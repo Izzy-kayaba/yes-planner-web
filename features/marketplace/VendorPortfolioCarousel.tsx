@@ -55,17 +55,17 @@ export function VendorPortfolioCarousel() {
 
   return (
     <section
-      className="rounded-2xl border border-vow-line bg-vow-surface p-4 shadow-vow-soft sm:p-6"
+      className="rounded-2xl border border-vow-line bg-vow-surface p-3 shadow-vow-soft sm:p-6"
       aria-labelledby="portfolio-heading"
     >
-      <div className="mb-5 flex items-end justify-between gap-4">
+      <div className="mb-5 flex flex-col items-start gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <p className="eyebrow">Portfolio stories</p>
-          <h2 id="portfolio-heading" className="text-2xl sm:text-3xl">
+          <h2 id="portfolio-heading" className="text-[1.65rem] leading-tight sm:text-3xl">
             See the craft before you shortlist.
           </h2>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex w-full items-center justify-between gap-2 sm:w-auto sm:justify-start">
           <span className="mr-1 text-[10px] font-bold text-vow-muted" aria-live="polite">
             {selectedIndex + 1} / {slideCount || 1}
           </span>
@@ -89,10 +89,10 @@ export function VendorPortfolioCarousel() {
       </div>
 
       <div className="overflow-hidden" ref={viewportRef}>
-        <div className="flex touch-pan-y gap-4">
+        <div className="flex touch-pan-y gap-3 sm:gap-4">
           {portfolios.map((portfolio) => (
             <article
-              className="min-w-0 flex-[0_0_84%] sm:flex-[0_0_46%] xl:flex-[0_0_31%]"
+              className="min-w-0 flex-[0_0_88%] sm:flex-[0_0_46%] xl:flex-[0_0_31%]"
               key={portfolio.studio}
             >
               <div
