@@ -1,4 +1,7 @@
+"use client";
+
 import type { ReactNode } from "react";
+import { useLanguage } from "@/components/providers/LanguageProvider";
 import { cn } from "@/lib/cn";
 
 const toneClasses: Record<string, string> = {
@@ -10,6 +13,7 @@ const toneClasses: Record<string, string> = {
 };
 
 export function StatusPill({ children, tone = "neutral" }: { children: ReactNode; tone?: string }) {
+  const { text } = useLanguage();
   return (
     <span
       className={cn(
@@ -17,7 +21,7 @@ export function StatusPill({ children, tone = "neutral" }: { children: ReactNode
         toneClasses[tone] ?? toneClasses.neutral,
       )}
     >
-      {children}
+      {typeof children === "string" ? text(children) : children}
     </span>
   );
 }

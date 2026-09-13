@@ -105,7 +105,7 @@ const connectionPreferences: Preference[] = [
 ];
 
 export function SettingsPanel() {
-  const { t } = useLanguage();
+  const { t, text } = useLanguage();
   const [active, setActive] = useState<(typeof tabs)[number][0]>("profile");
   const [profile, setProfile] = useState({
     firstName: "Amara",
@@ -119,14 +119,14 @@ export function SettingsPanel() {
       const stored = window.localStorage.getItem("vow-planner-profile");
       if (stored) setProfile(JSON.parse(stored));
     } catch {
-      toast.error("Saved profile settings could not be loaded.");
+      toast.error(text("Saved profile settings could not be loaded."));
     }
   }, []);
 
   function saveProfile(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     window.localStorage.setItem("vow-planner-profile", JSON.stringify(profile));
-    toast.success("Profile settings saved.");
+    toast.success(text("Profile settings saved."));
   }
 
   function updateProfile(field: keyof typeof profile, value: string) {
@@ -162,8 +162,10 @@ export function SettingsPanel() {
                   {profile.lastName[0]}
                 </div>
                 <div>
-                  <h3>Profile information</h3>
-                  <p>This information is visible to people sharing a workspace with you.</p>
+                  <h3>{text("Profile information")}</h3>
+                  <p>
+                    {text("This information is visible to people sharing a workspace with you.")}
+                  </p>
                 </div>
               </div>
               <div className="form-row">
@@ -219,8 +221,9 @@ export function SettingsPanel() {
               <div>
                 <h3>{t("settings.language")}</h3>
                 <p className="mt-2 text-sm text-vow-muted">
-                  Your choice updates the shared navigation and dashboard language and is remembered
-                  on this device.
+                  {text(
+                    "Your choice updates the shared navigation and dashboard language and is remembered on this device.",
+                  )}
                 </p>
               </div>
               <LanguageSwitcher />
@@ -243,6 +246,7 @@ export function SettingsPanel() {
 }
 
 function PreferenceList({ items, storageKey }: { items: Preference[]; storageKey: string }) {
+  const { text } = useLanguage();
   const key = `vow-planner-settings-${storageKey}`;
   const [enabled, setEnabled] = useState<Record<string, boolean>>({});
 
@@ -251,7 +255,7 @@ function PreferenceList({ items, storageKey }: { items: Preference[]; storageKey
       const stored = window.localStorage.getItem(key);
       if (stored) setEnabled(JSON.parse(stored));
     } catch {
-      toast.error("Saved preferences could not be loaded.");
+      toast.error(text("Saved preferences could not be loaded."));
     }
   }, [key]);
 
@@ -261,7 +265,7 @@ function PreferenceList({ items, storageKey }: { items: Preference[]; storageKey
       window.localStorage.setItem(key, JSON.stringify(next));
       return next;
     });
-    toast.success(`${item.label} ${value ? "enabled" : "disabled"}.`);
+    toast.success(`${text(item.label)} ${text(value ? "enabled" : "disabled")}.`);
   }
 
   return (
@@ -273,8 +277,8 @@ function PreferenceList({ items, storageKey }: { items: Preference[]; storageKey
               <item.icon size={17} strokeWidth={1.8} />
             </span>
             <span>
-              <strong>{item.label}</strong>
-              <small>{item.description}</small>
+              <strong>{text(item.label)}</strong>
+              <small>{text(item.description)}</small>
             </span>
           </span>
           <input

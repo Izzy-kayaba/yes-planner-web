@@ -40,6 +40,9 @@ VowPlanner-UI/
 - Keep reusable visual controls in `components/ui` or `components/forms`.
 - Put backend-specific code only in `lib/api`.
 - Add English and French text together in `lib/i18n.ts`.
+- The selected language lives in `LanguageProvider` and is saved for one year in the
+  `NEXT_LOCALE` cookie. The root layout reads that cookie before rendering, validates it against
+  the supported languages, and sets the document language without a client-side language flash.
 - Split a file before it reaches 1,000 formatted lines.
 - Run `npm run format` and `npm run check:lines` before committing.
 

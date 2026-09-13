@@ -75,9 +75,13 @@
 @layer base {
   html {
     @apply scroll-smooth;
+    max-width: 100%;
+    overflow-x: clip;
   }
   body {
     @apply m-0 bg-vow-canvas font-sans text-vow-ink antialiased;
+    max-width: 100%;
+    overflow-x: clip;
   }
   button,
   a {

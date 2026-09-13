@@ -3,6 +3,7 @@
 import useEmblaCarousel from "embla-carousel-react";
 import { ArrowLeft, ArrowRight, Heart } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
+import { useLanguage } from "@/components/providers/LanguageProvider";
 import { getInitials } from "@/lib/initials";
 
 const portfolios = [
@@ -33,6 +34,7 @@ const portfolios = [
 ];
 
 export function VendorPortfolioCarousel() {
+  const { text } = useLanguage();
   const [viewportRef, carousel] = useEmblaCarousel({ align: "start", dragFree: true });
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [slideCount, setSlideCount] = useState(0);
@@ -55,14 +57,14 @@ export function VendorPortfolioCarousel() {
 
   return (
     <section
-      className="rounded-2xl border border-vow-line bg-vow-surface p-3 shadow-vow-soft sm:p-6"
+      className="min-w-0 max-w-full overflow-hidden rounded-2xl border border-vow-line bg-vow-surface p-3 shadow-vow-soft sm:p-6"
       aria-labelledby="portfolio-heading"
     >
       <div className="mb-5 flex flex-col items-start gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <p className="eyebrow">Portfolio stories</p>
+          <p className="eyebrow">{text("Portfolio stories")}</p>
           <h2 id="portfolio-heading" className="text-[1.65rem] leading-tight sm:text-3xl">
-            See the craft before you shortlist.
+            {text("See the craft before you shortlist.")}
           </h2>
         </div>
         <div className="flex w-full items-center justify-between gap-2 sm:w-auto sm:justify-start">
@@ -73,7 +75,7 @@ export function VendorPortfolioCarousel() {
             className="icon-button"
             type="button"
             onClick={() => carousel?.scrollPrev()}
-            aria-label="Previous portfolio"
+            aria-label={text("Previous portfolio")}
           >
             <ArrowLeft size={17} />
           </button>
@@ -81,7 +83,7 @@ export function VendorPortfolioCarousel() {
             className="icon-button"
             type="button"
             onClick={() => carousel?.scrollNext()}
-            aria-label="Next portfolio"
+            aria-label={text("Next portfolio")}
           >
             <ArrowRight size={17} />
           </button>
@@ -105,7 +107,7 @@ export function VendorPortfolioCarousel() {
                 <button
                   className="absolute right-3 top-3 grid size-10 place-items-center rounded-full bg-white/90 text-vow-wine shadow-vow-soft backdrop-blur"
                   type="button"
-                  aria-label={`Save ${portfolio.studio}`}
+                  aria-label={`${text("Save")} ${portfolio.studio}`}
                   onClick={() =>
                     setSaved((current) =>
                       current.includes(portfolio.studio)
@@ -122,10 +124,10 @@ export function VendorPortfolioCarousel() {
               </div>
               <div className="px-1 pt-3">
                 <p className="text-[10px] font-extrabold uppercase tracking-[.14em] text-vow-wine">
-                  {portfolio.category}
+                  {text(portfolio.category)}
                 </p>
                 <h3 className="mt-1 font-display text-xl">{portfolio.studio}</h3>
-                <p className="mt-1 text-xs text-vow-muted">{portfolio.detail}</p>
+                <p className="mt-1 text-xs text-vow-muted">{text(portfolio.detail)}</p>
               </div>
             </article>
           ))}

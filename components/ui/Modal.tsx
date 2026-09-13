@@ -2,6 +2,7 @@
 
 import { X } from "lucide-react";
 import { useEffect, type ReactNode } from "react";
+import { useLanguage } from "@/components/providers/LanguageProvider";
 
 export function Modal({
   open,
@@ -16,6 +17,7 @@ export function Modal({
   children: ReactNode;
   onClose: () => void;
 }) {
+  const { text } = useLanguage();
   useEffect(() => {
     if (!open) return;
     const closeOnEscape = (event: KeyboardEvent) => {
@@ -44,11 +46,16 @@ export function Modal({
         <header className="mb-5 flex items-start justify-between gap-5">
           <div>
             <h2 id="modal-title" className="text-2xl">
-              {title}
+              {text(title)}
             </h2>
-            {description && <p className="mt-1 text-sm text-vow-muted">{description}</p>}
+            {description && <p className="mt-1 text-sm text-vow-muted">{text(description)}</p>}
           </div>
-          <button className="icon-button" type="button" onClick={onClose} aria-label="Close dialog">
+          <button
+            className="icon-button"
+            type="button"
+            onClick={onClose}
+            aria-label={text("Close dialog")}
+          >
             <X size={18} />
           </button>
         </header>

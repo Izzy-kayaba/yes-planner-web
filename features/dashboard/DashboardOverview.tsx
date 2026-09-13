@@ -33,7 +33,7 @@ const taskFields = [
 ];
 
 export function DashboardOverview() {
-  const { language, t } = useLanguage();
+  const { language, t, text } = useLanguage();
   const {
     items: tasks,
     create,
@@ -116,9 +116,9 @@ export function DashboardOverview() {
               >
                 <span className="check-box">{task.complete ? "✓" : ""}</span>
                 <span className="task-copy">
-                  <strong>{task.title}</strong>
+                  <strong>{text(task.title)}</strong>
                   <small>
-                    {task.category} · {task.assignee}
+                    {text(task.category)} · {task.assignee}
                   </small>
                 </span>
                 <span className={`priority priority-${task.priority.toLowerCase()}`}>
@@ -139,7 +139,7 @@ export function DashboardOverview() {
               <h3>{t("dashboard.nextMoments")}</h3>
             </div>
             <Link className="text-link text-xs" href={`/weddings/${currentWedding.id}/timeline`}>
-              View
+              {text("View")}
             </Link>
           </div>
           <div className="event-list">
@@ -150,12 +150,12 @@ export function DashboardOverview() {
                   <span>{event.month}</span>
                 </div>
                 <div>
-                  <strong>{event.title}</strong>
-                  <span>{event.meta}</span>
+                  <strong>{text(event.title)}</strong>
+                  <span>{text(event.meta)}</span>
                 </div>
                 <Link
                   href={`/weddings/${currentWedding.id}/timeline`}
-                  aria-label={`View ${event.title}`}
+                  aria-label={`${text("View")} ${text(event.title)}`}
                 >
                   ›
                 </Link>
@@ -175,8 +175,8 @@ export function DashboardOverview() {
         <article className="panel vendor-pulse">
           <div className="panel-header">
             <div>
-              <p className="eyebrow">Vendor pulse</p>
-              <h3>Almost all set</h3>
+              <p className="eyebrow">{text("Vendor pulse")}</p>
+              <h3>{text("Almost all set")}</h3>
             </div>
             <span className="large-fraction">
               8<small>/11</small>
@@ -188,20 +188,20 @@ export function DashboardOverview() {
             ))}
           </div>
           <div className="missing-vendors">
-            <span>Still looking for</span>
+            <span>{text("Still looking for")}</span>
             <div>
               <StatusPill tone="gold">Transport</StatusPill>
               <StatusPill tone="gold">Cake</StatusPill>
               <StatusPill tone="gold">Stationery</StatusPill>
             </div>
           </div>
-          <Link href="/marketplace">Explore recommended vendors →</Link>
+          <Link href="/marketplace">{text("Explore recommended vendors →")}</Link>
         </article>
         <article className="panel activity-panel">
           <div className="panel-header">
             <div>
-              <p className="eyebrow">Shared workspace</p>
-              <h3>Recent activity</h3>
+              <p className="eyebrow">{text("Shared workspace")}</p>
+              <h3>{text("Recent activity")}</h3>
             </div>
             <div className="avatar-stack small">
               <span>AM</span>
@@ -213,19 +213,22 @@ export function DashboardOverview() {
             <div>
               <span className="activity-dot rose">♡</span>
               <p>
-                <strong>Lerato</strong> updated the venue timeline<small>18 minutes ago</small>
+                <strong>Lerato</strong> {text("updated the venue timeline")}
+                <small>{text("18 minutes ago")}</small>
               </p>
             </div>
             <div>
               <span className="activity-dot sage">✓</span>
               <p>
-                <strong>Sipho</strong> approved the catering quote<small>2 hours ago</small>
+                <strong>Sipho</strong> {text("approved the catering quote")}
+                <small>{text("2 hours ago")}</small>
               </p>
             </div>
             <div>
               <span className="activity-dot gold">R</span>
               <p>
-                <strong>Naledi Molefe</strong> confirmed attendance<small>Yesterday</small>
+                <strong>Naledi Molefe</strong> {text("confirmed attendance")}
+                <small>{text("Yesterday")}</small>
               </p>
             </div>
           </div>

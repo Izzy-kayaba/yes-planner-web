@@ -450,6 +450,12 @@
   .topbar {
     padding-inline: 12px;
   }
+  .topbar-actions {
+    gap: 5px;
+  }
+  .language-switcher-compact {
+    gap: 4px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -15,6 +15,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import { useLanguage } from "@/components/providers/LanguageProvider";
 
 const readiness = [
   { area: "Venue", score: 92 },
@@ -48,19 +49,23 @@ const tooltipStyle = {
 };
 
 export function WeddingAnalytics() {
+  const { text } = useLanguage();
+  const localizedReadiness = readiness.map((item) => ({ ...item, area: text(item.area) }));
+  const localizedResponses = responses.map((item) => ({ ...item, name: text(item.name) }));
+
   return (
     <section className="grid gap-4 xl:grid-cols-[1.15fr_.85fr]">
       <article className="panel min-w-0">
         <div className="panel-header">
           <div>
-            <p className="eyebrow">Readiness</p>
-            <h3>Progress by planning area</h3>
+            <p className="eyebrow">{text("Readiness")}</p>
+            <h3>{text("Progress by planning area")}</h3>
           </div>
-          <span className="text-xs font-semibold text-vow-muted">Live overview</span>
+          <span className="text-xs font-semibold text-vow-muted">{text("Live overview")}</span>
         </div>
-        <div className="h-72 w-full" aria-label="Planning readiness by area">
+        <div className="h-72 w-full" aria-label={text("Planning readiness by area")}>
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={readiness} layout="vertical" margin={{ left: 8, right: 18 }}>
+            <BarChart data={localizedReadiness} layout="vertical" margin={{ left: 8, right: 18 }}>
               <CartesianGrid stroke="var(--line)" strokeDasharray="3 3" horizontal={false} />
               <XAxis
                 type="number"
@@ -80,7 +85,7 @@ export function WeddingAnalytics() {
               <Tooltip
                 contentStyle={tooltipStyle}
                 cursor={{ fill: "var(--surface-soft)" }}
-                formatter={(value) => [`${value}%`, "Ready"]}
+                formatter={(value) => [`${value}%`, text("Ready")]}
               />
               <Bar dataKey="score" fill="var(--wine)" radius={[0, 8, 8, 0]} barSize={16} />
             </BarChart>
@@ -91,22 +96,22 @@ export function WeddingAnalytics() {
       <article className="panel min-w-0">
         <div className="panel-header">
           <div>
-            <p className="eyebrow">Guest responses</p>
-            <h3>RSVP snapshot</h3>
+            <p className="eyebrow">{text("Guest responses")}</p>
+            <h3>{text("RSVP snapshot")}</h3>
           </div>
         </div>
-        <div className="h-72 w-full" aria-label="Guest RSVP response breakdown">
+        <div className="h-72 w-full" aria-label={text("Guest RSVP response breakdown")}>
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
               <Pie
-                data={responses}
+                data={localizedResponses}
                 dataKey="value"
                 nameKey="name"
                 innerRadius={58}
                 outerRadius={88}
                 paddingAngle={3}
               >
-                {responses.map((entry) => (
+                {localizedResponses.map((entry) => (
                   <Cell key={entry.name} fill={entry.color} />
                 ))}
               </Pie>
@@ -120,12 +125,12 @@ export function WeddingAnalytics() {
       <article className="panel min-w-0 xl:col-span-2">
         <div className="panel-header">
           <div>
-            <p className="eyebrow">Five-week trend</p>
-            <h3>Planning momentum</h3>
+            <p className="eyebrow">{text("Five-week trend")}</p>
+            <h3>{text("Planning momentum")}</h3>
           </div>
           <strong className="text-sm text-vow-sage">+26%</strong>
         </div>
-        <div className="h-64 w-full" aria-label="Planning progress over five weeks">
+        <div className="h-64 w-full" aria-label={text("Planning progress over five weeks")}>
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart data={progress} margin={{ left: -18, right: 10 }}>
               <defs>
@@ -149,7 +154,7 @@ export function WeddingAnalytics() {
               />
               <Tooltip
                 contentStyle={tooltipStyle}
-                formatter={(value) => [`${value}%`, "Readiness"]}
+                formatter={(value) => [`${value}%`, text("Readiness")]}
               />
               <Area
                 type="monotone"

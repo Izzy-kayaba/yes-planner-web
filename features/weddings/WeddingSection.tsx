@@ -52,7 +52,7 @@ const sections: Record<string, ComponentType> = {
 };
 
 export function WeddingSection({ section }: { section: string }) {
-  const { t } = useLanguage();
+  const { t, text } = useLanguage();
   const heading = titles[section];
   const Section = sections[section];
 
@@ -68,8 +68,8 @@ export function WeddingSection({ section }: { section: string }) {
       ) : (
         <div className="panel empty-state">
           <Heart size={30} />
-          <h3>This space is ready for your plans</h3>
-          <p>Choose a wedding module above to continue.</p>
+          <h3>{text("This space is ready for your plans")}</h3>
+          <p>{text("Choose a wedding module above to continue.")}</p>
         </div>
       )}
     </div>

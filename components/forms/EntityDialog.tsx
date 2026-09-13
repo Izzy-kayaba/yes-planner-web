@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, type FormEvent } from "react";
+import { useLanguage } from "@/components/providers/LanguageProvider";
 import { Button } from "@/components/ui/Button";
 import { Modal } from "@/components/ui/Modal";
 
@@ -32,6 +33,7 @@ export function EntityDialog({
   onClose: () => void;
   onSave: (values: Record<string, EntityFormValue>) => Promise<void> | void;
 }) {
+  const { text } = useLanguage();
   const [saving, setSaving] = useState(false);
   const [formKey, setFormKey] = useState(0);
   const defaults = initialValues as Record<string, EntityFormValue>;
@@ -63,14 +65,14 @@ export function EntityDialog({
       <form className="grid gap-4" key={formKey} onSubmit={submit}>
         {fields.map((field) => (
           <label className="grid gap-1.5 text-xs font-bold" key={field.name}>
-            {field.label}
+            {text(field.label)}
             {field.type === "textarea" ? (
               <textarea
                 className="min-h-28 p-3 text-sm"
                 name={field.name}
                 required={field.required}
                 defaultValue={defaults[field.name]}
-                placeholder={field.placeholder}
+                placeholder={field.placeholder ? text(field.placeholder) : undefined}
               />
             ) : field.type === "select" ? (
               <select
@@ -80,11 +82,11 @@ export function EntityDialog({
                 defaultValue={defaults[field.name] ?? ""}
               >
                 <option value="" disabled>
-                  Select an option
+                  {text("Select an option")}
                 </option>
                 {field.options?.map((option) => (
                   <option value={option} key={option}>
-                    {option}
+                    {text(option)}
                   </option>
                 ))}
               </select>
@@ -95,17 +97,17 @@ export function EntityDialog({
                 type={field.type ?? "text"}
                 required={field.required}
                 defaultValue={defaults[field.name]}
-                placeholder={field.placeholder}
+                placeholder={field.placeholder ? text(field.placeholder) : undefined}
               />
             )}
           </label>
         ))}
         <div className="mt-2 flex justify-end gap-3">
           <Button type="button" variant="secondary" onClick={onClose}>
-            Cancel
+            {text("Cancel")}
           </Button>
           <Button type="submit" disabled={saving}>
-            {saving ? "Saving…" : "Save changes"}
+            {text(saving ? "Saving…" : "Save changes")}
           </Button>
         </div>
       </form>

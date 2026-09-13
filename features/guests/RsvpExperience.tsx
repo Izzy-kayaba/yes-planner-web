@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import { Brand } from "@/components/ui/Brand";
+import { useLanguage } from "@/components/providers/LanguageProvider";
 import { cn } from "@/lib/cn";
 
 const rsvpSchema = z
@@ -29,6 +30,7 @@ const rsvpSchema = z
 type RsvpValues = z.infer<typeof rsvpSchema>;
 
 export function RsvpExperience() {
+  const { text } = useLanguage();
   const [submitted, setSubmitted] = useState(false);
   const {
     register,
@@ -52,7 +54,7 @@ export function RsvpExperience() {
       return;
     }
     setSubmitted(true);
-    toast.success("Your RSVP has been saved.");
+    toast.success(text("Your RSVP has been saved."));
   }
 
   if (submitted) {
@@ -66,18 +68,19 @@ export function RsvpExperience() {
           <span className="confirmation-mark">
             <Check size={28} />
           </span>
-          <p className="eyebrow">Response received</p>
+          <p className="eyebrow">{text("Response received")}</p>
           <h1>
             {response === "yes"
-              ? "We can’t wait to celebrate with you."
-              : "Thank you for letting us know."}
+              ? text("We can’t wait to celebrate with you.")
+              : text("Thank you for letting us know.")}
           </h1>
           <p>
-            Amara and Sipho have received your response. You can return to this invitation at any
-            time.
+            {text(
+              "Amara and Sipho have received your response. You can return to this invitation at any time.",
+            )}
           </p>
           <button className="button button-primary" onClick={() => setSubmitted(false)}>
-            Review my response
+            {text("Review my response")}
           </button>
         </section>
       </main>
@@ -95,26 +98,26 @@ export function RsvpExperience() {
       </div>
       <section className="invite-card">
         <Brand />
-        <p className="eyebrow">Together with their families</p>
+        <p className="eyebrow">{text("Together with their families")}</p>
         <h1>
           Amara <em>&</em> Sipho
         </h1>
-        <p className="invite-lead">joyfully invite you to celebrate their wedding</p>
+        <p className="invite-lead">{text("joyfully invite you to celebrate their wedding")}</p>
         <div className="invitation-details">
           <div>
-            <span>Sunday</span>
-            <strong>18 October 2026</strong>
-            <small>Ceremony at 15:00</small>
+            <span>{text("Sunday")}</span>
+            <strong>{text("18 October 2026")}</strong>
+            <small>{text("Ceremony at 15:00")}</small>
           </div>
           <i />
           <div>
             <span>Shepstone Gardens</span>
             <strong>Johannesburg</strong>
-            <small>Dress: Garden formal</small>
+            <small>{text("Dress: Garden formal")}</small>
           </div>
         </div>
         <form className="rsvp-form" onSubmit={handleSubmit(submit)} noValidate>
-          <h2>Will you be joining us?</h2>
+          <h2>{text("Will you be joining us?")}</h2>
           <div className="rsvp-choice">
             <button
               className={cn(response === "yes" && "selected")}
@@ -123,8 +126,8 @@ export function RsvpExperience() {
               onClick={() => setValue("response", "yes", { shouldValidate: true })}
             >
               <Heart size={19} />
-              <strong>Joyfully accepts</strong>
-              <small>I’ll be there</small>
+              <strong>{text("Joyfully accepts")}</strong>
+              <small>{text("I’ll be there")}</small>
             </button>
             <button
               className={cn(response === "no" && "selected")}
@@ -133,53 +136,57 @@ export function RsvpExperience() {
               onClick={() => setValue("response", "no", { shouldValidate: true })}
             >
               <X size={19} />
-              <strong>Regretfully declines</strong>
-              <small>Celebrating from afar</small>
+              <strong>{text("Regretfully declines")}</strong>
+              <small>{text("Celebrating from afar")}</small>
             </button>
           </div>
           {errors.response && (
-            <p className="text-center text-xs text-vow-wine">{errors.response.message}</p>
+            <p className="text-center text-xs text-vow-wine">
+              {text(errors.response.message ?? "")}
+            </p>
           )}
           {response === "yes" && (
             <div className="rsvp-details">
               <label>
-                Meal preference
+                {text("Meal preference")}
                 <select
                   {...register("mealPreference")}
                   aria-invalid={Boolean(errors.mealPreference)}
                   defaultValue=""
                 >
                   <option value="" disabled>
-                    Select a meal
+                    {text("Select a meal")}
                   </option>
-                  <option>Standard menu</option>
-                  <option>Vegetarian</option>
+                  <option value="Standard menu">{text("Standard menu")}</option>
+                  <option value="Vegetarian">{text("Vegetarian")}</option>
                   <option>Halaal</option>
-                  <option>Children’s menu</option>
+                  <option value="Children’s menu">{text("Children’s menu")}</option>
                 </select>
                 {errors.mealPreference && (
-                  <small className="text-vow-wine">{errors.mealPreference.message}</small>
+                  <small className="text-vow-wine">
+                    {text(errors.mealPreference.message ?? "")}
+                  </small>
                 )}
               </label>
               <label>
-                Dietary notes
+                {text("Dietary notes")}
                 <textarea
                   {...register("dietaryNotes")}
                   aria-invalid={Boolean(errors.dietaryNotes)}
-                  placeholder="Allergies or requirements we should know about"
+                  placeholder={text("Allergies or requirements we should know about")}
                 />
                 {errors.dietaryNotes && (
-                  <small className="text-vow-wine">{errors.dietaryNotes.message}</small>
+                  <small className="text-vow-wine">{text(errors.dietaryNotes.message ?? "")}</small>
                 )}
               </label>
             </div>
           )}
           <button disabled={!response} className="button button-primary button-wide" type="submit">
-            Send my response →
+            {text("Send my response →")}
           </button>
         </form>
         <p className="invite-footer">
-          Please reply by 28 September · Questions? Contact Lerato on +27 82 555 0124
+          {text("Please reply by 28 September · Questions? Contact Lerato on +27 82 555 0124")}
         </p>
       </section>
     </main>

@@ -6,6 +6,7 @@ import { EntityDialog, type EntityFormValue } from "@/components/forms/EntityDia
 import { PageHeader } from "@/components/ui/PageHeader";
 import { StatCard } from "@/components/ui/StatCard";
 import { StatusPill } from "@/components/ui/StatusPill";
+import { useLanguage } from "@/components/providers/LanguageProvider";
 import {
   budgetCategories,
   currentWedding,
@@ -15,6 +16,7 @@ import {
 } from "@/lib/demo-data";
 
 export function WeddingOverview() {
+  const { text } = useLanguage();
   const [details, setDetails] = useState(currentWedding);
   const [editing, setEditing] = useState(false);
 
@@ -36,20 +38,22 @@ export function WeddingOverview() {
         description={`${details.date} · ${details.venue}, ${details.city}`}
         action={
           <button className="button button-secondary" onClick={() => setEditing(true)}>
-            Edit wedding details
+            {text("Edit wedding details")}
           </button>
         }
       />
       <section className="overview-hero">
         <div>
           <StatusPill tone="sage">Planning beautifully</StatusPill>
-          <h2>{currentWedding.daysRemaining} days until “I do”</h2>
+          <h2>
+            {currentWedding.daysRemaining} {text("days until “I do”")}
+          </h2>
           <p>
-            You’re {currentWedding.progress}% of the way there. Six high-priority details need
-            attention this week.
+            {text("You’re")} {currentWedding.progress}% {text("of the way there.")}{" "}
+            {text("Six high-priority details need attention this week.")}
           </p>
           <Link className="button button-light" href={`/weddings/${currentWedding.id}/tasks`}>
-            Review this week →
+            {text("Review this week →")}
           </Link>
         </div>
         <div
@@ -57,7 +61,8 @@ export function WeddingOverview() {
           style={{ "--progress": `${currentWedding.progress}%` } as React.CSSProperties}
         >
           <span>
-            <strong>{currentWedding.progress}%</strong>ready
+            <strong>{currentWedding.progress}%</strong>
+            {text("ready")}
           </span>
         </div>
       </section>
@@ -70,16 +75,16 @@ export function WeddingOverview() {
         <article className="panel">
           <div className="panel-header">
             <div>
-              <p className="eyebrow">Budget shape</p>
-              <h3>R 335,500 committed</h3>
+              <p className="eyebrow">{text("Budget shape")}</p>
+              <h3>R 335,500 {text("committed")}</h3>
             </div>
-            <Link href={`/weddings/${currentWedding.id}/budget`}>Details →</Link>
+            <Link href={`/weddings/${currentWedding.id}/budget`}>{text("Details →")}</Link>
           </div>
           <div className="budget-bars mini">
             {budgetCategories.map((item) => (
               <div key={item.name}>
                 <span>
-                  <b>{item.name}</b>
+                  <b>{text(item.name)}</b>
                   <small>R {item.amount.toLocaleString()}</small>
                 </span>
                 <div>
@@ -97,10 +102,10 @@ export function WeddingOverview() {
         <article className="panel">
           <div className="panel-header">
             <div>
-              <p className="eyebrow">Next on the calendar</p>
-              <h3>Three important dates</h3>
+              <p className="eyebrow">{text("Next on the calendar")}</p>
+              <h3>{text("Three important dates")}</h3>
             </div>
-            <Link href={`/weddings/${currentWedding.id}/timeline`}>Calendar →</Link>
+            <Link href={`/weddings/${currentWedding.id}/timeline`}>{text("Calendar →")}</Link>
           </div>
           <div className="event-list">
             {upcomingEvents.map((event) => (
@@ -110,8 +115,8 @@ export function WeddingOverview() {
                   <span>{event.month}</span>
                 </div>
                 <div>
-                  <strong>{event.title}</strong>
-                  <span>{event.meta}</span>
+                  <strong>{text(event.title)}</strong>
+                  <span>{text(event.meta)}</span>
                 </div>
               </div>
             ))}
@@ -121,10 +126,10 @@ export function WeddingOverview() {
       <section className="panel">
         <div className="panel-header">
           <div>
-            <p className="eyebrow">Creative team</p>
-            <h3>Your confirmed partners</h3>
+            <p className="eyebrow">{text("Creative team")}</p>
+            <h3>{text("Your confirmed partners")}</h3>
           </div>
-          <Link href={`/weddings/${currentWedding.id}/vendors`}>Manage vendors →</Link>
+          <Link href={`/weddings/${currentWedding.id}/vendors`}>{text("Manage vendors →")}</Link>
         </div>
         <div className="vendor-lineup">
           {vendors.slice(0, 4).map((vendor) => (
@@ -132,7 +137,7 @@ export function WeddingOverview() {
               <span className={`vendor-avatar tone-${vendor.tone}`}>{vendor.initials}</span>
               <p>
                 <strong>{vendor.name}</strong>
-                <small>{vendor.category}</small>
+                <small>{text(vendor.category)}</small>
               </p>
               <StatusPill tone="sage">{vendor.status}</StatusPill>
             </div>

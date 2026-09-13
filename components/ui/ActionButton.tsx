@@ -2,6 +2,7 @@
 
 import { useState, type ButtonHTMLAttributes, type ReactNode } from "react";
 import { toast } from "sonner";
+import { useLanguage } from "@/components/providers/LanguageProvider";
 
 export function ActionButton({
   children,
@@ -13,6 +14,7 @@ export function ActionButton({
   message: string;
   doneLabel?: string;
 }) {
+  const { text } = useLanguage();
   const [done, setDone] = useState(false);
   return (
     <button
@@ -20,10 +22,14 @@ export function ActionButton({
       onClick={(event) => {
         props.onClick?.(event);
         setDone(true);
-        toast.success(message);
+        toast.success(text(message));
       }}
     >
-      {done && doneLabel ? doneLabel : children}
+      {done && doneLabel
+        ? text(doneLabel)
+        : typeof children === "string"
+          ? text(children)
+          : children}
     </button>
   );
 }
@@ -33,6 +39,7 @@ export function DownloadReportButton({
 }: {
   className?: string;
 }) {
+  const { text } = useLanguage();
   function download() {
     const content =
       "Metric,Value\nActive weddings,1284\nOrganisations,438\nMonthly users,8920\nOpen support cases,24";
@@ -42,11 +49,11 @@ export function DownloadReportButton({
     link.download = "vow-planner-report.csv";
     link.click();
     URL.revokeObjectURL(url);
-    toast.success("Report downloaded.");
+    toast.success(text("Report downloaded."));
   }
   return (
     <button className={className} onClick={download}>
-      Download report
+      {text("Download report")}
     </button>
   );
 }

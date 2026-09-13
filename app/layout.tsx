@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { Cardo, Nunito } from "next/font/google";
+import { getLocale } from "next-intl/server";
 import type { ReactNode } from "react";
 import { AppProviders } from "@/components/providers/AppProviders";
+import { isSupportedLanguage } from "@/lib/i18n";
 import "./globals.css";
 import "./workspace.css";
 import "./modules.css";
@@ -28,11 +30,18 @@ export const metadata: Metadata = {
   description: "One beautiful place to plan, manage and remember your wedding.",
 };
 
-export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
+export default async function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
+  const requestedLocale = await getLocale();
+  const initialLanguage = isSupportedLanguage(requestedLocale) ? requestedLocale : "en";
+
   return (
-    <html lang="en" className={`${cardo.variable} ${nunito.variable}`} suppressHydrationWarning>
+    <html
+      lang={initialLanguage}
+      className={`${cardo.variable} ${nunito.variable}`}
+      suppressHydrationWarning
+    >
       <body>
-        <AppProviders>{children}</AppProviders>
+        <AppProviders initialLanguage={initialLanguage}>{children}</AppProviders>
       </body>
     </html>
   );

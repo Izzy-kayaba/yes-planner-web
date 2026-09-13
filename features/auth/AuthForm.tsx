@@ -48,7 +48,7 @@ type AuthValues = {
 
 export function AuthForm({ mode }: { mode: "login" | "register" }) {
   const router = useRouter();
-  const { t } = useLanguage();
+  const { t, text } = useLanguage();
   const isRegister = mode === "register";
   const {
     register,
@@ -77,24 +77,24 @@ export function AuthForm({ mode }: { mode: "login" | "register" }) {
         const field = issue.path[0] as keyof AuthValues;
         if (field) setError(field, { type: "validate", message: issue.message });
       });
-      toast.error("Please check the highlighted details.");
+      toast.error(text("Please check the highlighted details."));
       return;
     }
 
     try {
       if (isRegister) await getBackend().register(result.data as RegisterInput);
       else await getBackend().login(result.data);
-      toast.success(isRegister ? "Your workspace is ready." : "Welcome back, Amara.");
+      toast.success(text(isRegister ? "Your workspace is ready." : "Welcome back, Amara."));
       router.push("/dashboard");
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Authentication failed.");
+      toast.error(error instanceof Error ? error.message : text("Authentication failed."));
     }
   }
 
   return (
     <form className="auth-form" onSubmit={handleSubmit(submit)} noValidate>
       {isRegister && (
-        <div className="role-picker" aria-label="Account type">
+        <div className="role-picker" aria-label={text("Account type")}>
           {roles.map(({ value, icon: Icon }) => (
             <button
               aria-pressed={selectedRole === value}
@@ -104,7 +104,7 @@ export function AuthForm({ mode }: { mode: "login" | "register" }) {
               onClick={() => setValue("role", value, { shouldValidate: true })}
             >
               <Icon size={18} strokeWidth={1.7} aria-hidden="true" />
-              {value}
+              {text(value)}
             </button>
           ))}
         </div>
@@ -181,7 +181,7 @@ export function AuthForm({ mode }: { mode: "login" | "register" }) {
       </label>
 
       {isRegister && (
-        <p className="form-hint">Use at least 8 characters with a number and a symbol.</p>
+        <p className="form-hint">{text("Use at least 8 characters with a number and a symbol.")}</p>
       )}
 
       <Button disabled={isSubmitting} fullWidth type="submit">
@@ -190,14 +190,14 @@ export function AuthForm({ mode }: { mode: "login" | "register" }) {
       </Button>
 
       <div className="form-divider">
-        <span>or continue with</span>
+        <span>{text("or continue with")}</span>
       </div>
       <div className="social-row">
         <Button
           type="button"
           variant="secondary"
           onClick={() =>
-            toast.info("Google sign-in will be available when authentication is connected.")
+            toast.info(text("Google sign-in will be available when authentication is connected."))
           }
         >
           G&nbsp;&nbsp; Google
@@ -206,10 +206,13 @@ export function AuthForm({ mode }: { mode: "login" | "register" }) {
           type="button"
           variant="secondary"
           onClick={() =>
-            toast.info("Apple sign-in will be available when authentication is connected.")
+            toast.info(text("Facebook sign-in will be available when authentication is connected."))
           }
         >
-          ⌘&nbsp;&nbsp; Apple
+          <span className="font-bold text-[#1877f2]" aria-hidden="true">
+            f
+          </span>
+          Facebook
         </Button>
       </div>
 

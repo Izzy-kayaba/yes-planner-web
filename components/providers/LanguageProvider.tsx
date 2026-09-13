@@ -1,5 +1,6 @@
 "use client";
 
+import { NextIntlClientProvider, useTranslations } from "next-intl";
 import {
   createContext,
   useCallback,
@@ -9,39 +10,79 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { translate, type Language, type TranslationKey } from "@/lib/i18n";
+import { intlMessages, languageCookieName, type Language, type TranslationKey } from "@/lib/i18n";
+import { getLiteralMessageKey } from "@/lib/i18n-literals";
 
 type LanguageContextValue = {
   language: Language;
   setLanguage: (language: Language) => void;
   t: (key: TranslationKey, values?: Record<string, string | number>) => string;
+  text: (value: string) => string;
 };
 
 const LanguageContext = createContext<LanguageContextValue | null>(null);
-const storageKey = "vow-planner-language";
 
-export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [language, updateLanguage] = useState<Language>("en");
-
-  useEffect(() => {
-    const stored = window.localStorage.getItem(storageKey);
-    if (stored === "en" || stored === "fr") updateLanguage(stored);
-  }, []);
+export function LanguageProvider({
+  children,
+  initialLanguage,
+}: {
+  children: ReactNode;
+  initialLanguage: Language;
+}) {
+  const [language, updateLanguage] = useState<Language>(initialLanguage);
 
   const setLanguage = useCallback((nextLanguage: Language) => {
     updateLanguage(nextLanguage);
-    window.localStorage.setItem(storageKey, nextLanguage);
     document.documentElement.lang = nextLanguage;
-    document.cookie = `vow-language=${nextLanguage}; path=/; max-age=31536000; samesite=lax`;
+    const secure = window.location.protocol === "https:" ? "; Secure" : "";
+    document.cookie = `${languageCookieName}=${nextLanguage}; Path=/; Max-Age=31536000; SameSite=Lax${secure}`;
+    document.cookie = `vow-language=; Path=/; Max-Age=0; SameSite=Lax${secure}`;
   }, []);
 
   useEffect(() => {
     document.documentElement.lang = language;
   }, [language]);
 
+  return (
+    <NextIntlClientProvider
+      locale={language}
+      messages={intlMessages[language]}
+      timeZone="Africa/Johannesburg"
+    >
+      <LanguageContextBridge language={language} setLanguage={setLanguage}>
+        {children}
+      </LanguageContextBridge>
+    </NextIntlClientProvider>
+  );
+}
+
+function LanguageContextBridge({
+  children,
+  language,
+  setLanguage,
+}: {
+  children: ReactNode;
+  language: Language;
+  setLanguage: (language: Language) => void;
+}) {
+  const translateMessage = useTranslations();
+
+  const translateText = useCallback(
+    (content: string) => {
+      const key = getLiteralMessageKey(content);
+      return key ? translateMessage(key) : content;
+    },
+    [translateMessage],
+  );
+
   const value = useMemo<LanguageContextValue>(
-    () => ({ language, setLanguage, t: (key, values) => translate(language, key, values) }),
-    [language, setLanguage],
+    () => ({
+      language,
+      setLanguage,
+      t: (key, values) => translateMessage(key, values),
+      text: translateText,
+    }),
+    [language, setLanguage, translateMessage, translateText],
   );
 
   return <LanguageContext.Provider value={value}>{children}</LanguageContext.Provider>;

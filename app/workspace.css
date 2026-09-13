@@ -131,9 +131,14 @@
 }
 .app-main {
   @apply min-w-0;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: clip;
 }
 .topbar {
   @apply sticky top-0 z-20 flex h-[70px] items-center justify-between border-b border-vow-line px-[34px];
+  width: 100%;
+  min-width: 0;
   background: color-mix(in srgb, var(--canvas) 88%, transparent);
   backdrop-filter: blur(16px);
 }
@@ -149,6 +154,8 @@
 }
 .topbar-actions {
   @apply flex items-center gap-2;
+  min-width: 0;
+  flex: 0 0 auto;
 }
 .quick-search {
   @apply flex h-10 w-[230px] items-center gap-2 rounded-[10px] border border-vow-line bg-vow-surface py-0 pl-3 pr-[9px] text-vow-muted;

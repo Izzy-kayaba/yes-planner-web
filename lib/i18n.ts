@@ -1,5 +1,12 @@
+import { literalMessages } from "@/lib/i18n-literals";
+
 export const supportedLanguages = ["en", "fr"] as const;
 export type Language = (typeof supportedLanguages)[number];
+export const languageCookieName = "NEXT_LOCALE";
+
+export function isSupportedLanguage(value: string | null | undefined): value is Language {
+  return value === "en" || value === "fr";
+}
 
 const english = {
   "common.addNew": "Add new",
@@ -198,6 +205,26 @@ const french: Record<TranslationKey, string> = {
 export const messages: Record<Language, Record<TranslationKey, string>> = {
   en: english,
   fr: french,
+};
+
+function nestMessages(languageMessages: Record<TranslationKey, string>) {
+  return Object.entries(languageMessages).reduce<Record<string, Record<string, string>>>(
+    (result, [key, value]) => {
+      const separator = key.indexOf(".");
+      const namespace = key.slice(0, separator);
+      const messageKey = key.slice(separator + 1);
+      result[namespace] ??= {};
+      result[namespace][messageKey] = value;
+      return result;
+    },
+    {},
+  );
+}
+
+/** Messages in the nested shape expected by next-intl. */
+export const intlMessages: Record<Language, Record<string, Record<string, string>>> = {
+  en: { ...nestMessages(messages.en), literal: literalMessages.en },
+  fr: { ...nestMessages(messages.fr), literal: literalMessages.fr },
 };
 
 export function translate(

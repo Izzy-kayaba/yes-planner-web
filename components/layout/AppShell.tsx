@@ -69,7 +69,7 @@ function matchesNavigation(pathname: string, href: string) {
 export function AppShell({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
-  const { t } = useLanguage();
+  const { t, text } = useLanguage();
   const { resolvedTheme, setTheme } = useTheme();
   const [menuOpen, setMenuOpen] = useState(false);
   const [themeReady, setThemeReady] = useState(false);
@@ -128,7 +128,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           </button>
         </div>
 
-        <nav className="sidebar-nav" aria-label="Main navigation">
+        <nav className="sidebar-nav" aria-label={text("Main navigation")}>
           <p className="nav-label">{t("nav.workspace")}</p>
           {navigation.map((item) => {
             const active = matchesNavigation(pathname, item.href);
@@ -167,7 +167,11 @@ export function AppShell({ children }: { children: ReactNode }) {
             <strong>Amara Mokoena</strong>
             <span>{t("shell.weddingOwner")}</span>
           </div>
-          <Link className="profile-menu" href="/settings" aria-label="Open profile settings">
+          <Link
+            className="profile-menu"
+            href="/settings"
+            aria-label={text("Open profile settings")}
+          >
             <MoreHorizontal size={18} />
           </Link>
         </div>
@@ -210,14 +214,14 @@ export function AppShell({ children }: { children: ReactNode }) {
             <button
               className="icon-button"
               onClick={() => setTheme(darkMode ? "light" : "dark")}
-              aria-label={`Use ${darkMode ? "light" : "dark"} theme`}
+              aria-label={text(darkMode ? "Use light theme" : "Use dark theme")}
             >
               {darkMode ? <Sun size={17} /> : <Moon size={17} />}
             </button>
             <button
               className="icon-button notification-button"
               aria-label={t("shell.notifications")}
-              onClick={() => toast.info("You have 3 unread messages.")}
+              onClick={() => toast.info(text("You have 3 unread messages."))}
             >
               <Bell size={17} />
               <span />

@@ -1,3 +1,9 @@
+"use client";
+
+import { TrendingUp } from "lucide-react";
+import { useLanguage } from "@/components/providers/LanguageProvider";
+import { cn } from "@/lib/cn";
+
 export function StatCard({
   label,
   value,
@@ -11,6 +17,7 @@ export function StatCard({
   tone?: string;
   trend?: string;
 }) {
+  const { text } = useLanguage();
   const toneClasses: Record<string, string> = {
     rose: "bg-vow-blush text-vow-wine",
     sage: "bg-vow-sage-soft text-vow-sage",
@@ -30,13 +37,11 @@ export function StatCard({
         >
           <TrendingUp size={14} strokeWidth={1.8} />
         </span>
-        {trend && <span className="text-[9px] text-vow-sage">{trend}</span>}
+        {trend && <span className="text-[9px] text-vow-sage">{text(trend)}</span>}
       </div>
-      <p className="mb-1 mt-3 text-[10px] text-vow-muted">{label}</p>
+      <p className="mb-1 mt-3 text-[10px] text-vow-muted">{text(label)}</p>
       <strong className="mb-0.5 block font-display text-2xl font-normal">{value}</strong>
-      <small className="text-[9px] text-vow-muted">{detail}</small>
+      <small className="text-[9px] text-vow-muted">{text(detail)}</small>
     </article>
   );
 }
-import { TrendingUp } from "lucide-react";
-import { cn } from "@/lib/cn";
