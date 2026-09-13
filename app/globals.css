@@ -1,0 +1,164 @@
+@import "tailwindcss";
+@import "./styles/public.css";
+@import "./styles/auth.css";
+
+/* Tailwind utilities consume the same tokens as the bespoke editorial artwork. */
+@theme inline {
+  --color-vow-ink: var(--ink);
+  --color-vow-muted: var(--muted);
+  --color-vow-canvas: var(--canvas);
+  --color-vow-surface: var(--surface);
+  --color-vow-soft: var(--surface-soft);
+  --color-vow-line: var(--line);
+  --color-vow-wine: var(--wine);
+  --color-vow-wine-deep: var(--wine-deep);
+  --color-vow-blush: var(--blush);
+  --color-vow-sage: var(--sage);
+  --color-vow-sage-soft: var(--sage-soft);
+  --color-vow-gold: var(--gold);
+  --color-vow-gold-soft: var(--gold-soft);
+  --color-vow-blue: var(--blue);
+  --color-vow-blue-soft: var(--blue-soft);
+  --font-display: var(--display);
+  --font-sans: var(--sans);
+  --shadow-vow: var(--shadow);
+  --shadow-vow-soft: var(--shadow-soft);
+}
+
+/* Foundation */
+:root {
+  --ink: #282322;
+  --muted: #746c68;
+  --canvas: #f8f5f1;
+  --surface: #fffdfb;
+  --surface-soft: #f2ece7;
+  --line: #e8dfd8;
+  --wine: #7f3448;
+  --wine-deep: #602437;
+  --blush: #ead3d7;
+  --sage: #70806a;
+  --sage-soft: #dfe7dc;
+  --gold: #ae8548;
+  --gold-soft: #f2e5ca;
+  --blue: #667991;
+  --blue-soft: #dfe7ef;
+  --danger-soft: #f4dfe1;
+  --shadow: 0 18px 55px rgba(59, 39, 34, 0.09);
+  --shadow-soft: 0 8px 28px rgba(59, 39, 34, 0.07);
+  --display: var(--font-cardo), Georgia, "Times New Roman", serif;
+  --sans:
+    var(--font-nunito), ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+}
+
+:root[data-theme="dark"] {
+  --ink: #f3ece8;
+  --muted: #b7aaa3;
+  --canvas: #1d1919;
+  --surface: #272121;
+  --surface-soft: #332b2a;
+  --line: #443938;
+  --wine: #c47b8d;
+  --wine-deep: #e7a4b4;
+  --blush: #513640;
+  --sage: #9aaa91;
+  --sage-soft: #334137;
+  --gold: #d2aa6a;
+  --gold-soft: #4b3e28;
+  --blue: #9aabc1;
+  --blue-soft: #334152;
+  --danger-soft: #523138;
+  --shadow: 0 18px 55px rgba(0, 0, 0, 0.25);
+  --shadow-soft: 0 8px 28px rgba(0, 0, 0, 0.18);
+}
+
+@layer base {
+  html {
+    @apply scroll-smooth;
+  }
+  body {
+    @apply m-0 bg-vow-canvas font-sans text-vow-ink antialiased;
+  }
+  button,
+  a {
+    -webkit-tap-highlight-color: transparent;
+  }
+  button {
+    @apply cursor-pointer;
+  }
+  a {
+    @apply text-inherit no-underline;
+  }
+  h1,
+  h2 {
+    @apply font-display font-normal tracking-[-.04em];
+  }
+  input,
+  select,
+  textarea {
+    @apply rounded-xl border border-vow-line bg-vow-surface text-inherit outline-0 transition;
+  }
+  input:focus,
+  select:focus,
+  textarea:focus {
+    border-color: var(--wine);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--wine) 12%, transparent);
+  }
+  button:focus-visible,
+  a:focus-visible {
+    outline: 3px solid color-mix(in srgb, var(--wine) 30%, transparent);
+    outline-offset: 3px;
+  }
+}
+.page-width {
+  width: min(1180px, calc(100% - 48px));
+  margin-inline: auto;
+}
+.eyebrow {
+  margin-bottom: 10px;
+  color: var(--wine);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+.eyebrow.light {
+  color: #ead0d7;
+}
+.text-link {
+  color: var(--wine);
+  font-weight: 700;
+}
+.button {
+  @apply inline-flex min-h-11 items-center justify-center gap-2.5 rounded-xl border border-transparent px-5 text-[13px] font-bold transition;
+}
+.button:hover {
+  transform: translateY(-1px);
+}
+.button-primary {
+  @apply bg-vow-wine text-white shadow-vow-soft;
+}
+.button-primary:hover {
+  @apply -translate-y-px bg-vow-wine-deep;
+}
+.button-secondary {
+  @apply border-vow-line bg-vow-surface text-vow-ink shadow-vow-soft;
+}
+.button-secondary:hover {
+  @apply -translate-y-px border-vow-wine;
+}
+.button-ghost {
+  @apply border-transparent bg-transparent text-vow-ink hover:bg-vow-soft;
+}
+.button-light {
+  @apply bg-white text-vow-wine-deep hover:bg-vow-blush;
+}
+.button-large {
+  @apply min-h-13 px-6 text-sm;
+}
+.button-wide {
+  @apply w-full;
+}
+.icon-button {
+  @apply grid size-10 place-items-center rounded-xl border border-vow-line bg-vow-surface;
+}

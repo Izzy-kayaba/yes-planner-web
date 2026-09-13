@@ -1,0 +1,420 @@
+/* Responsive states */
+@media (max-width: 1100px) {
+  .hero {
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  .floating-budget {
+    left: -15px;
+  }
+  .floating-guests {
+    right: -15px;
+  }
+  .app-shell {
+    grid-template-columns: 215px minmax(0, 1fr);
+  }
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .vendor-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .vendor-lineup {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .performance-layout {
+    grid-template-columns: 140px 1fr;
+  }
+  .performance-layout .mini-chart {
+    grid-column: span 2;
+  }
+  .notes-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 840px) {
+  .landing-links {
+    display: none;
+  }
+  .hero {
+    grid-template-columns: 1fr;
+    padding-top: 65px;
+  }
+  .hero-copy {
+    text-align: center;
+  }
+  .hero-copy h1,
+  .hero-lead {
+    margin-inline: auto;
+  }
+  .hero-actions,
+  .trust-row {
+    justify-content: center;
+  }
+  .hero-visual {
+    min-height: 520px;
+  }
+  .feature-grid {
+    grid-template-columns: 1fr;
+  }
+  .feature-card {
+    min-height: 330px;
+  }
+  .professional-inner {
+    grid-template-columns: 1fr;
+    padding-block: 80px;
+  }
+  .professional-preview {
+    min-height: 390px;
+  }
+  .auth-layout {
+    grid-template-columns: 1fr;
+  }
+  .auth-story {
+    display: none;
+  }
+  .app-shell {
+    display: block;
+  }
+  .sidebar {
+    width: 260px;
+    position: fixed;
+    left: 0;
+    transform: translateX(-105%);
+    transition: transform 0.25s;
+    box-shadow: var(--shadow);
+  }
+  .sidebar.sidebar-open {
+    transform: translateX(0);
+  }
+  .sidebar-close,
+  .menu-button {
+    display: grid;
+  }
+  .sidebar-scrim {
+    position: fixed;
+    inset: 0;
+    z-index: 25;
+    border: 0;
+    background: rgba(24, 19, 19, 0.42);
+  }
+  .topbar {
+    padding: 0 20px;
+  }
+  .topbar-context {
+    display: none;
+  }
+  .topbar-actions {
+    margin-left: auto;
+  }
+  .dashboard-grid,
+  .lower-grid,
+  .timeline-grid,
+  .reports-grid,
+  .org-grid {
+    grid-template-columns: 1fr;
+  }
+  .wedding-banner {
+    grid-template-columns: 1fr 150px;
+    padding: 30px;
+  }
+  .countdown-block strong {
+    font-size: 65px;
+  }
+  .overview-hero {
+    grid-template-columns: 1fr 160px;
+    padding: 30px;
+  }
+  .seating-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .booking-board {
+    grid-template-columns: 1fr;
+  }
+  .booking-column {
+    min-height: 0;
+  }
+  .messages-panel {
+    grid-template-columns: 245px 1fr;
+  }
+  .marketplace-feature {
+    grid-template-columns: 1fr 0.6fr;
+  }
+  .invite-layout {
+    grid-template-columns: 1fr;
+  }
+  .invite-art {
+    display: none;
+  }
+  .invite-card {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .settings-layout {
+    grid-template-columns: 1fr;
+  }
+  .settings-layout > nav {
+    display: flex;
+    overflow-x: auto;
+  }
+  .settings-layout > nav button {
+    min-width: max-content;
+  }
+}
+
+@media (max-width: 600px) {
+  .page-width {
+    width: min(100% - 28px, 1180px);
+  }
+  .landing-nav {
+    height: 72px;
+  }
+  .landing-actions .text-link {
+    display: none;
+  }
+  .hero {
+    padding-block: 35px 60px;
+  }
+  .hero-copy h1 {
+    font-size: 45px;
+  }
+  .hero-lead {
+    font-size: 15px;
+  }
+  .hero-actions {
+    flex-direction: column;
+  }
+  .hero-visual {
+    min-height: 420px;
+  }
+  .hero-halo {
+    width: 390px;
+    height: 390px;
+  }
+  .hero-photo {
+    width: 72%;
+  }
+  .floating-card {
+    padding: 11px;
+  }
+  .floating-budget {
+    top: 12%;
+  }
+  .floating-guests {
+    bottom: 12%;
+  }
+  .partner-strip > div {
+    gap: 22px;
+    font-size: 12px;
+  }
+  .experience {
+    padding-block: 80px;
+  }
+  .section-heading h2 {
+    font-size: 40px;
+  }
+  .preview-window {
+    width: calc(100vw - 46px);
+  }
+  .story-section {
+    padding-block: 85px;
+  }
+  .landing-footer {
+    flex-wrap: wrap;
+    justify-content: center;
+    padding-block: 30px;
+  }
+  .landing-footer p {
+    width: 100%;
+    order: 3;
+    text-align: center;
+  }
+  .auth-panel {
+    padding: 35px 20px;
+  }
+  .auth-card h2 {
+    font-size: 36px;
+  }
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+  .main-content {
+    padding: 24px 14px 45px;
+  }
+  .quick-search {
+    display: none;
+  }
+  .wedding-banner {
+    grid-template-columns: 1fr;
+    padding: 27px;
+  }
+  .countdown-block {
+    display: none;
+  }
+  .stats-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 9px;
+  }
+  .panel {
+    padding: 18px;
+  }
+  .overview-hero {
+    grid-template-columns: 1fr;
+    padding: 26px;
+  }
+  .overview-ring {
+    display: none;
+  }
+  .vendor-lineup,
+  .vendor-grid,
+  .seating-grid,
+  .notes-grid {
+    grid-template-columns: 1fr;
+  }
+  .table-toolbar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+  .table-toolbar > div {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  .table-search input {
+    min-width: 0;
+    width: 100%;
+  }
+  .table-footer > span {
+    display: none;
+  }
+  .budget-summary-card {
+    grid-template-columns: 1fr;
+    padding: 28px;
+    text-align: center;
+  }
+  .budget-donut {
+    display: none;
+  }
+  .task-row {
+    grid-template-columns: 25px 1fr auto;
+  }
+  .task-due {
+    display: none;
+  }
+  .file-list > div {
+    grid-template-columns: 38px 1fr auto;
+    padding: 8px 15px;
+  }
+  .file-list > div > span:not(.file-icon),
+  .file-list .status-pill {
+    display: none;
+  }
+  .messages-panel {
+    min-height: 650px;
+    grid-template-columns: 1fr;
+  }
+  .messages-panel > aside {
+    display: none;
+  }
+  .message {
+    max-width: 85%;
+  }
+  .marketplace-search {
+    grid-template-columns: 1fr;
+  }
+  .marketplace-search .button {
+    width: 100%;
+  }
+  .marketplace-feature {
+    grid-template-columns: 1fr;
+    padding: 28px;
+  }
+  .editorial-flower {
+    display: none;
+  }
+  .results-heading {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 15px;
+  }
+  .performance-layout {
+    grid-template-columns: 1fr;
+    justify-items: center;
+  }
+  .performance-layout .mini-chart {
+    width: 100%;
+    grid-column: auto;
+  }
+  .workload-list > div {
+    grid-template-columns: 38px 1fr 80px;
+  }
+  .workload-list > div > small {
+    display: none;
+  }
+  .wedding-portfolio > div {
+    grid-template-columns: 40px 1fr 20px;
+  }
+  .wedding-portfolio > div > div {
+    display: none;
+  }
+  .audit-list > div {
+    grid-template-columns: 34px 1fr auto;
+  }
+  .audit-list time {
+    display: none;
+  }
+  .settings-heading {
+    grid-template-columns: 58px 1fr;
+  }
+  .settings-heading .button {
+    grid-column: span 2;
+  }
+  .invite-card {
+    width: calc(100% - 30px);
+    padding: 35px 5px;
+  }
+  .invite-card > h1 {
+    font-size: 43px;
+  }
+  .invitation-details {
+    gap: 12px;
+  }
+  .rsvp-choice {
+    grid-template-columns: 1fr;
+  }
+  .report-donut {
+    grid-template-columns: 1fr;
+    justify-items: center;
+  }
+}
+
+@media (max-width: 390px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+  .social-row {
+    grid-template-columns: 1fr;
+  }
+  .role-picker {
+    grid-template-columns: 1fr;
+  }
+  .role-picker button {
+    min-height: 52px;
+    display: flex;
+  }
+  .topbar {
+    padding-inline: 12px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}

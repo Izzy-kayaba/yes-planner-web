@@ -1,0 +1,211 @@
+"use client";
+
+import { Download, Pencil, Plus, Trash2 } from "lucide-react";
+import { useState } from "react";
+import { EntityDialog, type EntityFormValue } from "@/components/forms/EntityDialog";
+import { StatusPill } from "@/components/ui/StatusPill";
+import { MetricGrid } from "@/features/weddings/MetricGrid";
+import { useWorkspaceCollection } from "@/hooks/useWorkspaceCollection";
+
+type Payment = {
+  id: string | number;
+  vendor: string;
+  reference: string;
+  amount: number;
+  due: string;
+  status: string;
+};
+const seed: Payment[] = [
+  {
+    id: 1,
+    vendor: "Shepstone Gardens",
+    reference: "INV-1042",
+    amount: 62000,
+    due: "24 Sep",
+    status: "Due soon",
+  },
+  {
+    id: 2,
+    vendor: "Lumen & Lace",
+    reference: "INV-0811",
+    amount: 14000,
+    due: "01 Oct",
+    status: "Scheduled",
+  },
+  {
+    id: 3,
+    vendor: "Olive & Oak",
+    reference: "INV-003",
+    amount: 48250,
+    due: "04 Sep",
+    status: "Paid",
+  },
+];
+const fields = [
+  { name: "vendor", label: "Vendor", required: true },
+  { name: "reference", label: "Invoice reference", required: true },
+  { name: "amount", label: "Amount", type: "number" as const, required: true },
+  { name: "due", label: "Due date", required: true },
+  {
+    name: "status",
+    label: "Status",
+    type: "select" as const,
+    options: ["Due soon", "Scheduled", "Paid", "Overdue"],
+    required: true,
+  },
+];
+
+export function PaymentsSection() {
+  const { items, create, update, remove } = useWorkspaceCollection<Payment>("payments", seed);
+  const [editing, setEditing] = useState<Payment | null>(null);
+  const [open, setOpen] = useState(false);
+  async function save(values: Record<string, EntityFormValue>) {
+    const input = values as unknown as Omit<Payment, "id">;
+    if (editing) await update({ ...input, id: editing.id });
+    else await create(input);
+  }
+  function exportCsv() {
+    const rows = [
+      ["Vendor", "Reference", "Amount", "Due", "Status"],
+      ...items.map((item) => [
+        item.vendor,
+        item.reference,
+        String(item.amount),
+        item.due,
+        item.status,
+      ]),
+    ];
+    const blob = new Blob(
+      [
+        rows
+          .map((row) => row.map((cell) => `"${cell.replaceAll('"', '""')}"`).join(","))
+          .join("\n"),
+      ],
+      { type: "text/csv" },
+    );
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "vow-planner-payments.csv";
+    link.click();
+    URL.revokeObjectURL(url);
+  }
+  const paid = items
+    .filter((item) => item.status === "Paid")
+    .reduce((sum, item) => sum + item.amount, 0);
+  return (
+    <>
+      <MetricGrid
+        items={[
+          {
+            label: "Paid",
+            value: `R ${paid.toLocaleString()}`,
+            detail: "Recorded payments",
+            tone: "sage",
+          },
+          {
+            label: "Due soon",
+            value: String(items.filter((item) => item.status === "Due soon").length),
+            detail: "Invoices requiring action",
+            tone: "gold",
+          },
+          {
+            label: "Upcoming",
+            value: String(items.filter((item) => item.status === "Scheduled").length),
+            detail: "Scheduled payments",
+            tone: "blue",
+          },
+          {
+            label: "Overdue",
+            value: String(items.filter((item) => item.status === "Overdue").length),
+            detail: "Needs attention",
+            tone: "rose",
+          },
+        ]}
+      />
+      <section className="panel">
+        <div className="panel-header">
+          <div>
+            <p className="eyebrow">Payment schedule</p>
+            <h3>Invoices and balances</h3>
+          </div>
+          <div className="flex gap-2">
+            <button className="button button-secondary" onClick={exportCsv}>
+              <Download size={14} /> Export
+            </button>
+            <button
+              className="button button-primary"
+              onClick={() => {
+                setEditing(null);
+                setOpen(true);
+              }}
+            >
+              <Plus size={14} /> Add payment
+            </button>
+          </div>
+        </div>
+        <div className="invoice-list">
+          {items.map((payment) => (
+            <div key={payment.id}>
+              <span className="invoice-mark">
+                {payment.vendor
+                  .split(" ")
+                  .map((part) => part[0])
+                  .join("")
+                  .slice(0, 2)}
+              </span>
+              <p>
+                <strong>{payment.vendor}</strong>
+                <small>{payment.reference}</small>
+              </p>
+              <b>
+                R {payment.amount.toLocaleString()}
+                <small>Due {payment.due}</small>
+              </b>
+              <StatusPill
+                tone={
+                  payment.status === "Paid"
+                    ? "sage"
+                    : payment.status === "Overdue"
+                      ? "rose"
+                      : "gold"
+                }
+              >
+                {payment.status}
+              </StatusPill>
+              <span className="flex gap-1">
+                <button
+                  className="icon-button"
+                  onClick={() => {
+                    setEditing(payment);
+                    setOpen(true);
+                  }}
+                  aria-label={`Edit ${payment.reference}`}
+                >
+                  <Pencil size={13} />
+                </button>
+                <button
+                  className="icon-button"
+                  onClick={() => {
+                    if (window.confirm(`Delete ${payment.reference}?`)) void remove(payment.id);
+                  }}
+                  aria-label={`Delete ${payment.reference}`}
+                >
+                  <Trash2 size={13} />
+                </button>
+              </span>
+            </div>
+          ))}
+        </div>
+      </section>
+      <EntityDialog
+        open={open}
+        title={editing ? "Edit payment" : "Add payment"}
+        fields={fields}
+        initialValues={editing ?? { status: "Scheduled", amount: 0 }}
+        onClose={() => setOpen(false)}
+        onSave={save}
+      />
+    </>
+  );
+}

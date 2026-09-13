@@ -1,0 +1,191 @@
+"use client";
+
+import {
+  addMonths,
+  eachDayOfInterval,
+  endOfMonth,
+  format,
+  startOfMonth,
+  subMonths,
+} from "date-fns";
+import { ChevronLeft, ChevronRight, Pencil, Plus, Trash2 } from "lucide-react";
+import { useMemo, useState } from "react";
+import { EntityDialog, type EntityFormValue } from "@/components/forms/EntityDialog";
+import { useWorkspaceCollection } from "@/hooks/useWorkspaceCollection";
+
+type TimelineEvent = {
+  id: string | number;
+  date: string;
+  time: string;
+  title: string;
+  who: string;
+  tone: string;
+};
+const seed: TimelineEvent[] = [
+  {
+    id: 1,
+    date: "2026-10-18",
+    time: "09:00",
+    title: "Hair & makeup begins",
+    who: "Bridal suite",
+    tone: "rose",
+  },
+  {
+    id: 2,
+    date: "2026-10-18",
+    time: "12:30",
+    title: "Photography detail shots",
+    who: "Lumen & Lace",
+    tone: "gold",
+  },
+  { id: 3, date: "2026-10-18", time: "15:00", title: "Ceremony", who: "All guests", tone: "blue" },
+];
+const fields = [
+  { name: "title", label: "Event title", required: true },
+  { name: "date", label: "Date", type: "date" as const, required: true },
+  { name: "time", label: "Time", type: "time" as const, required: true },
+  { name: "who", label: "People or location", required: true },
+  {
+    name: "tone",
+    label: "Colour",
+    type: "select" as const,
+    options: ["rose", "sage", "gold", "blue"],
+    required: true,
+  },
+];
+
+export function TimelineSection() {
+  const { items, create, update, remove } = useWorkspaceCollection<TimelineEvent>("timeline", seed);
+  const [month, setMonth] = useState(new Date(2026, 9, 1));
+  const [editing, setEditing] = useState<TimelineEvent | null>(null);
+  const [open, setOpen] = useState(false);
+  const days = useMemo(
+    () => eachDayOfInterval({ start: startOfMonth(month), end: endOfMonth(month) }),
+    [month],
+  );
+  const padding = (startOfMonth(month).getDay() + 6) % 7;
+
+  async function save(values: Record<string, EntityFormValue>) {
+    const input = values as unknown as Omit<TimelineEvent, "id">;
+    if (editing) await update({ ...input, id: editing.id });
+    else await create(input);
+  }
+
+  return (
+    <section className="dashboard-grid timeline-grid">
+      <article className="panel">
+        <div className="panel-header">
+          <div>
+            <p className="eyebrow">Planning calendar</p>
+            <h3>{format(month, "MMMM yyyy")}</h3>
+          </div>
+          <div className="flex gap-2">
+            <button
+              className="icon-button"
+              onClick={() => setMonth((value) => subMonths(value, 1))}
+              aria-label="Previous month"
+            >
+              <ChevronLeft size={16} />
+            </button>
+            <button
+              className="icon-button"
+              onClick={() => setMonth((value) => addMonths(value, 1))}
+              aria-label="Next month"
+            >
+              <ChevronRight size={16} />
+            </button>
+          </div>
+        </div>
+        <div className="calendar">
+          <div className="calendar-days">
+            {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((day) => (
+              <span key={day}>{day}</span>
+            ))}
+          </div>
+          <div className="calendar-grid">
+            {Array.from({ length: padding }, (_, index) => (
+              <span key={`blank-${index}`} />
+            ))}
+            {days.map((day) => {
+              const date = format(day, "yyyy-MM-dd");
+              return (
+                <button
+                  className={items.some((item) => item.date === date) ? "has-event" : ""}
+                  key={date}
+                  onClick={() => {
+                    setEditing(null);
+                    setOpen(true);
+                  }}
+                >
+                  {format(day, "d")}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      </article>
+      <article className="panel day-timeline">
+        <div className="panel-header">
+          <div>
+            <p className="eyebrow">Events</p>
+            <h3>Wedding schedule</h3>
+          </div>
+          <button
+            className="button button-primary"
+            onClick={() => {
+              setEditing(null);
+              setOpen(true);
+            }}
+          >
+            <Plus size={15} /> Add event
+          </button>
+        </div>
+        {[...items]
+          .sort((a, b) => `${a.date}${a.time}`.localeCompare(`${b.date}${b.time}`))
+          .map((event) => (
+            <div className="timeline-row" key={event.id}>
+              <time>{event.time}</time>
+              <span className={`timeline-pin tone-${event.tone}`} />
+              <p>
+                <strong>{event.title}</strong>
+                <small>
+                  {format(new Date(`${event.date}T12:00:00`), "d MMM")} · {event.who}
+                </small>
+              </p>
+              <span className="flex gap-1">
+                <button
+                  className="icon-button"
+                  onClick={() => {
+                    setEditing(event);
+                    setOpen(true);
+                  }}
+                  aria-label={`Edit ${event.title}`}
+                >
+                  <Pencil size={13} />
+                </button>
+                <button
+                  className="icon-button"
+                  onClick={() => {
+                    if (window.confirm(`Delete ${event.title}?`)) void remove(event.id);
+                  }}
+                  aria-label={`Delete ${event.title}`}
+                >
+                  <Trash2 size={13} />
+                </button>
+              </span>
+            </div>
+          ))}
+      </article>
+      <EntityDialog
+        open={open}
+        title={editing ? "Edit event" : "Add event"}
+        fields={fields}
+        initialValues={
+          editing ?? { date: format(month, "yyyy-MM-dd"), time: "12:00", tone: "rose" }
+        }
+        onClose={() => setOpen(false)}
+        onSave={save}
+      />
+    </section>
+  );
+}

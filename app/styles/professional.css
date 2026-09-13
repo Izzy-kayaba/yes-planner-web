@@ -1,0 +1,544 @@
+/* Marketplace and professional workspaces */
+.marketplace-search {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  background: var(--surface);
+  box-shadow: var(--shadow-soft);
+}
+.marketplace-search label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-left: 10px;
+  color: var(--muted);
+}
+.marketplace-search input {
+  width: 100%;
+  height: 44px;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+.category-scroll {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+}
+.category-scroll button {
+  min-width: max-content;
+  padding: 9px 15px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--muted);
+  font-size: 9px;
+  font-weight: 750;
+}
+.category-scroll button.active {
+  border-color: var(--wine);
+  background: var(--wine);
+  color: #fff;
+}
+.marketplace-feature {
+  min-height: 300px;
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  align-items: center;
+  overflow: hidden;
+  padding: 38px 45px;
+  border-radius: 18px;
+  background: linear-gradient(120deg, #6b3042, #925264);
+  color: #fff;
+}
+.marketplace-feature h2 {
+  margin: 14px 0 12px;
+  font-size: 39px;
+  line-height: 1.05;
+}
+.marketplace-feature h2 em {
+  color: #f0d6dc;
+}
+.marketplace-feature p {
+  max-width: 520px;
+  color: #e5ced5;
+  font-size: 11px;
+  line-height: 1.6;
+}
+.editorial-flower {
+  height: 100%;
+  position: relative;
+  display: grid;
+  place-items: center;
+}
+.editorial-flower > span {
+  z-index: 2;
+  font-size: 90px;
+  color: #e9d6b8;
+}
+.editorial-flower i,
+.editorial-flower b {
+  width: 190px;
+  height: 190px;
+  position: absolute;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 50%;
+}
+.editorial-flower b {
+  width: 260px;
+  height: 260px;
+}
+.results-heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+.results-heading h3 {
+  margin: 0;
+  font: 24px var(--display);
+}
+.marketplace-grid .vendor-cover.tall {
+  height: 190px;
+}
+.org-grid {
+  grid-template-columns: 1.15fr 0.85fr;
+}
+.wedding-portfolio,
+.request-list,
+.workload-list {
+  display: grid;
+}
+.wedding-portfolio > div {
+  min-height: 67px;
+  display: grid;
+  grid-template-columns: 40px 1fr 140px 20px;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 1px solid var(--line);
+}
+.portfolio-mark {
+  width: 37px;
+  height: 37px;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  background: var(--blush);
+  color: var(--wine);
+  font: 10px var(--display);
+}
+.portfolio-mark.tone-sage {
+  color: var(--sage);
+  background: var(--sage-soft);
+}
+.portfolio-mark.tone-gold {
+  color: var(--gold);
+  background: var(--gold-soft);
+}
+.wedding-portfolio p,
+.request-list p,
+.workload-list p {
+  display: grid;
+  gap: 3px;
+  margin: 0;
+}
+.wedding-portfolio p strong,
+.request-list p strong,
+.workload-list p strong {
+  font-size: 10px;
+}
+.wedding-portfolio p small,
+.request-list p small,
+.workload-list p small {
+  color: var(--muted);
+  font-size: 8px;
+}
+.wedding-portfolio > div > div {
+  display: grid;
+  grid-template-columns: 1fr 30px;
+  align-items: center;
+  gap: 7px;
+}
+.wedding-portfolio > div > div > span,
+.workload-list > div > div {
+  height: 5px;
+  overflow: hidden;
+  border-radius: 5px;
+  background: var(--surface-soft);
+}
+.wedding-portfolio i,
+.workload-list i {
+  height: 100%;
+  display: block;
+  border-radius: inherit;
+  background: var(--wine);
+}
+.wedding-portfolio > div > button {
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  font-size: 18px;
+}
+.request-list > div {
+  min-height: 67px;
+  display: grid;
+  grid-template-columns: 40px 1fr auto;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 1px solid var(--line);
+}
+.workload-list > div {
+  min-height: 60px;
+  display: grid;
+  grid-template-columns: 38px 1fr 110px 30px;
+  align-items: center;
+  gap: 10px;
+}
+.revenue-number {
+  display: grid;
+  gap: 5px;
+  font: 34px var(--display);
+}
+.revenue-number small {
+  color: var(--muted);
+  font: 9px var(--sans);
+}
+.mini-chart {
+  height: 115px;
+  display: flex;
+  align-items: end;
+  gap: 7px;
+  margin-top: 21px;
+}
+.mini-chart i {
+  flex: 1;
+  min-width: 4px;
+  border-radius: 4px 4px 1px 1px;
+  background: linear-gradient(var(--blush), var(--wine));
+}
+.next-booking {
+  display: grid;
+  grid-template-columns: 60px 48px 1fr;
+  align-items: center;
+  margin: 20px 0;
+}
+.next-booking > strong {
+  font: 52px var(--display);
+}
+.next-booking > span {
+  color: var(--wine);
+  font-size: 10px;
+  font-weight: 850;
+  line-height: 1.4;
+}
+.next-booking > div p {
+  margin-bottom: 4px;
+  font-size: 10px;
+  font-weight: 700;
+}
+.next-booking > div small {
+  color: var(--muted);
+  font-size: 8px;
+}
+.booking-checklist {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 22px;
+}
+.booking-checklist span {
+  color: var(--muted);
+  font-size: 9px;
+}
+.booking-checklist i {
+  width: 19px;
+  height: 19px;
+  display: inline-grid;
+  place-items: center;
+  margin-right: 8px;
+  border-radius: 50%;
+  background: var(--sage-soft);
+  color: var(--sage);
+  font-style: normal;
+}
+.performance-layout {
+  display: grid;
+  grid-template-columns: 145px 180px 1fr;
+  align-items: center;
+  gap: 30px;
+}
+.conversion-ring {
+  width: 135px;
+  height: 135px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: conic-gradient(var(--wine) 64%, var(--surface-soft) 0);
+}
+.conversion-ring::before {
+  content: "";
+  width: 105px;
+  height: 105px;
+  grid-area: 1/1;
+  border-radius: 50%;
+  background: var(--surface);
+}
+.conversion-ring span {
+  grid-area: 1/1;
+  z-index: 1;
+  display: grid;
+  text-align: center;
+  color: var(--muted);
+  font-size: 8px;
+}
+.conversion-ring b {
+  color: var(--ink);
+  font: 24px var(--display);
+}
+.performance-stats {
+  display: grid;
+  gap: 14px;
+}
+.performance-stats > div {
+  display: grid;
+  gap: 3px;
+}
+.performance-stats span {
+  color: var(--muted);
+  font-size: 8px;
+}
+.performance-stats strong {
+  font: 18px var(--display);
+}
+.mini-chart.wide {
+  margin: 0;
+}
+.health-dot {
+  width: 10px;
+  height: 10px;
+  margin-top: 7px;
+  border-radius: 50%;
+  background: #78936e;
+  box-shadow: 0 0 0 5px var(--sage-soft);
+}
+.health-list {
+  display: grid;
+}
+.health-list div {
+  display: flex;
+  justify-content: space-between;
+  padding: 13px 0;
+  border-bottom: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 9px;
+}
+.health-list strong {
+  color: var(--ink);
+}
+.audit-list {
+  display: grid;
+}
+.audit-list > div {
+  min-height: 63px;
+  display: grid;
+  grid-template-columns: 55px 34px 1fr 80px;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 1px solid var(--line);
+}
+.audit-list time {
+  color: var(--muted);
+  font-size: 8px;
+}
+.audit-list p {
+  display: grid;
+  gap: 3px;
+  margin: 0;
+}
+.audit-list strong {
+  font-size: 10px;
+}
+.audit-list small {
+  color: var(--muted);
+  font-size: 8px;
+}
+.settings-layout {
+  display: grid;
+  grid-template-columns: 210px minmax(0, 650px);
+  gap: 22px;
+}
+.settings-layout > nav {
+  display: grid;
+  align-content: start;
+  gap: 3px;
+}
+.settings-layout > nav button {
+  padding: 12px 13px;
+  border: 0;
+  border-radius: 9px;
+  background: transparent;
+  color: var(--muted);
+  text-align: left;
+  font-size: 10px;
+  font-weight: 700;
+}
+.settings-layout > nav button.active {
+  background: color-mix(in srgb, var(--wine) 9%, var(--surface));
+  color: var(--wine);
+}
+.settings-form {
+  display: grid;
+  gap: 18px;
+}
+.settings-heading {
+  display: grid;
+  grid-template-columns: 60px 1fr auto;
+  align-items: center;
+  gap: 14px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--line);
+}
+.avatar-large {
+  width: 58px;
+  height: 58px;
+  font-size: 13px;
+}
+.settings-heading h3 {
+  margin-bottom: 4px;
+  font: 20px var(--display);
+}
+.settings-heading p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 8px;
+}
+.settings-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding-top: 17px;
+  border-top: 1px solid var(--line);
+}
+
+/* Native checkboxes remain operable while the visible control matches Vow Planner. */
+.settings-preference-list {
+  display: grid;
+  gap: 10px;
+}
+.settings-form .settings-checkbox-row {
+  min-height: 66px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--ink);
+  cursor: pointer;
+  transition:
+    border-color 0.2s,
+    background 0.2s;
+}
+.settings-form .settings-checkbox-row:hover {
+  border-color: color-mix(in srgb, var(--wine) 30%, var(--line));
+  background: color-mix(in srgb, var(--blush) 14%, var(--surface));
+}
+.settings-row-copy {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.settings-row-copy > span:last-child {
+  min-width: 0;
+  display: grid;
+  gap: 3px;
+}
+.settings-row-copy strong {
+  font-size: 10px;
+  font-weight: 800;
+}
+.settings-row-copy small {
+  color: var(--muted);
+  font-size: 8px;
+  font-weight: 550;
+  line-height: 1.4;
+}
+.settings-row-icon {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 9px;
+  background: color-mix(in srgb, var(--blush) 58%, var(--surface));
+  color: var(--wine);
+}
+.settings-form .settings-checkbox {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 auto;
+  margin: 0;
+  padding: 0;
+  appearance: none;
+  border: 1.5px solid color-mix(in srgb, var(--muted) 48%, var(--line));
+  border-radius: 5px;
+  background-color: var(--surface);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 12px;
+  box-shadow: none;
+  cursor: pointer;
+  transition:
+    border-color 0.18s,
+    background-color 0.18s,
+    transform 0.18s;
+}
+.settings-form .settings-checkbox:hover {
+  border-color: var(--wine);
+}
+.settings-form .settings-checkbox:checked {
+  border-color: var(--wine);
+  background-color: var(--wine);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='%23fff' stroke-linecap='round' stroke-linejoin='round' stroke-width='2.25' d='m3.25 8.25 3 3 6.5-6.5'/%3E%3C/svg%3E");
+}
+.settings-form .settings-checkbox:active {
+  transform: scale(0.92);
+}
+.settings-form .settings-checkbox:focus {
+  border-color: var(--wine);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--wine) 15%, transparent);
+}
+
+.language-switcher,
+.settings-form .language-switcher {
+  width: fit-content;
+  display: inline-flex;
+  align-items: center;
+  align-self: start;
+  justify-content: flex-start;
+  gap: 8px;
+  color: var(--muted);
+  line-height: 1;
+}
+.language-switcher > svg {
+  flex: 0 0 auto;
+}
+.language-switcher .language-switcher-select,
+.settings-form .language-switcher .language-switcher-select {
+  width: auto;
+  min-width: 92px;
+  height: 40px;
+  padding: 0 28px 0 0;
+  border: 0;
+  background-color: transparent;
+  line-height: 1;
+  box-shadow: none;
+}
+.language-switcher.language-switcher-compact .language-switcher-select {
+  width: 48px;
+  padding-right: 16px;
+}

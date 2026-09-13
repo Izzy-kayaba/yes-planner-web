@@ -1,0 +1,39 @@
+{
+  "name": "vowplanner-ui",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "check:lines": "node scripts/check-file-lines.mjs",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "start": "next start",
+    "typecheck": "tsc --noEmit",
+    "validate": "npm run format:check && npm run check:lines && npm run typecheck && npm run build"
+  },
+  "dependencies": {
+    "clsx": "^2.1.1",
+    "date-fns": "^4.4.0",
+    "embla-carousel-react": "^8.6.0",
+    "lucide-react": "^1.45.0",
+    "next": "16.3.1",
+    "next-themes": "^0.4.6",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "react-hook-form": "^7.88.0",
+    "recharts": "^3.10.1",
+    "sonner": "^2.0.8",
+    "tailwind-merge": "^3.7.0",
+    "zod": "^4.6.4"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.3.3",
+    "@types/node": "^22.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "prettier": "^3.9.6",
+    "tailwindcss": "^4.3.3",
+    "typescript": "5.9.3"
+  }
+}

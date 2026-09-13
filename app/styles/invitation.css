@@ -1,0 +1,199 @@
+/* Guest invitation */
+.invite-layout {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 0.85fr 1.15fr;
+  background: #f8f2ed;
+  color: #2b2523;
+}
+.invite-art {
+  min-height: 100vh;
+  position: relative;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(circle at 50% 42%, rgba(255, 255, 255, 0.35), transparent 24%),
+    linear-gradient(145deg, #9fac96, #53675d);
+}
+.invite-art::before,
+.invite-art::after {
+  content: "";
+  width: 430px;
+  height: 430px;
+  position: absolute;
+  border: 1px solid rgba(255, 255, 255, 0.17);
+  border-radius: 50%;
+}
+.invite-art::after {
+  width: 600px;
+  height: 600px;
+}
+.invite-monogram {
+  z-index: 2;
+  display: grid;
+  color: #fff;
+  font: 90px/1 var(--display);
+  text-align: center;
+}
+.invite-monogram span {
+  margin: -15px 0;
+  color: #ead9bd;
+  font-size: 45px;
+  font-style: italic;
+}
+.invite-date {
+  position: absolute;
+  bottom: 50px;
+  color: #eef3ed;
+  font-size: 10px;
+  letter-spacing: 0.35em;
+}
+.invite-botanical {
+  position: absolute;
+  z-index: 1;
+  right: 10%;
+  top: 13%;
+  color: rgba(255, 255, 255, 0.25);
+  font-size: 95px;
+}
+.invite-card {
+  width: min(620px, calc(100% - 60px));
+  align-self: center;
+  justify-self: center;
+  padding: 55px 30px;
+  text-align: center;
+}
+.invite-card > .brand {
+  margin-bottom: 46px;
+}
+.invite-card > h1 {
+  margin: 14px 0 4px;
+  font-size: 57px;
+}
+.invite-card > h1 em {
+  color: #985367;
+  font-weight: 400;
+}
+.invite-lead {
+  color: #756b66;
+  font: italic 16px var(--display);
+}
+.invitation-details {
+  display: grid;
+  grid-template-columns: 1fr 1px 1fr;
+  gap: 25px;
+  margin: 35px 0;
+  padding: 23px 0;
+  border-block: 1px solid #ded2ca;
+}
+.invitation-details > i {
+  background: #ded2ca;
+}
+.invitation-details > div {
+  display: grid;
+  gap: 5px;
+}
+.invitation-details span {
+  color: #884457;
+  font-size: 8px;
+  font-weight: 850;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+.invitation-details strong {
+  font: 16px var(--display);
+}
+.invitation-details small {
+  color: #7e736e;
+  font-size: 8px;
+}
+.rsvp-form h2 {
+  margin-bottom: 17px;
+  font-size: 23px;
+}
+.rsvp-choice {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.rsvp-choice button {
+  min-height: 100px;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 4px;
+  border: 1px solid #ded2ca;
+  border-radius: 12px;
+  background: #fffdfb;
+  color: #2b2523;
+}
+.rsvp-choice button > span {
+  color: #884457;
+  font-size: 18px;
+}
+.rsvp-choice button strong {
+  font: 14px var(--display);
+}
+.rsvp-choice button small {
+  color: #887c76;
+  font-size: 8px;
+}
+.rsvp-choice button.selected {
+  border-color: #884457;
+  background: #f5e9ec;
+  box-shadow: 0 0 0 2px rgba(136, 68, 87, 0.09);
+}
+.rsvp-details {
+  display: grid;
+  gap: 12px;
+  margin: 17px 0;
+  text-align: left;
+}
+.rsvp-details label {
+  display: grid;
+  gap: 7px;
+  font-size: 9px;
+  font-weight: 750;
+}
+.rsvp-details select {
+  height: 44px;
+  padding: 0 12px;
+}
+.rsvp-details textarea {
+  min-height: 70px;
+  padding: 11px;
+  resize: vertical;
+}
+.rsvp-form > .button {
+  margin-top: 16px;
+}
+.rsvp-form > .button:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+.invite-footer {
+  margin: 19px 0 0;
+  color: #887d77;
+  font-size: 8px;
+}
+.confirmation-mark {
+  width: 72px;
+  height: 72px;
+  display: grid;
+  place-items: center;
+  margin: 0 auto 25px;
+  border-radius: 50%;
+  background: #dfe7dc;
+  color: #60705b;
+  font-size: 28px;
+}
+.confirmation h1 {
+  font-size: 43px;
+}
+.confirmation > p:not(.eyebrow) {
+  max-width: 470px;
+  margin: 0 auto 25px;
+  color: #756b66;
+  line-height: 1.6;
+}
