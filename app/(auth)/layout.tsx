@@ -1,33 +1,37 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
 import { Brand } from "@/components/ui/Brand";
+import { getTextTranslator } from "@/lib/i18n-server";
 
-export default function AuthLayout({ children }: { children: ReactNode }) {
+export default async function AuthLayout({ children }: { children: ReactNode }) {
+  const text = await getTextTranslator();
+
   return (
     <main className="auth-layout">
       <section className="auth-story">
         <nav>
           <Brand />
-          <Link href="/">Back to home</Link>
+          <Link href="/">{text("Back to home")}</Link>
         </nav>
         <div className="auth-story-copy">
-          <p className="eyebrow light">Plan beautifully together</p>
+          <p className="eyebrow light">{text("Plan beautifully together")}</p>
           <h1>
-            Every detail.
+            {text("Every detail.")}
             <br />
-            One shared vision.
+            {text("One shared vision.")}
           </h1>
           <p>
-            Bring your people, plans and promises together in a workspace designed for the joy of
-            the journey.
+            {text(
+              "Bring your people, plans and promises together in a workspace designed for the joy of the journey.",
+            )}
           </p>
         </div>
         <div className="auth-quote">
           <div className="quote-avatar">TM</div>
           <blockquote>
-            “Vow Planner gave us our evenings back. We could finally enjoy being engaged.”
+            {text("Vow Planner gave us our evenings back. We could finally enjoy being engaged.")}
           </blockquote>
-          <p>Thandi & Michael · Cape Town</p>
+          <p>{text("Thandi & Michael · Cape Town")}</p>
         </div>
         <div className="auth-orbit orbit-one" />
         <div className="auth-orbit orbit-two" />

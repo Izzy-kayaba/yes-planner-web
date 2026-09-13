@@ -3,6 +3,7 @@
 import { Pencil, Plus, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { EntityDialog, type EntityFormValue } from "@/components/forms/EntityDialog";
+import { useLanguage } from "@/components/providers/LanguageProvider";
 import { SearchField } from "@/components/forms/SearchField";
 import { StatusPill } from "@/components/ui/StatusPill";
 import { useWorkspaceCollection } from "@/hooks/useWorkspaceCollection";
@@ -24,6 +25,7 @@ const fields = [
 ];
 
 export function TasksSection() {
+  const { text } = useLanguage();
   const { items, create, update, remove } = useWorkspaceCollection<WeddingTask>("tasks", taskSeed);
   const [filter, setFilter] = useState("All");
   const [query, setQuery] = useState("");
@@ -55,7 +57,7 @@ export function TasksSection() {
               onClick={() => setFilter(item)}
               key={item}
             >
-              {item}
+              {text(item)}
             </button>
           ))}
         </div>
@@ -66,7 +68,7 @@ export function TasksSection() {
             setOpen(true);
           }}
         >
-          <Plus size={15} /> Add task
+          <Plus size={15} /> {text("Add task")}
         </button>
       </div>
       <div className="task-list">
@@ -74,15 +76,15 @@ export function TasksSection() {
           <div className={`task-row ${task.complete ? "complete" : ""}`} key={task.id}>
             <button
               className="check-box"
-              aria-label={`Mark ${task.title} ${task.complete ? "open" : "complete"}`}
+              aria-label={`${text("Mark")} ${text(task.title)} ${text(task.complete ? "open" : "complete")}`}
               onClick={() => void update({ ...task, complete: !task.complete })}
             >
               {task.complete ? "✓" : ""}
             </button>
             <span className="task-copy">
-              <strong>{task.title}</strong>
+              <strong>{text(task.title)}</strong>
               <small>
-                {task.category} · Assigned to {task.assignee}
+                {text(task.category)} · {text("Assigned to")} {task.assignee}
               </small>
             </span>
             <StatusPill
@@ -92,7 +94,7 @@ export function TasksSection() {
             >
               {task.priority}
             </StatusPill>
-            <span className="task-due">{task.due}</span>
+            <span className="task-due">{text(task.due)}</span>
             <span className="flex gap-1">
               <button
                 className="icon-button"
@@ -100,16 +102,17 @@ export function TasksSection() {
                   setEditing(task);
                   setOpen(true);
                 }}
-                aria-label={`Edit ${task.title}`}
+                aria-label={`${text("Edit")} ${text(task.title)}`}
               >
                 <Pencil size={14} />
               </button>
               <button
                 className="icon-button"
                 onClick={() => {
-                  if (window.confirm(`Delete ${task.title}?`)) void remove(task.id);
+                  if (window.confirm(`${text("Delete")} ${text(task.title)}?`))
+                    void remove(task.id);
                 }}
-                aria-label={`Delete ${task.title}`}
+                aria-label={`${text("Delete")} ${text(task.title)}`}
               >
                 <Trash2 size={14} />
               </button>

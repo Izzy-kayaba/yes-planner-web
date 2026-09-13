@@ -8,7 +8,7 @@ import type { EntityId, WorkspaceModule } from "@/lib/api/contracts";
 export function useWorkspaceCollection<T extends { id: EntityId }>(
   module: WorkspaceModule,
   seed: T[],
-  weddingId = "amara-sipho",
+  weddingId = "ruth-izzy",
 ) {
   const [items, setItems] = useState(seed);
   const [loading, setLoading] = useState(true);

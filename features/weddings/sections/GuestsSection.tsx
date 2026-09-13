@@ -3,6 +3,7 @@
 import { Pencil, Plus, Trash2 } from "lucide-react";
 import { useMemo, useState } from "react";
 import { EntityDialog, type EntityFormValue } from "@/components/forms/EntityDialog";
+import { useLanguage } from "@/components/providers/LanguageProvider";
 import { SearchField } from "@/components/forms/SearchField";
 import { StatusPill } from "@/components/ui/StatusPill";
 import { MetricGrid } from "@/features/weddings/MetricGrid";
@@ -27,6 +28,7 @@ const fields = [
 ];
 
 export function GuestsSection() {
+  const { text } = useLanguage();
   const { items, create, update, remove } = useWorkspaceCollection<Guest>("guests", guestSeed);
   const [query, setQuery] = useState("");
   const [status, setStatus] = useState("All");
@@ -85,12 +87,12 @@ export function GuestsSection() {
             <select
               value={status}
               onChange={(event) => setStatus(event.target.value)}
-              aria-label="Filter guests by RSVP"
+              aria-label={text("Filter guests by RSVP")}
             >
-              <option>All</option>
-              <option>Attending</option>
-              <option>Pending</option>
-              <option>Declined</option>
+              <option value="All">{text("All")}</option>
+              <option value="Attending">{text("Attending")}</option>
+              <option value="Pending">{text("Pending")}</option>
+              <option value="Declined">{text("Declined")}</option>
             </select>
             <button
               className="button button-primary"
@@ -99,17 +101,17 @@ export function GuestsSection() {
                 setDialogOpen(true);
               }}
             >
-              <Plus size={15} /> Add guest
+              <Plus size={15} /> {text("Add guest")}
             </button>
           </div>
         </div>
         <div className="data-table">
           <div className="table-head">
-            <span>Guest</span>
-            <span>Group</span>
+            <span>{text("Guest")}</span>
+            <span>{text("Group")}</span>
             <span>RSVP</span>
-            <span>Meal</span>
-            <span>Table</span>
+            <span>{text("Meal")}</span>
+            <span>{text("Table")}</span>
             <span />
           </div>
           {filtered.map((guest) => (
@@ -121,7 +123,7 @@ export function GuestsSection() {
                   <small>{guest.email}</small>
                 </b>
               </span>
-              <span>{guest.group}</span>
+              <span>{text(guest.group)}</span>
               <span>
                 <StatusPill
                   tone={
@@ -135,12 +137,12 @@ export function GuestsSection() {
                   {guest.status}
                 </StatusPill>
               </span>
-              <span>{guest.meal}</span>
-              <span>{guest.table}</span>
+              <span>{text(guest.meal)}</span>
+              <span>{text(guest.table)}</span>
               <span className="flex justify-end gap-1">
                 <button
                   className="icon-button"
-                  aria-label={`Edit ${guest.name}`}
+                  aria-label={`${text("Edit")} ${guest.name}`}
                   onClick={() => {
                     setEditing(guest);
                     setDialogOpen(true);
@@ -150,9 +152,9 @@ export function GuestsSection() {
                 </button>
                 <button
                   className="icon-button"
-                  aria-label={`Delete ${guest.name}`}
+                  aria-label={`${text("Delete")} ${guest.name}`}
                   onClick={() => {
-                    if (window.confirm(`Remove ${guest.name}?`)) void remove(guest.id);
+                    if (window.confirm(`${text("Remove")} ${guest.name}?`)) void remove(guest.id);
                   }}
                 >
                   <Trash2 size={14} />
@@ -163,7 +165,7 @@ export function GuestsSection() {
         </div>
         <div className="table-footer">
           <span>
-            Showing {filtered.length} of {items.length} guests
+            {text("Showing")} {filtered.length} {text("of")} {items.length} {text("guests")}
           </span>
         </div>
       </section>

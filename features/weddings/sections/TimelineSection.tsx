@@ -8,9 +8,11 @@ import {
   startOfMonth,
   subMonths,
 } from "date-fns";
+import { enZA, fr } from "date-fns/locale";
 import { ChevronLeft, ChevronRight, Pencil, Plus, Trash2 } from "lucide-react";
 import { useMemo, useState } from "react";
 import { EntityDialog, type EntityFormValue } from "@/components/forms/EntityDialog";
+import { useLanguage } from "@/components/providers/LanguageProvider";
 import { useWorkspaceCollection } from "@/hooks/useWorkspaceCollection";
 
 type TimelineEvent = {
@@ -55,6 +57,8 @@ const fields = [
 ];
 
 export function TimelineSection() {
+  const { language, text } = useLanguage();
+  const dateLocale = language === "fr" ? fr : enZA;
   const { items, create, update, remove } = useWorkspaceCollection<TimelineEvent>("timeline", seed);
   const [month, setMonth] = useState(new Date(2026, 9, 1));
   const [editing, setEditing] = useState<TimelineEvent | null>(null);
@@ -76,21 +80,21 @@ export function TimelineSection() {
       <article className="panel">
         <div className="panel-header">
           <div>
-            <p className="eyebrow">Planning calendar</p>
-            <h3>{format(month, "MMMM yyyy")}</h3>
+            <p className="eyebrow">{text("Planning calendar")}</p>
+            <h3>{format(month, "MMMM yyyy", { locale: dateLocale })}</h3>
           </div>
           <div className="flex gap-2">
             <button
               className="icon-button"
               onClick={() => setMonth((value) => subMonths(value, 1))}
-              aria-label="Previous month"
+              aria-label={text("Previous month")}
             >
               <ChevronLeft size={16} />
             </button>
             <button
               className="icon-button"
               onClick={() => setMonth((value) => addMonths(value, 1))}
-              aria-label="Next month"
+              aria-label={text("Next month")}
             >
               <ChevronRight size={16} />
             </button>
@@ -99,7 +103,7 @@ export function TimelineSection() {
         <div className="calendar">
           <div className="calendar-days">
             {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((day) => (
-              <span key={day}>{day}</span>
+              <span key={day}>{text(day)}</span>
             ))}
           </div>
           <div className="calendar-grid">
@@ -127,8 +131,8 @@ export function TimelineSection() {
       <article className="panel day-timeline">
         <div className="panel-header">
           <div>
-            <p className="eyebrow">Events</p>
-            <h3>Wedding schedule</h3>
+            <p className="eyebrow">{text("Events")}</p>
+            <h3>{text("Wedding schedule")}</h3>
           </div>
           <button
             className="button button-primary"
@@ -137,7 +141,7 @@ export function TimelineSection() {
               setOpen(true);
             }}
           >
-            <Plus size={15} /> Add event
+            <Plus size={15} /> {text("Add event")}
           </button>
         </div>
         {[...items]
@@ -147,9 +151,10 @@ export function TimelineSection() {
               <time>{event.time}</time>
               <span className={`timeline-pin tone-${event.tone}`} />
               <p>
-                <strong>{event.title}</strong>
+                <strong>{text(event.title)}</strong>
                 <small>
-                  {format(new Date(`${event.date}T12:00:00`), "d MMM")} · {event.who}
+                  {format(new Date(`${event.date}T12:00:00`), "d MMM", { locale: dateLocale })} ·{" "}
+                  {text(event.who)}
                 </small>
               </p>
               <span className="flex gap-1">
@@ -159,16 +164,17 @@ export function TimelineSection() {
                     setEditing(event);
                     setOpen(true);
                   }}
-                  aria-label={`Edit ${event.title}`}
+                  aria-label={`${text("Edit")} ${text(event.title)}`}
                 >
                   <Pencil size={13} />
                 </button>
                 <button
                   className="icon-button"
                   onClick={() => {
-                    if (window.confirm(`Delete ${event.title}?`)) void remove(event.id);
+                    if (window.confirm(`${text("Delete")} ${text(event.title)}?`))
+                      void remove(event.id);
                   }}
-                  aria-label={`Delete ${event.title}`}
+                  aria-label={`${text("Delete")} ${text(event.title)}`}
                 >
                   <Trash2 size={13} />
                 </button>

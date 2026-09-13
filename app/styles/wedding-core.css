@@ -34,7 +34,7 @@
   border: 0;
   background: transparent;
   box-shadow: none;
-  font-size: 11px;
+  font-size: 13px;
 }
 .data-table {
   overflow-x: auto;
@@ -52,7 +52,7 @@
   height: 42px;
   background: var(--surface-soft);
   color: var(--muted);
-  font-size: 8px;
+  font-size: 10px;
   font-weight: 850;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -61,7 +61,7 @@
   min-height: 68px;
   border-bottom: 1px solid var(--line);
   color: var(--muted);
-  font-size: 10px;
+  font-size: 12px;
 }
 .table-row:last-child {
   border: 0;
@@ -82,7 +82,7 @@
   background: var(--blush);
   color: var(--wine);
   font-style: normal;
-  font-size: 8px;
+  font-size: 10px;
   font-weight: 800;
   line-height: 1;
   text-align: center;
@@ -92,11 +92,11 @@
   display: grid;
   gap: 3px;
   color: var(--ink);
-  font-size: 10px;
+  font-size: 12px;
 }
 .person-cell small {
   color: var(--muted);
-  font-size: 8px;
+  font-size: 10px;
   font-weight: 400;
 }
 .table-row > button {
@@ -112,7 +112,7 @@
   padding: 10px 20px;
   border-top: 1px solid var(--line);
   color: var(--muted);
-  font-size: 9px;
+  font-size: 11px;
 }
 .table-footer > div {
   display: flex;
@@ -124,7 +124,7 @@
   border: 1px solid var(--line);
   border-radius: 7px;
   background: var(--surface);
-  font-size: 9px;
+  font-size: 11px;
 }
 .table-footer button.active {
   border-color: var(--wine);
@@ -150,7 +150,7 @@
 }
 .budget-summary-card > div > span {
   color: #e5cfd5;
-  font-size: 10px;
+  font-size: 12px;
 }
 .budget-donut {
   width: 120px;
@@ -175,7 +175,7 @@
   display: grid;
   text-align: center;
   color: #e8d3d8;
-  font-size: 8px;
+  font-size: 10px;
 }
 .budget-donut b {
   color: #fff;
@@ -194,7 +194,7 @@
 }
 .payment-list > div > span {
   color: var(--wine);
-  font-size: 8px;
+  font-size: 10px;
   font-weight: 850;
 }
 .payment-list p {
@@ -203,11 +203,11 @@
   margin: 0;
 }
 .payment-list p strong {
-  font-size: 10px;
+  font-size: 12px;
 }
 .payment-list p small {
   color: var(--muted);
-  font-size: 8px;
+  font-size: 10px;
 }
 .payment-list > div > b {
   font: 14px var(--display);
@@ -224,7 +224,7 @@
   border-radius: 7px;
   background: transparent;
   color: var(--muted);
-  font-size: 9px;
+  font-size: 11px;
   font-weight: 800;
 }
 .filter-tabs button.active {
@@ -298,7 +298,7 @@
   z-index: 2;
   bottom: 10px;
   color: #fff;
-  font-size: 8px;
+  font-size: 10px;
   font-weight: 800;
 }
 .vendor-card-copy {
@@ -312,11 +312,11 @@
 .vendor-card-copy p {
   margin-bottom: 8px;
   color: var(--muted);
-  font-size: 9px;
+  font-size: 11px;
 }
 .vendor-card-copy > div > p {
   color: var(--wine);
-  font-size: 8px;
+  font-size: 10px;
   font-weight: 850;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -328,7 +328,7 @@
 .vendor-card-copy > strong {
   display: block;
   margin: 13px 0;
-  font-size: 10px;
+  font-size: 12px;
 }
 .rating {
   color: var(--gold);
@@ -346,7 +346,7 @@
 .calendar-days span {
   padding-bottom: 7px;
   color: var(--muted);
-  font-size: 7px;
+  font-size: 9px;
   font-weight: 850;
   text-align: center;
   text-transform: uppercase;
@@ -357,7 +357,7 @@
   border-radius: 8px;
   background: transparent;
   color: var(--muted);
-  font-size: 9px;
+  font-size: 11px;
 }
 .calendar-grid button:hover {
   background: var(--surface-soft);
@@ -411,7 +411,7 @@
 .timeline-row time {
   padding-top: 2px;
   color: var(--muted);
-  font-size: 8px;
+  font-size: 10px;
 }
 .timeline-pin {
   width: 11px;
@@ -439,11 +439,11 @@
   gap: 4px;
 }
 .timeline-row strong {
-  font-size: 10px;
+  font-size: 12px;
 }
 .timeline-row small {
   color: var(--muted);
-  font-size: 8px;
+  font-size: 10px;
 }
 .seating-grid {
   display: grid;
@@ -512,12 +512,12 @@
 .table-card p {
   margin-bottom: 12px;
   color: var(--muted);
-  font-size: 9px;
+  font-size: 11px;
 }
 .table-card button {
   border: 0;
   background: transparent;
-  font-size: 9px;
+  font-size: 11px;
 }
 .meal-list {
   display: grid;
@@ -551,11 +551,11 @@
   margin: 0;
 }
 .meal-list strong {
-  font-size: 10px;
+  font-size: 12px;
 }
 .meal-list small {
   color: var(--muted);
-  font-size: 8px;
+  font-size: 10px;
 }
 .meal-list b {
   font: 18px var(--display);
@@ -568,7 +568,7 @@
 }
 .menu-course span {
   color: var(--wine);
-  font-size: 8px;
+  font-size: 10px;
   font-weight: 850;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -586,10 +586,10 @@
   color: #775926;
 }
 .dietary-alert strong {
-  font-size: 10px;
+  font-size: 12px;
 }
 .dietary-alert span {
-  font-size: 8px;
+  font-size: 10px;
 }
 .file-list {
   display: grid;
@@ -618,12 +618,12 @@
   margin: 0;
 }
 .file-list strong {
-  font-size: 10px;
+  font-size: 12px;
 }
 .file-list small,
 .file-list > div > span:not(.file-icon) {
   color: var(--muted);
-  font-size: 8px;
+  font-size: 10px;
 }
 .file-list button {
   border: 0;
@@ -661,7 +661,7 @@
   border-radius: 50%;
   background: var(--surface);
   color: var(--muted);
-  font-size: 8px;
+  font-size: 10px;
 }
 .booking-card {
   display: grid;
@@ -676,7 +676,7 @@
 .booking-card p {
   margin: 0;
   color: var(--wine);
-  font-size: 8px;
+  font-size: 10px;
   font-weight: 850;
   text-transform: uppercase;
 }
@@ -685,11 +685,11 @@
   font: 17px var(--display);
 }
 .booking-card > strong {
-  font-size: 10px;
+  font-size: 12px;
 }
 .booking-card > span {
   color: var(--muted);
-  font-size: 8px;
+  font-size: 10px;
 }
 .booking-card > button {
   width: max-content;
@@ -697,7 +697,7 @@
   border: 0;
   background: transparent;
   color: var(--wine);
-  font-size: 8px;
+  font-size: 10px;
   font-weight: 800;
 }
 .invoice-list > div {
@@ -730,10 +730,10 @@
 }
 .invoice-list p strong,
 .invoice-list > div > b {
-  font-size: 10px;
+  font-size: 12px;
 }
 .invoice-list small {
   color: var(--muted);
-  font-size: 8px;
+  font-size: 10px;
   font-weight: 400;
 }

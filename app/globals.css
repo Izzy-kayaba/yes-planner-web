@@ -121,7 +121,7 @@
 .eyebrow {
   margin-bottom: 10px;
   color: var(--wine);
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 800;
   letter-spacing: 0.18em;
   text-transform: uppercase;
@@ -134,7 +134,7 @@
   font-weight: 700;
 }
 .button {
-  @apply inline-flex min-h-11 items-center justify-center gap-2.5 rounded-xl border border-transparent px-5 text-[13px] font-bold transition;
+  @apply inline-flex min-h-11 items-center justify-center gap-2.5 rounded-xl border border-transparent px-5 text-[14px] font-bold transition;
 }
 .button:hover {
   transform: translateY(-1px);

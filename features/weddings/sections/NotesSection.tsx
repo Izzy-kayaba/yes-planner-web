@@ -3,6 +3,7 @@
 import { Pencil, Plus, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { EntityDialog, type EntityFormValue } from "@/components/forms/EntityDialog";
+import { useLanguage } from "@/components/providers/LanguageProvider";
 import { SearchField } from "@/components/forms/SearchField";
 import { useWorkspaceCollection } from "@/hooks/useWorkspaceCollection";
 
@@ -43,6 +44,7 @@ const fields = [
 ];
 
 export function NotesSection() {
+  const { text } = useLanguage();
   const { items, create, update, remove } = useWorkspaceCollection<Note>("notes", seed);
   const [query, setQuery] = useState("");
   const [editing, setEditing] = useState<Note | null>(null);
@@ -66,7 +68,7 @@ export function NotesSection() {
             setOpen(true);
           }}
         >
-          <Plus size={14} /> New note
+          <Plus size={14} /> {text("New note")}
         </button>
       </div>
       <section className="notes-grid">
@@ -78,15 +80,15 @@ export function NotesSection() {
                   setEditing(note);
                   setOpen(true);
                 }}
-                aria-label={`Edit ${note.title}`}
+                aria-label={`${text("Edit")} ${note.title}`}
               >
                 <Pencil size={14} />
               </button>
               <button
                 onClick={() => {
-                  if (window.confirm(`Delete ${note.title}?`)) void remove(note.id);
+                  if (window.confirm(`${text("Delete")} ${note.title}?`)) void remove(note.id);
                 }}
-                aria-label={`Delete ${note.title}`}
+                aria-label={`${text("Delete")} ${note.title}`}
               >
                 <Trash2 size={14} />
               </button>
@@ -94,7 +96,7 @@ export function NotesSection() {
             <span>✦</span>
             <h3>{note.title}</h3>
             <p>{note.body}</p>
-            <small>{note.date}</small>
+            <small>{text(note.date)}</small>
           </article>
         ))}
       </section>

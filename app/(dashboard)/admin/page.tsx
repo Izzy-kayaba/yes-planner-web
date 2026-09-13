@@ -3,10 +3,16 @@ import { PageHeader } from "@/components/ui/PageHeader";
 import { StatCard } from "@/components/ui/StatCard";
 import { StatusPill } from "@/components/ui/StatusPill";
 import { ActionButton, DownloadReportButton } from "@/components/ui/ActionButton";
+import { getTextTranslator } from "@/lib/i18n-server";
 
-export const metadata: Metadata = { title: "Platform administration" };
+export async function generateMetadata(): Promise<Metadata> {
+  const text = await getTextTranslator();
+  return { title: text("Platform administration") };
+}
 
-export default function AdminPage() {
+export default async function AdminPage() {
+  const text = await getTextTranslator();
+
   return (
     <div className="section-stack">
       <PageHeader
@@ -25,8 +31,8 @@ export default function AdminPage() {
         <article className="panel">
           <div className="panel-header">
             <div>
-              <p className="eyebrow">Verification queue</p>
-              <h3>Professional profiles</h3>
+              <p className="eyebrow">{text("Verification queue")}</p>
+              <h3>{text("Professional profiles")}</h3>
             </div>
             <ActionButton className="button button-secondary" message="Verification queue opened.">
               View all 62
@@ -37,7 +43,7 @@ export default function AdminPage() {
               <span className="avatar">BE</span>
               <p>
                 <strong>Bloom Events</strong>
-                <small>Wedding planner · Johannesburg</small>
+                <small>{text("Wedding planner · Johannesburg")}</small>
               </p>
               <StatusPill tone="gold">Documents ready</StatusPill>
             </div>
@@ -45,7 +51,7 @@ export default function AdminPage() {
               <span className="avatar">CV</span>
               <p>
                 <strong>Clay Venue</strong>
-                <small>Venue · Cape Town</small>
+                <small>{text("Venue · Cape Town")}</small>
               </p>
               <StatusPill tone="rose">Needs review</StatusPill>
             </div>
@@ -53,7 +59,7 @@ export default function AdminPage() {
               <span className="avatar">SP</span>
               <p>
                 <strong>Still & Poem</strong>
-                <small>Photography · Durban</small>
+                <small>{text("Photography · Durban")}</small>
               </p>
               <StatusPill tone="gold">Documents ready</StatusPill>
             </div>
@@ -62,27 +68,27 @@ export default function AdminPage() {
         <article className="panel">
           <div className="panel-header">
             <div>
-              <p className="eyebrow">Platform health</p>
-              <h3>All systems operational</h3>
+              <p className="eyebrow">{text("Platform health")}</p>
+              <h3>{text("All systems operational")}</h3>
             </div>
             <span className="health-dot" />
           </div>
           <div className="health-list">
             <div>
-              <span>API availability</span>
+              <span>{text("API availability")}</span>
               <strong>99.99%</strong>
             </div>
             <div>
-              <span>Median response time</span>
+              <span>{text("Median response time")}</span>
               <strong>184 ms</strong>
             </div>
             <div>
-              <span>Failed background jobs</span>
+              <span>{text("Failed background jobs")}</span>
               <strong>0</strong>
             </div>
             <div>
-              <span>Security alerts</span>
-              <strong>0 open</strong>
+              <span>{text("Security alerts")}</span>
+              <strong>{text("0 open")}</strong>
             </div>
           </div>
         </article>
@@ -90,8 +96,8 @@ export default function AdminPage() {
       <section className="panel">
         <div className="panel-header">
           <div>
-            <p className="eyebrow">Recent sensitive actions</p>
-            <h3>Audit activity</h3>
+            <p className="eyebrow">{text("Recent sensitive actions")}</p>
+            <h3>{text("Audit activity")}</h3>
           </div>
           <ActionButton className="button button-secondary" message="Audit log opened.">
             Open audit log
@@ -102,8 +108,8 @@ export default function AdminPage() {
             <time>09:41</time>
             <span className="activity-dot rose">O</span>
             <p>
-              <strong>Wedding ownership transferred</strong>
-              <small>Actor: support@vowplanner.co.za · Wedding ending 48D2</small>
+              <strong>{text("Wedding ownership transferred")}</strong>
+              <small>{text("Actor: support@vowplanner.co.za · Wedding ending 48D2")}</small>
             </p>
             <StatusPill tone="neutral">Ownership</StatusPill>
           </div>
@@ -111,17 +117,17 @@ export default function AdminPage() {
             <time>08:22</time>
             <span className="activity-dot sage">V</span>
             <p>
-              <strong>Vendor organisation verified</strong>
-              <small>Actor: operations@vowplanner.co.za · Bloom Events</small>
+              <strong>{text("Vendor organisation verified")}</strong>
+              <small>{text("Actor: operations@vowplanner.co.za · Bloom Events")}</small>
             </p>
             <StatusPill tone="sage">Verification</StatusPill>
           </div>
           <div>
-            <time>Yesterday</time>
+            <time>{text("Yesterday")}</time>
             <span className="activity-dot gold">P</span>
             <p>
-              <strong>Subscription refund approved</strong>
-              <small>Actor: finance@vowplanner.co.za · REF-2071</small>
+              <strong>{text("Subscription refund approved")}</strong>
+              <small>{text("Actor: finance@vowplanner.co.za · REF-2071")}</small>
             </p>
             <StatusPill tone="gold">Finance</StatusPill>
           </div>

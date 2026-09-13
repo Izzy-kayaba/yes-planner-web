@@ -3,6 +3,7 @@
 import { Pencil, Plus, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { EntityDialog, type EntityFormValue } from "@/components/forms/EntityDialog";
+import { useLanguage } from "@/components/providers/LanguageProvider";
 import { useWorkspaceCollection } from "@/hooks/useWorkspaceCollection";
 import { budgetCategories } from "@/lib/demo-data";
 
@@ -28,6 +29,7 @@ const fields = [
 ];
 
 export function BudgetSection() {
+  const { text } = useLanguage();
   const { items, create, update, remove } = useWorkspaceCollection<BudgetCategory>("budget", seed);
   const [editing, setEditing] = useState<BudgetCategory | null>(null);
   const [open, setOpen] = useState(false);
@@ -45,24 +47,25 @@ export function BudgetSection() {
     <>
       <section className="budget-summary-card">
         <div>
-          <p className="eyebrow light">Total wedding budget</p>
+          <p className="eyebrow light">{text("Total wedding budget")}</p>
           <strong>R {total.toLocaleString()}</strong>
           <span>
-            R {committed.toLocaleString()} committed · R {(total - committed).toLocaleString()}{" "}
-            remaining
+            R {committed.toLocaleString()} {text("committed")} · R{" "}
+            {(total - committed).toLocaleString()} {text("remaining")}
           </span>
         </div>
         <div className="budget-donut">
           <span>
-            <b>{allocated}%</b>allocated
+            <b>{allocated}%</b>
+            {text("allocated")}
           </span>
         </div>
       </section>
       <section className="panel">
         <div className="panel-header">
           <div>
-            <p className="eyebrow">Categories</p>
-            <h3>Planned versus committed</h3>
+            <p className="eyebrow">{text("Categories")}</p>
+            <h3>{text("Planned versus committed")}</h3>
           </div>
           <button
             className="button button-primary"
@@ -71,19 +74,19 @@ export function BudgetSection() {
               setOpen(true);
             }}
           >
-            <Plus size={15} /> Add category
+            <Plus size={15} /> {text("Add category")}
           </button>
         </div>
         <div className="budget-bars">
           {items.map((item) => (
             <div key={item.id}>
               <span>
-                <b>{item.name}</b>
+                <b>{text(item.name)}</b>
                 <small>
                   R {item.amount.toLocaleString()} / R {item.budget.toLocaleString()}{" "}
                   <button
                     className="ml-2"
-                    aria-label={`Edit ${item.name}`}
+                    aria-label={`${text("Edit")} ${text(item.name)}`}
                     onClick={() => {
                       setEditing(item);
                       setOpen(true);
@@ -93,9 +96,10 @@ export function BudgetSection() {
                   </button>
                   <button
                     className="ml-1"
-                    aria-label={`Delete ${item.name}`}
+                    aria-label={`${text("Delete")} ${text(item.name)}`}
                     onClick={() => {
-                      if (window.confirm(`Delete ${item.name}?`)) void remove(item.id);
+                      if (window.confirm(`${text("Delete")} ${text(item.name)}?`))
+                        void remove(item.id);
                     }}
                   >
                     <Trash2 size={12} />

@@ -4,6 +4,7 @@ import { MoreHorizontal, Plus, Send } from "lucide-react";
 import { useRef, useState, type FormEvent } from "react";
 import { toast } from "sonner";
 import { SearchField } from "@/components/forms/SearchField";
+import { useLanguage } from "@/components/providers/LanguageProvider";
 import { useWorkspaceCollection } from "@/hooks/useWorkspaceCollection";
 import { getInitials } from "@/lib/initials";
 
@@ -24,7 +25,7 @@ const seed: Conversation[] = [
     unread: true,
     messages: [
       { author: "them", body: "Good morning! I’ve updated the final venue walkthrough timeline." },
-      { author: "me", body: "It looks perfect. Sipho and I can be there from 14:15." },
+      { author: "me", body: "It looks perfect. Izzy and I can be there from 14:15." },
     ],
   },
   {
@@ -41,11 +42,12 @@ const seed: Conversation[] = [
     role: "Photographer",
     time: "Mon",
     unread: false,
-    messages: [{ author: "them", body: "Perfect, thank you Amara!" }],
+    messages: [{ author: "them", body: "Perfect, thank you Ruth!" }],
   },
 ];
 
 export function MessagesSection() {
+  const { text } = useLanguage();
   const { items, update } = useWorkspaceCollection<Conversation>("messages", seed);
   const [query, setQuery] = useState("");
   const [selectedId, setSelectedId] = useState<string | number>(1);
@@ -83,10 +85,10 @@ export function MessagesSection() {
             <span className="avatar">{getInitials(chat.name)}</span>
             <p>
               <strong>{chat.name}</strong>
-              <small>{chat.role}</small>
+              <small>{text(chat.role)}</small>
               <em>{chat.messages.at(-1)?.body}</em>
             </p>
-            <time>{chat.time}</time>
+            <time>{text(chat.time)}</time>
             {chat.unread && <i />}
           </button>
         ))}
@@ -97,18 +99,20 @@ export function MessagesSection() {
             <div className="avatar">{getInitials(selected.name)}</div>
             <p>
               <strong>{selected.name}</strong>
-              <small>{selected.role} · Active now</small>
+              <small>
+                {text(selected.role)} · {text("Active now")}
+              </small>
             </p>
             <button
               className="icon-button"
-              aria-label="Conversation options"
-              onClick={() => toast.info("Conversation notifications are enabled.")}
+              aria-label={text("Conversation options")}
+              onClick={() => toast.info(text("Conversation notifications are enabled."))}
             >
               <MoreHorizontal size={16} />
             </button>
           </div>
           <div className="chat-body">
-            <span className="chat-date">Today</span>
+            <span className="chat-date">{text("Today")}</span>
             {selected.messages.map((message, index) => (
               <div
                 className={`message ${message.author === "me" ? "sent" : "received"}`}
@@ -137,13 +141,13 @@ export function MessagesSection() {
             />
             <button
               type="button"
-              aria-label="Attach a file"
+              aria-label={text("Attach a file")}
               onClick={() => attachmentInput.current?.click()}
             >
               <Plus size={16} />
             </button>
-            <input name="message" placeholder="Write a message…" required />
-            <button className="send-button" type="submit" aria-label="Send message">
+            <input name="message" placeholder={text("Write a message…")} required />
+            <button className="send-button" type="submit" aria-label={text("Send message")}>
               <Send size={15} />
             </button>
           </form>

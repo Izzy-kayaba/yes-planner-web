@@ -44,13 +44,13 @@ type NavigationItem = {
 
 const navigation: NavigationItem[] = [
   { labelKey: "nav.dashboard", href: "/dashboard", icon: LayoutDashboard },
-  { labelKey: "nav.wedding", href: "/weddings/amara-sipho", icon: CalendarHeart },
+  { labelKey: "nav.wedding", href: "/weddings/ruth-izzy", icon: CalendarHeart },
   { labelKey: "nav.marketplace", href: "/marketplace", icon: Store },
   { labelKey: "nav.organisation", href: "/organisations/beautiful-day", icon: Building2 },
   { labelKey: "nav.vendor", href: "/vendor", icon: UsersRound },
   {
     labelKey: "nav.messages",
-    href: "/weddings/amara-sipho/messages",
+    href: "/weddings/ruth-izzy/messages",
     icon: MessageCircle,
     badge: "3",
   },
@@ -59,9 +59,9 @@ const navigation: NavigationItem[] = [
 
 function matchesNavigation(pathname: string, href: string) {
   if (href === "/dashboard") return pathname === href;
-  const messagesPath = "/weddings/amara-sipho/messages";
+  const messagesPath = "/weddings/ruth-izzy/messages";
   if (href === messagesPath) return pathname.startsWith(messagesPath);
-  if (href === "/weddings/amara-sipho")
+  if (href === "/weddings/ruth-izzy")
     return pathname.startsWith(href) && !pathname.startsWith(messagesPath);
   return pathname.startsWith(href);
 }
@@ -106,9 +106,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       "reports",
     ].find((item) => item.includes(term) || term.includes(item));
     router.push(
-      section
-        ? `/weddings/amara-sipho/${section}`
-        : `/marketplace?query=${encodeURIComponent(term)}`,
+      section ? `/weddings/ruth-izzy/${section}` : `/marketplace?query=${encodeURIComponent(term)}`,
     );
   }
 
@@ -156,15 +154,15 @@ export function AppShell({ children }: { children: ReactNode }) {
             <span>68%</span>
           </div>
           <div>
-            <strong>Amara & Sipho</strong>
+            <strong>Ruth & Izzy</strong>
             <span>35 {t("shell.daysToGo")}</span>
           </div>
         </div>
 
         <div className="sidebar-profile">
-          <div className="avatar">AM</div>
+          <div className="avatar">RM</div>
           <div>
-            <strong>Amara Mokoena</strong>
+            <strong>Ruth Mokoena</strong>
             <span>{t("shell.weddingOwner")}</span>
           </div>
           <Link
@@ -180,7 +178,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       {menuOpen && (
         <button
           className="sidebar-scrim"
-          aria-label="Close navigation"
+          aria-label={t("shell.closeNav")}
           onClick={() => setMenuOpen(false)}
         />
       )}

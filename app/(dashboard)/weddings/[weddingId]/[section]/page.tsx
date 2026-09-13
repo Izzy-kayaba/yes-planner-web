@@ -1,7 +1,11 @@
 import type { Metadata } from "next";
 import { WeddingSection } from "@/features/weddings/WeddingSection";
+import { getTextTranslator } from "@/lib/i18n-server";
 
-export const metadata: Metadata = { title: "Wedding workspace" };
+export async function generateMetadata(): Promise<Metadata> {
+  const text = await getTextTranslator();
+  return { title: text("Wedding workspace") };
+}
 
 export default async function WeddingSectionPage({
   params,

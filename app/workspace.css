@@ -20,10 +20,10 @@
   @apply flex-1;
 }
 .nav-label {
-  @apply mb-2 ml-3 mr-3 mt-3 text-[9px] font-extrabold uppercase tracking-[.16em] text-vow-muted;
+  @apply mb-2 ml-3 mr-3 mt-3 text-[11px] font-extrabold uppercase tracking-[.16em] text-vow-muted;
 }
 .nav-item {
-  @apply my-[3px] grid min-h-[46px] grid-cols-[29px_1fr_auto] items-center gap-[7px] rounded-[10px] px-[11px] text-xs font-semibold text-vow-muted;
+  @apply my-[3px] grid min-h-[46px] grid-cols-[29px_1fr_auto] items-center gap-[7px] rounded-[10px] px-[11px] text-sm font-semibold text-vow-muted;
 }
 .nav-item:hover {
   @apply bg-vow-soft text-vow-ink;
@@ -36,7 +36,7 @@
   @apply grid size-[26px] place-items-center font-display text-[17px];
 }
 .nav-item small {
-  @apply grid size-5 min-w-5 place-items-center rounded-full bg-vow-wine text-[9px] text-white;
+  @apply grid size-5 min-w-5 place-items-center rounded-full bg-vow-wine text-[11px] text-white;
 }
 .sidebar-wedding-card {
   display: flex;
@@ -69,7 +69,7 @@
 .mini-ring span {
   grid-area: 1/1;
   z-index: 1;
-  font-size: 8px;
+  font-size: 10px;
   font-weight: 800;
 }
 .sidebar-wedding-card > div:last-child {
@@ -81,7 +81,7 @@
 }
 .sidebar-wedding-card span {
   color: var(--muted);
-  font-size: 9px;
+  font-size: 11px;
 }
 .sidebar-profile {
   display: grid;
@@ -101,7 +101,7 @@
   border-radius: 50%;
   background: var(--blush);
   color: var(--wine);
-  font-size: 9px;
+  font-size: 11px;
   font-style: normal;
   font-weight: 850;
   line-height: 1;
@@ -115,13 +115,13 @@
 }
 .sidebar-profile strong {
   overflow: hidden;
-  font-size: 10px;
+  font-size: 12px;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 .sidebar-profile span {
   color: var(--muted);
-  font-size: 9px;
+  font-size: 11px;
 }
 .profile-menu {
   padding: 4px;
@@ -143,7 +143,7 @@
   backdrop-filter: blur(16px);
 }
 .topbar-context {
-  @apply flex items-center gap-2 text-[10px] font-bold uppercase tracking-[.08em] text-vow-muted;
+  @apply flex items-center gap-2 text-[12px] font-bold uppercase tracking-[.08em] text-vow-muted;
 }
 .topbar-dot {
   width: 7px;
@@ -161,11 +161,11 @@
   @apply flex h-10 w-[230px] items-center gap-2 rounded-[10px] border border-vow-line bg-vow-surface py-0 pl-3 pr-[9px] text-vow-muted;
 }
 .quick-search input {
-  @apply h-full w-full border-0 bg-transparent p-0 text-[11px] shadow-none;
+  @apply h-full w-full border-0 bg-transparent p-0 text-[13px] shadow-none;
   min-width: 0;
 }
 .quick-search kbd {
-  @apply inline-flex shrink-0 items-center justify-center whitespace-nowrap rounded-[5px] border border-vow-line bg-vow-soft px-1.5 py-1 text-[8px];
+  @apply inline-flex shrink-0 items-center justify-center whitespace-nowrap rounded-[5px] border border-vow-line bg-vow-soft px-1.5 py-1 text-[10px];
   min-width: 32px;
   line-height: 1;
 }
@@ -217,7 +217,7 @@
 .banner-copy > p {
   margin-bottom: 24px;
   color: #ead5da;
-  font-size: 12px;
+  font-size: 14px;
 }
 .banner-copy p span {
   margin: 0 7px;
@@ -227,10 +227,10 @@
   display: flex;
   justify-content: space-between;
   margin-bottom: 8px;
-  font-size: 9px;
+  font-size: 11px;
 }
 .banner-progress-copy strong {
-  font-size: 9px;
+  font-size: 11px;
 }
 .progress-track {
   width: min(430px, 100%);
@@ -310,7 +310,7 @@
 .panel-header > a,
 .panel-header > div > a {
   color: var(--wine);
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 800;
 }
 .task-list {
@@ -340,7 +340,7 @@
   border: 1px solid #cfc3bd;
   border-radius: 6px;
   color: #fff;
-  font-size: 11px;
+  font-size: 13px;
 }
 .task-row.complete .check-box {
   border-color: var(--sage);
@@ -355,14 +355,14 @@
   gap: 4px;
 }
 .task-copy strong {
-  font-size: 11px;
+  font-size: 13px;
 }
 .task-copy small {
   color: var(--muted);
-  font-size: 9px;
+  font-size: 11px;
 }
 .priority {
-  font-size: 8px;
+  font-size: 10px;
   font-weight: 800;
 }
 .priority-high {
@@ -377,7 +377,7 @@
 .task-due {
   min-width: 60px;
   color: var(--muted);
-  font-size: 9px;
+  font-size: 11px;
   text-align: right;
 }
 .add-row-button {
@@ -385,7 +385,7 @@
   border: 0;
   background: transparent;
   color: var(--wine);
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 800;
 }
 .event-list {
@@ -414,7 +414,7 @@
   line-height: 1;
 }
 .date-tile span {
-  font-size: 7px;
+  font-size: 9px;
   font-weight: 900;
   letter-spacing: 0.1em;
 }
@@ -431,11 +431,11 @@
   gap: 4px;
 }
 .event-row > div:nth-child(2) strong {
-  font-size: 11px;
+  font-size: 13px;
 }
 .event-row > div:nth-child(2) span {
   color: var(--muted);
-  font-size: 9px;
+  font-size: 11px;
 }
 .event-row > button {
   border: 0;
@@ -475,7 +475,7 @@
 }
 .missing-vendors > span {
   color: var(--muted);
-  font-size: 9px;
+  font-size: 11px;
 }
 .missing-vendors > div {
   display: flex;
@@ -483,7 +483,7 @@
 }
 .vendor-pulse > a {
   color: var(--wine);
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 800;
 }
 .avatar-stack.small span {
@@ -523,12 +523,12 @@
   display: grid;
   gap: 3px;
   margin: 0;
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 500;
 }
 .activity-list p small {
   color: var(--muted);
-  font-size: 8px;
+  font-size: 10px;
 }
 
 /* Shared wedding workspace */
@@ -550,7 +550,7 @@
 .overview-hero p {
   max-width: 610px;
   color: #cfdbd4;
-  font-size: 12px;
+  font-size: 14px;
   line-height: 1.6;
 }
 .overview-ring {
@@ -577,7 +577,7 @@
   display: grid;
   text-align: center;
   color: #d5e0d9;
-  font-size: 9px;
+  font-size: 11px;
 }
 .overview-ring strong {
   color: #fff;
@@ -593,11 +593,11 @@
   margin-bottom: 7px;
 }
 .budget-bars b {
-  font-size: 10px;
+  font-size: 12px;
 }
 .budget-bars small {
   color: var(--muted);
-  font-size: 9px;
+  font-size: 11px;
 }
 .budget-bars > div > div {
   height: 7px;
@@ -663,9 +663,9 @@
   margin: 0;
 }
 .vendor-lineup strong {
-  font-size: 10px;
+  font-size: 12px;
 }
 .vendor-lineup small {
   color: var(--muted);
-  font-size: 8px;
+  font-size: 10px;
 }

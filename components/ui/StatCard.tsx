@@ -37,11 +37,11 @@ export function StatCard({
         >
           <TrendingUp size={14} strokeWidth={1.8} />
         </span>
-        {trend && <span className="text-[9px] text-vow-sage">{text(trend)}</span>}
+        {trend && <span className="text-[11px] text-vow-sage">{text(trend)}</span>}
       </div>
-      <p className="mb-1 mt-3 text-[10px] text-vow-muted">{text(label)}</p>
+      <p className="mb-1 mt-3 text-[12px] text-vow-muted">{text(label)}</p>
       <strong className="mb-0.5 block font-display text-2xl font-normal">{value}</strong>
-      <small className="text-[9px] text-vow-muted">{text(detail)}</small>
+      <small className="text-[11px] text-vow-muted">{text(detail)}</small>
     </article>
   );
 }

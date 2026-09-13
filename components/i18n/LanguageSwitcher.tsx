@@ -1,11 +1,19 @@
 "use client";
 
 import { Languages } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useLanguage } from "@/components/providers/LanguageProvider";
 import { cn } from "@/lib/cn";
 
 export function LanguageSwitcher({ compact = false }: { compact?: boolean }) {
   const { language, setLanguage, t } = useLanguage();
+  const router = useRouter();
+
+  function changeLanguage(nextLanguage: "en" | "fr") {
+    setLanguage(nextLanguage);
+    // Refresh server-rendered sections after the cookie changes so every page uses the new language.
+    router.refresh();
+  }
 
   return (
     <label
@@ -19,11 +27,11 @@ export function LanguageSwitcher({ compact = false }: { compact?: boolean }) {
       <span className="sr-only">{t("settings.preferredLanguage")}</span>
       <select
         className={cn(
-          "language-switcher-select h-10 border-0 bg-transparent p-0 text-xs font-bold shadow-none",
+          "language-switcher-select h-10 border-0 bg-transparent p-0 text-sm font-bold shadow-none",
           compact && "w-12",
         )}
         value={language}
-        onChange={(event) => setLanguage(event.target.value as "en" | "fr")}
+        onChange={(event) => changeLanguage(event.target.value as "en" | "fr")}
         aria-label={t("settings.preferredLanguage")}
       >
         <option value="en">{compact ? "EN" : t("language.english")}</option>

@@ -1,8 +1,12 @@
 import type { Metadata } from "next";
 import { AuthForm } from "@/features/auth/AuthForm";
 import { AuthHeading } from "@/features/auth/AuthHeading";
+import { getTextTranslator } from "@/lib/i18n-server";
 
-export const metadata: Metadata = { title: "Sign in" };
+export async function generateMetadata(): Promise<Metadata> {
+  const text = await getTextTranslator();
+  return { title: text("Sign in") };
+}
 
 export default function LoginPage() {
   return (

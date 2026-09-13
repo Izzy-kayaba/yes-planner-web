@@ -64,7 +64,7 @@ export function EntityDialog({
     <Modal open={open} title={title} description={description} onClose={onClose}>
       <form className="grid gap-4" key={formKey} onSubmit={submit}>
         {fields.map((field) => (
-          <label className="grid gap-1.5 text-xs font-bold" key={field.name}>
+          <label className="grid gap-1.5 text-sm font-bold" key={field.name}>
             {text(field.label)}
             {field.type === "textarea" ? (
               <textarea

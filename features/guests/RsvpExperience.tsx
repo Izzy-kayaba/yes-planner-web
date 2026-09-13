@@ -76,7 +76,7 @@ export function RsvpExperience() {
           </h1>
           <p>
             {text(
-              "Amara and Sipho have received your response. You can return to this invitation at any time.",
+              "Ruth and Izzy have received your response. You can return to this invitation at any time.",
             )}
           </p>
           <button className="button button-primary" onClick={() => setSubmitted(false)}>
@@ -100,7 +100,7 @@ export function RsvpExperience() {
         <Brand />
         <p className="eyebrow">{text("Together with their families")}</p>
         <h1>
-          Amara <em>&</em> Sipho
+          Ruth <em>&</em> Izzy
         </h1>
         <p className="invite-lead">{text("joyfully invite you to celebrate their wedding")}</p>
         <div className="invitation-details">
@@ -141,7 +141,7 @@ export function RsvpExperience() {
             </button>
           </div>
           {errors.response && (
-            <p className="text-center text-xs text-vow-wine">
+            <p className="text-center text-sm text-vow-wine">
               {text(errors.response.message ?? "")}
             </p>
           )}

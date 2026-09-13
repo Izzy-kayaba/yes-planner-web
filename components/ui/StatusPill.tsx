@@ -17,7 +17,7 @@ export function StatusPill({ children, tone = "neutral" }: { children: ReactNode
   return (
     <span
       className={cn(
-        "status-pill inline-flex w-max items-center whitespace-nowrap rounded-full px-2.5 py-1.5 text-[10px] font-extrabold tracking-[.04em]",
+        "status-pill inline-flex w-max items-center whitespace-nowrap rounded-full px-2.5 py-1.5 text-[12px] font-extrabold tracking-[.04em]",
         toneClasses[tone] ?? toneClasses.neutral,
       )}
     >

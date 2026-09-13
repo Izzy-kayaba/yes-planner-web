@@ -108,9 +108,9 @@ export function SettingsPanel() {
   const { t, text } = useLanguage();
   const [active, setActive] = useState<(typeof tabs)[number][0]>("profile");
   const [profile, setProfile] = useState({
-    firstName: "Amara",
+    firstName: "Ruth",
     lastName: "Mokoena",
-    email: "amara@example.com",
+    email: "ruth@example.com",
     phone: "+27 82 123 4567",
   });
 

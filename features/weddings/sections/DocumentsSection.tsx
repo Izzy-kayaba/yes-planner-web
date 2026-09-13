@@ -3,6 +3,7 @@
 import { FileText, Pencil, Plus, Trash2, Upload } from "lucide-react";
 import { useRef, useState } from "react";
 import { EntityDialog, type EntityFormValue } from "@/components/forms/EntityDialog";
+import { useLanguage } from "@/components/providers/LanguageProvider";
 import { SearchField } from "@/components/forms/SearchField";
 import { StatusPill } from "@/components/ui/StatusPill";
 import { useWorkspaceCollection } from "@/hooks/useWorkspaceCollection";
@@ -20,7 +21,7 @@ const seed: DocumentItem[] = [
     id: 1,
     name: "Venue agreement.pdf",
     type: "Contract",
-    owner: "Amara",
+    owner: "Ruth",
     date: "10 Sep",
     access: "Private",
   },
@@ -36,7 +37,7 @@ const seed: DocumentItem[] = [
     id: 3,
     name: "Catering invoice 003.pdf",
     type: "Invoice",
-    owner: "Sipho",
+    owner: "Izzy",
     date: "04 Sep",
     access: "Team",
   },
@@ -56,6 +57,7 @@ const fields = [
 ];
 
 export function DocumentsSection() {
+  const { language, text } = useLanguage();
   const { items, create, update, remove } = useWorkspaceCollection<DocumentItem>("documents", seed);
   const [query, setQuery] = useState("");
   const [editing, setEditing] = useState<DocumentItem | null>(null);
@@ -71,8 +73,11 @@ export function DocumentsSection() {
     await create({
       name: file.name,
       type: file.type || "File",
-      owner: "Amara",
-      date: new Date().toLocaleDateString("en-ZA", { day: "2-digit", month: "short" }),
+      owner: "Ruth",
+      date: new Date().toLocaleDateString(language === "fr" ? "fr-FR" : "en-ZA", {
+        day: "2-digit",
+        month: "short",
+      }),
       access: "Team",
     });
   }
@@ -91,7 +96,7 @@ export function DocumentsSection() {
             onChange={(event) => void receiveFile(event.target.files?.[0])}
           />
           <button className="button button-secondary" onClick={() => fileInput.current?.click()}>
-            <Upload size={14} /> Upload file
+            <Upload size={14} /> {text("Upload file")}
           </button>
           <button
             className="button button-primary"
@@ -100,7 +105,7 @@ export function DocumentsSection() {
               setOpen(true);
             }}
           >
-            <Plus size={14} /> Add record
+            <Plus size={14} /> {text("Add record")}
           </button>
         </div>
       </div>
@@ -113,10 +118,10 @@ export function DocumentsSection() {
             <p>
               <strong>{doc.name}</strong>
               <small>
-                {doc.type} · Added by {doc.owner}
+                {text(doc.type)} · {text("Added by")} {doc.owner}
               </small>
             </p>
-            <span>{doc.date}</span>
+            <span>{text(doc.date)}</span>
             <StatusPill tone={doc.access === "Private" ? "rose" : "sage"}>{doc.access}</StatusPill>
             <span className="flex gap-1">
               <button
@@ -125,16 +130,16 @@ export function DocumentsSection() {
                   setEditing(doc);
                   setOpen(true);
                 }}
-                aria-label={`Edit ${doc.name}`}
+                aria-label={`${text("Edit")} ${doc.name}`}
               >
                 <Pencil size={13} />
               </button>
               <button
                 className="icon-button"
                 onClick={() => {
-                  if (window.confirm(`Delete ${doc.name}?`)) void remove(doc.id);
+                  if (window.confirm(`${text("Delete")} ${doc.name}?`)) void remove(doc.id);
                 }}
-                aria-label={`Delete ${doc.name}`}
+                aria-label={`${text("Delete")} ${doc.name}`}
               >
                 <Trash2 size={13} />
               </button>
@@ -146,7 +151,7 @@ export function DocumentsSection() {
         open={open}
         title={editing ? "Edit document" : "Add document"}
         fields={fields}
-        initialValues={editing ?? { owner: "Amara", date: "Today", access: "Team" }}
+        initialValues={editing ?? { owner: "Ruth", date: "Today", access: "Team" }}
         onClose={() => setOpen(false)}
         onSave={save}
       />

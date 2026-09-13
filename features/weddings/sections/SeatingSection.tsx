@@ -3,6 +3,7 @@
 import { Pencil, Plus, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { EntityDialog, type EntityFormValue } from "@/components/forms/EntityDialog";
+import { useLanguage } from "@/components/providers/LanguageProvider";
 import { MetricGrid } from "@/features/weddings/MetricGrid";
 import { useWorkspaceCollection } from "@/hooks/useWorkspaceCollection";
 
@@ -35,6 +36,7 @@ const fields = [
 ];
 
 export function SeatingSection() {
+  const { text } = useLanguage();
   const { items, create, update, remove } = useWorkspaceCollection<SeatingTable>("seating", seed);
   const [editing, setEditing] = useState<SeatingTable | null>(null);
   const [open, setOpen] = useState(false);
@@ -57,7 +59,7 @@ export function SeatingSection() {
             setOpen(true);
           }}
         >
-          <Plus size={15} /> Add table
+          <Plus size={15} /> {text("Add table")}
         </button>
       </div>
       <MetricGrid
@@ -94,9 +96,9 @@ export function SeatingSection() {
                 <i key={index} />
               ))}
             </div>
-            <h3>{table.name}</h3>
+            <h3>{text(table.name)}</h3>
             <p>
-              {table.label} · {table.guests}
+              {text(table.label)} · {table.guests}
             </p>
             <div className="flex justify-center gap-2">
               <button
@@ -106,12 +108,13 @@ export function SeatingSection() {
                   setOpen(true);
                 }}
               >
-                <Pencil size={13} /> Arrange
+                <Pencil size={13} /> {text("Arrange")}
               </button>
               <button
                 className="text-link"
                 onClick={() => {
-                  if (window.confirm(`Delete ${table.name}?`)) void remove(table.id);
+                  if (window.confirm(`${text("Delete")} ${text(table.name)}?`))
+                    void remove(table.id);
                 }}
               >
                 <Trash2 size={13} />

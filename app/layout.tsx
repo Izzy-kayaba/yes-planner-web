@@ -4,6 +4,7 @@ import { getLocale } from "next-intl/server";
 import type { ReactNode } from "react";
 import { AppProviders } from "@/components/providers/AppProviders";
 import { isSupportedLanguage } from "@/lib/i18n";
+import { getTextTranslator } from "@/lib/i18n-server";
 import "./globals.css";
 import "./workspace.css";
 import "./modules.css";
@@ -22,13 +23,16 @@ const nunito = Nunito({
   display: "swap",
 });
 
-export const metadata: Metadata = {
-  title: {
-    default: "Vow Planner",
-    template: "%s · Vow Planner",
-  },
-  description: "One beautiful place to plan, manage and remember your wedding.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const text = await getTextTranslator();
+  return {
+    title: {
+      default: "Vow Planner",
+      template: "%s · Vow Planner",
+    },
+    description: text("One beautiful place to plan, manage and remember your wedding."),
+  };
+}
 
 export default async function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
   const requestedLocale = await getLocale();

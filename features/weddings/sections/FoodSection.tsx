@@ -3,6 +3,7 @@
 import { Pencil } from "lucide-react";
 import { useState } from "react";
 import { EntityDialog, type EntityFormValue } from "@/components/forms/EntityDialog";
+import { useLanguage } from "@/components/providers/LanguageProvider";
 import { StatusPill } from "@/components/ui/StatusPill";
 import { useWorkspaceCollection } from "@/hooks/useWorkspaceCollection";
 
@@ -30,6 +31,7 @@ const fields = [
 ];
 
 export function FoodSection() {
+  const { text } = useLanguage();
   const { items, update } = useWorkspaceCollection<Menu>("food-drinks", seed);
   const [open, setOpen] = useState(false);
   const menu = items[0] ?? seed[0];
@@ -41,8 +43,8 @@ export function FoodSection() {
       <article className="panel">
         <div className="panel-header">
           <div>
-            <p className="eyebrow">Meal selections</p>
-            <h3>118 confirmed meals</h3>
+            <p className="eyebrow">{text("Meal selections")}</p>
+            <h3>{text("118 confirmed meals")}</h3>
           </div>
           <StatusPill tone="sage">72% complete</StatusPill>
         </div>
@@ -51,8 +53,10 @@ export function FoodSection() {
             <div key={meal.name}>
               <span className={`meal-swatch tone-${meal.color}`} />
               <p>
-                <strong>{meal.name}</strong>
-                <small>{meal.percent}% of responses</small>
+                <strong>{text(meal.name)}</strong>
+                <small>
+                  {meal.percent}% {text("of responses")}
+                </small>
               </p>
               <b>{meal.count}</b>
             </div>
@@ -62,28 +66,28 @@ export function FoodSection() {
       <article className="panel menu-card">
         <div className="panel-header">
           <div>
-            <p className="eyebrow">Selected menu</p>
-            <h3>{menu.name}</h3>
+            <p className="eyebrow">{text("Selected menu")}</p>
+            <h3>{text(menu.name)}</h3>
           </div>
           <button className="button button-secondary" onClick={() => setOpen(true)}>
-            <Pencil size={14} /> Edit menu
+            <Pencil size={14} /> {text("Edit menu")}
           </button>
         </div>
         <div className="menu-course">
-          <span>Starter</span>
-          <strong>{menu.starter}</strong>
+          <span>{text("Starter")}</span>
+          <strong>{text(menu.starter)}</strong>
         </div>
         <div className="menu-course">
-          <span>Main</span>
-          <strong>{menu.main}</strong>
+          <span>{text("Main")}</span>
+          <strong>{text(menu.main)}</strong>
         </div>
         <div className="menu-course">
-          <span>Dessert</span>
-          <strong>{menu.dessert}</strong>
+          <span>{text("Dessert")}</span>
+          <strong>{text(menu.dessert)}</strong>
         </div>
         <div className="dietary-alert">
-          <strong>14 dietary notes</strong>
-          <span>3 guests require caterer confirmation</span>
+          <strong>{text("14 dietary notes")}</strong>
+          <span>{text("3 guests require caterer confirmation")}</span>
         </div>
       </article>
       <EntityDialog

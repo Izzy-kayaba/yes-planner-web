@@ -84,7 +84,7 @@ export function AuthForm({ mode }: { mode: "login" | "register" }) {
     try {
       if (isRegister) await getBackend().register(result.data as RegisterInput);
       else await getBackend().login(result.data);
-      toast.success(text(isRegister ? "Your workspace is ready." : "Welcome back, Amara."));
+      toast.success(text(isRegister ? "Your workspace is ready." : "Welcome back, Ruth."));
       router.push("/dashboard");
     } catch (error) {
       toast.error(error instanceof Error ? error.message : text("Authentication failed."));
@@ -117,11 +117,11 @@ export function AuthForm({ mode }: { mode: "login" | "register" }) {
             <input
               {...register("firstName")}
               aria-invalid={Boolean(errors.firstName)}
-              placeholder="Amara"
+              placeholder="Ruth"
               autoComplete="given-name"
             />
             {errors.firstName && (
-              <small className="text-vow-wine">{errors.firstName.message}</small>
+              <small className="text-vow-wine">{text(errors.firstName.message ?? "")}</small>
             )}
           </label>
           <label>
@@ -132,7 +132,9 @@ export function AuthForm({ mode }: { mode: "login" | "register" }) {
               placeholder="Mokoena"
               autoComplete="family-name"
             />
-            {errors.lastName && <small className="text-vow-wine">{errors.lastName.message}</small>}
+            {errors.lastName && (
+              <small className="text-vow-wine">{text(errors.lastName.message ?? "")}</small>
+            )}
           </label>
         </div>
       )}
@@ -147,7 +149,9 @@ export function AuthForm({ mode }: { mode: "login" | "register" }) {
             placeholder="you@example.com"
             autoComplete="email"
           />
-          {errors.email && <small className="text-vow-wine">{errors.email.message}</small>}
+          {errors.email && (
+            <small className="text-vow-wine">{text(errors.email.message ?? "")}</small>
+          )}
         </label>
       )}
 
@@ -161,7 +165,7 @@ export function AuthForm({ mode }: { mode: "login" | "register" }) {
           autoComplete="tel"
         />
         {errors.phoneNumber && (
-          <small className="text-vow-wine">{errors.phoneNumber.message}</small>
+          <small className="text-vow-wine">{text(errors.phoneNumber.message ?? "")}</small>
         )}
       </label>
 
@@ -177,7 +181,9 @@ export function AuthForm({ mode }: { mode: "login" | "register" }) {
           placeholder="••••••••••••"
           autoComplete={isRegister ? "new-password" : "current-password"}
         />
-        {errors.password && <small className="text-vow-wine">{errors.password.message}</small>}
+        {errors.password && (
+          <small className="text-vow-wine">{text(errors.password.message ?? "")}</small>
+        )}
       </label>
 
       {isRegister && (

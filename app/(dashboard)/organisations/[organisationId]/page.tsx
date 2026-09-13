@@ -5,12 +5,17 @@ import { PageHeader } from "@/components/ui/PageHeader";
 import { StatCard } from "@/components/ui/StatCard";
 import { StatusPill } from "@/components/ui/StatusPill";
 import { getInitials } from "@/lib/initials";
+import { getTextTranslator } from "@/lib/i18n-server";
 
-export const metadata: Metadata = { title: "Organisation" };
+export async function generateMetadata(): Promise<Metadata> {
+  const text = await getTextTranslator();
+  return { title: text("Organisation") };
+}
 
-export default function OrganisationPage() {
+export default async function OrganisationPage() {
+  const text = await getTextTranslator();
   const weddings = [
-    { couple: "Amara & Sipho", date: "18 Oct 2026", progress: 68, owner: "Lerato", tone: "rose" },
+    { couple: "Ruth & Izzy", date: "18 Oct 2026", progress: 68, owner: "Lerato", tone: "rose" },
     { couple: "Jessica & Liam", date: "07 Nov 2026", progress: 54, owner: "Thabo", tone: "sage" },
     { couple: "Nandi & Sam", date: "13 Dec 2026", progress: 41, owner: "Naledi", tone: "gold" },
   ];
@@ -35,8 +40,8 @@ export default function OrganisationPage() {
         <article className="panel">
           <div className="panel-header">
             <div>
-              <p className="eyebrow">Wedding portfolio</p>
-              <h3>Active celebrations</h3>
+              <p className="eyebrow">{text("Wedding portfolio")}</p>
+              <h3>{text("Active celebrations")}</h3>
             </div>
             <ActionButton
               className="button button-secondary"
@@ -54,7 +59,7 @@ export default function OrganisationPage() {
                 <p>
                   <strong>{wedding.couple}</strong>
                   <small>
-                    {wedding.date} · Lead: {wedding.owner}
+                    {text(wedding.date)} · {text("Lead")}: {wedding.owner}
                   </small>
                 </p>
                 <div>
@@ -63,7 +68,7 @@ export default function OrganisationPage() {
                   </span>
                   <small>{wedding.progress}%</small>
                 </div>
-                <Link href="/weddings/amara-sipho" aria-label={`Open ${wedding.couple}`}>
+                <Link href="/weddings/ruth-izzy" aria-label={`${text("Open")} ${wedding.couple}`}>
                   ›
                 </Link>
               </div>
@@ -73,8 +78,8 @@ export default function OrganisationPage() {
         <article className="panel">
           <div className="panel-header">
             <div>
-              <p className="eyebrow">Request queue</p>
-              <h3>New opportunities</h3>
+              <p className="eyebrow">{text("Request queue")}</p>
+              <h3>{text("New opportunities")}</h3>
             </div>
             <StatusPill tone="gold">3 pending</StatusPill>
           </div>
@@ -83,7 +88,7 @@ export default function OrganisationPage() {
               <span className="avatar">KM</span>
               <p>
                 <strong>Karabo & Musa</strong>
-                <small>28 February 2027 · Pretoria</small>
+                <small>{text("28 February 2027 · Pretoria")}</small>
               </p>
               <ActionButton
                 className="button button-secondary"
@@ -97,7 +102,7 @@ export default function OrganisationPage() {
               <span className="avatar">ZN</span>
               <p>
                 <strong>Zinhle & Neo</strong>
-                <small>17 April 2027 · Sandton</small>
+                <small>{text("17 April 2027 · Sandton")}</small>
               </p>
               <ActionButton
                 className="button button-secondary"
@@ -111,7 +116,7 @@ export default function OrganisationPage() {
               <span className="avatar">JL</span>
               <p>
                 <strong>Julia & Lesedi</strong>
-                <small>06 June 2027 · Magaliesburg</small>
+                <small>{text("06 June 2027 · Magaliesburg")}</small>
               </p>
               <ActionButton
                 className="button button-secondary"
@@ -128,8 +133,8 @@ export default function OrganisationPage() {
         <article className="panel">
           <div className="panel-header">
             <div>
-              <p className="eyebrow">Team workload</p>
-              <h3>This week’s capacity</h3>
+              <p className="eyebrow">{text("Team workload")}</p>
+              <h3>{text("This week’s capacity")}</h3>
             </div>
             <ActionButton className="button button-secondary" message="Team management opened.">
               Manage team
@@ -146,7 +151,9 @@ export default function OrganisationPage() {
                 <span className="avatar">{getInitials(String(name))}</span>
                 <p>
                   <strong>{name}</strong>
-                  <small>{task} due</small>
+                  <small>
+                    {text(String(task))} {text("due")}
+                  </small>
                 </p>
                 <div>
                   <i style={{ width: `${value}%` }} />
@@ -159,13 +166,13 @@ export default function OrganisationPage() {
         <article className="panel">
           <div className="panel-header">
             <div>
-              <p className="eyebrow">Financial overview</p>
-              <h3>September revenue</h3>
+              <p className="eyebrow">{text("Financial overview")}</p>
+              <h3>{text("September revenue")}</h3>
             </div>
             <StatusPill tone="sage">+12.4%</StatusPill>
           </div>
           <div className="revenue-number">
-            R 248,500<small>R 82,000 awaiting payment</small>
+            R 248,500<small>{text("R 82,000 awaiting payment")}</small>
           </div>
           <div className="mini-chart">
             {[35, 52, 46, 68, 58, 74, 82, 65, 88, 76, 92, 84].map((height, index) => (

@@ -3,10 +3,16 @@ import Link from "next/link";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { StatCard } from "@/components/ui/StatCard";
 import { StatusPill } from "@/components/ui/StatusPill";
+import { getTextTranslator } from "@/lib/i18n-server";
 
-export const metadata: Metadata = { title: "Vendor portal" };
+export async function generateMetadata(): Promise<Metadata> {
+  const text = await getTextTranslator();
+  return { title: text("Vendor portal") };
+}
 
-export default function VendorPage() {
+export default async function VendorPage() {
+  const text = await getTextTranslator();
+
   return (
     <div className="section-stack">
       <PageHeader
@@ -15,7 +21,7 @@ export default function VendorPage() {
         description="Your bookings, enquiries and client moments for the week."
         action={
           <Link className="button button-primary" href="/settings">
-            Edit public profile
+            {text("Edit public profile")}
           </Link>
         }
       />
@@ -29,11 +35,11 @@ export default function VendorPage() {
         <article className="panel">
           <div className="panel-header">
             <div>
-              <p className="eyebrow">Booking requests</p>
-              <h3>Ready for your response</h3>
+              <p className="eyebrow">{text("Booking requests")}</p>
+              <h3>{text("Ready for your response")}</h3>
             </div>
-            <Link className="button button-secondary" href="/weddings/amara-sipho/messages">
-              View inbox
+            <Link className="button button-secondary" href="/weddings/ruth-izzy/messages">
+              {text("View inbox")}
             </Link>
           </div>
           <div className="request-list">
@@ -41,7 +47,7 @@ export default function VendorPage() {
               <span className="avatar">KN</span>
               <p>
                 <strong>Karabo & Neo</strong>
-                <small>21 March 2027 · Full-day photography</small>
+                <small>{text("21 March 2027 · Full-day photography")}</small>
               </p>
               <StatusPill tone="gold">New</StatusPill>
             </div>
@@ -49,7 +55,7 @@ export default function VendorPage() {
               <span className="avatar">NS</span>
               <p>
                 <strong>Nandi & Sam</strong>
-                <small>13 December 2026 · Photo + film</small>
+                <small>{text("13 December 2026 · Photo + film")}</small>
               </p>
               <StatusPill tone="rose">Follow up</StatusPill>
             </div>
@@ -57,7 +63,7 @@ export default function VendorPage() {
               <span className="avatar">JL</span>
               <p>
                 <strong>Jessica & Liam</strong>
-                <small>07 November 2026 · Album add-on</small>
+                <small>{text("07 November 2026 · Album add-on")}</small>
               </p>
               <StatusPill tone="neutral">Quote sent</StatusPill>
             </div>
@@ -66,68 +72,72 @@ export default function VendorPage() {
         <article className="panel">
           <div className="panel-header">
             <div>
-              <p className="eyebrow">Next booking</p>
-              <h3>Amara & Sipho</h3>
+              <p className="eyebrow">{text("Next booking")}</p>
+              <h3>Ruth & Izzy</h3>
             </div>
             <StatusPill tone="sage">Confirmed</StatusPill>
           </div>
           <div className="next-booking">
             <strong>18</strong>
             <span>
-              OCT
+              {text("OCT")}
               <br />
               2026
             </span>
             <div>
               <p>Shepstone Gardens</p>
-              <small>Johannesburg · 12:30 arrival</small>
+              <small>{text("Johannesburg · 12:30 arrival")}</small>
             </div>
           </div>
           <div className="booking-checklist">
             <span>
-              <i>✓</i>Contract signed
+              <i>✓</i>
+              {text("Contract signed")}
             </span>
             <span>
-              <i>✓</i>Deposit received
+              <i>✓</i>
+              {text("Deposit received")}
             </span>
             <span>
-              <i>○</i>Final timeline approval
+              <i>○</i>
+              {text("Final timeline approval")}
             </span>
           </div>
-          <Link className="button button-secondary button-wide" href="/weddings/amara-sipho">
-            Open wedding brief
+          <Link className="button button-secondary button-wide" href="/weddings/ruth-izzy">
+            {text("Open wedding brief")}
           </Link>
         </article>
       </section>
       <section className="panel">
         <div className="panel-header">
           <div>
-            <p className="eyebrow">Performance</p>
-            <h3>Enquiries to confirmed bookings</h3>
+            <p className="eyebrow">{text("Performance")}</p>
+            <h3>{text("Enquiries to confirmed bookings")}</h3>
           </div>
-          <select className="button button-secondary" aria-label="Performance period">
-            <option>Last 6 months</option>
-            <option>Last 12 months</option>
-            <option>This year</option>
+          <select className="button button-secondary" aria-label={text("Performance period")}>
+            <option>{text("Last 6 months")}</option>
+            <option>{text("Last 12 months")}</option>
+            <option>{text("This year")}</option>
           </select>
         </div>
         <div className="performance-layout">
           <div className="conversion-ring">
             <span>
-              <b>64%</b>conversion
+              <b>64%</b>
+              {text("conversion")}
             </span>
           </div>
           <div className="performance-stats">
             <div>
-              <span>Average response</span>
+              <span>{text("Average response")}</span>
               <strong>2h 18m</strong>
             </div>
             <div>
-              <span>Profile views</span>
+              <span>{text("Profile views")}</span>
               <strong>1,284</strong>
             </div>
             <div>
-              <span>Package saves</span>
+              <span>{text("Package saves")}</span>
               <strong>219</strong>
             </div>
           </div>

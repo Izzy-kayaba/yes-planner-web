@@ -43,13 +43,13 @@
   margin: 0;
 }
 .messages-panel aside strong {
-  font-size: 10px;
+  font-size: 12px;
 }
 .messages-panel aside small,
 .messages-panel aside em {
   overflow: hidden;
   color: var(--muted);
-  font-size: 8px;
+  font-size: 10px;
   font-style: normal;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -57,7 +57,7 @@
 .messages-panel aside time {
   align-self: start;
   color: var(--muted);
-  font-size: 7px;
+  font-size: 9px;
 }
 .messages-panel aside button > i {
   width: 6px;
@@ -86,11 +86,11 @@
   margin: 0 auto 0 0;
 }
 .chat-header strong {
-  font-size: 11px;
+  font-size: 13px;
 }
 .chat-header small {
   color: var(--sage);
-  font-size: 8px;
+  font-size: 10px;
 }
 .chat-body {
   display: flex;
@@ -102,13 +102,13 @@
 .chat-date {
   align-self: center;
   color: var(--muted);
-  font-size: 8px;
+  font-size: 10px;
 }
 .message {
   max-width: 68%;
   padding: 12px 15px;
   border-radius: 13px;
-  font-size: 10px;
+  font-size: 12px;
   line-height: 1.6;
 }
 .message.received {
@@ -198,13 +198,13 @@
 }
 .note-card p {
   color: var(--muted);
-  font-size: 10px;
+  font-size: 12px;
   line-height: 1.7;
 }
 .note-card small {
   margin-top: auto;
   color: var(--muted);
-  font-size: 8px;
+  font-size: 10px;
 }
 .new-note {
   align-items: center;
@@ -244,7 +244,7 @@
 }
 .report-bars b,
 .report-bars strong {
-  font-size: 9px;
+  font-size: 11px;
 }
 .report-bars strong {
   color: var(--wine);
@@ -289,7 +289,7 @@
   display: grid;
   text-align: center;
   color: var(--muted);
-  font-size: 8px;
+  font-size: 10px;
 }
 .report-donut b {
   color: var(--ink);
@@ -307,7 +307,7 @@
   align-items: center;
   gap: 7px;
   color: var(--muted);
-  font-size: 8px;
+  font-size: 10px;
 }
 .report-donut li i {
   width: 7px;
@@ -323,7 +323,7 @@
 }
 .report-donut li strong {
   color: var(--ink);
-  font-size: 9px;
+  font-size: 11px;
 }
 .empty-state {
   min-height: 300px;

@@ -61,7 +61,7 @@ export function WeddingAnalytics() {
             <p className="eyebrow">{text("Readiness")}</p>
             <h3>{text("Progress by planning area")}</h3>
           </div>
-          <span className="text-xs font-semibold text-vow-muted">{text("Live overview")}</span>
+          <span className="text-sm font-semibold text-vow-muted">{text("Live overview")}</span>
         </div>
         <div className="h-72 w-full" aria-label={text("Planning readiness by area")}>
           <ResponsiveContainer width="100%" height="100%">

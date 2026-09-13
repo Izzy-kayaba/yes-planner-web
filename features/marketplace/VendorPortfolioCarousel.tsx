@@ -68,7 +68,7 @@ export function VendorPortfolioCarousel() {
           </h2>
         </div>
         <div className="flex w-full items-center justify-between gap-2 sm:w-auto sm:justify-start">
-          <span className="mr-1 text-[10px] font-bold text-vow-muted" aria-live="polite">
+          <span className="mr-1 text-[12px] font-bold text-vow-muted" aria-live="polite">
             {selectedIndex + 1} / {slideCount || 1}
           </span>
           <button
@@ -123,11 +123,11 @@ export function VendorPortfolioCarousel() {
                 </button>
               </div>
               <div className="px-1 pt-3">
-                <p className="text-[10px] font-extrabold uppercase tracking-[.14em] text-vow-wine">
+                <p className="text-[12px] font-extrabold uppercase tracking-[.14em] text-vow-wine">
                   {text(portfolio.category)}
                 </p>
                 <h3 className="mt-1 font-display text-xl">{portfolio.studio}</h3>
-                <p className="mt-1 text-xs text-vow-muted">{text(portfolio.detail)}</p>
+                <p className="mt-1 text-sm text-vow-muted">{text(portfolio.detail)}</p>
               </div>
             </article>
           ))}

@@ -59,7 +59,7 @@ export function WeddingSection({ section }: { section: string }) {
   return (
     <div className="section-stack">
       <PageHeader
-        eyebrow="Amara & Sipho"
+        eyebrow="Ruth & Izzy"
         title={heading ? t(heading[0]) : t("nav.workspace")}
         description={heading ? t(heading[1]) : t("dashboard.intro")}
       />

@@ -3,6 +3,7 @@
 import { Pencil, Plus, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { EntityDialog, type EntityFormValue } from "@/components/forms/EntityDialog";
+import { useLanguage } from "@/components/providers/LanguageProvider";
 import { SearchField } from "@/components/forms/SearchField";
 import { useWorkspaceCollection } from "@/hooks/useWorkspaceCollection";
 
@@ -55,6 +56,7 @@ const fields = [
 ];
 
 export function BookingsSection() {
+  const { text } = useLanguage();
   const { items, create, update, remove } = useWorkspaceCollection<Booking>("bookings", seed);
   const [query, setQuery] = useState("");
   const [editing, setEditing] = useState<Booking | null>(null);
@@ -78,24 +80,24 @@ export function BookingsSection() {
             setOpen(true);
           }}
         >
-          <Plus size={15} /> Add request
+          <Plus size={15} /> {text("Add request")}
         </button>
       </div>
       <section className="booking-board">
         {["Pending", "Quote received", "Confirmed"].map((column) => (
           <div className="booking-column" key={column}>
             <div className="booking-column-title">
-              <h3>{column}</h3>
+              <h3>{text(column)}</h3>
               <span>{shown.filter((item) => item.status === column).length}</span>
             </div>
             {shown
               .filter((item) => item.status === column)
               .map((booking) => (
                 <article className="booking-card" key={booking.id}>
-                  <p>{booking.service}</p>
+                  <p>{text(booking.service)}</p>
                   <h4>{booking.vendor}</h4>
                   <strong>{booking.amount}</strong>
-                  <span>{booking.next}</span>
+                  <span>{text(booking.next)}</span>
                   <div className="flex gap-2">
                     <button
                       onClick={() => {
@@ -103,11 +105,11 @@ export function BookingsSection() {
                         setOpen(true);
                       }}
                     >
-                      <Pencil size={13} /> Edit
+                      <Pencil size={13} /> {text("Edit")}
                     </button>
                     <button
                       onClick={() => {
-                        if (window.confirm(`Delete booking with ${booking.vendor}?`))
+                        if (window.confirm(`${text("Delete booking with")} ${booking.vendor}?`))
                           void remove(booking.id);
                       }}
                     >

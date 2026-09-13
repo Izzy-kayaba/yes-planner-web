@@ -23,12 +23,12 @@ Useful routes:
 - `/` — public product page
 - `/login` and `/register` — authentication previews
 - `/dashboard` — couple dashboard
-- `/weddings/amara-sipho` — shared wedding workspace
+- `/weddings/ruth-izzy` — shared wedding workspace
 - `/marketplace` — vendor discovery
 - `/organisations/beautiful-day` — planner organisation
 - `/vendor` — vendor workspace
 - `/admin` — platform operations
-- `/invite/amara-and-sipho` — guest RSVP
+- `/invite/ruth-and-izzy` — guest RSVP
 
 To clear preview edits, remove keys beginning with `vow-planner:` from browser storage.
 

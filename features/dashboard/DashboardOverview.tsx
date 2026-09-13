@@ -57,7 +57,7 @@ export function DashboardOverview() {
     <div className="dashboard-stack">
       <PageHeader
         eyebrow={format(new Date(), "EEEE, d MMMM", { locale: language === "fr" ? fr : enZA })}
-        title={t("dashboard.greeting", { name: "Amara" })}
+        title={t("dashboard.greeting", { name: "Ruth" })}
         description={t("dashboard.intro")}
         action={
           <Link className="button button-primary" href={`/weddings/${currentWedding.id}`}>
@@ -138,7 +138,7 @@ export function DashboardOverview() {
               <p className="eyebrow">{t("dashboard.comingUp")}</p>
               <h3>{t("dashboard.nextMoments")}</h3>
             </div>
-            <Link className="text-link text-xs" href={`/weddings/${currentWedding.id}/timeline`}>
+            <Link className="text-link text-sm" href={`/weddings/${currentWedding.id}/timeline`}>
               {text("View")}
             </Link>
           </div>
@@ -204,7 +204,7 @@ export function DashboardOverview() {
               <h3>{text("Recent activity")}</h3>
             </div>
             <div className="avatar-stack small">
-              <span>AM</span>
+              <span>RM</span>
               <span>SM</span>
               <span>LM</span>
             </div>
@@ -220,7 +220,7 @@ export function DashboardOverview() {
             <div>
               <span className="activity-dot sage">✓</span>
               <p>
-                <strong>Sipho</strong> {text("approved the catering quote")}
+                <strong>Izzy</strong> {text("approved the catering quote")}
                 <small>{text("2 hours ago")}</small>
               </p>
             </div>

@@ -1,12 +1,20 @@
+"use client";
+
 import dynamic from "next/dynamic";
+import { useLanguage } from "@/components/providers/LanguageProvider";
 import { MetricGrid } from "@/features/weddings/MetricGrid";
+
+function AnalyticsLoading() {
+  const { text } = useLanguage();
+  return (
+    <div className="panel min-h-72 animate-pulse" aria-label={text("Loading wedding analytics")} />
+  );
+}
 
 const WeddingAnalytics = dynamic(
   () => import("@/features/reports/WeddingAnalytics").then((module) => module.WeddingAnalytics),
   {
-    loading: () => (
-      <div className="panel min-h-72 animate-pulse" aria-label="Loading wedding analytics" />
-    ),
+    loading: () => <AnalyticsLoading />,
   },
 );
 

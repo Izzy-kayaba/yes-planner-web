@@ -25,13 +25,13 @@ const sections: ReadonlyArray<[TranslationKey, string]> = [
 
 export function WeddingNav({ weddingId }: { weddingId: string }) {
   const pathname = usePathname();
-  const { t } = useLanguage();
+  const { t, text } = useLanguage();
   const base = `/weddings/${weddingId}`;
 
   return (
     <nav
       className="flex gap-1 overflow-x-auto rounded-xl border border-vow-line bg-vow-surface p-1.5 [scrollbar-width:none]"
-      aria-label="Wedding workspace"
+      aria-label={text("Wedding workspace")}
     >
       {sections.map(([label, slug]) => {
         const href = slug ? `${base}/${slug}` : base;
@@ -40,7 +40,7 @@ export function WeddingNav({ weddingId }: { weddingId: string }) {
           <Link
             aria-current={active ? "page" : undefined}
             className={cn(
-              "min-w-max rounded-lg px-3 py-2.5 text-[10px] font-bold transition-colors",
+              "min-w-max rounded-lg px-3 py-2.5 text-[12px] font-bold transition-colors",
               active
                 ? "bg-vow-wine text-white"
                 : "text-vow-muted hover:bg-vow-soft hover:text-vow-ink",

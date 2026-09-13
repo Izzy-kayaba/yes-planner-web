@@ -43,7 +43,7 @@ npm.cmd install
 npm.cmd run dev
 ```
 
-Open `http://localhost:3000`. The invitation preview is at `/invite/amara-and-sipho`.
+Open `http://localhost:3000`. The invitation preview is at `/invite/ruth-and-izzy`.
 
 The default data source is a browser-persisted preview, so the complete workspace can be used without running an API. Set `NEXT_PUBLIC_DATA_SOURCE=api` to use a compatible backend.
 

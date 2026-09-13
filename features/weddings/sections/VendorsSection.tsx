@@ -3,6 +3,7 @@
 import { Heart, Pencil, Plus, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { EntityDialog, type EntityFormValue } from "@/components/forms/EntityDialog";
+import { useLanguage } from "@/components/providers/LanguageProvider";
 import { SearchField } from "@/components/forms/SearchField";
 import { StatusPill } from "@/components/ui/StatusPill";
 import { MetricGrid } from "@/features/weddings/MetricGrid";
@@ -27,6 +28,7 @@ const fields = [
 ];
 
 export function VendorsSection() {
+  const { text } = useLanguage();
   const { items, create, update, remove } = useWorkspaceCollection<Vendor>("vendors", seed);
   const [query, setQuery] = useState("");
   const [editing, setEditing] = useState<Vendor | null>(null);
@@ -93,7 +95,7 @@ export function VendorsSection() {
             setOpen(true);
           }}
         >
-          <Plus size={15} /> Add vendor
+          <Plus size={15} /> {text("Add vendor")}
         </button>
       </div>
       <section className="vendor-grid">
@@ -102,7 +104,7 @@ export function VendorsSection() {
             <div className={`vendor-cover tone-${vendor.tone}`}>
               <span>{vendor.initials}</span>
               <button
-                aria-label={`Save ${vendor.name}`}
+                aria-label={`${text("Save")} ${vendor.name}`}
                 onClick={() => void update({ ...vendor, saved: !vendor.saved })}
               >
                 <Heart size={16} fill={vendor.saved ? "currentColor" : "none"} />
@@ -110,7 +112,7 @@ export function VendorsSection() {
             </div>
             <div className="vendor-card-copy">
               <div>
-                <p>{vendor.category}</p>
+                <p>{text(vendor.category)}</p>
                 <StatusPill tone={vendor.status === "Confirmed" ? "sage" : "gold"}>
                   {vendor.status}
                 </StatusPill>
@@ -119,7 +121,7 @@ export function VendorsSection() {
               <p>
                 <span className="rating">★ {vendor.rating}</span> · Johannesburg
               </p>
-              <strong>{vendor.price}</strong>
+              <strong>{text(vendor.price)}</strong>
               <div className="flex gap-2">
                 <button
                   className="button button-secondary flex-1"
@@ -128,14 +130,14 @@ export function VendorsSection() {
                     setOpen(true);
                   }}
                 >
-                  <Pencil size={14} /> Edit
+                  <Pencil size={14} /> {text("Edit")}
                 </button>
                 <button
                   className="icon-button"
                   onClick={() => {
-                    if (window.confirm(`Remove ${vendor.name}?`)) void remove(vendor.id);
+                    if (window.confirm(`${text("Remove")} ${vendor.name}?`)) void remove(vendor.id);
                   }}
-                  aria-label={`Delete ${vendor.name}`}
+                  aria-label={`${text("Delete")} ${vendor.name}`}
                 >
                   <Trash2 size={15} />
                 </button>

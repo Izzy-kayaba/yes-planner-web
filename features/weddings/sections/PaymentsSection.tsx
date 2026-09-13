@@ -3,6 +3,7 @@
 import { Download, Pencil, Plus, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { EntityDialog, type EntityFormValue } from "@/components/forms/EntityDialog";
+import { useLanguage } from "@/components/providers/LanguageProvider";
 import { StatusPill } from "@/components/ui/StatusPill";
 import { MetricGrid } from "@/features/weddings/MetricGrid";
 import { useWorkspaceCollection } from "@/hooks/useWorkspaceCollection";
@@ -57,6 +58,7 @@ const fields = [
 ];
 
 export function PaymentsSection() {
+  const { text } = useLanguage();
   const { items, create, update, remove } = useWorkspaceCollection<Payment>("payments", seed);
   const [editing, setEditing] = useState<Payment | null>(null);
   const [open, setOpen] = useState(false);
@@ -127,12 +129,12 @@ export function PaymentsSection() {
       <section className="panel">
         <div className="panel-header">
           <div>
-            <p className="eyebrow">Payment schedule</p>
-            <h3>Invoices and balances</h3>
+            <p className="eyebrow">{text("Payment schedule")}</p>
+            <h3>{text("Invoices and balances")}</h3>
           </div>
           <div className="flex gap-2">
             <button className="button button-secondary" onClick={exportCsv}>
-              <Download size={14} /> Export
+              <Download size={14} /> {text("Export")}
             </button>
             <button
               className="button button-primary"
@@ -141,7 +143,7 @@ export function PaymentsSection() {
                 setOpen(true);
               }}
             >
-              <Plus size={14} /> Add payment
+              <Plus size={14} /> {text("Add payment")}
             </button>
           </div>
         </div>
@@ -155,7 +157,9 @@ export function PaymentsSection() {
               </p>
               <b>
                 R {payment.amount.toLocaleString()}
-                <small>Due {payment.due}</small>
+                <small>
+                  {text("Due")} {text(payment.due)}
+                </small>
               </b>
               <StatusPill
                 tone={
@@ -175,16 +179,17 @@ export function PaymentsSection() {
                     setEditing(payment);
                     setOpen(true);
                   }}
-                  aria-label={`Edit ${payment.reference}`}
+                  aria-label={`${text("Edit")} ${payment.reference}`}
                 >
                   <Pencil size={13} />
                 </button>
                 <button
                   className="icon-button"
                   onClick={() => {
-                    if (window.confirm(`Delete ${payment.reference}?`)) void remove(payment.id);
+                    if (window.confirm(`${text("Delete")} ${payment.reference}?`))
+                      void remove(payment.id);
                   }}
-                  aria-label={`Delete ${payment.reference}`}
+                  aria-label={`${text("Delete")} ${payment.reference}`}
                 >
                   <Trash2 size={13} />
                 </button>

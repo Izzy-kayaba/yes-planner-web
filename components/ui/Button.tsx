@@ -24,7 +24,7 @@ export function buttonStyles({
   className?: string;
 } = {}) {
   return cn(
-    "inline-flex min-h-11 items-center justify-center gap-2.5 rounded-xl border px-5 text-[13px] font-bold transition hover:-translate-y-px focus-visible:outline-3 focus-visible:outline-offset-3 focus-visible:outline-vow-wine/30 disabled:pointer-events-none disabled:opacity-45",
+    "inline-flex min-h-11 items-center justify-center gap-2.5 rounded-xl border px-5 text-[14px] font-bold transition hover:-translate-y-px focus-visible:outline-3 focus-visible:outline-offset-3 focus-visible:outline-vow-wine/30 disabled:pointer-events-none disabled:opacity-45",
     variantClasses[variant],
     size === "large" && "min-h-13 px-6 text-sm",
     fullWidth && "w-full",
