@@ -75,6 +75,7 @@
   width: 34px;
   height: 34px;
   flex: 0 0 auto;
+  overflow: hidden;
   display: grid;
   place-items: center;
   border-radius: 50%;
@@ -83,6 +84,9 @@
   font-style: normal;
   font-size: 8px;
   font-weight: 800;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
 }
 .person-cell > b {
   display: grid;
@@ -707,12 +711,16 @@
 .invoice-mark {
   width: 38px;
   height: 38px;
+  overflow: hidden;
   display: grid;
   place-items: center;
   border-radius: 10px;
   background: var(--surface-soft);
   color: var(--wine);
   font: 10px var(--display);
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
 }
 .invoice-list p,
 .invoice-list > div > b {

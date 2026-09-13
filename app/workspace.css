@@ -95,6 +95,7 @@
   width: 38px;
   height: 38px;
   flex: 0 0 auto;
+  overflow: hidden;
   display: grid;
   place-items: center;
   border-radius: 50%;
@@ -103,6 +104,9 @@
   font-size: 9px;
   font-style: normal;
   font-weight: 850;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
 }
 .sidebar-profile > div:nth-child(2) {
   display: grid;
@@ -151,9 +155,12 @@
 }
 .quick-search input {
   @apply h-full w-full border-0 bg-transparent p-0 text-[11px] shadow-none;
+  min-width: 0;
 }
 .quick-search kbd {
-  @apply rounded-[5px] border border-vow-line bg-vow-soft px-1.5 py-1 text-[8px];
+  @apply inline-flex shrink-0 items-center justify-center whitespace-nowrap rounded-[5px] border border-vow-line bg-vow-soft px-1.5 py-1 text-[8px];
+  min-width: 32px;
+  line-height: 1;
 }
 .notification-button {
   position: relative;
@@ -620,12 +627,16 @@
   width: 41px;
   height: 41px;
   grid-row: span 2;
+  overflow: hidden;
   display: grid;
   place-items: center;
   border-radius: 50%;
   background: var(--blush);
   color: var(--wine);
   font: 11px var(--display);
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
 }
 .vendor-avatar.tone-sage {
   color: var(--sage);

@@ -5,6 +5,7 @@ import { useRef, useState, type FormEvent } from "react";
 import { toast } from "sonner";
 import { SearchField } from "@/components/forms/SearchField";
 import { useWorkspaceCollection } from "@/hooks/useWorkspaceCollection";
+import { getInitials } from "@/lib/initials";
 
 type Conversation = {
   id: string | number;
@@ -79,12 +80,7 @@ export function MessagesSection() {
               if (chat.unread) void update({ ...chat, unread: false });
             }}
           >
-            <span className="avatar">
-              {chat.name
-                .split(" ")
-                .map((part) => part[0])
-                .join("")}
-            </span>
+            <span className="avatar">{getInitials(chat.name)}</span>
             <p>
               <strong>{chat.name}</strong>
               <small>{chat.role}</small>
@@ -98,12 +94,7 @@ export function MessagesSection() {
       {selected && (
         <article>
           <div className="chat-header">
-            <div className="avatar">
-              {selected.name
-                .split(" ")
-                .map((part) => part[0])
-                .join("")}
-            </div>
+            <div className="avatar">{getInitials(selected.name)}</div>
             <p>
               <strong>{selected.name}</strong>
               <small>{selected.role} · Active now</small>

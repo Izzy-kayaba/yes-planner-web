@@ -4,6 +4,7 @@ import { ActionButton } from "@/components/ui/ActionButton";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { StatCard } from "@/components/ui/StatCard";
 import { StatusPill } from "@/components/ui/StatusPill";
+import { getInitials } from "@/lib/initials";
 
 export const metadata: Metadata = { title: "Organisation" };
 
@@ -48,11 +49,7 @@ export default function OrganisationPage() {
             {weddings.map((wedding) => (
               <div key={wedding.couple}>
                 <span className={`portfolio-mark tone-${wedding.tone}`}>
-                  {wedding.couple
-                    .split(" ")
-                    .filter((part) => part !== "&")
-                    .map((part) => part[0])
-                    .join("")}
+                  {getInitials(wedding.couple)}
                 </span>
                 <p>
                   <strong>{wedding.couple}</strong>
@@ -146,12 +143,7 @@ export default function OrganisationPage() {
               ["Mia Daniels", "3 tasks", 34],
             ].map(([name, task, value]) => (
               <div key={name}>
-                <span className="avatar">
-                  {String(name)
-                    .split(" ")
-                    .map((part) => part[0])
-                    .join("")}
-                </span>
+                <span className="avatar">{getInitials(String(name))}</span>
                 <p>
                   <strong>{name}</strong>
                   <small>{task} due</small>

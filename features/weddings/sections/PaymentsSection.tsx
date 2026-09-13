@@ -6,6 +6,7 @@ import { EntityDialog, type EntityFormValue } from "@/components/forms/EntityDia
 import { StatusPill } from "@/components/ui/StatusPill";
 import { MetricGrid } from "@/features/weddings/MetricGrid";
 import { useWorkspaceCollection } from "@/hooks/useWorkspaceCollection";
+import { getInitials } from "@/lib/initials";
 
 type Payment = {
   id: string | number;
@@ -147,13 +148,7 @@ export function PaymentsSection() {
         <div className="invoice-list">
           {items.map((payment) => (
             <div key={payment.id}>
-              <span className="invoice-mark">
-                {payment.vendor
-                  .split(" ")
-                  .map((part) => part[0])
-                  .join("")
-                  .slice(0, 2)}
-              </span>
+              <span className="invoice-mark">{getInitials(payment.vendor)}</span>
               <p>
                 <strong>{payment.vendor}</strong>
                 <small>{payment.reference}</small>

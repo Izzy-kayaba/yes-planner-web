@@ -8,6 +8,7 @@ import { StatusPill } from "@/components/ui/StatusPill";
 import { MetricGrid } from "@/features/weddings/MetricGrid";
 import { useWorkspaceCollection } from "@/hooks/useWorkspaceCollection";
 import { vendors } from "@/lib/demo-data";
+import { getInitials } from "@/lib/initials";
 
 type Vendor = (typeof vendors)[number] & { id: string | number; saved: boolean };
 const seed = vendors.map((vendor, index) => ({ ...vendor, id: index + 1, saved: false }));
@@ -41,11 +42,7 @@ export function VendorsSection() {
     >;
     const input = {
       ...base,
-      initials: base.name
-        .split(" ")
-        .map((part) => part[0])
-        .join("")
-        .slice(0, 2),
+      initials: getInitials(base.name),
       tone: editing?.tone ?? "rose",
       saved: editing?.saved ?? false,
     } as Omit<Vendor, "id">;

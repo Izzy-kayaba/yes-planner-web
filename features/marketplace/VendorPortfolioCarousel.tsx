@@ -3,6 +3,7 @@
 import useEmblaCarousel from "embla-carousel-react";
 import { ArrowLeft, ArrowRight, Heart } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
+import { getInitials } from "@/lib/initials";
 
 const portfolios = [
   {
@@ -99,10 +100,7 @@ export function VendorPortfolioCarousel() {
               >
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_25%,rgba(255,255,255,.55),transparent_18%),linear-gradient(to_top,rgba(27,18,19,.42),transparent_55%)]" />
                 <span className="absolute bottom-4 left-4 font-display text-5xl text-white/80">
-                  {portfolio.studio
-                    .split(" ")
-                    .map((word) => word[0])
-                    .join("")}
+                  {getInitials(portfolio.studio)}
                 </span>
                 <button
                   className="absolute right-3 top-3 grid size-10 place-items-center rounded-full bg-white/90 text-vow-wine shadow-vow-soft backdrop-blur"

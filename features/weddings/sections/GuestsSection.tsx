@@ -8,6 +8,7 @@ import { StatusPill } from "@/components/ui/StatusPill";
 import { MetricGrid } from "@/features/weddings/MetricGrid";
 import { useWorkspaceCollection } from "@/hooks/useWorkspaceCollection";
 import { guests as guestSeed } from "@/lib/demo-data";
+import { getInitials } from "@/lib/initials";
 import type { Guest } from "@/types";
 
 const fields = [
@@ -114,12 +115,7 @@ export function GuestsSection() {
           {filtered.map((guest) => (
             <div className="table-row" key={guest.id}>
               <span className="person-cell">
-                <i>
-                  {guest.name
-                    .split(" ")
-                    .map((part) => part[0])
-                    .join("")}
-                </i>
+                <i>{getInitials(guest.name)}</i>
                 <b>
                   {guest.name}
                   <small>{guest.email}</small>

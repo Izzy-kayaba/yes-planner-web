@@ -122,12 +122,16 @@
 .portfolio-mark {
   width: 37px;
   height: 37px;
+  overflow: hidden;
   display: grid;
   place-items: center;
   border-radius: 10px;
   background: var(--blush);
   color: var(--wine);
   font: 10px var(--display);
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
 }
 .portfolio-mark.tone-sage {
   color: var(--sage);
