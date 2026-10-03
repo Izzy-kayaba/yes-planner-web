@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "react-phone-number-input/style.css";
 @import "./styles/public.css";
 @import "./styles/auth.css";
 
@@ -102,6 +103,14 @@
   textarea {
     @apply rounded-xl border border-vow-line bg-vow-surface text-inherit outline-0 transition;
   }
+
+  select {
+    @apply appearance-none pr-10 pl-4;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 20 20' fill='none'%3E%3Cpath d='M6 8l4 4 4-4' stroke='%238A7E78' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+  }
+
   input:focus,
   select:focus,
   textarea:focus {
@@ -152,17 +161,46 @@
   @apply -translate-y-px border-vow-wine;
 }
 .button-ghost {
-  @apply border-transparent bg-transparent text-vow-ink hover:bg-vow-soft;
+  @apply border border-vow-soft bg-transparent text-vow-ink hover:bg-vow-soft;
 }
 .button-light {
   @apply bg-white text-vow-wine-deep hover:bg-vow-blush;
 }
 .button-large {
-  @apply min-h-13 px-6 text-sm;
+  @apply min-h-13 px-6 text-sm flex items-center justify-center;
 }
 .button-wide {
   @apply w-full;
 }
 .icon-button {
-  @apply grid size-10 place-items-center rounded-xl border border-vow-line bg-vow-surface;
+  @apply inline-grid size-11 shrink-0 place-items-center rounded-xl border border-vow-line bg-vow-surface p-0 text-inherit leading-none;
+}
+.alert {
+  display: flex;
+  gap: 10px;
+  padding: 13px 15px;
+  border: 1px solid;
+  border-radius: 12px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+.alert-error {
+  color: #8a1c16;
+  border-color: #f0b4ae;
+  background: #fff1f0;
+}
+.alert-warning {
+  color: #7a4d00;
+  border-color: #edcf88;
+  background: #fff8e6;
+}
+.alert-info {
+  color: #174f78;
+  border-color: #a9d2ed;
+  background: #eef8ff;
+}
+.alert-success {
+  color: #28613c;
+  border-color: #a8d6b5;
+  background: #effaf2;
 }

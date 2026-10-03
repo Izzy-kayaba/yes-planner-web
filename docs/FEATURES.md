@@ -16,7 +16,8 @@
 - Document search, metadata creation, local file selection, editing and removal
 - Booking search, creation, lifecycle editing and removal
 - Payment creation, editing, removal and CSV export
-- Conversation search, selection, read state and message sending
+- Direct vendor contact through WhatsApp when a validated number is available
+- Optional WhatsApp notifications for vendor requests and shared-workspace changes
 - Note search, creation, editing and removal
 - Responsive reports and marketplace portfolios
 - Profile settings, language settings and preference toggles

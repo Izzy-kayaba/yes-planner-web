@@ -1,14 +1,6 @@
 "use client";
 
-import {
-  addMonths,
-  eachDayOfInterval,
-  endOfMonth,
-  format,
-  startOfMonth,
-  subMonths,
-} from "date-fns";
-import { enZA, fr } from "date-fns/locale";
+import moment from "moment";
 import { ChevronLeft, ChevronRight, Pencil, Plus, Trash2 } from "lucide-react";
 import { useMemo, useState } from "react";
 import { EntityDialog, type EntityFormValue } from "@/components/forms/EntityDialog";
@@ -58,16 +50,15 @@ const fields = [
 
 export function TimelineSection() {
   const { language, text } = useLanguage();
-  const dateLocale = language === "fr" ? fr : enZA;
   const { items, create, update, remove } = useWorkspaceCollection<TimelineEvent>("timeline", seed);
-  const [month, setMonth] = useState(new Date(2026, 9, 1));
+  const [month, setMonth] = useState(() => moment().startOf("month").toDate());
   const [editing, setEditing] = useState<TimelineEvent | null>(null);
   const [open, setOpen] = useState(false);
-  const days = useMemo(
-    () => eachDayOfInterval({ start: startOfMonth(month), end: endOfMonth(month) }),
-    [month],
-  );
-  const padding = (startOfMonth(month).getDay() + 6) % 7;
+  const days = useMemo(() => {
+    const count = moment(month).daysInMonth();
+    return Array.from({ length: count }, (_, index) => moment(month).date(index + 1));
+  }, [month]);
+  const padding = (moment(month).startOf("month").day() + 6) % 7;
 
   async function save(values: Record<string, EntityFormValue>) {
     const input = values as unknown as Omit<TimelineEvent, "id">;
@@ -81,19 +72,19 @@ export function TimelineSection() {
         <div className="panel-header">
           <div>
             <p className="eyebrow">{text("Planning calendar")}</p>
-            <h3>{format(month, "MMMM yyyy", { locale: dateLocale })}</h3>
+            <h3>{moment(month).locale(language).format("MMMM YYYY")}</h3>
           </div>
           <div className="flex gap-2">
             <button
               className="icon-button"
-              onClick={() => setMonth((value) => subMonths(value, 1))}
+              onClick={() => setMonth((value) => moment(value).subtract(1, "month").toDate())}
               aria-label={text("Previous month")}
             >
               <ChevronLeft size={16} />
             </button>
             <button
               className="icon-button"
-              onClick={() => setMonth((value) => addMonths(value, 1))}
+              onClick={() => setMonth((value) => moment(value).add(1, "month").toDate())}
               aria-label={text("Next month")}
             >
               <ChevronRight size={16} />
@@ -111,7 +102,7 @@ export function TimelineSection() {
               <span key={`blank-${index}`} />
             ))}
             {days.map((day) => {
-              const date = format(day, "yyyy-MM-dd");
+              const date = day.format("YYYY-MM-DD");
               return (
                 <button
                   className={items.some((item) => item.date === date) ? "has-event" : ""}
@@ -121,7 +112,7 @@ export function TimelineSection() {
                     setOpen(true);
                   }}
                 >
-                  {format(day, "d")}
+                  {day.format("D")}
                 </button>
               );
             })}
@@ -153,7 +144,7 @@ export function TimelineSection() {
               <p>
                 <strong>{text(event.title)}</strong>
                 <small>
-                  {format(new Date(`${event.date}T12:00:00`), "d MMM", { locale: dateLocale })} ·{" "}
+                  {moment(`${event.date}T${event.time}`).locale(language).format("D MMM · HH:mm")}{" "}
                   {text(event.who)}
                 </small>
               </p>
@@ -187,7 +178,7 @@ export function TimelineSection() {
         title={editing ? "Edit event" : "Add event"}
         fields={fields}
         initialValues={
-          editing ?? { date: format(month, "yyyy-MM-dd"), time: "12:00", tone: "rose" }
+          editing ?? { date: moment(month).format("YYYY-MM-DD"), time: "12:00", tone: "rose" }
         }
         onClose={() => setOpen(false)}
         onSave={save}

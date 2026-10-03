@@ -1,8 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { format } from "date-fns";
-import { enZA, fr } from "date-fns/locale";
 import { useState } from "react";
 import { EntityDialog, type EntityFormValue } from "@/components/forms/EntityDialog";
 import { PageHeader } from "@/components/ui/PageHeader";
@@ -17,6 +15,7 @@ import {
 import { useLanguage } from "@/components/providers/LanguageProvider";
 import { useWorkspaceCollection } from "@/hooks/useWorkspaceCollection";
 import type { WeddingTask } from "@/types";
+import { formatDate } from "@/lib/date-time";
 
 const taskFields = [
   { name: "title", label: "Task", required: true },
@@ -32,7 +31,8 @@ const taskFields = [
   },
 ];
 
-export function DashboardOverview() {
+// This component is rendered only when NEXT_PUBLIC_DATA_SOURCE is explicitly set to "demo".
+export function DemoDashboardOverview() {
   const { language, t, text } = useLanguage();
   const {
     items: tasks,
@@ -56,7 +56,7 @@ export function DashboardOverview() {
   return (
     <div className="dashboard-stack">
       <PageHeader
-        eyebrow={format(new Date(), "EEEE, d MMMM", { locale: language === "fr" ? fr : enZA })}
+        eyebrow={formatDate(new Date(), "dddd, D MMMM", language)}
         title={t("dashboard.greeting", { name: "Ruth" })}
         description={t("dashboard.intro")}
         action={

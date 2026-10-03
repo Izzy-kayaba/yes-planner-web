@@ -5,6 +5,7 @@ import { Toaster } from "sonner";
 import type { ReactNode } from "react";
 import { LanguageProvider } from "@/components/providers/LanguageProvider";
 import type { Language } from "@/lib/i18n";
+import { CurrencyProvider } from "@/components/providers/CurrencyProvider";
 
 /** Client-only providers shared by every public and authenticated page. */
 export function AppProviders({
@@ -22,8 +23,10 @@ export function AppProviders({
       disableTransitionOnChange
     >
       <LanguageProvider initialLanguage={initialLanguage}>
-        {children}
-        <ThemeAwareToaster />
+        <CurrencyProvider>
+          {children}
+          <ThemeAwareToaster />
+        </CurrencyProvider>
       </LanguageProvider>
     </ThemeProvider>
   );

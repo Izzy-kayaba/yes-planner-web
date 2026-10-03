@@ -1,0 +1,294 @@
+"use client";
+
+import { ImagePlus, X } from "lucide-react";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useState, type ChangeEvent, type FormEvent } from "react";
+import { toast } from "sonner";
+import { useLanguage } from "@/components/providers/LanguageProvider";
+import { Button } from "@/components/ui/Button";
+import { apiRequest } from "@/lib/api/client";
+import { vendorServices } from "@/lib/vendors/services";
+
+export type VendorOnboardingValue = {
+  businessName: string;
+  contactName: string;
+  bio: string;
+  services: string[];
+  serviceArea: string;
+  startingPriceMinor: number;
+  website: string;
+  instagramHandle: string;
+  profileImage: string;
+  portfolioImages: string[];
+};
+
+const emptyValue: VendorOnboardingValue = {
+  businessName: "",
+  contactName: "",
+  bio: "",
+  services: [],
+  serviceArea: "",
+  startingPriceMinor: 0,
+  website: "",
+  instagramHandle: "",
+  profileImage: "",
+  portfolioImages: [],
+};
+
+async function uploadImage(file: File) {
+  const body = new FormData();
+  body.set("file", file);
+  return apiRequest<{ id: string; url: string }>("/api/v1/media", { method: "POST", body });
+}
+
+async function removeImage(url: string) {
+  const id = url.split("/").at(-1);
+  if (id) await apiRequest(`/api/v1/media/${id}`, { method: "DELETE" });
+}
+
+export function VendorOnboardingForm({ initialValue }: { initialValue?: VendorOnboardingValue }) {
+  const router = useRouter();
+  const { text } = useLanguage();
+  const [value, setValue] = useState(initialValue ?? emptyValue);
+  const [saving, setSaving] = useState(false);
+  const [removedImages, setRemovedImages] = useState<string[]>([]);
+
+  function update<K extends keyof VendorOnboardingValue>(
+    field: K,
+    nextValue: VendorOnboardingValue[K],
+  ) {
+    setValue((current) => ({ ...current, [field]: nextValue }));
+  }
+
+  function toggleService(service: string) {
+    update(
+      "services",
+      value.services.includes(service)
+        ? value.services.filter((item) => item !== service)
+        : [...value.services, service],
+    );
+  }
+
+  async function selectProfileImage(event: ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    try {
+      const uploaded = await uploadImage(file);
+      if (value.profileImage) setRemovedImages((current) => [...current, value.profileImage]);
+      update("profileImage", uploaded.url);
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : text("Invalid image."));
+    }
+  }
+
+  async function addPortfolioImages(event: ChangeEvent<HTMLInputElement>) {
+    const files = Array.from(event.target.files ?? []).slice(0, 6 - value.portfolioImages.length);
+    try {
+      const images = await Promise.all(files.map(uploadImage));
+      update("portfolioImages", [...value.portfolioImages, ...images.map((image) => image.url)]);
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : text("Invalid image."));
+    }
+  }
+
+  async function save(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (!value.services.length) {
+      toast.error(text("Select at least one service."));
+      return;
+    }
+    setSaving(true);
+    try {
+      await apiRequest("/api/v1/vendor-profile", {
+        method: "PUT",
+        body: JSON.stringify(value),
+      });
+      await Promise.all(removedImages.map((image) => removeImage(image).catch(() => undefined)));
+      setRemovedImages([]);
+      toast.success(text("Vendor profile saved."));
+      router.push("/vendor");
+      router.refresh();
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : text("Vendor profile could not be saved."),
+      );
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  return (
+    <form className="panel onboarding-form grid gap-6" onSubmit={save}>
+      <div className="onboarding-section-heading">
+        <span>1</span>
+        <div>
+          <h2>{text("Business profile")}</h2>
+          <p>{text("This information appears in marketplace searches and your public profile.")}</p>
+        </div>
+      </div>
+      <div className="form-row">
+        <label>
+          {text("Business name")}
+          <input
+            onChange={(event) => update("businessName", event.target.value)}
+            required
+            value={value.businessName}
+          />
+        </label>
+        <label>
+          {text("Contact name")}
+          <input
+            onChange={(event) => update("contactName", event.target.value)}
+            required
+            value={value.contactName}
+          />
+        </label>
+      </div>
+      <label>
+        {text("Business description")}
+        <textarea
+          minLength={30}
+          onChange={(event) => update("bio", event.target.value)}
+          placeholder={text(
+            "Describe your approach, experience and what makes your service special.",
+          )}
+          required
+          rows={5}
+          value={value.bio}
+        />
+      </label>
+
+      <div className="onboarding-section-heading">
+        <span>2</span>
+        <div>
+          <h2>{text("Services offered")}</h2>
+          <p>{text("Choose every service couples can request from you.")}</p>
+        </div>
+      </div>
+      <div className="service-picker">
+        {vendorServices.map((service) => (
+          <button
+            aria-pressed={value.services.includes(service)}
+            className={value.services.includes(service) ? "selected" : ""}
+            key={service}
+            onClick={() => toggleService(service)}
+            type="button"
+          >
+            {text(service)}
+          </button>
+        ))}
+      </div>
+      <div className="form-row">
+        <label>
+          {text("Service area")}
+          <input
+            onChange={(event) => update("serviceArea", event.target.value)}
+            placeholder={text("Johannesburg, Gauteng or nationwide")}
+            required
+            value={value.serviceArea}
+          />
+        </label>
+        <label>
+          {text("Starting price")} (USD)
+          <span className="input-with-prefix">
+            <b>$</b>
+            <input
+              min="0"
+              onChange={(event) =>
+                update("startingPriceMinor", Math.round(Number(event.target.value) * 100))
+              }
+              required
+              type="number"
+              value={value.startingPriceMinor ? value.startingPriceMinor / 100 : ""}
+            />
+          </span>
+        </label>
+      </div>
+      <div className="form-row">
+        <label>
+          {text("Website")}
+          <input
+            onChange={(event) => update("website", event.target.value)}
+            placeholder="https://"
+            type="url"
+            value={value.website}
+          />
+        </label>
+        <label>
+          {text("Instagram handle")}
+          <input
+            onChange={(event) => update("instagramHandle", event.target.value)}
+            placeholder="@business"
+            value={value.instagramHandle}
+          />
+        </label>
+      </div>
+
+      <div className="onboarding-section-heading">
+        <span>3</span>
+        <div>
+          <h2>{text("Profile and portfolio")}</h2>
+          <p>{text("Upload clear images that couples can see before sending a request.")}</p>
+        </div>
+      </div>
+      <div className="vendor-upload-grid">
+        <label className="image-upload-tile profile-upload">
+          {value.profileImage ? (
+            <Image alt="" fill sizes="180px" src={value.profileImage} unoptimized />
+          ) : (
+            <>
+              <ImagePlus />
+              <span>{text("Profile image")}</span>
+            </>
+          )}
+          <input
+            accept="image/jpeg,image/png,image/webp"
+            hidden
+            onChange={selectProfileImage}
+            type="file"
+          />
+        </label>
+        <div className="portfolio-upload-list">
+          {value.portfolioImages.map((image, index) => (
+            <div className="portfolio-upload-preview" key={`${image.slice(-20)}-${index}`}>
+              <Image alt="" fill sizes="140px" src={image} unoptimized />
+              <button
+                aria-label={text("Remove image")}
+                onClick={() => {
+                  setRemovedImages((current) => [...current, image]);
+                  update(
+                    "portfolioImages",
+                    value.portfolioImages.filter((_, item) => item !== index),
+                  );
+                }}
+                type="button"
+              >
+                <X size={14} />
+              </button>
+            </div>
+          ))}
+          {value.portfolioImages.length < 6 && (
+            <label className="image-upload-tile">
+              <ImagePlus />
+              <span>{text("Add work")}</span>
+              <input
+                accept="image/jpeg,image/png,image/webp"
+                hidden
+                multiple
+                onChange={addPortfolioImages}
+                type="file"
+              />
+            </label>
+          )}
+        </div>
+      </div>
+      <small>{text("Up to 6 JPG, PNG or WebP images, each smaller than 5 MB.")}</small>
+      <div className="settings-actions">
+        <Button disabled={saving} type="submit">
+          {saving ? text("Saving…") : text("Save and continue")}
+        </Button>
+      </div>
+    </form>
+  );
+}

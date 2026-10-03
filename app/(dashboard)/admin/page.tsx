@@ -2,137 +2,145 @@ import type { Metadata } from "next";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { StatCard } from "@/components/ui/StatCard";
 import { StatusPill } from "@/components/ui/StatusPill";
-import { ActionButton, DownloadReportButton } from "@/components/ui/ActionButton";
+import { requirePageRole } from "@/lib/auth/session";
+import { getInitials } from "@/lib/initials";
 import { getTextTranslator } from "@/lib/i18n-server";
+import { mongoDb } from "@/lib/mongodb";
 
 export async function generateMetadata(): Promise<Metadata> {
   const text = await getTextTranslator();
-  return { title: text("Platform administration") };
+  return { title: text("System administration") };
 }
 
 export default async function AdminPage() {
+  const demoMode = (process.env.NEXT_PUBLIC_DATA_SOURCE ?? "api") === "demo";
+  if (!demoMode) await requirePageRole(["SystemAdmin"]);
   const text = await getTextTranslator();
+  const metrics = demoMode
+    ? { users: 0, couples: 0, professionals: 0, records: 0 }
+    : await loadMetrics();
+  const users = demoMode ? [] : await loadRecentUsers();
 
   return (
     <div className="section-stack">
       <PageHeader
-        eyebrow="Platform administration"
+        eyebrow="System administration"
         title="Vow Planner operations"
-        description="A focused view of platform health, verification and support."
-        action={<DownloadReportButton />}
+        description="Protected platform oversight for users, roles and application activity."
       />
       <section className="stats-grid">
-        <StatCard label="Active weddings" value="1,284" detail="+8.2% this month" tone="rose" />
-        <StatCard label="Organisations" value="438" detail="62 pending verification" tone="sage" />
-        <StatCard label="Monthly users" value="8,920" detail="71% returning" tone="blue" />
-        <StatCard label="Open support cases" value="24" detail="5 require attention" tone="gold" />
+        <StatCard
+          label="Registered users"
+          value={String(metrics.users)}
+          detail="MongoDB users"
+          tone="rose"
+        />
+        <StatCard
+          label="Couple accounts"
+          value={String(metrics.couples)}
+          detail="Active identities"
+          tone="sage"
+        />
+        <StatCard
+          label="Professional accounts"
+          value={String(metrics.professionals)}
+          detail="Planners and vendors"
+          tone="blue"
+        />
+        <StatCard
+          label="Workspace records"
+          value={String(metrics.records)}
+          detail="Database-backed records"
+          tone="gold"
+        />
       </section>
       <section className="dashboard-grid">
         <article className="panel">
           <div className="panel-header">
             <div>
-              <p className="eyebrow">{text("Verification queue")}</p>
-              <h3>{text("Professional profiles")}</h3>
+              <p className="eyebrow">{text("User access")}</p>
+              <h3>{text("Recent accounts")}</h3>
             </div>
-            <ActionButton className="button button-secondary" message="Verification queue opened.">
-              View all 62
-            </ActionButton>
+            <StatusPill tone="sage">{text("Server protected")}</StatusPill>
           </div>
           <div className="request-list">
-            <div>
-              <span className="avatar">BE</span>
-              <p>
-                <strong>Bloom Events</strong>
-                <small>{text("Wedding planner · Johannesburg")}</small>
+            {users.length ? (
+              users.map((user: AdminUser) => (
+                <div key={user.id}>
+                  <span className="avatar">{getInitials(user.name)}</span>
+                  <p>
+                    <strong>{user.name}</strong>
+                    <small>{user.email}</small>
+                  </p>
+                  <StatusPill tone={user.role === "SystemAdmin" ? "rose" : "neutral"}>
+                    {user.role}
+                  </StatusPill>
+                </div>
+              ))
+            ) : (
+              <p className="text-sm text-vow-muted">
+                {text("No database users are available yet.")}
               </p>
-              <StatusPill tone="gold">Documents ready</StatusPill>
-            </div>
-            <div>
-              <span className="avatar">CV</span>
-              <p>
-                <strong>Clay Venue</strong>
-                <small>{text("Venue · Cape Town")}</small>
-              </p>
-              <StatusPill tone="rose">Needs review</StatusPill>
-            </div>
-            <div>
-              <span className="avatar">SP</span>
-              <p>
-                <strong>Still & Poem</strong>
-                <small>{text("Photography · Durban")}</small>
-              </p>
-              <StatusPill tone="gold">Documents ready</StatusPill>
-            </div>
+            )}
           </div>
         </article>
         <article className="panel">
           <div className="panel-header">
             <div>
-              <p className="eyebrow">{text("Platform health")}</p>
-              <h3>{text("All systems operational")}</h3>
+              <p className="eyebrow">{text("Security controls")}</p>
+              <h3>{text("Enforced on the server")}</h3>
             </div>
             <span className="health-dot" />
           </div>
           <div className="health-list">
-            <div>
-              <span>{text("API availability")}</span>
-              <strong>99.99%</strong>
-            </div>
-            <div>
-              <span>{text("Median response time")}</span>
-              <strong>184 ms</strong>
-            </div>
-            <div>
-              <span>{text("Failed background jobs")}</span>
-              <strong>0</strong>
-            </div>
-            <div>
-              <span>{text("Security alerts")}</span>
-              <strong>{text("0 open")}</strong>
-            </div>
+            {[
+              ["Session validation", "Active"],
+              ["Role checks", "Active"],
+              ["Resource ownership", "Active"],
+              ["Admin route restriction", "SystemAdmin only"],
+            ].map(([label, value]) => (
+              <div key={label}>
+                <span>{text(label)}</span>
+                <strong>{text(value)}</strong>
+              </div>
+            ))}
           </div>
         </article>
-      </section>
-      <section className="panel">
-        <div className="panel-header">
-          <div>
-            <p className="eyebrow">{text("Recent sensitive actions")}</p>
-            <h3>{text("Audit activity")}</h3>
-          </div>
-          <ActionButton className="button button-secondary" message="Audit log opened.">
-            Open audit log
-          </ActionButton>
-        </div>
-        <div className="audit-list">
-          <div>
-            <time>09:41</time>
-            <span className="activity-dot rose">O</span>
-            <p>
-              <strong>{text("Wedding ownership transferred")}</strong>
-              <small>{text("Actor: support@vowplanner.co.za · Wedding ending 48D2")}</small>
-            </p>
-            <StatusPill tone="neutral">Ownership</StatusPill>
-          </div>
-          <div>
-            <time>08:22</time>
-            <span className="activity-dot sage">V</span>
-            <p>
-              <strong>{text("Vendor organisation verified")}</strong>
-              <small>{text("Actor: operations@vowplanner.co.za · Bloom Events")}</small>
-            </p>
-            <StatusPill tone="sage">Verification</StatusPill>
-          </div>
-          <div>
-            <time>{text("Yesterday")}</time>
-            <span className="activity-dot gold">P</span>
-            <p>
-              <strong>{text("Subscription refund approved")}</strong>
-              <small>{text("Actor: finance@vowplanner.co.za · REF-2071")}</small>
-            </p>
-            <StatusPill tone="gold">Finance</StatusPill>
-          </div>
-        </div>
       </section>
     </div>
   );
 }
+
+async function loadMetrics() {
+  const users = mongoDb.collection("user");
+  const [userCount, couples, planners, vendors, records] = await Promise.all([
+    users.countDocuments(),
+    users.countDocuments({ role: "Couple" }),
+    users.countDocuments({ role: "Planner" }),
+    users.countDocuments({ role: "Vendor" }),
+    mongoDb.collection("workspaceItems").countDocuments({ deletedAt: { $exists: false } }),
+  ]);
+  return { users: userCount, couples, professionals: planners + vendors, records };
+}
+
+async function loadRecentUsers() {
+  const users = await mongoDb
+    .collection("user")
+    .find({}, { projection: { name: 1, email: 1, role: 1 } })
+    .sort({ createdAt: -1 })
+    .limit(8)
+    .toArray();
+  return users.map((user: Record<string, unknown>) => ({
+    id: String(user._id),
+    name: String(user.name ?? user.email ?? "User"),
+    email: String(user.email ?? ""),
+    role: String(user.role ?? "Couple"),
+  }));
+}
+
+type AdminUser = {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+};

@@ -14,7 +14,7 @@ The public contract is `BackendAdapter` in `lib/api/contracts.ts`. It covers:
 - update a record;
 - delete a record.
 
-Supported modules are guests, budget, tasks, vendors, timeline, seating, food and drinks, documents, bookings, payments, messages and notes.
+Supported modules are guests, budget, tasks, vendors, timeline, seating, food and drinks, documents, bookings, payments and notes. Vendor contact uses WhatsApp rather than a generic internal-message record.
 
 ## HTTP contract
 
@@ -22,14 +22,10 @@ Authentication:
 
 ```text
 POST /api/v1/auth/register
-POST /api/v1/auth/login
+POST /api/auth/sign-in/email
 ```
 
-Both return:
-
-```json
-{ "token": "..." }
-```
+Better Auth creates an HTTP-only session cookie. Application scripts do not store an access token.
 
 Workspace records:
 
@@ -40,7 +36,7 @@ PUT    /api/v1/weddings/{weddingKey}/workspace/{module}/{id}
 DELETE /api/v1/weddings/{weddingKey}/workspace/{module}/{id}
 ```
 
-Requests and responses are ordinary JSON records. The server supplies the `id` on creation. Authenticated requests send `Authorization: Bearer <token>`.
+Requests and responses are ordinary JSON records. The server supplies the `id` on creation. Browser requests send the secure session cookie automatically.
 
 ## Connecting a different backend
 
@@ -50,12 +46,12 @@ Requests and responses are ordinary JSON records. The server supplies the `id` o
 4. Do not import backend-generated types into feature components.
 5. Keep errors compatible with `{ "message": "Readable explanation" }`, or translate them in the adapter.
 
-This approach lets a REST API, GraphQL service, Firebase, Supabase or another backend replace the current .NET API without changing the screens.
+This approach lets another REST API, GraphQL service or managed backend replace the MongoDB application-data routes without changing feature screens. If authentication is replaced, the new server must provide an equally secure session boundary and repeat every role and ownership check.
 
 ## Security boundary
 
 The frontend may hide unavailable controls for clarity, but the backend must make every access decision again. The current workspace endpoint scopes records to the authenticated user, wedding key and module. The full couple/planner shared-access model will require persisted wedding memberships before production use.
 
-The current adapter stores its access token in browser storage for the local prototype. A production deployment should prefer a secure, HTTP-only cookie or a server-side frontend session so browser scripts cannot read long-lived credentials.
+API mode uses secure Better Auth session cookies. Demo mode is explicitly a browser-only preview and must not be used as the production security model.
 
 File uploads currently save metadata in preview mode. A production backend should issue short-lived object-storage upload URLs, validate file type and size, and save only the resulting storage reference.

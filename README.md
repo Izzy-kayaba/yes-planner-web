@@ -1,12 +1,13 @@
 # Vow Planner Frontend
 
-This repository contains the mobile-first Next.js frontend for Vow Planner. It is intentionally separate from the ASP.NET Core API in `../VowPlanner`.
+This repository contains the mobile-first Next.js application for Vow Planner. Its server routes provide Better Auth, MongoDB-backed application data and access control. The older ASP.NET Core project remains in a separate repository as a legacy integration option.
 
 ## Included experiences
 
 - Premium public landing and authentication pages
 - Shared couple and Full Manager wedding workspace
-- Guests, budget, tasks, vendors, timeline, seating, menus, documents, bookings, payments, messages, notes and reports
+- Guests, budget, tasks, vendors, timeline, seating, menus, documents, bookings, payments, notes and reports
+- Direct vendor contact and opt-in event notifications through WhatsApp
 - Planner organisation dashboard
 - Vendor marketplace and vendor business dashboard
 - Mobile guest invitation and RSVP journey
@@ -33,7 +34,7 @@ The runtime dependency set is deliberately focused. Next.js and React provide th
 
 HTTP requests continue to use the native `fetch` wrapper in `lib/api/client.ts`; Axios and a general-purpose component library are intentionally not included.
 
-The proposal contains more API modules than the current backend. Those screens use realistic demonstration data so the complete experience can be reviewed now. Replace feature data imports with calls through `lib/api/client.ts` as matching backend endpoints become available. The backend remains the final authority for every permission decision.
+The proposal contains more modules than the persisted data layer currently covers. Those screens can still use realistic demonstration data for review, while API mode is the secure foundation for authentication, profile information and editable workspace records. Server routes remain the final authority for every permission decision.
 
 ## Local development
 
@@ -45,13 +46,17 @@ npm.cmd run dev
 
 Open `http://localhost:3000`. The invitation preview is at `/invite/ruth-and-izzy`.
 
-The default data source is a browser-persisted preview, so the complete workspace can be used without running an API. Set `NEXT_PUBLIC_DATA_SOURCE=api` to use a compatible backend.
+API mode is the default. Run MongoDB and configure `.env.local` to use real accounts and server-managed sessions. Set `NEXT_PUBLIC_DATA_SOURCE=demo` only when a browser-persisted preview is needed.
 
 ## Documentation
 
+- [Currency display and USD storage](docs/CURRENCY.md)
+
+- [Project overview for teams](docs/PROJECT_OVERVIEW.md)
 - [Folder structure](docs/FOLDER_STRUCTURE.md)
 - [Running locally](docs/RUNNING_LOCALLY.md)
 - [Backend integration and replacement](docs/BACKEND_INTEGRATION.md)
+- [Authentication, MongoDB and access control](docs/AUTHENTICATION_AND_SECURITY.md)
 - [Feature status](docs/FEATURES.md)
 
 ## Verification

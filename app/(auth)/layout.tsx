@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import Link from "next/link";
 import { Brand } from "@/components/ui/Brand";
 import { getTextTranslator } from "@/lib/i18n-server";
+import { ArrowLeft } from "lucide-react";
 
 export default async function AuthLayout({ children }: { children: ReactNode }) {
   const text = await getTextTranslator();
@@ -11,7 +12,9 @@ export default async function AuthLayout({ children }: { children: ReactNode }) 
       <section className="auth-story">
         <nav>
           <Brand />
-          <Link href="/">{text("Back to home")}</Link>
+          <Link className="auth-home-button" href="/" aria-label={text("Back to home")}>
+            <ArrowLeft size={19} />
+          </Link>
         </nav>
         <div className="auth-story-copy">
           <p className="eyebrow light">{text("Plan beautifully together")}</p>
@@ -36,7 +39,16 @@ export default async function AuthLayout({ children }: { children: ReactNode }) 
         <div className="auth-orbit orbit-one" />
         <div className="auth-orbit orbit-two" />
       </section>
-      <section className="auth-panel">{children}</section>
+      <section className="auth-panel">
+        <Link
+          className="auth-home-button auth-home-mobile"
+          href="/"
+          aria-label={text("Back to home")}
+        >
+          <ArrowLeft size={19} />
+        </Link>
+        {children}
+      </section>
     </main>
   );
 }

@@ -9,7 +9,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 18px;
-  padding: 14px 20px;
+  padding: 14px;
   border-bottom: 1px solid var(--line);
 }
 .table-toolbar > div {
@@ -302,10 +302,11 @@
   font-weight: 800;
 }
 .vendor-card-copy {
-  padding: 17px;
+  padding: 1rem 0.75rem;
 }
 .vendor-card-copy > div {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
 }
@@ -314,6 +315,10 @@
   color: var(--muted);
   font-size: 11px;
 }
+.vendor-card-copy span {
+  margin-bottom: 8px;
+}
+
 .vendor-card-copy > div > p {
   color: var(--wine);
   font-size: 10px;
@@ -357,7 +362,7 @@
   border-radius: 8px;
   background: transparent;
   color: var(--muted);
-  font-size: 11px;
+  font-size: 1rem;
 }
 .calendar-grid button:hover {
   background: var(--surface-soft);
@@ -707,6 +712,7 @@
   align-items: center;
   gap: 12px;
   border-bottom: 1px solid var(--line);
+  padding: 0.5rem 0;
 }
 .invoice-mark {
   width: 38px;

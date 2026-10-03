@@ -4,7 +4,7 @@
 
 - Node.js 20.9 or newer
 - npm
-- Optional API mode: .NET 10 SDK and SQL Server
+- MongoDB 7 or a MongoDB Atlas development database
 
 ## Browser preview mode
 
@@ -32,29 +32,27 @@ Useful routes:
 
 To clear preview edits, remove keys beginning with `vow-planner:` from browser storage.
 
-## API mode with the current .NET backend
+## MongoDB-backed API mode
 
-Configure the backend in a PowerShell terminal. Use your own local values; do not commit them.
+Copy the example environment file, then use your own local values. Do not commit `.env.local`.
 
 ```powershell
-$env:Database__Provider = "SqlServer"
-$env:ConnectionStrings__SqlServer = "<your SQL Server connection string>"
-$env:Jwt__Key = "<at least 32 random bytes>"
-$env:Jwt__Issuer = "VowPlanner.API"
-$env:Jwt__Audience = "VowPlanner.API"
-dotnet run --project .\VowPlanner.API --launch-profile http
+Copy-Item .env.example .env.local
 ```
 
-The API listens on `http://localhost:5227` with the checked-in launch profile. Database migrations are applied at startup.
-
-In `VowPlanner-UI/.env.local`, set:
+At minimum, set:
 
 ```dotenv
 NEXT_PUBLIC_DATA_SOURCE=api
-NEXT_PUBLIC_API_URL=http://localhost:5227
+NEXT_PUBLIC_API_URL=
+MONGODB_DEVELOPMENT_URI=mongodb://127.0.0.1:27017
+MONGODB_DEVELOPMENT_DATABASE=vow_planner_development
+MONGODB_USE_TRANSACTIONS=false
+BETTER_AUTH_URL=http://localhost:3000
+BETTER_AUTH_SECRET=<a unique random value of at least 32 characters>
 ```
 
-Restart Next.js after changing environment variables. Register a normal account before opening authenticated workspace data.
+Add provider credentials when Google or Instagram login is required, then start Next.js with `npm.cmd run dev`. Register a normal account before opening authenticated workspace data.
 
 ## Verification
 
@@ -65,9 +63,4 @@ npm.cmd run validate
 npm.cmd audit --offline
 ```
 
-Backend:
-
-```powershell
-dotnet test VowPlanner.slnx --no-restore
-dotnet build VowPlanner.slnx --no-restore --configuration Release
-```
+The legacy .NET project is verified independently in its own repository and is not required by this application at runtime.

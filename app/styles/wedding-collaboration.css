@@ -125,11 +125,50 @@
 }
 .message-compose {
   display: grid;
-  grid-template-columns: 35px 1fr 36px;
+  grid-template-columns: 1fr 36px;
   align-items: center;
   gap: 8px;
   padding: 12px 18px;
   border-top: 1px solid var(--line);
+}
+.messages-loading,
+.messages-empty {
+  min-height: 260px;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 10px;
+  text-align: center;
+}
+.messages-empty p,
+.messages-conversation-empty {
+  color: var(--muted);
+}
+.messages-panel .avatar {
+  position: relative;
+  overflow: hidden;
+}
+.messages-panel .avatar img {
+  object-fit: cover;
+}
+.message-unread {
+  min-width: 22px;
+  height: 22px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background: var(--wine);
+  color: #fff;
+  font-size: 10px;
+}
+.message p {
+  margin: 0;
+}
+.message time {
+  display: block;
+  margin-top: 5px;
+  font-size: 9px;
+  opacity: 0.72;
 }
 .message-compose input {
   height: 42px;
@@ -141,6 +180,9 @@
   border: 0;
   border-radius: 50%;
   background: var(--surface-soft);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .message-compose .send-button {
   background: var(--wine);

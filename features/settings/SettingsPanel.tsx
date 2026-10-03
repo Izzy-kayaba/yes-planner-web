@@ -13,11 +13,17 @@ import {
   Smartphone,
   type LucideIcon,
 } from "lucide-react";
+import { isValidPhoneNumber } from "libphonenumber-js";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import PhoneInput from "react-phone-number-input";
 import { useEffect, useState, type FormEvent } from "react";
 import { toast } from "sonner";
 import { LanguageSwitcher } from "@/components/i18n/LanguageSwitcher";
 import { useLanguage } from "@/components/providers/LanguageProvider";
 import { PageHeader } from "@/components/ui/PageHeader";
+import { apiRequest } from "@/lib/api/client";
+import { authClient } from "@/lib/auth-client";
 import { cn } from "@/lib/cn";
 
 const tabs = [
@@ -49,9 +55,9 @@ const notificationPreferences: Preference[] = [
     icon: Mail,
   },
   {
-    id: "vendor-messages",
-    label: "Vendor messages",
-    description: "New messages from your booked vendors",
+    id: "vendor-requests",
+    label: "Vendor request updates",
+    description: "Status changes from vendors you asked to work with",
     icon: MessageSquareText,
   },
   {
@@ -105,31 +111,66 @@ const connectionPreferences: Preference[] = [
 ];
 
 export function SettingsPanel() {
+  const router = useRouter();
   const { t, text } = useLanguage();
+  const { data: session } = authClient.useSession();
   const [active, setActive] = useState<(typeof tabs)[number][0]>("profile");
   const [profile, setProfile] = useState({
-    firstName: "Ruth",
-    lastName: "Mokoena",
-    email: "ruth@example.com",
-    phone: "+27 82 123 4567",
+    firstName: "",
+    lastName: "",
+    email: "",
+    phoneNumber: "",
+    whatsappNotifications: false,
   });
 
   useEffect(() => {
-    try {
-      const stored = window.localStorage.getItem("vow-planner-profile");
-      if (stored) setProfile(JSON.parse(stored));
-    } catch {
-      toast.error(text("Saved profile settings could not be loaded."));
+    if ((process.env.NEXT_PUBLIC_DATA_SOURCE ?? "api") === "demo") {
+      try {
+        const stored = window.localStorage.getItem("vow-planner-profile");
+        if (stored) {
+          const saved = JSON.parse(stored) as Partial<typeof profile> & { phone?: string };
+          setProfile((current) => ({
+            ...current,
+            ...saved,
+            phoneNumber: saved.phoneNumber ?? saved.phone ?? "",
+          }));
+        }
+      } catch {
+        toast.error(text("Saved profile settings could not be loaded."));
+      }
+      return;
     }
+    apiRequest<typeof profile>("/api/v1/me")
+      .then(setProfile)
+      .catch((error: Error) => toast.error(error.message));
   }, []);
 
-  function saveProfile(event: FormEvent<HTMLFormElement>) {
+  async function saveProfile(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    window.localStorage.setItem("vow-planner-profile", JSON.stringify(profile));
-    toast.success(text("Profile settings saved."));
+    if (!isValidPhoneNumber(profile.phoneNumber)) {
+      toast.error(text("Enter a valid phone number."));
+      return;
+    }
+    try {
+      if ((process.env.NEXT_PUBLIC_DATA_SOURCE ?? "api") === "demo") {
+        window.localStorage.setItem("vow-planner-profile", JSON.stringify(profile));
+      } else {
+        const saved = await apiRequest<typeof profile>("/api/v1/me", {
+          method: "PATCH",
+          body: JSON.stringify(profile),
+        });
+        setProfile(saved);
+        router.refresh();
+      }
+      toast.success(text("Profile settings saved."));
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : text("Profile settings could not be saved."),
+      );
+    }
   }
 
-  function updateProfile(field: keyof typeof profile, value: string) {
+  function updateProfile<K extends keyof typeof profile>(field: K, value: (typeof profile)[K]) {
     setProfile((current) => ({ ...current, [field]: value }));
   }
 
@@ -190,25 +231,38 @@ export function SettingsPanel() {
               </div>
               <label>
                 {t("auth.email")}
+                <input name="email" readOnly required type="email" value={profile.email} />
+              </label>
+              <label className="settings-toggle-row">
                 <input
-                  name="email"
-                  onChange={(event) => updateProfile("email", event.target.value)}
-                  required
-                  type="email"
-                  value={profile.email}
+                  checked={profile.whatsappNotifications}
+                  onChange={(event) => updateProfile("whatsappNotifications", event.target.checked)}
+                  type="checkbox"
                 />
+                <span>
+                  <strong>{text("WhatsApp notifications")}</strong>
+                  <small>
+                    {text("Receive important workspace and vendor-request updates on WhatsApp.")}
+                  </small>
+                </span>
               </label>
               <label>
                 {t("auth.phone")}
-                <input
-                  name="phone"
-                  onChange={(event) => updateProfile("phone", event.target.value)}
-                  required
-                  type="tel"
-                  value={profile.phone}
+                <PhoneInput
+                  className="phone-input"
+                  defaultCountry="ZA"
+                  international
+                  countryCallingCodeEditable={false}
+                  onChange={(value) => updateProfile("phoneNumber", value ?? "")}
+                  value={profile.phoneNumber}
                 />
               </label>
               <div className="settings-actions">
+                {session?.user.role === "Couple" && (
+                  <Link className="button button-secondary" href="/onboarding">
+                    {text("Edit wedding details")}
+                  </Link>
+                )}
                 <button className="button button-primary" type="submit">
                   {t("common.save")}
                 </button>

@@ -117,6 +117,14 @@
 .marketplace-grid .vendor-cover.tall {
   height: 190px;
 }
+.marketplace-grid .vendor-cover.has-image > img {
+  object-fit: cover;
+  object-position: center;
+}
+.marketplace-grid .vendor-cover.has-image::before,
+.marketplace-grid .vendor-cover.has-image::after {
+  display: none;
+}
 .marketplace-grid .vendor-cover > button {
   width: 40px;
   height: 40px;
@@ -128,6 +136,16 @@
   color: var(--wine);
   box-shadow: var(--shadow-soft);
   backdrop-filter: blur(8px);
+}
+.vendor-profile-link {
+  min-height: 40px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 0 13px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface);
 }
 .org-grid {
   grid-template-columns: 1.15fr 0.85fr;

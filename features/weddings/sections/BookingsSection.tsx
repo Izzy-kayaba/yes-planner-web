@@ -4,6 +4,7 @@ import { Pencil, Plus, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { EntityDialog, type EntityFormValue } from "@/components/forms/EntityDialog";
 import { useLanguage } from "@/components/providers/LanguageProvider";
+import { useCurrency } from "@/components/providers/CurrencyProvider";
 import { SearchField } from "@/components/forms/SearchField";
 import { useWorkspaceCollection } from "@/hooks/useWorkspaceCollection";
 
@@ -11,7 +12,7 @@ type Booking = {
   id: string | number;
   vendor: string;
   service: string;
-  amount: string;
+  amountMinor: number;
   status: string;
   next: string;
 };
@@ -20,7 +21,7 @@ const seed: Booking[] = [
     id: 1,
     vendor: "Lumen & Lace",
     service: "Photography",
-    amount: "R 28,000",
+    amountMinor: 2800000,
     status: "Confirmed",
     next: "Balance due 01 Oct",
   },
@@ -28,7 +29,7 @@ const seed: Booking[] = [
     id: 2,
     vendor: "Petal Theory",
     service: "Florals & décor",
-    amount: "R 44,000",
+    amountMinor: 4400000,
     status: "Quote received",
     next: "Respond by 16 Sep",
   },
@@ -36,7 +37,7 @@ const seed: Booking[] = [
     id: 3,
     vendor: "City Classic Cars",
     service: "Transport",
-    amount: "R 9,800",
+    amountMinor: 980000,
     status: "Pending",
     next: "Awaiting vendor reply",
   },
@@ -44,7 +45,7 @@ const seed: Booking[] = [
 const fields = [
   { name: "vendor", label: "Vendor", required: true },
   { name: "service", label: "Service", required: true },
-  { name: "amount", label: "Amount", required: true },
+  { name: "amountUsd", label: "Amount (USD)", type: "number" as const, required: true },
   {
     name: "status",
     label: "Status",
@@ -57,12 +58,19 @@ const fields = [
 
 export function BookingsSection() {
   const { text } = useLanguage();
+  const { displayMoney } = useCurrency();
   const { items, create, update, remove } = useWorkspaceCollection<Booking>("bookings", seed);
   const [query, setQuery] = useState("");
   const [editing, setEditing] = useState<Booking | null>(null);
   const [open, setOpen] = useState(false);
   async function save(values: Record<string, EntityFormValue>) {
-    const input = values as unknown as Omit<Booking, "id">;
+    const input = {
+      vendor: String(values.vendor),
+      service: String(values.service),
+      amountMinor: Math.round(Number(values.amountUsd) * 100),
+      status: String(values.status),
+      next: String(values.next),
+    };
     if (editing) await update({ ...input, id: editing.id });
     else await create(input);
   }
@@ -96,10 +104,11 @@ export function BookingsSection() {
                 <article className="booking-card" key={booking.id}>
                   <p>{text(booking.service)}</p>
                   <h4>{booking.vendor}</h4>
-                  <strong>{booking.amount}</strong>
+                  <strong>{displayMoney(booking.amountMinor)}</strong>
                   <span>{text(booking.next)}</span>
                   <div className="flex gap-2">
                     <button
+                      className="button button-secondary"
                       onClick={() => {
                         setEditing(booking);
                         setOpen(true);
@@ -108,6 +117,7 @@ export function BookingsSection() {
                       <Pencil size={13} /> {text("Edit")}
                     </button>
                     <button
+                      className="icon-button"
                       onClick={() => {
                         if (window.confirm(`${text("Delete booking with")} ${booking.vendor}?`))
                           void remove(booking.id);
@@ -125,7 +135,11 @@ export function BookingsSection() {
         open={open}
         title={editing ? "Edit booking" : "Add booking request"}
         fields={fields}
-        initialValues={editing ?? { status: "Pending" }}
+        initialValues={
+          editing
+            ? { ...editing, amountUsd: editing.amountMinor / 100 }
+            : { status: "Pending", amountUsd: 0 }
+        }
         onClose={() => setOpen(false)}
         onSave={save}
       />

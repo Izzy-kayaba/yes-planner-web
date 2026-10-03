@@ -139,7 +139,7 @@ export function GuestsSection() {
               </span>
               <span>{text(guest.meal)}</span>
               <span>{text(guest.table)}</span>
-              <span className="flex justify-end gap-1">
+              <span className="flex justify-end gap-2">
                 <button
                   className="icon-button"
                   aria-label={`${text("Edit")} ${guest.name}`}

@@ -10,7 +10,6 @@ import { BudgetSection } from "@/features/weddings/sections/BudgetSection";
 import { DocumentsSection } from "@/features/weddings/sections/DocumentsSection";
 import { FoodSection } from "@/features/weddings/sections/FoodSection";
 import { GuestsSection } from "@/features/weddings/sections/GuestsSection";
-import { MessagesSection } from "@/features/weddings/sections/MessagesSection";
 import { NotesSection } from "@/features/weddings/sections/NotesSection";
 import { PaymentsSection } from "@/features/weddings/sections/PaymentsSection";
 import { ReportsSection } from "@/features/weddings/sections/ReportsSection";
@@ -30,7 +29,6 @@ const titles: Record<string, [TranslationKey, TranslationKey]> = {
   documents: ["wedding.documents", "wedding.documentsDescription"],
   bookings: ["wedding.bookings", "wedding.bookingsDescription"],
   payments: ["wedding.payments", "wedding.paymentsDescription"],
-  messages: ["wedding.messages", "wedding.messagesDescription"],
   notes: ["wedding.notes", "wedding.notesDescription"],
   reports: ["wedding.reports", "wedding.reportsDescription"],
 };
@@ -46,7 +44,6 @@ const sections: Record<string, ComponentType> = {
   documents: DocumentsSection,
   bookings: BookingsSection,
   payments: PaymentsSection,
-  messages: MessagesSection,
   notes: NotesSection,
   reports: ReportsSection,
 };
@@ -59,7 +56,7 @@ export function WeddingSection({ section }: { section: string }) {
   return (
     <div className="section-stack">
       <PageHeader
-        eyebrow="Ruth & Izzy"
+        eyebrow={text("Wedding workspace")}
         title={heading ? t(heading[0]) : t("nav.workspace")}
         description={heading ? t(heading[1]) : t("dashboard.intro")}
       />

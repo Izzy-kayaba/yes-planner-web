@@ -1,9 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { StatCard } from "@/components/ui/StatCard";
 import { StatusPill } from "@/components/ui/StatusPill";
 import { getTextTranslator } from "@/lib/i18n-server";
+import { requirePageRole } from "@/lib/auth/session";
+import { mongoDb } from "@/lib/mongodb";
+import { VendorWorkspace, type VendorRequestValue } from "@/features/vendors/VendorWorkspace";
 
 export async function generateMetadata(): Promise<Metadata> {
   const text = await getTextTranslator();
@@ -11,6 +15,38 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function VendorPage() {
+  const demoMode = (process.env.NEXT_PUBLIC_DATA_SOURCE ?? "api") === "demo";
+  if (!demoMode) {
+    const session = await requirePageRole(["Vendor"]);
+    const [profile, requests] = await Promise.all([
+      mongoDb.collection("vendorProfiles").findOne({ ownerUserId: session.user.id }),
+      mongoDb
+        .collection("vendorRequests")
+        .find({ vendorUserId: session.user.id })
+        .sort({ createdAt: -1 })
+        .toArray(),
+    ]);
+    if (!profile) redirect("/onboarding");
+    return (
+      <VendorWorkspace
+        businessName={String(profile.businessName)}
+        contactName={String(profile.contactName)}
+        portfolioCount={Array.isArray(profile.portfolioImages) ? profile.portfolioImages.length : 0}
+        services={Array.isArray(profile.services) ? profile.services.map(String) : []}
+        requests={requests.map((request) => ({
+          id: String(request._id),
+          coupleName: String(request.coupleName ?? ""),
+          weddingDate: String(request.weddingDate ?? ""),
+          venue: String(request.venue ?? ""),
+          location: String(request.location ?? ""),
+          service: String(request.service ?? ""),
+          message: String(request.message ?? ""),
+          status: String(request.status ?? "Pending") as VendorRequestValue["status"],
+          weddingKey: String(request.weddingKey ?? ""),
+        }))}
+      />
+    );
+  }
   const text = await getTextTranslator();
 
   return (
@@ -38,8 +74,8 @@ export default async function VendorPage() {
               <p className="eyebrow">{text("Booking requests")}</p>
               <h3>{text("Ready for your response")}</h3>
             </div>
-            <Link className="button button-secondary" href="/weddings/ruth-izzy/messages">
-              {text("View inbox")}
+            <Link className="button button-secondary" href="/marketplace">
+              {text("View marketplace")}
             </Link>
           </div>
           <div className="request-list">

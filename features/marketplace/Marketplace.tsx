@@ -110,7 +110,7 @@ export function Marketplace() {
         </select>
       </div>
       <section className="vendor-grid marketplace-grid">
-        {results.map((vendor) => (
+        {results.map((vendor, index) => (
           <article className="vendor-card" key={vendor.name}>
             <div className={`vendor-cover tall tone-${vendor.tone}`}>
               <span>{vendor.initials}</span>

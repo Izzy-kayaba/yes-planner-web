@@ -100,22 +100,26 @@ export function SeatingSection() {
             <p>
               {text(table.label)} · {table.guests}
             </p>
-            <div className="flex justify-center gap-2">
+            <div className="flex items-center justify-center gap-3">
               <button
-                className="text-link"
+                className="text-link inline-flex items-center gap-1"
                 onClick={() => {
                   setEditing(table);
                   setOpen(true);
                 }}
               >
-                <Pencil size={13} /> {text("Arrange")}
+                <Pencil size={13} />
+                {text("Arrange")}
               </button>
+
               <button
-                className="text-link"
+                className="text-link inline-flex items-center"
                 onClick={() => {
-                  if (window.confirm(`${text("Delete")} ${text(table.name)}?`))
+                  if (window.confirm(`${text("Delete")} ${text(table.name)}?`)) {
                     void remove(table.id);
+                  }
                 }}
+                aria-label={`${text("Delete")} ${text(table.name)}`}
               >
                 <Trash2 size={13} />
               </button>

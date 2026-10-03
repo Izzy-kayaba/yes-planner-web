@@ -74,8 +74,9 @@ export function NotesSection() {
       <section className="notes-grid">
         {shown.map((note) => (
           <article className={`note-card tone-${note.color}`} key={note.id}>
-            <div className="flex justify-end gap-1">
+            <div className="flex justify-end gap-2">
               <button
+                className="icon-button"
                 onClick={() => {
                   setEditing(note);
                   setOpen(true);
@@ -85,6 +86,7 @@ export function NotesSection() {
                 <Pencil size={14} />
               </button>
               <button
+                className="icon-button"
                 onClick={() => {
                   if (window.confirm(`${text("Delete")} ${note.title}?`)) void remove(note.id);
                 }}

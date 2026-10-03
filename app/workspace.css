@@ -123,6 +123,10 @@
   color: var(--muted);
   font-size: 11px;
 }
+.sidebar-profile-actions {
+  display: flex;
+  gap: 3px;
+}
 .profile-menu {
   padding: 4px;
   border: 0;
@@ -156,6 +160,9 @@
   @apply flex items-center gap-2;
   min-width: 0;
   flex: 0 0 auto;
+}
+.currency-switcher select {
+  @apply h-10 rounded-xl border border-vow-line bg-vow-surface px-3 text-xs font-bold text-vow-muted shadow-none;
 }
 .quick-search {
   @apply flex h-10 w-[230px] items-center gap-2 rounded-[10px] border border-vow-line bg-vow-surface py-0 pl-3 pr-[9px] text-vow-muted;

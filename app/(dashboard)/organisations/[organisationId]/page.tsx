@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { ActionButton } from "@/components/ui/ActionButton";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { StatCard } from "@/components/ui/StatCard";
 import { StatusPill } from "@/components/ui/StatusPill";
 import { getInitials } from "@/lib/initials";
 import { getTextTranslator } from "@/lib/i18n-server";
+import { requirePageRole } from "@/lib/auth/session";
 
 export async function generateMetadata(): Promise<Metadata> {
   const text = await getTextTranslator();
@@ -13,6 +15,10 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function OrganisationPage() {
+  if ((process.env.NEXT_PUBLIC_DATA_SOURCE ?? "api") !== "demo") {
+    await requirePageRole(["SystemAdmin", "Planner"]);
+    redirect("/planner");
+  }
   const text = await getTextTranslator();
   const weddings = [
     { couple: "Ruth & Izzy", date: "18 Oct 2026", progress: 68, owner: "Lerato", tone: "rose" },

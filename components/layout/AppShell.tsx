@@ -1,16 +1,17 @@
 "use client";
 
 import {
-  Bell,
   Building2,
   CalendarHeart,
   LayoutDashboard,
+  LogOut,
   Menu,
-  MessageCircle,
+  MessageSquareText,
   Moon,
   MoreHorizontal,
   Search,
   Settings,
+  ShieldCheck,
   Store,
   Sun,
   UsersRound,
@@ -28,53 +29,105 @@ import {
   type FormEvent,
   type ReactNode,
 } from "react";
-import { toast } from "sonner";
 import { Brand } from "@/components/ui/Brand";
 import { LanguageSwitcher } from "@/components/i18n/LanguageSwitcher";
+import { CurrencySwitcher } from "@/components/currency/CurrencySwitcher";
 import { useLanguage } from "@/components/providers/LanguageProvider";
 import { cn } from "@/lib/cn";
+import { authClient } from "@/lib/auth-client";
+import type { PlatformRole } from "@/lib/auth/roles";
+import type { DashboardData } from "@/lib/dashboard/types";
 import type { TranslationKey } from "@/lib/i18n";
+import { getInitials } from "@/lib/initials";
+import { formatDate } from "@/lib/date-time";
 
 type NavigationItem = {
   labelKey: TranslationKey;
   href: string;
   icon: LucideIcon;
   badge?: string;
+  roles?: readonly PlatformRole[];
 };
 
 const navigation: NavigationItem[] = [
-  { labelKey: "nav.dashboard", href: "/dashboard", icon: LayoutDashboard },
-  { labelKey: "nav.wedding", href: "/weddings/ruth-izzy", icon: CalendarHeart },
+  {
+    labelKey: "nav.dashboard",
+    href: "/dashboard",
+    icon: LayoutDashboard,
+    roles: ["SystemAdmin", "Couple"],
+  },
+  {
+    labelKey: "nav.wedding",
+    href: "/weddings/ruth-izzy",
+    icon: CalendarHeart,
+    roles: ["SystemAdmin", "Couple", "Planner"],
+  },
+  { labelKey: "nav.vendor", href: "/vendor", icon: UsersRound, roles: ["SystemAdmin", "Vendor"] },
   { labelKey: "nav.marketplace", href: "/marketplace", icon: Store },
-  { labelKey: "nav.organisation", href: "/organisations/beautiful-day", icon: Building2 },
-  { labelKey: "nav.vendor", href: "/vendor", icon: UsersRound },
   {
     labelKey: "nav.messages",
-    href: "/weddings/ruth-izzy/messages",
-    icon: MessageCircle,
-    badge: "3",
+    href: "/messages",
+    icon: MessageSquareText,
+    roles: ["Couple", "Vendor"],
+  },
+  {
+    labelKey: "nav.organisation",
+    href: "/organisations/beautiful-day",
+    icon: Building2,
+    roles: ["SystemAdmin", "Planner"],
   },
   { labelKey: "common.settings", href: "/settings", icon: Settings },
+  { labelKey: "nav.admin", href: "/admin", icon: ShieldCheck, roles: ["SystemAdmin"] },
 ];
 
 function matchesNavigation(pathname: string, href: string) {
   if (href === "/dashboard") return pathname === href;
-  const messagesPath = "/weddings/ruth-izzy/messages";
-  if (href === messagesPath) return pathname.startsWith(messagesPath);
-  if (href === "/weddings/ruth-izzy")
-    return pathname.startsWith(href) && !pathname.startsWith(messagesPath);
+  if (href.startsWith("/weddings/") && href.split("/").length === 3)
+    return pathname.startsWith(href);
   return pathname.startsWith(href);
 }
 
-export function AppShell({ children }: { children: ReactNode }) {
+export function AppShell({
+  children,
+  shellData,
+}: {
+  children: ReactNode;
+  shellData?: DashboardData;
+}) {
   const pathname = usePathname();
   const router = useRouter();
-  const { t, text } = useLanguage();
+  const { language, t, text } = useLanguage();
   const { resolvedTheme, setTheme } = useTheme();
   const [menuOpen, setMenuOpen] = useState(false);
   const [themeReady, setThemeReady] = useState(false);
   const [search, setSearch] = useState("");
   const searchInput = useRef<HTMLInputElement>(null);
+  const { data: session } = authClient.useSession();
+  const demoMode = (process.env.NEXT_PUBLIC_DATA_SOURCE ?? "api") === "demo";
+  const role = shellData?.user.role ?? (session?.user.role as PlatformRole | undefined);
+  const profileName = demoMode
+    ? "Demo Couple"
+    : (shellData?.user.name ?? session?.user.name ?? session?.user.email ?? "");
+  const profileLabel = role ?? "Guest";
+  const weddingKey = demoMode ? "ruth-izzy" : shellData?.wedding?.weddingKey;
+  const showWeddingSummary = demoMode || Boolean(shellData?.wedding);
+  const resolvedNavigation = navigation
+    .map((item) => ({
+      ...item,
+      href: (item.href === "/organisations/beautiful-day" && !demoMode
+        ? "/planner"
+        : item.href
+      ).replace("ruth-izzy", weddingKey ?? "wedding-not-configured"),
+      badge:
+        item.href === "/messages" && shellData?.counts.unreadMessages
+          ? String(shellData.counts.unreadMessages)
+          : undefined,
+    }))
+    .filter(
+      (item) =>
+        !item.href.startsWith("/weddings/wedding-not-configured") &&
+        (demoMode || !item.roles || (role && item.roles.includes(role))),
+    );
 
   useEffect(() => setThemeReady(true), []);
   useEffect(() => {
@@ -101,16 +154,25 @@ export function AppShell({ children }: { children: ReactNode }) {
       "documents",
       "bookings",
       "payments",
-      "messages",
       "notes",
       "reports",
     ].find((item) => item.includes(term) || term.includes(item));
     router.push(
-      section ? `/weddings/ruth-izzy/${section}` : `/marketplace?query=${encodeURIComponent(term)}`,
+      section && weddingKey
+        ? `/weddings/${weddingKey}/${section}`
+        : `/marketplace?query=${encodeURIComponent(term)}`,
     );
   }
 
   const darkMode = themeReady && resolvedTheme === "dark";
+
+  async function signOut() {
+    if (!window.confirm(text("Are you sure you want to log out?"))) return;
+    if (!demoMode) await authClient.signOut();
+    setMenuOpen(false);
+    router.replace("/login");
+    router.refresh();
+  }
 
   return (
     <div className="app-shell">
@@ -128,7 +190,7 @@ export function AppShell({ children }: { children: ReactNode }) {
 
         <nav className="sidebar-nav" aria-label={text("Main navigation")}>
           <p className="nav-label">{t("nav.workspace")}</p>
-          {navigation.map((item) => {
+          {resolvedNavigation.map((item) => {
             const active = matchesNavigation(pathname, item.href);
             const Icon = item.icon;
             return (
@@ -149,29 +211,48 @@ export function AppShell({ children }: { children: ReactNode }) {
           })}
         </nav>
 
-        <div className="sidebar-wedding-card">
-          <div className="mini-ring" style={{ "--progress": "68%" } as CSSProperties}>
-            <span>68%</span>
+        {showWeddingSummary && (
+          <div className="sidebar-wedding-card">
+            {demoMode && (
+              <div className="mini-ring" style={{ "--progress": "68%" } as CSSProperties}>
+                <span>68%</span>
+              </div>
+            )}
+            <div>
+              <strong>{demoMode ? "Ruth & Izzy" : shellData?.wedding?.displayName}</strong>
+              <span>
+                {demoMode
+                  ? `35 ${t("shell.daysToGo")}`
+                  : formatDate(shellData?.wedding?.weddingDate, "D MMM YYYY", language)}
+              </span>
+            </div>
           </div>
-          <div>
-            <strong>Ruth & Izzy</strong>
-            <span>35 {t("shell.daysToGo")}</span>
-          </div>
-        </div>
+        )}
 
         <div className="sidebar-profile">
-          <div className="avatar">RM</div>
+          <div className="avatar">{getInitials(profileName)}</div>
           <div>
-            <strong>Ruth Mokoena</strong>
-            <span>{t("shell.weddingOwner")}</span>
+            <strong>{profileName}</strong>
+            <span>{demoMode ? t("shell.weddingOwner") : text(profileLabel)}</span>
           </div>
-          <Link
-            className="profile-menu"
-            href="/settings"
-            aria-label={text("Open profile settings")}
-          >
-            <MoreHorizontal size={18} />
-          </Link>
+          <div className="sidebar-profile-actions">
+            <Link
+              className="profile-menu"
+              href="/settings"
+              aria-label={text("Open profile settings")}
+            >
+              <MoreHorizontal size={18} />
+            </Link>
+            <button
+              className="profile-menu"
+              onClick={() => void signOut()}
+              type="button"
+              aria-label={text("Log out")}
+              title={text("Log out")}
+            >
+              <LogOut size={17} />
+            </button>
+          </div>
         </div>
       </aside>
 
@@ -208,6 +289,7 @@ export function AppShell({ children }: { children: ReactNode }) {
               />
               <kbd>⌘ K</kbd>
             </form>
+            <CurrencySwitcher />
             <LanguageSwitcher compact />
             <button
               className="icon-button"
@@ -215,14 +297,6 @@ export function AppShell({ children }: { children: ReactNode }) {
               aria-label={text(darkMode ? "Use light theme" : "Use dark theme")}
             >
               {darkMode ? <Sun size={17} /> : <Moon size={17} />}
-            </button>
-            <button
-              className="icon-button notification-button"
-              aria-label={t("shell.notifications")}
-              onClick={() => toast.info(text("You have 3 unread messages."))}
-            >
-              <Bell size={17} />
-              <span />
             </button>
           </div>
         </header>

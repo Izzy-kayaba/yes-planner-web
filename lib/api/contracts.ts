@@ -11,23 +11,22 @@ export type WorkspaceModule =
   | "documents"
   | "bookings"
   | "payments"
-  | "messages"
   | "notes";
 
 export type LoginInput = {
-  phoneNumber: string;
+  email: string;
   password: string;
 };
 
 export type RegisterInput = LoginInput & {
-  email?: string;
-  firstName?: string;
-  lastName?: string;
+  phoneNumber: string;
+  firstName: string;
+  lastName: string;
   role: "Couple" | "Planner" | "Vendor";
 };
 
 export type AuthSession = {
-  token: string;
+  userId?: string;
 };
 
 export interface BackendAdapter {

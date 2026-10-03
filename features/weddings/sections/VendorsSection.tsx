@@ -4,6 +4,7 @@ import { Heart, Pencil, Plus, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { EntityDialog, type EntityFormValue } from "@/components/forms/EntityDialog";
 import { useLanguage } from "@/components/providers/LanguageProvider";
+import { useCurrency } from "@/components/providers/CurrencyProvider";
 import { SearchField } from "@/components/forms/SearchField";
 import { StatusPill } from "@/components/ui/StatusPill";
 import { MetricGrid } from "@/features/weddings/MetricGrid";
@@ -11,13 +12,28 @@ import { useWorkspaceCollection } from "@/hooks/useWorkspaceCollection";
 import { vendors } from "@/lib/demo-data";
 import { getInitials } from "@/lib/initials";
 
-type Vendor = (typeof vendors)[number] & { id: string | number; saved: boolean };
-const seed = vendors.map((vendor, index) => ({ ...vendor, id: index + 1, saved: false }));
+type Vendor = {
+  id: string | number;
+  name: string;
+  category: string;
+  rating: string;
+  priceMinor: number;
+  status: string;
+  initials: string;
+  tone: string;
+  saved: boolean;
+};
+const seed: Vendor[] = vendors.map((vendor, index) => ({
+  ...vendor,
+  id: index + 1,
+  priceMinor: 0,
+  saved: false,
+}));
 const fields = [
   { name: "name", label: "Vendor name", required: true },
   { name: "category", label: "Category", required: true },
   { name: "rating", label: "Rating", type: "number" as const, required: true },
-  { name: "price", label: "Price", required: true },
+  { name: "priceUsd", label: "Price (USD)", type: "number" as const, required: true },
   {
     name: "status",
     label: "Status",
@@ -29,6 +45,7 @@ const fields = [
 
 export function VendorsSection() {
   const { text } = useLanguage();
+  const { displayMoney } = useCurrency();
   const { items, create, update, remove } = useWorkspaceCollection<Vendor>("vendors", seed);
   const [query, setQuery] = useState("");
   const [editing, setEditing] = useState<Vendor | null>(null);
@@ -38,12 +55,15 @@ export function VendorsSection() {
   );
 
   async function save(values: Record<string, EntityFormValue>) {
-    const base = values as unknown as Pick<
-      Vendor,
-      "name" | "category" | "rating" | "price" | "status"
-    >;
+    const base = values as unknown as Pick<Vendor, "name" | "category" | "rating" | "status"> & {
+      priceUsd: number;
+    };
     const input = {
-      ...base,
+      name: base.name,
+      category: base.category,
+      rating: base.rating,
+      status: base.status,
+      priceMinor: Math.round(Number(base.priceUsd) * 100),
       initials: getInitials(base.name),
       tone: editing?.tone ?? "rose",
       saved: editing?.saved ?? false,
@@ -104,6 +124,7 @@ export function VendorsSection() {
             <div className={`vendor-cover tone-${vendor.tone}`}>
               <span>{vendor.initials}</span>
               <button
+                className="icon-button"
                 aria-label={`${text("Save")} ${vendor.name}`}
                 onClick={() => void update({ ...vendor, saved: !vendor.saved })}
               >
@@ -121,10 +142,12 @@ export function VendorsSection() {
               <p>
                 <span className="rating">★ {vendor.rating}</span> · Johannesburg
               </p>
-              <strong>{text(vendor.price)}</strong>
+              <strong>
+                {vendor.priceMinor ? displayMoney(vendor.priceMinor) : text("Quote required")}
+              </strong>
               <div className="flex gap-2">
                 <button
-                  className="button button-secondary flex-1"
+                  className="button button-secondary flex-1 min-w-0"
                   onClick={() => {
                     setEditing(vendor);
                     setOpen(true);
@@ -133,7 +156,7 @@ export function VendorsSection() {
                   <Pencil size={14} /> {text("Edit")}
                 </button>
                 <button
-                  className="icon-button"
+                  className="icon-button shrink-0"
                   onClick={() => {
                     if (window.confirm(`${text("Remove")} ${vendor.name}?`)) void remove(vendor.id);
                   }}
@@ -150,7 +173,11 @@ export function VendorsSection() {
         open={open}
         title={editing ? "Edit vendor" : "Add vendor"}
         fields={fields}
-        initialValues={editing ?? { status: "Shortlisted", rating: 5 }}
+        initialValues={
+          editing
+            ? { ...editing, priceUsd: editing.priceMinor / 100 }
+            : { status: "Shortlisted", rating: 5, priceUsd: 0 }
+        }
         onClose={() => setOpen(false)}
         onSave={save}
       />

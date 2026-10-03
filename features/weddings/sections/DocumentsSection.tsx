@@ -7,6 +7,7 @@ import { useLanguage } from "@/components/providers/LanguageProvider";
 import { SearchField } from "@/components/forms/SearchField";
 import { StatusPill } from "@/components/ui/StatusPill";
 import { useWorkspaceCollection } from "@/hooks/useWorkspaceCollection";
+import { formatDate } from "@/lib/date-time";
 
 type DocumentItem = {
   id: string | number;
@@ -73,11 +74,8 @@ export function DocumentsSection() {
     await create({
       name: file.name,
       type: file.type || "File",
-      owner: "Ruth",
-      date: new Date().toLocaleDateString(language === "fr" ? "fr-FR" : "en-ZA", {
-        day: "2-digit",
-        month: "short",
-      }),
+      owner: text("Me"),
+      date: formatDate(new Date(), "DD MMM", language),
       access: "Team",
     });
   }
@@ -151,7 +149,7 @@ export function DocumentsSection() {
         open={open}
         title={editing ? "Edit document" : "Add document"}
         fields={fields}
-        initialValues={editing ?? { owner: "Ruth", date: "Today", access: "Team" }}
+        initialValues={editing ?? { owner: text("Me"), date: "Today", access: "Team" }}
         onClose={() => setOpen(false)}
         onSave={save}
       />

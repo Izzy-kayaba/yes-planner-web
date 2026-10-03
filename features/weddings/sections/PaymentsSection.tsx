@@ -4,6 +4,7 @@ import { Download, Pencil, Plus, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { EntityDialog, type EntityFormValue } from "@/components/forms/EntityDialog";
 import { useLanguage } from "@/components/providers/LanguageProvider";
+import { useCurrency } from "@/components/providers/CurrencyProvider";
 import { StatusPill } from "@/components/ui/StatusPill";
 import { MetricGrid } from "@/features/weddings/MetricGrid";
 import { useWorkspaceCollection } from "@/hooks/useWorkspaceCollection";
@@ -13,7 +14,7 @@ type Payment = {
   id: string | number;
   vendor: string;
   reference: string;
-  amount: number;
+  amountMinor: number;
   due: string;
   status: string;
 };
@@ -22,7 +23,7 @@ const seed: Payment[] = [
     id: 1,
     vendor: "Shepstone Gardens",
     reference: "INV-1042",
-    amount: 62000,
+    amountMinor: 6200000,
     due: "24 Sep",
     status: "Due soon",
   },
@@ -30,7 +31,7 @@ const seed: Payment[] = [
     id: 2,
     vendor: "Lumen & Lace",
     reference: "INV-0811",
-    amount: 14000,
+    amountMinor: 1400000,
     due: "01 Oct",
     status: "Scheduled",
   },
@@ -38,7 +39,7 @@ const seed: Payment[] = [
     id: 3,
     vendor: "Olive & Oak",
     reference: "INV-003",
-    amount: 48250,
+    amountMinor: 4825000,
     due: "04 Sep",
     status: "Paid",
   },
@@ -46,7 +47,7 @@ const seed: Payment[] = [
 const fields = [
   { name: "vendor", label: "Vendor", required: true },
   { name: "reference", label: "Invoice reference", required: true },
-  { name: "amount", label: "Amount", type: "number" as const, required: true },
+  { name: "amountUsd", label: "Amount (USD)", type: "number" as const, required: true },
   { name: "due", label: "Due date", required: true },
   {
     name: "status",
@@ -59,21 +60,28 @@ const fields = [
 
 export function PaymentsSection() {
   const { text } = useLanguage();
+  const { displayMoney } = useCurrency();
   const { items, create, update, remove } = useWorkspaceCollection<Payment>("payments", seed);
   const [editing, setEditing] = useState<Payment | null>(null);
   const [open, setOpen] = useState(false);
   async function save(values: Record<string, EntityFormValue>) {
-    const input = values as unknown as Omit<Payment, "id">;
+    const input = {
+      vendor: String(values.vendor),
+      reference: String(values.reference),
+      amountMinor: Math.round(Number(values.amountUsd) * 100),
+      due: String(values.due),
+      status: String(values.status),
+    };
     if (editing) await update({ ...input, id: editing.id });
     else await create(input);
   }
   function exportCsv() {
     const rows = [
-      ["Vendor", "Reference", "Amount", "Due", "Status"],
+      ["Vendor", "Reference", "Amount USD minor units", "Due", "Status"],
       ...items.map((item) => [
         item.vendor,
         item.reference,
-        String(item.amount),
+        String(item.amountMinor),
         item.due,
         item.status,
       ]),
@@ -95,14 +103,14 @@ export function PaymentsSection() {
   }
   const paid = items
     .filter((item) => item.status === "Paid")
-    .reduce((sum, item) => sum + item.amount, 0);
+    .reduce((sum, item) => sum + item.amountMinor, 0);
   return (
     <>
       <MetricGrid
         items={[
           {
             label: "Paid",
-            value: `R ${paid.toLocaleString()}`,
+            value: displayMoney(paid),
             detail: "Recorded payments",
             tone: "sage",
           },
@@ -156,7 +164,7 @@ export function PaymentsSection() {
                 <small>{payment.reference}</small>
               </p>
               <b>
-                R {payment.amount.toLocaleString()}
+                {displayMoney(payment.amountMinor)}
                 <small>
                   {text("Due")} {text(payment.due)}
                 </small>
@@ -202,7 +210,11 @@ export function PaymentsSection() {
         open={open}
         title={editing ? "Edit payment" : "Add payment"}
         fields={fields}
-        initialValues={editing ?? { status: "Scheduled", amount: 0 }}
+        initialValues={
+          editing
+            ? { ...editing, amountUsd: editing.amountMinor / 100 }
+            : { status: "Scheduled", amountUsd: 0 }
+        }
         onClose={() => setOpen(false)}
         onSave={save}
       />

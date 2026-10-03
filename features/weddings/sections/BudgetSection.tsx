@@ -4,21 +4,28 @@ import { Pencil, Plus, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { EntityDialog, type EntityFormValue } from "@/components/forms/EntityDialog";
 import { useLanguage } from "@/components/providers/LanguageProvider";
+import { useCurrency } from "@/components/providers/CurrencyProvider";
 import { useWorkspaceCollection } from "@/hooks/useWorkspaceCollection";
 import { budgetCategories } from "@/lib/demo-data";
 
 type BudgetCategory = {
   id: string | number;
   name: string;
-  amount: number;
-  budget: number;
+  amountMinor: number;
+  budgetMinor: number;
   color: string;
 };
-const seed = budgetCategories.map((category, index) => ({ ...category, id: index + 1 }));
+const seed = budgetCategories.map((category, index) => ({
+  id: index + 1,
+  name: category.name,
+  amountMinor: category.amount * 100,
+  budgetMinor: category.budget * 100,
+  color: category.color,
+}));
 const fields = [
   { name: "name", label: "Category", required: true },
-  { name: "amount", label: "Committed amount", type: "number" as const, required: true },
-  { name: "budget", label: "Planned budget", type: "number" as const, required: true },
+  { name: "amountUsd", label: "Committed amount (USD)", type: "number" as const, required: true },
+  { name: "budgetUsd", label: "Planned budget (USD)", type: "number" as const, required: true },
   {
     name: "color",
     label: "Colour",
@@ -30,15 +37,21 @@ const fields = [
 
 export function BudgetSection() {
   const { text } = useLanguage();
+  const { displayMoney } = useCurrency();
   const { items, create, update, remove } = useWorkspaceCollection<BudgetCategory>("budget", seed);
   const [editing, setEditing] = useState<BudgetCategory | null>(null);
   const [open, setOpen] = useState(false);
-  const total = items.reduce((sum, item) => sum + item.budget, 0);
-  const committed = items.reduce((sum, item) => sum + item.amount, 0);
+  const total = items.reduce((sum, item) => sum + item.budgetMinor, 0);
+  const committed = items.reduce((sum, item) => sum + item.amountMinor, 0);
   const allocated = total ? Math.round((committed / total) * 100) : 0;
 
   async function save(values: Record<string, EntityFormValue>) {
-    const input = values as unknown as Omit<BudgetCategory, "id">;
+    const input = {
+      name: String(values.name),
+      amountMinor: Math.round(Number(values.amountUsd) * 100),
+      budgetMinor: Math.round(Number(values.budgetUsd) * 100),
+      color: String(values.color),
+    };
     if (editing) await update({ ...input, id: editing.id });
     else await create(input);
   }
@@ -48,10 +61,10 @@ export function BudgetSection() {
       <section className="budget-summary-card">
         <div>
           <p className="eyebrow light">{text("Total wedding budget")}</p>
-          <strong>R {total.toLocaleString()}</strong>
+          <strong>{displayMoney(total)}</strong>
           <span>
-            R {committed.toLocaleString()} {text("committed")} · R{" "}
-            {(total - committed).toLocaleString()} {text("remaining")}
+            {displayMoney(committed)} {text("committed")} · {displayMoney(total - committed)}{" "}
+            {text("remaining")}
           </span>
         </div>
         <div className="budget-donut">
@@ -83,7 +96,7 @@ export function BudgetSection() {
               <span>
                 <b>{text(item.name)}</b>
                 <small>
-                  R {item.amount.toLocaleString()} / R {item.budget.toLocaleString()}{" "}
+                  {displayMoney(item.amountMinor)} / {displayMoney(item.budgetMinor)}{" "}
                   <button
                     className="ml-2"
                     aria-label={`${text("Edit")} ${text(item.name)}`}
@@ -109,7 +122,7 @@ export function BudgetSection() {
               <div>
                 <i
                   style={{
-                    width: `${Math.min(100, (item.amount / item.budget) * 100)}%`,
+                    width: `${Math.min(100, (item.amountMinor / item.budgetMinor) * 100)}%`,
                     background: item.color,
                   }}
                 />
@@ -122,7 +135,15 @@ export function BudgetSection() {
         open={open}
         title={editing ? "Edit budget category" : "Add budget category"}
         fields={fields}
-        initialValues={editing ?? { color: "#8d4656", amount: 0, budget: 0 }}
+        initialValues={
+          editing
+            ? {
+                ...editing,
+                amountUsd: editing.amountMinor / 100,
+                budgetUsd: editing.budgetMinor / 100,
+              }
+            : { color: "#8d4656", amountUsd: 0, budgetUsd: 0 }
+        }
         onClose={() => setOpen(false)}
         onSave={save}
       />

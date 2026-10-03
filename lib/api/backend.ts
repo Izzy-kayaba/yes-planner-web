@@ -1,4 +1,5 @@
 import { apiRequest } from "@/lib/api/client";
+import { authClient } from "@/lib/auth-client";
 import type {
   AuthSession,
   BackendAdapter,
@@ -8,8 +9,7 @@ import type {
   WorkspaceModule,
 } from "@/lib/api/contracts";
 
-const dataSource = process.env.NEXT_PUBLIC_DATA_SOURCE ?? "demo";
-const tokenKey = "vow-planner-token";
+const dataSource = process.env.NEXT_PUBLIC_DATA_SOURCE ?? "api";
 
 function workspaceStorageKey(weddingId: string, module: WorkspaceModule) {
   return `vow-planner:${weddingId}:${module}`;
@@ -35,14 +35,10 @@ function writeStored<T>(key: string, values: T[]) {
 
 const demoBackend: BackendAdapter = {
   async login() {
-    const session = { token: "preview-session" };
-    window.localStorage.setItem(tokenKey, session.token);
-    return session;
+    return {};
   },
   async register() {
-    const session = { token: "preview-session" };
-    window.localStorage.setItem(tokenKey, session.token);
-    return session;
+    return {};
   },
   async list(weddingId, module, seed) {
     return readStored(workspaceStorageKey(weddingId, module), seed);
@@ -77,48 +73,37 @@ const demoBackend: BackendAdapter = {
   },
 };
 
-function authHeaders() {
-  const token = window.localStorage.getItem(tokenKey);
-  return token ? { token } : {};
-}
-
 const httpBackend: BackendAdapter = {
   async login(input) {
-    const session = await apiRequest<AuthSession>("/api/v1/auth/login", {
-      method: "POST",
-      body: JSON.stringify(input),
-    });
-    window.localStorage.setItem(tokenKey, session.token);
-    return session;
+    const result = await authClient.signIn.email(input);
+    if (result.error) throw new Error(result.error.message ?? "Authentication failed.");
+    return { userId: result.data?.user.id };
   },
   async register(input) {
-    const session = await apiRequest<AuthSession>("/api/v1/auth/register", {
+    await apiRequest("/api/v1/auth/register", {
       method: "POST",
       body: JSON.stringify(input),
     });
-    window.localStorage.setItem(tokenKey, session.token);
-    return session;
+    const session = await authClient.getSession();
+    return { userId: session.data?.user.id };
   },
   list(weddingId, module) {
-    return apiRequest(`/api/v1/weddings/${weddingId}/workspace/${module}`, authHeaders());
+    return apiRequest(`/api/v1/weddings/${weddingId}/workspace/${module}`);
   },
   create(weddingId, module, value) {
     return apiRequest(`/api/v1/weddings/${weddingId}/workspace/${module}`, {
-      ...authHeaders(),
       method: "POST",
       body: JSON.stringify(value),
     });
   },
   update(weddingId, module, value) {
     return apiRequest(`/api/v1/weddings/${weddingId}/workspace/${module}/${value.id}`, {
-      ...authHeaders(),
       method: "PUT",
       body: JSON.stringify(value),
     });
   },
   remove(weddingId, module, id) {
     return apiRequest(`/api/v1/weddings/${weddingId}/workspace/${module}/${id}`, {
-      ...authHeaders(),
       method: "DELETE",
     });
   },

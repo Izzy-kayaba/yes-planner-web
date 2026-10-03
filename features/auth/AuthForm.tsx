@@ -1,9 +1,13 @@
 "use client";
 
-import { Heart, Sparkles, Store, type LucideIcon } from "lucide-react";
+import { Camera, Heart, Sparkles, Store, type LucideIcon } from "lucide-react";
+import { getCountries, isValidPhoneNumber, parsePhoneNumber } from "libphonenumber-js";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
+import { useEffect, useState } from "react";
+import { Controller, useForm } from "react-hook-form";
+import PhoneInput from "react-phone-number-input";
+import type { Country } from "react-phone-number-input";
 import { toast } from "sonner";
 import { z } from "zod";
 import { Button } from "@/components/ui/Button";
@@ -11,6 +15,7 @@ import { cn } from "@/lib/cn";
 import { useLanguage } from "@/components/providers/LanguageProvider";
 import { getBackend } from "@/lib/api/backend";
 import type { RegisterInput } from "@/lib/api/contracts";
+import { authClient } from "@/lib/auth-client";
 
 const roles = [
   { value: "Couple", icon: Heart },
@@ -19,7 +24,7 @@ const roles = [
 ] as const satisfies ReadonlyArray<{ value: AccountRole; icon: LucideIcon }>;
 
 const loginSchema = z.object({
-  phoneNumber: z.string().trim().min(8, "Enter a valid phone number."),
+  email: z.string().trim().email("Enter a valid email address."),
   password: z.string().min(8, "Password must be at least 8 characters."),
 });
 
@@ -27,7 +32,10 @@ const registrationSchema = loginSchema.extend({
   role: z.enum(["Couple", "Planner", "Vendor"]),
   firstName: z.string().trim().min(2, "Enter your first name."),
   lastName: z.string().trim().min(2, "Enter your last name."),
-  email: z.string().trim().email("Enter a valid email address."),
+  phoneNumber: z
+    .string()
+    .trim()
+    .refine((value) => isValidPhoneNumber(value), "Enter a valid phone number."),
   password: z
     .string()
     .min(8, "Password must be at least 8 characters.")
@@ -50,8 +58,10 @@ export function AuthForm({ mode }: { mode: "login" | "register" }) {
   const router = useRouter();
   const { t, text } = useLanguage();
   const isRegister = mode === "register";
+  const [defaultCountry, setDefaultCountry] = useState<Country>("ZA");
   const {
     register,
+    control,
     handleSubmit,
     setError,
     setValue,
@@ -69,6 +79,18 @@ export function AuthForm({ mode }: { mode: "login" | "register" }) {
   });
   const selectedRole = watch("role");
 
+  useEffect(() => {
+    if (!isRegister) return;
+    fetch("/api/v1/currency")
+      .then((response) => response.json())
+      .then((value: { country?: string | null }) => {
+        if (value.country && getCountries().includes(value.country as Country)) {
+          setDefaultCountry(value.country as Country);
+        }
+      })
+      .catch(() => setDefaultCountry("ZA"));
+  }, [isRegister]);
+
   async function submit(values: AuthValues) {
     // Zod remains the single definition of valid input while React Hook Form handles field state.
     const result = (isRegister ? registrationSchema : loginSchema).safeParse(values);
@@ -82,13 +104,29 @@ export function AuthForm({ mode }: { mode: "login" | "register" }) {
     }
 
     try {
-      if (isRegister) await getBackend().register(result.data as RegisterInput);
-      else await getBackend().login(result.data);
-      toast.success(text(isRegister ? "Your workspace is ready." : "Welcome back, Ruth."));
+      if (isRegister) {
+        const registration = result.data as RegisterInput;
+        await getBackend().register({
+          ...registration,
+          phoneNumber: parsePhoneNumber(registration.phoneNumber).number,
+        });
+      } else await getBackend().login(result.data);
+      toast.success(text(isRegister ? "Your workspace is ready." : "Welcome back."));
       router.push("/dashboard");
     } catch (error) {
       toast.error(error instanceof Error ? error.message : text("Authentication failed."));
     }
+  }
+
+  async function socialSignIn(provider: "google" | "instagram") {
+    if (isRegister) {
+      document.cookie = `vow-pending-role=${selectedRole}; Path=/; Max-Age=600; SameSite=Lax`;
+    }
+    const result = await authClient.signIn.social({
+      provider,
+      callbackURL: "/api/v1/auth/complete",
+    });
+    if (result?.error) toast.error(result.error.message ?? text("Authentication failed."));
   }
 
   return (
@@ -117,11 +155,11 @@ export function AuthForm({ mode }: { mode: "login" | "register" }) {
             <input
               {...register("firstName")}
               aria-invalid={Boolean(errors.firstName)}
-              placeholder="Ruth"
+              placeholder="Alex"
               autoComplete="given-name"
             />
             {errors.firstName && (
-              <small className="text-vow-wine">{text(errors.firstName.message ?? "")}</small>
+              <small className="form-error">{text(errors.firstName.message ?? "")}</small>
             )}
           </label>
           <label>
@@ -129,50 +167,57 @@ export function AuthForm({ mode }: { mode: "login" | "register" }) {
             <input
               {...register("lastName")}
               aria-invalid={Boolean(errors.lastName)}
-              placeholder="Mokoena"
+              placeholder="Morgan"
               autoComplete="family-name"
             />
             {errors.lastName && (
-              <small className="text-vow-wine">{text(errors.lastName.message ?? "")}</small>
+              <small className="form-error">{text(errors.lastName.message ?? "")}</small>
             )}
           </label>
         </div>
       )}
 
+      <label>
+        {t("auth.email")}
+        <input
+          {...register("email")}
+          aria-invalid={Boolean(errors.email)}
+          type="email"
+          placeholder="you@example.com"
+          autoComplete="email"
+        />
+        {errors.email && <small className="form-error">{text(errors.email.message ?? "")}</small>}
+      </label>
+
       {isRegister && (
         <label>
-          {t("auth.email")}
-          <input
-            {...register("email")}
-            aria-invalid={Boolean(errors.email)}
-            type="email"
-            placeholder="you@example.com"
-            autoComplete="email"
+          {t("auth.phone")}
+          <Controller
+            control={control}
+            name="phoneNumber"
+            render={({ field }) => (
+              <PhoneInput
+                {...field}
+                className="phone-input"
+                defaultCountry={defaultCountry}
+                international
+                countryCallingCodeEditable={false}
+                aria-invalid={Boolean(errors.phoneNumber)}
+                autoComplete="tel"
+                onChange={(value) => field.onChange(value ?? "")}
+              />
+            )}
           />
-          {errors.email && (
-            <small className="text-vow-wine">{text(errors.email.message ?? "")}</small>
+          {errors.phoneNumber && (
+            <small className="form-error">{text(errors.phoneNumber.message ?? "")}</small>
           )}
         </label>
       )}
 
       <label>
-        {t("auth.phone")}
-        <input
-          {...register("phoneNumber")}
-          aria-invalid={Boolean(errors.phoneNumber)}
-          type="tel"
-          placeholder="+27 82 123 4567"
-          autoComplete="tel"
-        />
-        {errors.phoneNumber && (
-          <small className="text-vow-wine">{text(errors.phoneNumber.message ?? "")}</small>
-        )}
-      </label>
-
-      <label>
         <span className="label-row">
           {t("auth.password")}
-          {!isRegister && <Link href="#">{t("auth.forgot")}</Link>}
+          {!isRegister && <Link href="/forgot-password">{t("auth.forgot")}</Link>}
         </span>
         <input
           {...register("password")}
@@ -182,7 +227,7 @@ export function AuthForm({ mode }: { mode: "login" | "register" }) {
           autoComplete={isRegister ? "new-password" : "current-password"}
         />
         {errors.password && (
-          <small className="text-vow-wine">{text(errors.password.message ?? "")}</small>
+          <small className="form-error">{text(errors.password.message ?? "")}</small>
         )}
       </label>
 
@@ -199,26 +244,15 @@ export function AuthForm({ mode }: { mode: "login" | "register" }) {
         <span>{text("or continue with")}</span>
       </div>
       <div className="social-row">
-        <Button
-          type="button"
-          variant="secondary"
-          onClick={() =>
-            toast.info(text("Google sign-in will be available when authentication is connected."))
-          }
-        >
-          G&nbsp;&nbsp; Google
-        </Button>
-        <Button
-          type="button"
-          variant="secondary"
-          onClick={() =>
-            toast.info(text("Facebook sign-in will be available when authentication is connected."))
-          }
-        >
-          <span className="font-bold text-[#1877f2]" aria-hidden="true">
-            f
+        <Button type="button" variant="secondary" onClick={() => void socialSignIn("google")}>
+          <span className="font-bold text-[#EA4335]" aria-hidden="true">
+            G
           </span>
-          Facebook
+          Google
+        </Button>
+        <Button type="button" variant="secondary" onClick={() => void socialSignIn("instagram")}>
+          <Camera className="text-[#C13584]" size={17} aria-hidden="true" />
+          Instagram
         </Button>
       </div>
 

@@ -19,7 +19,7 @@ export function Brand({ compact = false }: { compact?: boolean }) {
         <span className="rotate-3 font-display text-2xl">V</span>
       </span>
       {!compact && (
-        <span className="brand-wordmark flex items-baseline gap-1 font-display text-[21px]">
+        <span className="brand-wordmark flex items-baseline gap-1 font-display text-[21px] max-[424px]:hidden">
           <strong className="font-bold">Vow</strong>
           <span className="brand-planner italic text-vow-wine">Planner</span>
         </span>

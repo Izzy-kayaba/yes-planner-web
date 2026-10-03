@@ -1,26 +1,49 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { Brand } from "@/components/ui/Brand";
 import { getTextTranslator } from "@/lib/i18n-server";
+import Image from "next/image";
+import { CoupleTestimonials } from "@/features/public/CoupleTestimonials";
+import { DisplayMoney } from "@/components/currency/DisplayMoney";
+import { CurrencySwitcher } from "@/components/currency/CurrencySwitcher";
+import { getAuthorizedSession } from "@/lib/auth/session";
 
 const features = [
   {
     number: "01",
     title: "One calm command centre",
     body: "Budget, guests, tasks, vendors and your wedding-day timeline stay beautifully in sync.",
+    image: "/assets/Gemini_Generated_Image_8ebvwt8ebvwt8ebv.jpeg",
   },
   {
     number: "02",
     title: "Plan with your people",
     body: "Couples and assigned planners work from the same live plan, with ownership safely protected.",
+    image: "/assets/Gemini_Generated_Image_lnve17lnve17lnve.jpeg",
   },
   {
     number: "03",
     title: "Find exceptional vendors",
     body: "Discover trusted creative partners, compare packages and manage every booking in context.",
+    image: "/assets/Gemini_Generated_Image_nc6koync6koync6k.jpeg",
   },
 ];
 
 export default async function HomePage() {
+  if ((process.env.NEXT_PUBLIC_DATA_SOURCE ?? "api") !== "demo") {
+    const session = await getAuthorizedSession();
+    if (session) {
+      redirect(
+        session.user.role === "Vendor"
+          ? "/vendor"
+          : session.user.role === "Planner"
+            ? "/planner"
+            : session.user.role === "SystemAdmin"
+              ? "/admin"
+              : "/dashboard",
+      );
+    }
+  }
   const text = await getTextTranslator();
 
   return (
@@ -33,10 +56,11 @@ export default async function HomePage() {
           <a href="#stories">{text("Stories")}</a>
         </div>
         <div className="landing-actions">
+          <CurrencySwitcher />
           <Link className="text-link" href="/login">
             {text("Sign in")}
           </Link>
-          <Link className="button button-primary" href="/register">
+          <Link className="button button-primary text-center" href="/register">
             {text("Start planning")}
           </Link>
         </div>
@@ -77,29 +101,32 @@ export default async function HomePage() {
 
         <div
           className="hero-visual"
-          aria-label={text("Preview of the Vow Planner wedding dashboard")}
+          aria-label={text("Preview of the Vow Planner wedding planning experience")}
         >
           <div className="hero-halo" />
           <div className="hero-photo">
             <div className="floral floral-left">✦</div>
-            <div className="couple-silhouette">
-              <span />
-              <i />
-            </div>
-            <div className="photo-caption">
-              <span>18 · 10 · 26</span>
-              <strong>Ruth & Izzy</strong>
-              <small>Johannesburg</small>
-            </div>
+            <Image
+              className="hero-img"
+              src="/assets/hero-image.jpeg"
+              alt="Engaged couple celebrating together"
+              width={600}
+              height={900}
+              priority
+            />
           </div>
+
           <div className="floating-card floating-budget">
             <div className="floating-icon">↗</div>
             <div>
               <span>{text("Budget on track")}</span>
-              <strong>R 184,500</strong>
+              <strong>
+                <DisplayMoney amountMinor={18_450_000} />
+              </strong>
               <small>{text("remaining")}</small>
             </div>
           </div>
+
           <div className="floating-card floating-guests">
             <div className="progress-orb">72%</div>
             <div>
@@ -147,9 +174,8 @@ export default async function HomePage() {
           {features.map((feature) => (
             <article className="feature-card" key={feature.number}>
               <span>{feature.number}</span>
-              <div className="feature-art" aria-hidden="true">
-                <i />
-                <b />
+              <div className="feature-art">
+                <Image fill sizes="(max-width: 760px) 100vw, 33vw" src={feature.image} alt="" />
               </div>
               <h3>{text(feature.title)}</h3>
               <p>{text(feature.body)}</p>
@@ -200,18 +226,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="story-section page-width" id="stories">
-        <p className="story-mark">“</p>
-        <blockquote>
-          {text(
-            "We stopped feeling like project managers and started enjoying our engagement again.",
-          )}
-        </blockquote>
-        <p>{text("Thandi & Michael · Married in Cape Town")}</p>
-        <Link className="button button-primary" href="/register">
-          {text("Begin your story")}
-        </Link>
-      </section>
+      <CoupleTestimonials />
 
       <footer className="landing-footer page-width">
         <Brand />
