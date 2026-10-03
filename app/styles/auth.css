@@ -121,10 +121,11 @@
   overflow-y: auto;
 }
 .auth-card .language-switcher {
-  min-width: 132px;
+  min-width: 6rem;
   justify-content: center;
   border-color: color-mix(in srgb, var(--wine) 30%, var(--line));
   background: var(--blush);
+  border-radius: 1rem;
   color: var(--wine);
 }
 .auth-form input[aria-invalid="true"],

@@ -20,7 +20,7 @@ export function LanguageSwitcher({ compact = false }: { compact?: boolean }) {
       className={cn(
         "language-switcher inline-flex items-center gap-2 text-vow-muted",
         compact && "language-switcher-compact",
-        !compact && "rounded-xl border border-vow-line bg-vow-surface px-3",
+        !compact && "rounded-xl border border-vow-line bg-vow-surface px-1",
       )}
     >
       <Languages size={16} aria-hidden="true" />
