@@ -126,7 +126,7 @@ export function AuthenticatedDashboardOverview({ data }: { data: DashboardData }
               ))}
             </div>
           ) : (
-            <p className="text-sm text-vow-muted">
+            <p className="text-sm text-yes-muted">
               {text("No tasks yet. Add your first task from the wedding workspace.")}
             </p>
           )}
@@ -134,7 +134,7 @@ export function AuthenticatedDashboardOverview({ data }: { data: DashboardData }
         <article className="panel">
           <p className="eyebrow">{text("Vendor marketplace")}</p>
           <h3>{text("Build your wedding team")}</h3>
-          <p className="mt-2 text-sm text-vow-muted">
+          <p className="mt-2 text-sm text-yes-muted">
             {text("Open a vendor profile to contact them directly on WhatsApp.")}
           </p>
           <div className="flex gap-2">

@@ -3,7 +3,7 @@
 import { Globe2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useLanguage } from "@/components/providers/LanguageProvider";
-import { VowSelect } from "@/components/ui/VowSelect";
+import { YesSelect } from "@/components/ui/YesSelect";
 
 export function LanguageSwitcher({ compact = false }: { compact?: boolean }) {
   const { language, setLanguage, t } = useLanguage();
@@ -17,7 +17,7 @@ export function LanguageSwitcher({ compact = false }: { compact?: boolean }) {
 
   return (
     <div className={`language-switcher${compact ? " language-switcher-compact" : ""}`}>
-      <VowSelect
+      <YesSelect
         ariaLabel={t("settings.preferredLanguage")}
         compact={compact}
         leadingIcon={<Globe2 size={15} aria-hidden="true" />}

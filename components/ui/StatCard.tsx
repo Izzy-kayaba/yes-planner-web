@@ -19,14 +19,14 @@ export function StatCard({
 }) {
   const { text } = useLanguage();
   const toneClasses: Record<string, string> = {
-    rose: "bg-vow-blush text-vow-wine",
-    sage: "bg-vow-sage-soft text-vow-sage",
-    gold: "bg-vow-gold-soft text-vow-gold",
-    blue: "bg-vow-blue-soft text-vow-blue",
+    rose: "bg-yes-blush text-yes-wine",
+    sage: "bg-yes-sage-soft text-yes-sage",
+    gold: "bg-yes-gold-soft text-yes-gold",
+    blue: "bg-yes-blue-soft text-yes-blue",
   };
 
   return (
-    <article className="min-h-36 rounded-2xl border border-vow-line bg-vow-surface p-5 shadow-vow-soft max-sm:min-h-32 max-sm:p-4">
+    <article className="min-h-36 rounded-2xl border border-yes-line bg-yes-surface p-5 shadow-yes-soft max-sm:min-h-32 max-sm:p-4">
       <div className="flex min-h-7 justify-between">
         <span
           className={cn(
@@ -37,11 +37,11 @@ export function StatCard({
         >
           <TrendingUp size={14} strokeWidth={1.8} />
         </span>
-        {trend && <span className="text-[11px] text-vow-sage">{text(trend)}</span>}
+        {trend && <span className="text-[11px] text-yes-sage">{text(trend)}</span>}
       </div>
-      <p className="mb-1 mt-3 text-[12px] text-vow-muted">{text(label)}</p>
+      <p className="mb-1 mt-3 text-[12px] text-yes-muted">{text(label)}</p>
       <strong className="mb-0.5 block font-display text-2xl font-normal">{value}</strong>
-      <small className="text-[11px] text-vow-muted">{text(detail)}</small>
+      <small className="text-[11px] text-yes-muted">{text(detail)}</small>
     </article>
   );
 }

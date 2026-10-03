@@ -9,7 +9,7 @@ import { useCurrency } from "@/components/providers/CurrencyProvider";
 import { Button } from "@/components/ui/Button";
 import { AtSign, ExternalLink, MessageCircle } from "lucide-react";
 import { apiRequest } from "@/lib/api/client";
-import { VowSelect } from "@/components/ui/VowSelect";
+import { YesSelect } from "@/components/ui/YesSelect";
 
 export function VendorPublicProfile({
   vendor,
@@ -86,13 +86,13 @@ export function VendorPublicProfile({
               </span>
             ))}
           </div>
-          <p className="mt-4 text-sm text-vow-muted">
+          <p className="mt-4 text-sm text-yes-muted">
             {vendor.serviceArea} ·{" "}
             {vendor.startingPriceMinor
               ? `${text("From")} ${displayMoney(vendor.startingPriceMinor)}`
               : text("Quote required")}
           </p>
-          <div className="mt-3 flex flex-wrap gap-4 text-sm font-bold text-vow-wine">
+          <div className="mt-3 flex flex-wrap gap-4 text-sm font-bold text-yes-wine">
             {vendor.phoneNumber && (
               <a
                 className="button button-primary"
@@ -147,7 +147,7 @@ export function VendorPublicProfile({
             ))}
           </div>
         ) : (
-          <p className="text-vow-muted">
+          <p className="text-yes-muted">
             {text("This vendor has not added portfolio images yet.")}
           </p>
         )}
@@ -159,13 +159,13 @@ export function VendorPublicProfile({
             <h2>{text("Send a request")}</h2>
           </div>
           {requestStatus && (
-            <p className="rounded-xl bg-vow-soft p-3 text-sm font-bold text-vow-wine">
+            <p className="rounded-xl bg-yes-soft p-3 text-sm font-bold text-yes-wine">
               {text("Current request status")}: {text(requestStatus)}
             </p>
           )}
           <label>
             {text("Service")}
-            <VowSelect
+            <YesSelect
               ariaLabel={text("Service")}
               options={vendor.services.map((item) => ({ value: item, label: text(item) }))}
               value={service}

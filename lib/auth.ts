@@ -24,7 +24,7 @@ function getAuthSecret() {
   ) {
     throw new Error("BETTER_AUTH_SECRET is required when the application runs in production.");
   }
-  return "vow-planner-development-secret-change-before-production";
+  return "yes-planner-development-secret-change-before-production";
 }
 
 function getAuthBaseUrl() {
@@ -61,7 +61,7 @@ const instagramPlugin = genericOAuth({
             return {
               id: profile.id,
               name: username,
-              email: `${profile.id}@instagram.vowplanner.invalid`,
+              email: `${profile.id}@instagram.yesplanner.invalid`,
               emailVerified: false,
             };
           },
@@ -71,7 +71,7 @@ const instagramPlugin = genericOAuth({
 });
 
 export const auth = betterAuth({
-  appName: "Vow Planner",
+  appName: "Yes Planner",
   baseURL: getAuthBaseUrl(),
   secret: getAuthSecret(),
   rateLimit: {

@@ -46,7 +46,7 @@ export function DownloadReportButton({
     const url = URL.createObjectURL(new Blob([content], { type: "text/csv" }));
     const link = document.createElement("a");
     link.href = url;
-    link.download = "vow-planner-report.csv";
+    link.download = "yes-planner-report.csv";
     link.click();
     URL.revokeObjectURL(url);
     toast.success(text("Report downloaded."));

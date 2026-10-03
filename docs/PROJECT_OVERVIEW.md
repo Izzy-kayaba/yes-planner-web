@@ -1,4 +1,4 @@
-# Vow Planner: project overview
+# Yes Planner: project overview
 
 **Audience:** marketing, product, engineering, design, operations and business stakeholders  
 **Document purpose:** shared, plain-language overview of the product direction and the current implementation  
@@ -6,24 +6,24 @@
 
 ## At a glance
 
-Vow Planner is a wedding-planning platform intended to bring the couple, their planner, wedding-service businesses and invited guests into one coordinated experience. Its central idea is a shared wedding workspace: planning information such as guests, budget, tasks, vendors and dates should be available in the context where the wedding is managed, rather than scattered across separate spreadsheets, inboxes and chat threads.
+Yes Planner is a wedding-planning platform intended to bring the couple, their planner, wedding-service businesses and invited guests into one coordinated experience. Its central idea is a shared wedding workspace: planning information such as guests, budget, tasks, vendors and dates should be available in the context where the wedding is managed, rather than scattered across separate spreadsheets, inboxes and chat threads.
 
 The product has two connected sides:
 
 - A consumer experience for couples to organise a wedding, coordinate with a planner and communicate approved information to guests.
 - A business experience for planners and wedding-service providers to present their services and manage relevant client work.
 
-The current project contains a responsive Next.js application with protected server routes, Better Auth and MongoDB. It can run in a browser-only preview mode or in database-backed API mode. The separate ASP.NET Core project is now a legacy integration option rather than the active web runtime. A mobile-native app is not present in the current `vow-planner-mobile` folder; the current mobile experience is the responsive website.
+The current project contains a responsive Next.js application with protected server routes, Better Auth and MongoDB. It can run in a browser-only preview mode or in database-backed API mode. The separate ASP.NET Core project is now a legacy integration option rather than the active web runtime. A mobile-native app is not present in the current `yes-planner-mobile` folder; the current mobile experience is the responsive website.
 
-## The problem Vow Planner addresses
+## The problem Yes Planner addresses
 
 Wedding planning often spans spreadsheets, calendars, email, messaging apps, paper documents and vendor websites. Couples and planners can lose track of decisions, guest responses, costs, responsibilities and deadlines when each item lives in a different place. Vendors may not have a clear view of the information they need for their booking, and guests may need to contact the couple for details that could have been shared in advance.
 
-Vow Planner aims to provide one organised place to keep the planning work visible and connected. The intended benefit is less coordination overhead, clearer responsibilities and a better informed experience for everyone involved.
+Yes Planner aims to provide one organised place to keep the planning work visible and connected. The intended benefit is less coordination overhead, clearer responsibilities and a better informed experience for everyone involved.
 
 ## Who can use it
 
-| Audience                   | Need                                                         | Intended Vow Planner experience                                                                                        |
+| Audience                   | Need                                                         | Intended Yes Planner experience                                                                                        |
 | -------------------------- | ------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------- |
 | Couples                    | Coordinate a wedding, track decisions and share tasks        | Own a wedding workspace for guest, budget, task, vendor, schedule and document management                              |
 | Professional planners      | Manage client weddings and their own workload                | Work with a couple in the wedding workspace and, over time, manage clients and staff through an organisation workspace |

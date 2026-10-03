@@ -25,8 +25,8 @@ export function CurrencyProvider({ children }: { children: ReactNode }) {
     fetch("/api/v1/currency", {
       cache: "no-store",
       headers: {
-        "x-vow-locale": navigator.language,
-        "x-vow-time-zone": timeZone,
+        "x-yes-locale": navigator.language,
+        "x-yes-time-zone": timeZone,
       },
     })
       .then(async (response) => {

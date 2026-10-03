@@ -115,7 +115,7 @@ export async function POST(request: Request) {
   after(() =>
     sendWhatsAppEvent(
       parsed.data.vendorUserId,
-      `${wedding.displayName} sent a ${parsed.data.service} work request in Vow Planner.`,
+      `${wedding.displayName} sent a ${parsed.data.service} work request in Yes Planner.`,
     ),
   );
   return NextResponse.json(publicRequest(result!), { status: 201 });

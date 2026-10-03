@@ -36,7 +36,7 @@ export function LanguageProvider({
     document.documentElement.lang = nextLanguage;
     const secure = window.location.protocol === "https:" ? "; Secure" : "";
     document.cookie = `${languageCookieName}=${nextLanguage}; Path=/; Max-Age=31536000; SameSite=Lax${secure}`;
-    document.cookie = `vow-language=; Path=/; Max-Age=0; SameSite=Lax${secure}`;
+    document.cookie = `yes-language=; Path=/; Max-Age=0; SameSite=Lax${secure}`;
   }, []);
 
   useEffect(() => {

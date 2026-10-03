@@ -102,7 +102,7 @@ export function LiveMarketplace({ vendors }: { vendors: MarketplaceVendor[] }) {
           ))}
         </section>
       ) : (
-        <section className="panel text-center text-vow-muted">
+        <section className="panel text-center text-yes-muted">
           {text("No vendor profiles match this search yet.")}
         </section>
       )}

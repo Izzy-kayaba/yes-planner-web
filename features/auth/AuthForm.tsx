@@ -120,7 +120,7 @@ export function AuthForm({ mode }: { mode: "login" | "register" }) {
 
   async function socialSignIn(provider: "google" | "instagram") {
     if (isRegister) {
-      document.cookie = `vow-pending-role=${selectedRole}; Path=/; Max-Age=600; SameSite=Lax`;
+      document.cookie = `yes-pending-role=${selectedRole}; Path=/; Max-Age=600; SameSite=Lax`;
     }
     const result = await authClient.signIn.social({
       provider,

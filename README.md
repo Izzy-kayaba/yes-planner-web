@@ -1,6 +1,6 @@
-# Vow Planner Frontend
+# Yes Planner Frontend
 
-This repository contains the mobile-first Next.js application for Vow Planner. Its server routes provide Better Auth, MongoDB-backed application data and access control. The older ASP.NET Core project remains in a separate repository as a legacy integration option.
+This repository contains the mobile-first Next.js application for Yes Planner. Its server routes provide Better Auth, MongoDB-backed application data and access control. The older ASP.NET Core project remains in a separate repository as a legacy integration option.
 
 ## Included experiences
 
@@ -17,7 +17,7 @@ This repository contains the mobile-first Next.js application for Vow Planner. I
 
 ## Frontend design system
 
-Tailwind CSS owns the shared Vow Planner design tokens and reusable utility styles. The token bridge is defined in `app/globals.css` and covers the wine, blush, sage, gold, blue and neutral palette together with display typography and shadows.
+Tailwind CSS owns the shared Yes Planner design tokens and reusable utility styles. The token bridge is defined in `app/globals.css` and covers the wine, blush, sage, gold, blue and neutral palette together with display typography and shadows.
 
 Reusable interface components live in `components/ui`, while wedding-specific components live with the wedding feature. Bespoke CSS is reserved for decorative editorial artwork and complex layouts that are clearer as named visual compositions.
 

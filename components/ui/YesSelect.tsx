@@ -4,9 +4,9 @@ import { Check, ChevronDown } from "lucide-react";
 import { useEffect, useId, useRef, useState, type ReactNode } from "react";
 import { cn } from "@/lib/cn";
 
-export type VowSelectOption = { value: string; label: string };
+export type YesSelectOption = { value: string; label: string };
 
-export function VowSelect({
+export function YesSelect({
   value,
   defaultValue = "",
   options,
@@ -22,7 +22,7 @@ export function VowSelect({
 }: {
   value?: string;
   defaultValue?: string;
-  options: VowSelectOption[];
+  options: YesSelectOption[];
   placeholder?: string;
   ariaLabel: string;
   name?: string;
@@ -73,7 +73,7 @@ export function VowSelect({
   }
 
   return (
-    <div className={cn("vow-select", compact && "vow-select-compact", className)} ref={root}>
+    <div className={cn("yes-select", compact && "yes-select-compact", className)} ref={root}>
       {name && <input name={name} type="hidden" value={selectedValue} />}
       <button
         aria-controls={`${generatedId}-options`}
@@ -81,22 +81,22 @@ export function VowSelect({
         aria-haspopup="listbox"
         aria-invalid={invalid || undefined}
         aria-label={ariaLabel}
-        className="vow-select-trigger"
+        className="yes-select-trigger"
         disabled={disabled}
         onClick={() => setOpen((current) => !current)}
         onKeyDown={handleKeyDown}
         type="button"
       >
-        <span className="vow-select-value">
-          {leadingIcon && <span className="vow-select-leading-icon">{leadingIcon}</span>}
-          <span className={selected ? "" : "vow-select-placeholder"}>
+        <span className="yes-select-value">
+          {leadingIcon && <span className="yes-select-leading-icon">{leadingIcon}</span>}
+          <span className={selected ? "" : "yes-select-placeholder"}>
             {selected?.label ?? placeholder}
           </span>
         </span>
-        <ChevronDown aria-hidden="true" className="vow-select-chevron" size={16} />
+        <ChevronDown aria-hidden="true" className="yes-select-chevron" size={16} />
       </button>
       {open && (
-        <div className="vow-select-options" id={`${generatedId}-options`} role="listbox">
+        <div className="yes-select-options" id={`${generatedId}-options`} role="listbox">
           {options.map((option) => (
             <button
               aria-selected={option.value === selectedValue}

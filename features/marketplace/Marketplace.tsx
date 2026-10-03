@@ -8,7 +8,7 @@ import { StatusPill } from "@/components/ui/StatusPill";
 import { useLanguage } from "@/components/providers/LanguageProvider";
 import { vendors } from "@/lib/demo-data";
 import { VendorPortfolioCarousel } from "@/features/marketplace/VendorPortfolioCarousel";
-import { VowSelect } from "@/components/ui/VowSelect";
+import { YesSelect } from "@/components/ui/YesSelect";
 
 const categories = ["All", "Photography", "Catering", "Florist", "Music & DJ"];
 
@@ -72,7 +72,7 @@ export function Marketplace() {
       </div>
       <section className="marketplace-feature">
         <div>
-          <StatusPill tone="rose">Vow Planner edit</StatusPill>
+          <StatusPill tone="rose">Yes Planner edit</StatusPill>
           <h2>
             {text("Florals that feel")}
             <br />
@@ -99,7 +99,7 @@ export function Marketplace() {
             {results.length} {text("exceptional matches")}
           </h3>
         </div>
-        <VowSelect
+        <YesSelect
           ariaLabel={text("Sort vendors")}
           className="marketplace-sort"
           options={["Best match", "Rating", "Name"].map((item) => ({
@@ -116,7 +116,7 @@ export function Marketplace() {
             <div className={`vendor-cover tall tone-${vendor.tone}`}>
               <span>{vendor.initials}</span>
               <button
-                className="absolute right-3 top-3 grid size-10 place-items-center rounded-full bg-white/90 text-vow-wine shadow-vow-soft backdrop-blur"
+                className="absolute right-3 top-3 grid size-10 place-items-center rounded-full bg-white/90 text-yes-wine shadow-yes-soft backdrop-blur"
                 type="button"
                 aria-label={`${text("Save")} ${vendor.name}`}
                 onClick={() =>

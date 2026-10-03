@@ -2,7 +2,7 @@
 
 ## Current finding
 
-`https://vow-planner-web.vercel.app/api/health` reaches Vercel but returns HTTP `503` with `{"status":"unavailable"}`. The health route returns that response only when MongoDB cannot be reached or authenticated. The application domain and route are therefore working; the current production blocker is the database connection.
+`https://yes-planner-web.vercel.app/api/health` reaches Vercel but returns HTTP `503` with `{"status":"unavailable"}`. The health route returns that response only when MongoDB cannot be reached or authenticated. The application domain and route are therefore working; the current production blocker is the database connection.
 
 The local production-database test also reached the connection layer but Node reported `unable to verify the first certificate`. This can be caused by a company antivirus, proxy or network filter replacing the certificate chain. Do not work around it with `tlsAllowInvalidCertificates=true` or by disabling TLS verification.
 
@@ -21,7 +21,7 @@ Local files are not copied into Vercel. Every required value must also exist in 
    - `BETTER_AUTH_SECRET`
    - `BETTER_AUTH_URL`
    - `NEXT_PUBLIC_DATA_SOURCE=api`
-   - `NEXT_PUBLIC_API_URL=https://vow-planner-web.vercel.app`
+   - `NEXT_PUBLIC_API_URL=https://yes-planner-web.vercel.app`
 3. Ensure `BETTER_AUTH_URL` exactly matches the HTTPS production domain, without an unrelated path.
 4. Redeploy after changing variables. Existing deployments do not automatically receive newly added values.
 5. Request `/api/health` and inspect the matching function invocation under **Vercel → Logs**. The health route records the MongoDB error name, code and sanitised message without returning credentials to the browser.
@@ -32,7 +32,7 @@ Local files are not copied into Vercel. Every required value must also exist in 
 
 ## Safe checks
 
-Run these one at a time from `vow-planner-web`:
+Run these one at a time from `yes-planner-web`:
 
 ```powershell
 npm.cmd run typecheck
@@ -53,7 +53,7 @@ npm.cmd run build
 Check the deployed database health:
 
 ```powershell
-curl.exe -i https://vow-planner-web.vercel.app/api/health
+curl.exe -i https://yes-planner-web.vercel.app/api/health
 ```
 
 A working result is HTTP `200` with `{"status":"healthy"}`. HTTP `503` means the deployed function still cannot use MongoDB.

@@ -1,6 +1,6 @@
 # Authentication, MongoDB and access control
 
-Vow Planner uses Better Auth inside the Next.js server. Better Auth stores users, linked OAuth accounts and sessions in MongoDB. Application workspace records use the same selected MongoDB database in a separate `workspaceItems` collection.
+Yes Planner uses Better Auth inside the Next.js server. Better Auth stores users, linked OAuth accounts and sessions in MongoDB. Application workspace records use the same selected MongoDB database in a separate `workspaceItems` collection.
 
 ## Environment separation
 
@@ -8,7 +8,7 @@ Development reads:
 
 ```dotenv
 MONGODB_DEVELOPMENT_URI=mongodb://127.0.0.1:27017
-MONGODB_DEVELOPMENT_DATABASE=vow_planner_development
+MONGODB_DEVELOPMENT_DATABASE=yes_planner_development
 MONGODB_USE_TRANSACTIONS=false
 ```
 
@@ -33,7 +33,7 @@ http://localhost:3000/api/auth/callback/instagram
 
 Use the matching HTTPS application domain in production. Google requires a Google Cloud OAuth client. Instagram requires an application with the appropriate Instagram OAuth product and permissions. Credentials are external secrets; the code is ready to run when valid credentials and provider-side callback URLs are configured.
 
-Instagram does not provide an email address through this profile flow. Better Auth requires one on every user record, so the integration stores a non-routable address under the reserved `.invalid` domain and anchors the identity to Instagram's stable account identifier. The user can maintain their real contact information separately in Vow Planner.
+Instagram does not provide an email address through this profile flow. Better Auth requires one on every user record, so the integration stores a non-routable address under the reserved `.invalid` domain and anchors the identity to Instagram's stable account identifier. The user can maintain their real contact information separately in Yes Planner.
 
 ## Phone numbers
 

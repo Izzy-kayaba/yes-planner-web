@@ -123,10 +123,10 @@
 .auth-card .language-switcher {
   width: 100%;
 }
-.auth-card .language-switcher .vow-select {
+.auth-card .language-switcher .yes-select {
   width: 100%;
 }
-.auth-card .language-switcher .vow-select-trigger {
+.auth-card .language-switcher .yes-select-trigger {
   border-color: color-mix(in srgb, var(--wine) 24%, var(--line));
   background: color-mix(in srgb, var(--blush) 55%, var(--surface));
 }

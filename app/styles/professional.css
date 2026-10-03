@@ -469,7 +469,7 @@
   border-top: 1px solid var(--line);
 }
 
-/* Native checkboxes remain operable while the visible control matches Vow Planner. */
+/* Native checkboxes remain operable while the visible control matches Yes Planner. */
 .settings-preference-list {
   display: grid;
   gap: 10px;
@@ -571,6 +571,6 @@
   color: var(--muted);
   line-height: 1;
 }
-.language-switcher:not(.language-switcher-compact) .vow-select {
+.language-switcher:not(.language-switcher-compact) .yes-select {
   width: 190px;
 }

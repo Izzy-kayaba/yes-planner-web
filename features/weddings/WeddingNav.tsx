@@ -31,7 +31,7 @@ export function WeddingNav({ weddingId, role }: { weddingId: string; role?: Plat
 
   return (
     <nav
-      className="flex gap-1 overflow-x-auto rounded-xl border border-vow-line bg-vow-surface p-1.5 [scrollbar-width:none]"
+      className="flex gap-1 overflow-x-auto rounded-xl border border-yes-line bg-yes-surface p-1.5 [scrollbar-width:none]"
       aria-label={text("Wedding workspace")}
     >
       {sections
@@ -49,8 +49,8 @@ export function WeddingNav({ weddingId, role }: { weddingId: string; role?: Plat
               className={cn(
                 "min-w-max rounded-lg px-3 py-2.5 text-[12px] font-bold transition-colors",
                 active
-                  ? "bg-vow-wine text-white"
-                  : "text-vow-muted hover:bg-vow-soft hover:text-vow-ink",
+                  ? "bg-yes-wine text-white"
+                  : "text-yes-muted hover:bg-yes-soft hover:text-yes-ink",
               )}
               href={href}
               key={label}

@@ -129,7 +129,7 @@ export function VendorWorkspace({
                 </div>
               ))
             ) : (
-              <p className="text-sm text-vow-muted">{text("No pending requests.")}</p>
+              <p className="text-sm text-yes-muted">{text("No pending requests.")}</p>
             )}
           </div>
         </article>
@@ -160,7 +160,7 @@ export function VendorWorkspace({
                 </div>
               ))
             ) : (
-              <p className="text-sm text-vow-muted">
+              <p className="text-sm text-yes-muted">
                 {text("Accepted requests will appear here.")}
               </p>
             )}

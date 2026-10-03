@@ -5,25 +5,25 @@
 
 /* Tailwind utilities consume the same tokens as the bespoke editorial artwork. */
 @theme inline {
-  --color-vow-ink: var(--ink);
-  --color-vow-muted: var(--muted);
-  --color-vow-canvas: var(--canvas);
-  --color-vow-surface: var(--surface);
-  --color-vow-soft: var(--surface-soft);
-  --color-vow-line: var(--line);
-  --color-vow-wine: var(--wine);
-  --color-vow-wine-deep: var(--wine-deep);
-  --color-vow-blush: var(--blush);
-  --color-vow-sage: var(--sage);
-  --color-vow-sage-soft: var(--sage-soft);
-  --color-vow-gold: var(--gold);
-  --color-vow-gold-soft: var(--gold-soft);
-  --color-vow-blue: var(--blue);
-  --color-vow-blue-soft: var(--blue-soft);
+  --color-yes-ink: var(--ink);
+  --color-yes-muted: var(--muted);
+  --color-yes-canvas: var(--canvas);
+  --color-yes-surface: var(--surface);
+  --color-yes-soft: var(--surface-soft);
+  --color-yes-line: var(--line);
+  --color-yes-wine: var(--wine);
+  --color-yes-wine-deep: var(--wine-deep);
+  --color-yes-blush: var(--blush);
+  --color-yes-sage: var(--sage);
+  --color-yes-sage-soft: var(--sage-soft);
+  --color-yes-gold: var(--gold);
+  --color-yes-gold-soft: var(--gold-soft);
+  --color-yes-blue: var(--blue);
+  --color-yes-blue-soft: var(--blue-soft);
   --font-display: var(--display);
   --font-sans: var(--sans);
-  --shadow-vow: var(--shadow);
-  --shadow-vow-soft: var(--shadow-soft);
+  --shadow-yes: var(--shadow);
+  --shadow-yes-soft: var(--shadow-soft);
 }
 
 /* Foundation */
@@ -80,7 +80,7 @@
     overflow-x: clip;
   }
   body {
-    @apply m-0 bg-vow-canvas font-sans text-vow-ink antialiased;
+    @apply m-0 bg-yes-canvas font-sans text-yes-ink antialiased;
     max-width: 100%;
     overflow-x: clip;
   }
@@ -101,7 +101,7 @@
   input,
   select,
   textarea {
-    @apply rounded-xl border border-vow-line bg-vow-surface text-inherit outline-0 transition;
+    @apply rounded-xl border border-yes-line bg-yes-surface text-inherit outline-0 transition;
   }
 
   select {
@@ -167,22 +167,22 @@
   transform: translateY(-1px);
 }
 .button-primary {
-  @apply bg-vow-wine text-white shadow-vow-soft;
+  @apply bg-yes-wine text-white shadow-yes-soft;
 }
 .button-primary:hover {
-  @apply -translate-y-px bg-vow-wine-deep;
+  @apply -translate-y-px bg-yes-wine-deep;
 }
 .button-secondary {
-  @apply border-vow-line bg-vow-surface text-vow-ink shadow-vow-soft;
+  @apply border-yes-line bg-yes-surface text-yes-ink shadow-yes-soft;
 }
 .button-secondary:hover {
-  @apply -translate-y-px border-vow-wine;
+  @apply -translate-y-px border-yes-wine;
 }
 .button-ghost {
-  @apply border border-vow-soft bg-transparent text-vow-ink hover:bg-vow-soft;
+  @apply border border-yes-soft bg-transparent text-yes-ink hover:bg-yes-soft;
 }
 .button-light {
-  @apply bg-white text-vow-wine-deep hover:bg-vow-blush;
+  @apply bg-white text-yes-wine-deep hover:bg-yes-blush;
 }
 .button-large {
   @apply min-h-13 px-6 text-sm flex items-center justify-center;
@@ -191,13 +191,13 @@
   @apply w-full;
 }
 .icon-button {
-  @apply inline-grid size-11 shrink-0 place-items-center rounded-xl border border-vow-line bg-vow-surface p-0 text-inherit leading-none;
+  @apply inline-grid size-11 shrink-0 place-items-center rounded-xl border border-yes-line bg-yes-surface p-0 text-inherit leading-none;
 }
-.vow-select {
+.yes-select {
   min-width: 0;
   position: relative;
 }
-.vow-select-trigger {
+.yes-select-trigger {
   width: 100%;
   min-height: 46px;
   display: flex;
@@ -213,28 +213,28 @@
   text-align: left;
   box-shadow: 0 5px 18px rgba(59, 39, 34, 0.04);
 }
-.vow-select-trigger:hover,
-.vow-select-trigger[aria-expanded="true"] {
+.yes-select-trigger:hover,
+.yes-select-trigger[aria-expanded="true"] {
   border-color: color-mix(in srgb, var(--wine) 45%, var(--line));
 }
-.vow-select-trigger[aria-expanded="true"] {
+.yes-select-trigger[aria-expanded="true"] {
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--wine) 12%, transparent);
 }
-.vow-select-trigger[aria-expanded="true"] .vow-select-chevron {
+.yes-select-trigger[aria-expanded="true"] .yes-select-chevron {
   transform: rotate(180deg);
 }
-.vow-select-chevron {
+.yes-select-chevron {
   flex: 0 0 auto;
   color: var(--wine);
   transition: transform 160ms ease;
 }
-.vow-select-value {
+.yes-select-value {
   min-width: 0;
   display: inline-flex;
   align-items: center;
   gap: 9px;
 }
-.vow-select-leading-icon {
+.yes-select-leading-icon {
   width: 27px;
   height: 27px;
   display: grid;
@@ -244,11 +244,11 @@
   background: color-mix(in srgb, var(--wine) 10%, var(--surface));
   color: var(--wine);
 }
-.vow-select-placeholder {
+.yes-select-placeholder {
   color: var(--muted);
   font-weight: 600;
 }
-.vow-select-options {
+.yes-select-options {
   width: 100%;
   max-height: 260px;
   position: absolute;
@@ -262,7 +262,7 @@
   background: var(--surface);
   box-shadow: var(--shadow);
 }
-.vow-select-options button {
+.yes-select-options button {
   width: 100%;
   min-height: 48px;
   display: flex;
@@ -277,38 +277,38 @@
   font: 650 13px var(--sans);
   text-align: left;
 }
-.vow-select-options button:hover,
-.vow-select-options button:focus-visible {
+.yes-select-options button:hover,
+.yes-select-options button:focus-visible {
   background: var(--surface-soft);
   outline: none;
 }
-.vow-select-options button.selected {
+.yes-select-options button.selected {
   background: color-mix(in srgb, var(--wine) 10%, var(--surface));
   color: var(--wine);
 }
-.vow-select-compact {
+.yes-select-compact {
   width: 78px;
 }
-.vow-select-compact .vow-select-trigger {
+.yes-select-compact .yes-select-trigger {
   min-height: 42px;
   padding: 0 7px;
   font-size: 12px;
 }
-.vow-select-compact .vow-select-value {
+.yes-select-compact .yes-select-value {
   gap: 7px;
 }
-.vow-select-compact .vow-select-leading-icon {
+.yes-select-compact .yes-select-leading-icon {
   width: 20px;
   height: 20px;
   border-radius: 0;
   background: transparent;
 }
-.vow-select-compact .vow-select-options {
+.yes-select-compact .yes-select-options {
   width: 100%;
   right: 0;
   left: auto;
 }
-.vow-select-compact .vow-select-options button {
+.yes-select-compact .yes-select-options button {
   min-height: 42px;
   padding: 9px;
   font-size: 12px;

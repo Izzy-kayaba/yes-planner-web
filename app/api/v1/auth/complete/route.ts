@@ -9,7 +9,7 @@ export async function GET(request: Request) {
   if ("error" in authentication) return NextResponse.redirect(new URL("/login", request.url));
 
   const cookieStore = await cookies();
-  const requestedRole = cookieStore.get("vow-pending-role")?.value;
+  const requestedRole = cookieStore.get("yes-pending-role")?.value;
 
   if (isSelfServiceRole(requestedRole)) {
     await mongoDb.collection("user").updateOne(
@@ -24,6 +24,6 @@ export async function GET(request: Request) {
   }
 
   const response = NextResponse.redirect(new URL("/dashboard", request.url));
-  response.cookies.delete("vow-pending-role");
+  response.cookies.delete("yes-pending-role");
   return response;
 }

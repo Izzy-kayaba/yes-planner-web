@@ -5,7 +5,7 @@ import { intlMessages, isSupportedLanguage, languageCookieName, type Language } 
 export default getRequestConfig(async () => {
   const cookieStore = await cookies();
   const cookieLanguage =
-    cookieStore.get(languageCookieName)?.value ?? cookieStore.get("vow-language")?.value;
+    cookieStore.get(languageCookieName)?.value ?? cookieStore.get("yes-language")?.value;
   const locale: Language = isSupportedLanguage(cookieLanguage) ? cookieLanguage : "en";
 
   return {

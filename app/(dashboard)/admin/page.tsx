@@ -25,7 +25,7 @@ export default async function AdminPage() {
     <div className="section-stack">
       <PageHeader
         eyebrow="System administration"
-        title="Vow Planner operations"
+        title="Yes Planner operations"
         description="Protected platform oversight for users, roles and application activity."
       />
       <section className="stats-grid">
@@ -78,7 +78,7 @@ export default async function AdminPage() {
                 </div>
               ))
             ) : (
-              <p className="text-sm text-vow-muted">
+              <p className="text-sm text-yes-muted">
                 {text("No database users are available yet.")}
               </p>
             )}

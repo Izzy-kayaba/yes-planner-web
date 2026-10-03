@@ -99,7 +99,7 @@ export default async function HomePage() {
 
         <div
           className="hero-visual"
-          aria-label={text("Preview of the Vow Planner wedding planning experience")}
+          aria-label={text("Preview of the Yes Planner wedding planning experience")}
         >
           <div className="hero-halo" />
           <div className="hero-photo">
@@ -229,7 +229,7 @@ export default async function HomePage() {
       <footer className="landing-footer page-width">
         <Brand />
         <p>{text("Planning made personal, from yes to I do.")}</p>
-        <span>© 2026 Vow Planner</span>
+        <span>© 2026 Yes Planner</span>
       </footer>
     </main>
   );

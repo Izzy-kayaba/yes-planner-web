@@ -61,7 +61,7 @@ export function WeddingAnalytics() {
             <p className="eyebrow">{text("Readiness")}</p>
             <h3>{text("Progress by planning area")}</h3>
           </div>
-          <span className="text-sm font-semibold text-vow-muted">{text("Live overview")}</span>
+          <span className="text-sm font-semibold text-yes-muted">{text("Live overview")}</span>
         </div>
         <div className="h-72 w-full" aria-label={text("Planning readiness by area")}>
           <ResponsiveContainer width="100%" height="100%">
@@ -128,7 +128,7 @@ export function WeddingAnalytics() {
             <p className="eyebrow">{text("Five-week trend")}</p>
             <h3>{text("Planning momentum")}</h3>
           </div>
-          <strong className="text-sm text-vow-sage">+26%</strong>
+          <strong className="text-sm text-yes-sage">+26%</strong>
         </div>
         <div className="h-64 w-full" aria-label={text("Planning progress over five weeks")}>
           <ResponsiveContainer width="100%" height="100%">

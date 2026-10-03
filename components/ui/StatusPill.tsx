@@ -5,11 +5,11 @@ import { useLanguage } from "@/components/providers/LanguageProvider";
 import { cn } from "@/lib/cn";
 
 const toneClasses: Record<string, string> = {
-  rose: "bg-vow-blush text-vow-wine",
-  sage: "bg-vow-sage-soft text-vow-sage",
-  gold: "bg-vow-gold-soft text-vow-gold",
-  blue: "bg-vow-blue-soft text-vow-blue",
-  neutral: "bg-vow-soft text-vow-muted",
+  rose: "bg-yes-blush text-yes-wine",
+  sage: "bg-yes-sage-soft text-yes-sage",
+  gold: "bg-yes-gold-soft text-yes-gold",
+  blue: "bg-yes-blue-soft text-yes-blue",
+  neutral: "bg-yes-soft text-yes-muted",
 };
 
 export function StatusPill({ children, tone = "neutral" }: { children: ReactNode; tone?: string }) {

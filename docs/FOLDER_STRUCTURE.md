@@ -1,9 +1,9 @@
 # Frontend folder structure
 
-Vow Planner groups code by product area. A page chooses a feature; it does not contain the feature implementation itself.
+Yes Planner groups code by product area. A page chooses a feature; it does not contain the feature implementation itself.
 
 ```text
-VowPlanner-UI/
+YesPlanner-UI/
 ├── app/                         Next.js routes, layouts and global style entry points
 │   ├── (auth)/                  Login and registration routes
 │   ├── (dashboard)/             Authenticated SaaS routes

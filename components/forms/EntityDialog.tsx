@@ -4,7 +4,7 @@ import { useEffect, useState, type FormEvent } from "react";
 import { useLanguage } from "@/components/providers/LanguageProvider";
 import { Button } from "@/components/ui/Button";
 import { Modal } from "@/components/ui/Modal";
-import { VowSelect } from "@/components/ui/VowSelect";
+import { YesSelect } from "@/components/ui/YesSelect";
 
 export type EntityFormValue = string | number;
 
@@ -76,7 +76,7 @@ export function EntityDialog({
                 placeholder={field.placeholder ? text(field.placeholder) : undefined}
               />
             ) : field.type === "select" ? (
-              <VowSelect
+              <YesSelect
                 ariaLabel={text(field.label)}
                 defaultValue={String(defaults[field.name] ?? "")}
                 name={field.name}

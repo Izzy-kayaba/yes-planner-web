@@ -32,7 +32,7 @@ export default async function AuthLayout({ children }: { children: ReactNode }) 
         <div className="auth-quote">
           <div className="quote-avatar">TM</div>
           <blockquote>
-            {text("Vow Planner gave us our evenings back. We could finally enjoy being engaged.")}
+            {text("Yes Planner gave us our evenings back. We could finally enjoy being engaged.")}
           </blockquote>
           <p>{text("Thandi & Michael · Cape Town")}</p>
         </div>

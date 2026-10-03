@@ -27,8 +27,8 @@ export async function generateMetadata(): Promise<Metadata> {
   const text = await getTextTranslator();
   return {
     title: {
-      default: "Vow Planner",
-      template: "%s · Vow Planner",
+      default: "Yes Planner",
+      template: "%s · Yes Planner",
     },
     description: text("One beautiful place to plan, manage and remember your wedding."),
   };

@@ -79,7 +79,7 @@ export async function PUT(request: Request, context: RouteContext) {
     notifyWeddingParticipants(
       authorization.params.weddingKey,
       authorization.session.user.id,
-      `A ${authorization.params.module} item was updated in Vow Planner.`,
+      `A ${authorization.params.module} item was updated in Yes Planner.`,
     ),
   );
   return NextResponse.json({ ...data, id: authorization.params.recordId });
@@ -104,7 +104,7 @@ export async function DELETE(request: Request, context: RouteContext) {
     notifyWeddingParticipants(
       authorization.params.weddingKey,
       authorization.session.user.id,
-      `A ${authorization.params.module} item was removed in Vow Planner.`,
+      `A ${authorization.params.module} item was removed in Yes Planner.`,
     ),
   );
   return new NextResponse(null, { status: 204 });

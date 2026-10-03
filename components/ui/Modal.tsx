@@ -38,7 +38,7 @@ export function Modal({
       }}
     >
       <section
-        className="max-h-[90vh] w-full max-w-xl overflow-y-auto rounded-2xl border border-vow-line bg-vow-surface p-6 shadow-vow"
+        className="max-h-[90vh] w-full max-w-xl overflow-y-auto rounded-2xl border border-yes-line bg-yes-surface p-6 shadow-yes"
         role="dialog"
         aria-modal="true"
         aria-labelledby="modal-title"
@@ -48,7 +48,7 @@ export function Modal({
             <h2 id="modal-title" className="text-2xl">
               {text(title)}
             </h2>
-            {description && <p className="mt-1 text-sm text-vow-muted">{text(description)}</p>}
+            {description && <p className="mt-1 text-sm text-yes-muted">{text(description)}</p>}
           </div>
           <button
             className="icon-button"

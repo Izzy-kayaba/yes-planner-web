@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/Button";
 import { useLanguage } from "@/components/providers/LanguageProvider";
 import { apiRequest } from "@/lib/api/client";
 import moment from "moment";
-import { VowSelect } from "@/components/ui/VowSelect";
+import { YesSelect } from "@/components/ui/YesSelect";
 
 export type WeddingOnboardingValue = {
   firstName: string;
@@ -163,7 +163,7 @@ export function WeddingOnboardingForm({ initialValue }: { initialValue?: Wedding
       </div>
       <label>
         {text("Wedding style")}
-        <VowSelect
+        <YesSelect
           ariaLabel={text("Wedding style")}
           onChange={(nextValue) => update("weddingStyle", nextValue)}
           options={[

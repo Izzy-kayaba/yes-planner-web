@@ -16,13 +16,13 @@ const testimonials = [
     comment: "Every supplier, payment and guest detail finally lived in one calm, beautiful place.",
     names: "Naledi & James",
     location: "Johannesburg",
-    image: "/vow-planner-profile-1.jpeg",
+    image: "/yes-planner-profile-1.jpeg",
   },
   {
     comment: "Our planner and family always knew what was next, without endless message threads.",
     names: "Amina & Daniel",
     location: "Durban",
-    image: "/vow-planner-profile-2.jpeg",
+    image: "/yes-planner-profile-2.jpeg",
   },
 ];
 

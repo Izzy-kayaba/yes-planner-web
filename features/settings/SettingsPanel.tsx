@@ -126,7 +126,7 @@ export function SettingsPanel() {
   useEffect(() => {
     if ((process.env.NEXT_PUBLIC_DATA_SOURCE ?? "api") === "demo") {
       try {
-        const stored = window.localStorage.getItem("vow-planner-profile");
+        const stored = window.localStorage.getItem("yes-planner-profile");
         if (stored) {
           const saved = JSON.parse(stored) as Partial<typeof profile> & { phone?: string };
           setProfile((current) => ({
@@ -153,7 +153,7 @@ export function SettingsPanel() {
     }
     try {
       if ((process.env.NEXT_PUBLIC_DATA_SOURCE ?? "api") === "demo") {
-        window.localStorage.setItem("vow-planner-profile", JSON.stringify(profile));
+        window.localStorage.setItem("yes-planner-profile", JSON.stringify(profile));
       } else {
         const saved = await apiRequest<typeof profile>("/api/v1/me", {
           method: "PATCH",
@@ -274,7 +274,7 @@ export function SettingsPanel() {
             <div className="grid gap-5">
               <div>
                 <h3>{t("settings.language")}</h3>
-                <p className="mt-2 text-sm text-vow-muted">
+                <p className="mt-2 text-sm text-yes-muted">
                   {text(
                     "Your choice updates the shared navigation and dashboard language and is remembered on this device.",
                   )}
@@ -301,7 +301,7 @@ export function SettingsPanel() {
 
 function PreferenceList({ items, storageKey }: { items: Preference[]; storageKey: string }) {
   const { text } = useLanguage();
-  const key = `vow-planner-settings-${storageKey}`;
+  const key = `yes-planner-settings-${storageKey}`;
   const [enabled, setEnabled] = useState<Record<string, boolean>>({});
 
   useEffect(() => {

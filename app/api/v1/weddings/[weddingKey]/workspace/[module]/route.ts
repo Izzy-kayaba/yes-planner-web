@@ -102,7 +102,7 @@ export async function POST(request: Request, context: RouteContext) {
     notifyWeddingParticipants(
       authorization.params.weddingKey,
       authorization.session.user.id,
-      `A new ${authorization.params.module} item was added in Vow Planner.`,
+      `A new ${authorization.params.module} item was added in Yes Planner.`,
     ),
   );
   return NextResponse.json(publicRecord(document), { status: 201 });

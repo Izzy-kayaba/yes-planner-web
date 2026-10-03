@@ -1,4 +1,4 @@
-# Running Vow Planner locally
+# Running Yes Planner locally
 
 ## Requirements
 
@@ -30,7 +30,7 @@ Useful routes:
 - `/admin` — platform operations
 - `/invite/ruth-and-izzy` — guest RSVP
 
-To clear preview edits, remove keys beginning with `vow-planner:` from browser storage.
+To clear preview edits, remove keys beginning with `yes-planner:` from browser storage.
 
 ## MongoDB-backed API mode
 
@@ -46,7 +46,7 @@ At minimum, set:
 NEXT_PUBLIC_DATA_SOURCE=api
 NEXT_PUBLIC_API_URL=
 MONGODB_DEVELOPMENT_URI=mongodb://127.0.0.1:27017
-MONGODB_DEVELOPMENT_DATABASE=vow_planner_development
+MONGODB_DEVELOPMENT_DATABASE=yes_planner_development
 MONGODB_USE_TRANSACTIONS=false
 BETTER_AUTH_URL=http://localhost:3000
 BETTER_AUTH_SECRET=<a unique random value of at least 32 characters>

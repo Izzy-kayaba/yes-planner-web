@@ -16,8 +16,8 @@ function detectedCountry(request: Request) {
 
   // Localhost has no IP-country header. Browser hints are sufficient here
   // because location only controls whether the optional ZAR display is shown.
-  const locale = request.headers.get("x-vow-locale")?.toUpperCase() ?? "";
-  const timeZone = request.headers.get("x-vow-time-zone") ?? "";
+  const locale = request.headers.get("x-yes-locale")?.toUpperCase() ?? "";
+  const timeZone = request.headers.get("x-yes-time-zone") ?? "";
   return locale.endsWith("-ZA") || timeZone === "Africa/Johannesburg" ? "ZA" : "";
 }
 

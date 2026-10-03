@@ -57,7 +57,7 @@ export function VendorPortfolioCarousel() {
 
   return (
     <section
-      className="min-w-0 max-w-full overflow-hidden rounded-2xl border border-vow-line bg-vow-surface p-3 shadow-vow-soft sm:p-6"
+      className="min-w-0 max-w-full overflow-hidden rounded-2xl border border-yes-line bg-yes-surface p-3 shadow-yes-soft sm:p-6"
       aria-labelledby="portfolio-heading"
     >
       <div className="mb-5 flex flex-col items-start gap-4 sm:flex-row sm:items-end sm:justify-between">
@@ -68,7 +68,7 @@ export function VendorPortfolioCarousel() {
           </h2>
         </div>
         <div className="flex w-full items-center justify-between gap-2 sm:w-auto sm:justify-start">
-          <span className="mr-1 text-[12px] font-bold text-vow-muted" aria-live="polite">
+          <span className="mr-1 text-[12px] font-bold text-yes-muted" aria-live="polite">
             {selectedIndex + 1} / {slideCount || 1}
           </span>
           <button
@@ -105,7 +105,7 @@ export function VendorPortfolioCarousel() {
                   {getInitials(portfolio.studio)}
                 </span>
                 <button
-                  className="absolute right-3 top-3 grid size-10 place-items-center rounded-full bg-white/90 text-vow-wine shadow-vow-soft backdrop-blur"
+                  className="absolute right-3 top-3 grid size-10 place-items-center rounded-full bg-white/90 text-yes-wine shadow-yes-soft backdrop-blur"
                   type="button"
                   aria-label={`${text("Save")} ${portfolio.studio}`}
                   onClick={() =>
@@ -123,11 +123,11 @@ export function VendorPortfolioCarousel() {
                 </button>
               </div>
               <div className="px-1 pt-3">
-                <p className="text-[12px] font-extrabold uppercase tracking-[.14em] text-vow-wine">
+                <p className="text-[12px] font-extrabold uppercase tracking-[.14em] text-yes-wine">
                   {text(portfolio.category)}
                 </p>
                 <h3 className="mt-1 font-display text-xl">{portfolio.studio}</h3>
-                <p className="mt-1 text-sm text-vow-muted">{text(portfolio.detail)}</p>
+                <p className="mt-1 text-sm text-yes-muted">{text(portfolio.detail)}</p>
               </div>
             </article>
           ))}

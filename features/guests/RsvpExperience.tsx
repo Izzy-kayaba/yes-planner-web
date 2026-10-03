@@ -8,7 +8,7 @@ import { z } from "zod";
 import { Brand } from "@/components/ui/Brand";
 import { useLanguage } from "@/components/providers/LanguageProvider";
 import { cn } from "@/lib/cn";
-import { VowSelect } from "@/components/ui/VowSelect";
+import { YesSelect } from "@/components/ui/YesSelect";
 
 const rsvpSchema = z
   .object({
@@ -143,7 +143,7 @@ export function RsvpExperience() {
             </button>
           </div>
           {errors.response && (
-            <p className="text-center text-sm text-vow-wine">
+            <p className="text-center text-sm text-yes-wine">
               {text(errors.response.message ?? "")}
             </p>
           )}
@@ -151,7 +151,7 @@ export function RsvpExperience() {
             <div className="rsvp-details">
               <label>
                 {text("Meal preference")}
-                <VowSelect
+                <YesSelect
                   ariaLabel={text("Meal preference")}
                   invalid={Boolean(errors.mealPreference)}
                   onChange={(value) => setValue("mealPreference", value, { shouldValidate: true })}
@@ -165,7 +165,7 @@ export function RsvpExperience() {
                   value={mealPreference}
                 />
                 {errors.mealPreference && (
-                  <small className="text-vow-wine">
+                  <small className="text-yes-wine">
                     {text(errors.mealPreference.message ?? "")}
                   </small>
                 )}
@@ -178,7 +178,7 @@ export function RsvpExperience() {
                   placeholder={text("Allergies or requirements we should know about")}
                 />
                 {errors.dietaryNotes && (
-                  <small className="text-vow-wine">{text(errors.dietaryNotes.message ?? "")}</small>
+                  <small className="text-yes-wine">{text(errors.dietaryNotes.message ?? "")}</small>
                 )}
               </label>
             </div>

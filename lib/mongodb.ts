@@ -18,7 +18,7 @@ function databaseConfiguration() {
 
   return {
     uri: uri ?? "mongodb://127.0.0.1:27017",
-    databaseName: databaseName ?? (production ? "vow_planner" : "vow_planner_development"),
+    databaseName: databaseName ?? (production ? "yes_planner" : "yes_planner_development"),
   };
 }
 
@@ -26,12 +26,12 @@ const configuration = databaseConfiguration();
 
 declare global {
   // eslint-disable-next-line no-var
-  var vowPlannerMongoClient: MongoClient | undefined;
+  var yesPlannerMongoClient: MongoClient | undefined;
 }
 
-export const mongoClient = global.vowPlannerMongoClient ?? new MongoClient(configuration.uri);
+export const mongoClient = global.yesPlannerMongoClient ?? new MongoClient(configuration.uri);
 
-if (process.env.NODE_ENV !== "production") global.vowPlannerMongoClient = mongoClient;
+if (process.env.NODE_ENV !== "production") global.yesPlannerMongoClient = mongoClient;
 
 export const mongoDb: Db = mongoClient.db(configuration.databaseName);
 

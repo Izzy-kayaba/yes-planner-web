@@ -12,7 +12,7 @@ import type {
 const dataSource = process.env.NEXT_PUBLIC_DATA_SOURCE ?? "api";
 
 function workspaceStorageKey(weddingId: string, module: WorkspaceModule) {
-  return `vow-planner:${weddingId}:${module}`;
+  return `yes-planner:${weddingId}:${module}`;
 }
 
 function readStored<T>(key: string, seed: T[]) {

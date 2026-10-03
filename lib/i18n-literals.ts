@@ -39,7 +39,7 @@ const frenchByEnglish: Record<string, string> = {
   Catering: "Traiteur",
   Florist: "Fleuriste",
   "Music & DJ": "Musique et DJ",
-  "Vow Planner edit": "Sélection Vow Planner",
+  "Yes Planner edit": "Sélection Yes Planner",
   "Florals that feel": "Des fleurs qui semblent",
   "gathered, not arranged.": "cueillies, jamais arrangées.",
   "Meet five Johannesburg studios creating expressive, season-led celebrations.":
@@ -167,7 +167,7 @@ const frenchByEnglish: Record<string, string> = {
   "Explore the workspace": "Découvrir l’espace de travail",
   "Loved by modern couples": "Apprécié par les couples modernes",
   "4.9 average planning experience": "Expérience moyenne de 4,9",
-  "Preview of the Vow Planner wedding dashboard": "Aperçu du tableau de bord Vow Planner",
+  "Preview of the Yes Planner wedding dashboard": "Aperçu du tableau de bord Yes Planner",
   "Budget on track": "Budget maîtrisé",
   remaining: "restant",
   "Guest responses": "Réponses des invités",
@@ -212,8 +212,8 @@ const frenchByEnglish: Record<string, string> = {
   "One shared vision.": "Une vision partagée.",
   "Bring your people, plans and promises together in a workspace designed for the joy of the journey.":
     "Rassemblez vos proches, vos projets et vos promesses dans un espace conçu pour savourer chaque étape.",
-  "Vow Planner gave us our evenings back. We could finally enjoy being engaged.":
-    "Vow Planner nous a rendu nos soirées. Nous avons enfin pu profiter de nos fiançailles.",
+  "Yes Planner gave us our evenings back. We could finally enjoy being engaged.":
+    "Yes Planner nous a rendu nos soirées. Nous avons enfin pu profiter de nos fiançailles.",
   "Thandi & Michael · Cape Town": "Thandi & Michael · Le Cap",
 
   // Dashboard and wedding overview
@@ -400,7 +400,7 @@ const frenchByEnglish: Record<string, string> = {
 
   // Administration
   "Platform administration": "Administration de la plateforme",
-  "Vow Planner operations": "Opérations Vow Planner",
+  "Yes Planner operations": "Opérations Yes Planner",
   "A focused view of platform health, verification and support.":
     "Une vue ciblée de l’état de la plateforme, des vérifications et de l’assistance.",
   "Active weddings": "Mariages actifs",
@@ -432,15 +432,15 @@ const frenchByEnglish: Record<string, string> = {
   "Audit log opened.": "Journal d’audit ouvert.",
   "Open audit log": "Ouvrir le journal d’audit",
   "Wedding ownership transferred": "Propriété du mariage transférée",
-  "Actor: support@vowplanner.co.za · Wedding ending 48D2":
-    "Acteur : support@vowplanner.co.za · Mariage se terminant par 48D2",
+  "Actor: support@yesplanner.co.za · Wedding ending 48D2":
+    "Acteur : support@yesplanner.co.za · Mariage se terminant par 48D2",
   Ownership: "Propriété",
   "Vendor organisation verified": "Organisation prestataire vérifiée",
-  "Actor: operations@vowplanner.co.za · Bloom Events":
-    "Acteur : operations@vowplanner.co.za · Bloom Events",
+  "Actor: operations@yesplanner.co.za · Bloom Events":
+    "Acteur : operations@yesplanner.co.za · Bloom Events",
   Verification: "Vérification",
   "Subscription refund approved": "Remboursement de l’abonnement approuvé",
-  "Actor: finance@vowplanner.co.za · REF-2071": "Acteur : finance@vowplanner.co.za · REF-2071",
+  "Actor: finance@yesplanner.co.za · REF-2071": "Acteur : finance@yesplanner.co.za · REF-2071",
   Finance: "Finance",
 
   // Vendor portal
@@ -666,7 +666,7 @@ const frenchByEnglish: Record<string, string> = {
   "Enter a valid email address.": "Saisissez une adresse e-mail valide.",
   "Add at least one number.": "Ajoutez au moins un chiffre.",
   "Add at least one symbol.": "Ajoutez au moins un symbole.",
-  "Vow Planner home": "Accueil Vow Planner",
+  "Yes Planner home": "Accueil Yes Planner",
   "Loading wedding analytics": "Chargement des analyses du mariage",
   "Budget remaining": "Budget restant",
   "of R 520,000": "sur R 520 000",

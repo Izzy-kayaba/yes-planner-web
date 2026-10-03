@@ -10,8 +10,8 @@ export async function sendPasswordResetEmail(to: string, resetUrl: string) {
     body: JSON.stringify({
       from,
       to: [to],
-      subject: "Reset your Vow Planner password",
-      text: `Use this secure link to reset your Vow Planner password: ${resetUrl}\n\nThis link expires in one hour. If you did not request it, you can ignore this email.`,
+      subject: "Reset your Yes Planner password",
+      text: `Use this secure link to reset your Yes Planner password: ${resetUrl}\n\nThis link expires in one hour. If you did not request it, you can ignore this email.`,
     }),
   });
   if (!response.ok) throw new Error("Password reset email could not be sent.");

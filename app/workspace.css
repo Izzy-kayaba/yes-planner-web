@@ -5,7 +5,7 @@
   @apply grid min-h-screen grid-cols-[246px_minmax(0,1fr)];
 }
 .sidebar {
-  @apply sticky top-0 z-30 flex h-screen flex-col border-r border-vow-line bg-vow-surface px-[18px] pb-[19px] pt-[27px];
+  @apply sticky top-0 z-30 flex h-screen flex-col border-r border-yes-line bg-yes-surface px-[18px] pb-[19px] pt-[27px];
 }
 .sidebar-brand-row {
   padding: 0 9px 25px;
@@ -20,13 +20,13 @@
   @apply flex-1;
 }
 .nav-label {
-  @apply mb-2 ml-3 mr-3 mt-3 text-[11px] font-extrabold uppercase tracking-[.16em] text-vow-muted;
+  @apply mb-2 ml-3 mr-3 mt-3 text-[11px] font-extrabold uppercase tracking-[.16em] text-yes-muted;
 }
 .nav-item {
-  @apply my-[3px] grid min-h-[46px] grid-cols-[29px_1fr_auto] items-center gap-[7px] rounded-[10px] px-[11px] text-sm font-semibold text-vow-muted;
+  @apply my-[3px] grid min-h-[46px] grid-cols-[29px_1fr_auto] items-center gap-[7px] rounded-[10px] px-[11px] text-sm font-semibold text-yes-muted;
 }
 .nav-item:hover {
-  @apply bg-vow-soft text-vow-ink;
+  @apply bg-yes-soft text-yes-ink;
 }
 .nav-item.active {
   background: color-mix(in srgb, var(--wine) 10%, var(--surface));
@@ -36,7 +36,7 @@
   @apply grid size-[26px] place-items-center font-display text-[17px];
 }
 .nav-item small {
-  @apply grid size-5 min-w-5 place-items-center rounded-full bg-vow-wine text-[11px] text-white;
+  @apply grid size-5 min-w-5 place-items-center rounded-full bg-yes-wine text-[11px] text-white;
 }
 .sidebar-wedding-card {
   display: flex;
@@ -140,14 +140,14 @@
   overflow-x: clip;
 }
 .topbar {
-  @apply sticky top-0 z-20 flex h-[70px] items-center justify-between border-b border-vow-line px-[34px];
+  @apply sticky top-0 z-20 flex h-[70px] items-center justify-between border-b border-yes-line px-[34px];
   width: 100%;
   min-width: 0;
   background: color-mix(in srgb, var(--canvas) 88%, transparent);
   backdrop-filter: blur(16px);
 }
 .topbar-context {
-  @apply flex items-center gap-2 text-[12px] font-bold uppercase tracking-[.08em] text-vow-muted;
+  @apply flex items-center gap-2 text-[12px] font-bold uppercase tracking-[.08em] text-yes-muted;
 }
 .topbar-dot {
   width: 7px;
@@ -162,17 +162,17 @@
   flex: 0 0 auto;
 }
 .currency-switcher select {
-  @apply h-10 rounded-xl border border-vow-line bg-vow-surface px-3 text-xs font-bold text-vow-muted shadow-none;
+  @apply h-10 rounded-xl border border-yes-line bg-yes-surface px-3 text-xs font-bold text-yes-muted shadow-none;
 }
 .quick-search {
-  @apply flex h-10 w-[230px] items-center gap-2 rounded-[10px] border border-vow-line bg-vow-surface py-0 pl-3 pr-[9px] text-vow-muted;
+  @apply flex h-10 w-[230px] items-center gap-2 rounded-[10px] border border-yes-line bg-yes-surface py-0 pl-3 pr-[9px] text-yes-muted;
 }
 .quick-search input {
   @apply h-full w-full border-0 bg-transparent p-0 text-[13px] shadow-none;
   min-width: 0;
 }
 .quick-search kbd {
-  @apply inline-flex shrink-0 items-center justify-center whitespace-nowrap rounded-[5px] border border-vow-line bg-vow-soft px-1.5 py-1 text-[10px];
+  @apply inline-flex shrink-0 items-center justify-center whitespace-nowrap rounded-[5px] border border-yes-line bg-yes-soft px-1.5 py-1 text-[10px];
   min-width: 32px;
   line-height: 1;
 }
@@ -297,7 +297,7 @@
   grid-template-columns: 0.85fr 1.15fr;
 }
 .panel {
-  @apply rounded-2xl border border-vow-line bg-vow-surface p-6 shadow-vow-soft;
+  @apply rounded-2xl border border-yes-line bg-yes-surface p-6 shadow-yes-soft;
 }
 .panel-header {
   min-height: 43px;

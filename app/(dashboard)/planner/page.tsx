@@ -49,7 +49,7 @@ export default async function PlannerPage() {
       <section className="panel">
         <p className="eyebrow">Service area</p>
         <h2>{String(profile.serviceArea)}</h2>
-        <p className="mt-3 max-w-3xl text-vow-muted">{String(profile.bio)}</p>
+        <p className="mt-3 max-w-3xl text-yes-muted">{String(profile.bio)}</p>
       </section>
     </div>
   );
