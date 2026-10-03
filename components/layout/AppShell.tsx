@@ -31,7 +31,7 @@ import {
 } from "react";
 import { Brand } from "@/components/ui/Brand";
 import { LanguageSwitcher } from "@/components/i18n/LanguageSwitcher";
-import { CurrencySwitcher } from "@/components/currency/CurrencySwitcher";
+import { Modal } from "@/components/ui/Modal";
 import { useLanguage } from "@/components/providers/LanguageProvider";
 import { cn } from "@/lib/cn";
 import { authClient } from "@/lib/auth-client";
@@ -101,6 +101,7 @@ export function AppShell({
   const [menuOpen, setMenuOpen] = useState(false);
   const [themeReady, setThemeReady] = useState(false);
   const [search, setSearch] = useState("");
+  const [logoutOpen, setLogoutOpen] = useState(false);
   const searchInput = useRef<HTMLInputElement>(null);
   const { data: session } = authClient.useSession();
   const demoMode = (process.env.NEXT_PUBLIC_DATA_SOURCE ?? "api") === "demo";
@@ -167,8 +168,8 @@ export function AppShell({
   const darkMode = themeReady && resolvedTheme === "dark";
 
   async function signOut() {
-    if (!window.confirm(text("Are you sure you want to log out?"))) return;
     if (!demoMode) await authClient.signOut();
+    setLogoutOpen(false);
     setMenuOpen(false);
     router.replace("/login");
     router.refresh();
@@ -245,7 +246,7 @@ export function AppShell({
             </Link>
             <button
               className="profile-menu"
-              onClick={() => void signOut()}
+              onClick={() => setLogoutOpen(true)}
               type="button"
               aria-label={text("Log out")}
               title={text("Log out")}
@@ -289,7 +290,6 @@ export function AppShell({
               />
               <kbd>⌘ K</kbd>
             </form>
-            <CurrencySwitcher />
             <LanguageSwitcher compact />
             <button
               className="icon-button"
@@ -302,6 +302,25 @@ export function AppShell({
         </header>
         <main className="main-content">{children}</main>
       </div>
+      <Modal
+        description="Are you sure you want to log out?"
+        onClose={() => setLogoutOpen(false)}
+        open={logoutOpen}
+        title="Log out"
+      >
+        <div className="flex justify-end gap-3">
+          <button
+            className="button button-secondary"
+            onClick={() => setLogoutOpen(false)}
+            type="button"
+          >
+            {text("Cancel")}
+          </button>
+          <button className="button button-primary" onClick={() => void signOut()} type="button">
+            <LogOut size={16} /> {text("Log out")}
+          </button>
+        </div>
+      </Modal>
     </div>
   );
 }

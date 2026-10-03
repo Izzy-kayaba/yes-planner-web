@@ -1,0 +1,1171 @@
+[
+  {
+    "businessName": "Events By Nicci-H",
+    "contactName": "Nicole",
+    "bio": "Johannesburg-based events planning company specialising in contemporary decor styling, catering, bar services, audiovisual production and event extras.",
+    "serviceArea": "Johannesburg",
+    "services": ["Wedding planning", "Decor", "Catering", "Florist", "Cake", "DJ", "Entertainment"],
+    "startingPriceMinor": null,
+    "website": "https://www.eventsbynicci-h.co.za/",
+    "instagramHandle": null,
+    "profileImage": null,
+    "portfolioImages": [],
+    "published": true,
+    "claimed": false,
+    "seeded": true,
+    "ownerUserId": null,
+    "source": {
+      "name": "Official website",
+      "url": "https://www.eventsbynicci-h.co.za/"
+    }
+  },
+  {
+    "businessName": "JoyJams Studio",
+    "contactName": null,
+    "bio": "Johannesburg event styling studio offering event planning, premium balloon styling, custom decor and florals, catering and treats, with photography add-ons.",
+    "serviceArea": "Sandton, Johannesburg",
+    "services": ["Wedding planning", "Decor", "Florist", "Catering", "Cake", "Photography"],
+    "startingPriceMinor": 1250000,
+    "website": "https://joyjamsevents.com/",
+    "instagramHandle": "@joy_jams_events",
+    "profileImage": null,
+    "portfolioImages": [],
+    "published": true,
+    "claimed": false,
+    "seeded": true,
+    "ownerUserId": null,
+    "source": {
+      "name": "Official website",
+      "url": "https://joyjamsevents.com/"
+    }
+  },
+  {
+    "businessName": "Tapestry Event Group",
+    "contactName": null,
+    "bio": "Johannesburg-based full-service event curation and design studio providing creative direction, decor, vendor coordination, catering and bar services.",
+    "serviceArea": "Johannesburg",
+    "services": ["Wedding planning", "Decor", "Catering", "Rentals", "Florist"],
+    "startingPriceMinor": 1299900,
+    "website": "https://tapestryevents.co.za/",
+    "instagramHandle": "@tape.stryevents",
+    "profileImage": null,
+    "portfolioImages": [],
+    "published": true,
+    "claimed": false,
+    "seeded": true,
+    "ownerUserId": null,
+    "source": {
+      "name": "Official website",
+      "url": "https://tapestryevents.co.za/"
+    }
+  },
+  {
+    "businessName": "Signature Setup & Co",
+    "contactName": null,
+    "bio": "Wedding specialist providing stationery and signage, floral and decor styling, planning and coordination, and custom wedding websites.",
+    "serviceArea": "Johannesburg",
+    "services": ["Wedding planning", "Florist", "Decor", "Stationery"],
+    "startingPriceMinor": null,
+    "website": "https://www.signaturesetup.co.za/",
+    "instagramHandle": null,
+    "profileImage": null,
+    "portfolioImages": [],
+    "published": true,
+    "claimed": false,
+    "seeded": true,
+    "ownerUserId": null,
+    "source": {
+      "name": "Official website",
+      "url": "https://www.signaturesetup.co.za/"
+    }
+  },
+  {
+    "businessName": "Making Memories Wedding Planners",
+    "contactName": null,
+    "bio": "Wedding planning and event company serving Johannesburg, offering wedding planning, proposal planning, floral design, decor rentals, backdrops, furniture and event styling.",
+    "serviceArea": "Johannesburg",
+    "services": ["Wedding planning", "Decor", "Florist", "Rentals"],
+    "startingPriceMinor": null,
+    "website": "https://makinmemories.co.za/",
+    "instagramHandle": null,
+    "profileImage": null,
+    "portfolioImages": [],
+    "published": true,
+    "claimed": false,
+    "seeded": true,
+    "ownerUserId": null,
+    "source": {
+      "name": "Official website",
+      "url": "https://makinmemories.co.za/"
+    }
+  },
+  {
+    "businessName": "Mary's Inn",
+    "contactName": null,
+    "bio": "Johannesburg event supplier offering wedding decor, catering, cakes and confectionery, bar services, photography and videography.",
+    "serviceArea": "Johannesburg",
+    "services": ["Decor", "Catering", "Cake", "Photography", "Videography", "Rentals"],
+    "startingPriceMinor": 200000,
+    "website": "https://marysinn.co.za/",
+    "instagramHandle": null,
+    "profileImage": null,
+    "portfolioImages": [],
+    "published": true,
+    "claimed": false,
+    "seeded": true,
+    "ownerUserId": null,
+    "source": {
+      "name": "Official website",
+      "url": "https://marysinn.co.za/"
+    }
+  },
+  {
+    "businessName": "Trendy Settings",
+    "contactName": null,
+    "bio": "Johannesburg wedding decor hire and event styling company offering decor, styling, setup, breakdown, event coordination, wedding planning, invitations, gifts, catering and sound and lighting hire.",
+    "serviceArea": "Johannesburg",
+    "services": ["Decor", "Rentals", "Wedding planning", "Catering", "Florist"],
+    "startingPriceMinor": null,
+    "website": null,
+    "instagramHandle": null,
+    "profileImage": null,
+    "portfolioImages": [],
+    "published": true,
+    "claimed": false,
+    "seeded": true,
+    "ownerUserId": null,
+    "source": {
+      "name": "Time to Party directory",
+      "url": "https://timetoparty.co.za/party-ideas/directory/listing/listing-weddingdecor-3236/"
+    }
+  },
+  {
+    "businessName": "Memories in Motion",
+    "contactName": null,
+    "bio": "Johannesburg wedding planning service providing full-service planning and coordination, wedding decor, styling, florals, furniture hire, AV, sound, lighting, staging and supplier coordination.",
+    "serviceArea": "Johannesburg",
+    "services": [
+      "Wedding planning",
+      "Decor",
+      "Florist",
+      "Rentals",
+      "Catering",
+      "Cake",
+      "Photography",
+      "Videography"
+    ],
+    "startingPriceMinor": null,
+    "website": "https://memoriesmotion.co.za/locations/johannesburg/wedding-planners",
+    "instagramHandle": null,
+    "profileImage": null,
+    "portfolioImages": [],
+    "published": true,
+    "claimed": false,
+    "seeded": true,
+    "ownerUserId": null,
+    "source": {
+      "name": "Official website",
+      "url": "https://memoriesmotion.co.za/locations/johannesburg/wedding-planners"
+    }
+  },
+  {
+    "businessName": "Pink Book Weddings",
+    "contactName": null,
+    "bio": "South African wedding supplier directory serving couples primarily in Johannesburg and the Western Cape, covering venues, catering, photography, videography, planning, flowers, decor and entertainment.",
+    "serviceArea": "Johannesburg",
+    "services": ["Wedding planning", "Catering", "Photography", "Videography", "Florist", "Decor"],
+    "startingPriceMinor": null,
+    "website": null,
+    "instagramHandle": null,
+    "profileImage": null,
+    "portfolioImages": [],
+    "published": true,
+    "claimed": false,
+    "seeded": true,
+    "ownerUserId": null,
+    "source": {
+      "name": "Time to Party directory",
+      "url": "https://timetoparty.co.za/party-ideas/directory/listing/listing-pink-book-weddings-1630/"
+    }
+  },
+  {
+    "businessName": "Duck & Dine",
+    "contactName": null,
+    "bio": "Garden and self-catering venue for weddings and private events in Pretoria.",
+    "serviceArea": "Pretoria, Gauteng",
+    "services": ["Venue", "Catering", "Wedding planning"],
+    "startingPriceMinor": null,
+    "website": "https://www.duckdine.com",
+    "instagramHandle": null,
+    "profileImage": null,
+    "portfolioImages": [],
+    "published": true,
+    "claimed": false,
+    "seeded": true,
+    "ownerUserId": null,
+    "source": {
+      "name": "Official website",
+      "url": "https://www.duckdine.com"
+    }
+  },
+  {
+    "businessName": "Lethabo Estate",
+    "contactName": null,
+    "bio": "Riverside country estate offering a scenic setting for weddings and private functions in the Lanseria and Muldersdrift area.",
+    "serviceArea": "Lanseria / Muldersdrift, Gauteng",
+    "services": ["Venue", "Wedding planning", "Catering", "Decor"],
+    "startingPriceMinor": null,
+    "website": "https://www.lethaboestate.com",
+    "instagramHandle": null,
+    "profileImage": null,
+    "portfolioImages": [],
+    "published": true,
+    "claimed": false,
+    "seeded": true,
+    "ownerUserId": null,
+    "source": {
+      "name": "Official website",
+      "url": "https://www.lethaboestate.com"
+    }
+  },
+  {
+    "businessName": "The Garden Venue",
+    "contactName": null,
+    "bio": "Garden pavilion and function venue in Randburg, Johannesburg.",
+    "serviceArea": "Randburg, Johannesburg, Gauteng",
+    "services": ["Venue", "Wedding planning", "Catering", "Decor"],
+    "startingPriceMinor": null,
+    "website": "https://www.thegardenvenue.co.za",
+    "instagramHandle": null,
+    "profileImage": null,
+    "portfolioImages": [],
+    "published": true,
+    "claimed": false,
+    "seeded": true,
+    "ownerUserId": null,
+    "source": {
+      "name": "Official website",
+      "url": "https://www.thegardenvenue.co.za"
+    }
+  },
+  {
+    "businessName": "Valverde Eco Hotel",
+    "contactName": null,
+    "bio": "Country hotel and events venue in Muldersdrift.",
+    "serviceArea": "Muldersdrift, Gauteng",
+    "services": ["Venue", "Accommodation", "Catering", "Wedding planning"],
+    "startingPriceMinor": null,
+    "website": "https://www.valverde.co.za",
+    "instagramHandle": null,
+    "profileImage": null,
+    "portfolioImages": [],
+    "published": true,
+    "claimed": false,
+    "seeded": true,
+    "ownerUserId": null,
+    "source": {
+      "name": "Official website",
+      "url": "https://www.valverde.co.za"
+    }
+  },
+  {
+    "businessName": "Oxbow Country Estate",
+    "contactName": null,
+    "bio": "Country estate in Bronkhorstspruit offering a countryside setting for weddings and functions.",
+    "serviceArea": "Bronkhorstspruit, Gauteng",
+    "services": ["Venue", "Wedding planning", "Catering", "Accommodation"],
+    "startingPriceMinor": null,
+    "website": "https://www.oxbowestate.co.za",
+    "instagramHandle": null,
+    "profileImage": null,
+    "portfolioImages": [],
+    "published": true,
+    "claimed": false,
+    "seeded": true,
+    "ownerUserId": null,
+    "source": {
+      "name": "Official website",
+      "url": "https://www.oxbowestate.co.za"
+    }
+  },
+  {
+    "businessName": "Forest Walk Venue",
+    "contactName": null,
+    "bio": "Garden chapel and thatch lapa venue in Midrand.",
+    "serviceArea": "Midrand, Gauteng",
+    "services": ["Venue", "Wedding planning", "Catering", "Decor"],
+    "startingPriceMinor": null,
+    "website": "https://www.forestwalkvenue.co.za",
+    "instagramHandle": null,
+    "profileImage": null,
+    "portfolioImages": [],
+    "published": true,
+    "claimed": false,
+    "seeded": true,
+    "ownerUserId": null,
+    "source": {
+      "name": "Official website",
+      "url": "https://www.forestwalkvenue.co.za"
+    }
+  },
+  {
+    "businessName": "Monte Vista Wedding Venue",
+    "contactName": null,
+    "bio": "All-inclusive wedding and function venue in Muldersdrift.",
+    "serviceArea": "Muldersdrift, Gauteng",
+    "services": ["Venue", "Wedding planning", "Catering", "Decor"],
+    "startingPriceMinor": null,
+    "website": "https://montevistavenue.co.za",
+    "instagramHandle": null,
+    "profileImage": null,
+    "portfolioImages": [],
+    "published": true,
+    "claimed": false,
+    "seeded": true,
+    "ownerUserId": null,
+    "source": {
+      "name": "Official website",
+      "url": "https://montevistavenue.co.za"
+    }
+  },
+  {
+    "businessName": "Riverside Country Estate",
+    "contactName": null,
+    "bio": "Riverside venue offering a hall and lapa setting for weddings and private functions.",
+    "serviceArea": "Springs, Gauteng",
+    "services": ["Venue", "Wedding planning", "Catering", "Decor"],
+    "startingPriceMinor": null,
+    "website": "https://www.riversidecountryestate.co.za",
+    "instagramHandle": null,
+    "profileImage": null,
+    "portfolioImages": [],
+    "published": true,
+    "claimed": false,
+    "seeded": true,
+    "ownerUserId": null,
+    "source": {
+      "name": "Official website",
+      "url": "https://www.riversidecountryestate.co.za"
+    }
+  },
+  {
+    "businessName": "The Lakeside",
+    "contactName": null,
+    "bio": "Waterfront function venue in Benoni.",
+    "serviceArea": "Benoni, Gauteng",
+    "services": ["Venue", "Wedding planning", "Catering", "Decor"],
+    "startingPriceMinor": null,
+    "website": "https://www.thelakeside.co.za",
+    "instagramHandle": null,
+    "profileImage": null,
+    "portfolioImages": [],
+    "published": true,
+    "claimed": false,
+    "seeded": true,
+    "ownerUserId": null,
+    "source": {
+      "name": "Official website",
+      "url": "https://www.thelakeside.co.za"
+    }
+  },
+  {
+    "businessName": "Kleinkaap Boutique Hotel",
+    "contactName": null,
+    "bio": "Cape Dutch-inspired boutique hotel and wedding venue in Centurion.",
+    "serviceArea": "Centurion, Gauteng",
+    "services": ["Venue", "Accommodation", "Wedding planning", "Catering"],
+    "startingPriceMinor": null,
+    "website": "https://www.kleinkaap.co.za",
+    "instagramHandle": null,
+    "profileImage": null,
+    "portfolioImages": [],
+    "published": true,
+    "claimed": false,
+    "seeded": true,
+    "ownerUserId": null,
+    "source": {
+      "name": "Official website",
+      "url": "https://www.kleinkaap.co.za"
+    }
+  },
+  {
+    "businessName": "Ikhutsa Mountainmanor Guesthouse",
+    "contactName": null,
+    "bio": "Mountain-view guesthouse and venue serving the Pretoria East area.",
+    "serviceArea": "Pretoria East, Gauteng",
+    "services": ["Venue", "Accommodation", "Wedding planning", "Catering"],
+    "startingPriceMinor": null,
+    "website": "https://www.mountainmanor.co.za",
+    "instagramHandle": null,
+    "profileImage": null,
+    "portfolioImages": [],
+    "published": true,
+    "claimed": false,
+    "seeded": true,
+    "ownerUserId": null,
+    "source": {
+      "name": "Official website",
+      "url": "https://www.mountainmanor.co.za"
+    }
+  },
+  {
+    "businessName": "Avianto",
+    "contactName": null,
+    "bio": "European village-style estate and function venue in Muldersdrift.",
+    "serviceArea": "Muldersdrift, Gauteng",
+    "services": ["Venue", "Wedding planning", "Catering", "Accommodation"],
+    "startingPriceMinor": null,
+    "website": "https://www.avianto.co.za",
+    "instagramHandle": null,
+    "profileImage": null,
+    "portfolioImages": [],
+    "published": true,
+    "claimed": false,
+    "seeded": true,
+    "ownerUserId": null,
+    "source": {
+      "name": "Official website",
+      "url": "https://www.avianto.co.za"
+    }
+  },
+  {
+    "businessName": "Memories En Voyage",
+    "contactName": null,
+    "bio": "Intimate function venue in Kempton Park.",
+    "serviceArea": "Kempton Park, Gauteng",
+    "services": ["Venue", "Wedding planning", "Catering", "Decor"],
+    "startingPriceMinor": null,
+    "website": "https://www.memoriesvenue.co.za",
+    "instagramHandle": null,
+    "profileImage": null,
+    "portfolioImages": [],
+    "published": true,
+    "claimed": false,
+    "seeded": true,
+    "ownerUserId": null,
+    "source": {
+      "name": "Official website",
+      "url": "https://www.memoriesvenue.co.za"
+    }
+  },
+  {
+    "businessName": "Tianfield Wedding Venue",
+    "contactName": null,
+    "bio": "Bushveld garden wedding venue in Pretoria North.",
+    "serviceArea": "Pretoria North, Gauteng",
+    "services": ["Venue", "Wedding planning", "Catering", "Decor"],
+    "startingPriceMinor": null,
+    "website": "https://www.tianfield.co.za",
+    "instagramHandle": null,
+    "profileImage": null,
+    "portfolioImages": [],
+    "published": true,
+    "claimed": false,
+    "seeded": true,
+    "ownerUserId": null,
+    "source": {
+      "name": "Official website",
+      "url": "https://www.tianfield.co.za"
+    }
+  },
+  {
+    "businessName": "Leopard Lodge",
+    "contactName": null,
+    "bio": "Mountain and valley view venue near Hartbeespoort.",
+    "serviceArea": "Hartbeespoort, North West",
+    "services": ["Venue", "Accommodation", "Wedding planning", "Catering"],
+    "startingPriceMinor": null,
+    "website": "https://www.leopardlodge.co.za",
+    "instagramHandle": null,
+    "profileImage": null,
+    "portfolioImages": [],
+    "published": true,
+    "claimed": false,
+    "seeded": true,
+    "ownerUserId": null,
+    "source": {
+      "name": "Official website",
+      "url": "https://www.leopardlodge.co.za"
+    }
+  },
+  {
+    "businessName": "Green Leaves Country Lodge",
+    "contactName": null,
+    "bio": "Country lodge and wedding venue in Hartbeespoort.",
+    "serviceArea": "Hartbeespoort, North West",
+    "services": ["Venue", "Accommodation", "Wedding planning", "Catering"],
+    "startingPriceMinor": null,
+    "website": "https://www.greenleaves.co.za",
+    "instagramHandle": null,
+    "profileImage": null,
+    "portfolioImages": [],
+    "published": true,
+    "claimed": false,
+    "seeded": true,
+    "ownerUserId": null,
+    "source": {
+      "name": "Official website",
+      "url": "https://www.greenleaves.co.za"
+    }
+  },
+  {
+    "businessName": "Thaba Eco Hotel",
+    "contactName": null,
+    "bio": "Eco-luxury hotel and function venue in Johannesburg South.",
+    "serviceArea": "Johannesburg South, Gauteng",
+    "services": ["Venue", "Accommodation", "Wedding planning", "Catering"],
+    "startingPriceMinor": null,
+    "website": "https://www.thabaecohotel.co.za",
+    "instagramHandle": null,
+    "profileImage": null,
+    "portfolioImages": [],
+    "published": true,
+    "claimed": false,
+    "seeded": true,
+    "ownerUserId": null,
+    "source": {
+      "name": "Official website",
+      "url": "https://www.thabaecohotel.co.za"
+    }
+  },
+  {
+    "businessName": "Zebra Country Lodge",
+    "contactName": null,
+    "bio": "Bushveld lodge and wedding venue near Cullinan.",
+    "serviceArea": "Cullinan, Gauteng",
+    "services": ["Venue", "Accommodation", "Wedding planning", "Catering"],
+    "startingPriceMinor": null,
+    "website": "https://www.zebrahotel.co.za",
+    "instagramHandle": null,
+    "profileImage": null,
+    "portfolioImages": [],
+    "published": true,
+    "claimed": false,
+    "seeded": true,
+    "ownerUserId": null,
+    "source": {
+      "name": "Official website",
+      "url": "https://www.zebrahotel.co.za"
+    }
+  },
+  {
+    "businessName": "Cradle Moon Lakeside Game Lodge",
+    "contactName": null,
+    "bio": "Lakeside game lodge and events venue in Muldersdrift.",
+    "serviceArea": "Muldersdrift, Gauteng",
+    "services": ["Venue", "Accommodation", "Wedding planning", "Catering"],
+    "startingPriceMinor": null,
+    "website": "https://cradlemoon.co.za",
+    "instagramHandle": null,
+    "profileImage": null,
+    "portfolioImages": [],
+    "published": true,
+    "claimed": false,
+    "seeded": true,
+    "ownerUserId": null,
+    "source": {
+      "name": "Official website",
+      "url": "https://cradlemoon.co.za"
+    }
+  },
+  {
+    "businessName": "Blandford Manor",
+    "contactName": null,
+    "bio": "Country manor and garden venue in North Riding, Randburg.",
+    "serviceArea": "North Riding, Randburg, Gauteng",
+    "services": ["Venue", "Wedding planning", "Catering", "Decor"],
+    "startingPriceMinor": null,
+    "website": "https://www.blandfordmanor.co.za",
+    "instagramHandle": null,
+    "profileImage": null,
+    "portfolioImages": [],
+    "published": true,
+    "claimed": false,
+    "seeded": true,
+    "ownerUserId": null,
+    "source": {
+      "name": "Official website",
+      "url": "https://www.blandfordmanor.co.za"
+    }
+  },
+  {
+    "businessName": "Memorable Function Venue",
+    "contactName": null,
+    "bio": "Function venue in Boksburg serving weddings and private events.",
+    "serviceArea": "Boksburg, Gauteng",
+    "services": ["Venue", "Wedding planning", "Catering", "Decor"],
+    "startingPriceMinor": null,
+    "website": "https://www.memorablevenue.co.za",
+    "instagramHandle": null,
+    "profileImage": null,
+    "portfolioImages": [],
+    "published": true,
+    "claimed": false,
+    "seeded": true,
+    "ownerUserId": null,
+    "source": {
+      "name": "Official website",
+      "url": "https://www.memorablevenue.co.za"
+    }
+  },
+  {
+    "businessName": "Pretoria National Botanical Garden",
+    "contactName": null,
+    "bio": "National botanical garden setting in Pretoria with spaces suitable for functions and events.",
+    "serviceArea": "Pretoria, Gauteng",
+    "services": ["Venue", "Wedding planning"],
+    "startingPriceMinor": null,
+    "website": "https://www.sanbi.org",
+    "instagramHandle": null,
+    "profileImage": null,
+    "portfolioImages": [],
+    "published": true,
+    "claimed": false,
+    "seeded": true,
+    "ownerUserId": null,
+    "source": {
+      "name": "Official website",
+      "url": "https://www.sanbi.org"
+    }
+  },
+  {
+    "businessName": "The Blades",
+    "contactName": null,
+    "bio": "Waterfront boutique hotel and events venue near Roodeplaat, Pretoria.",
+    "serviceArea": "Roodeplaat, Pretoria, Gauteng",
+    "services": ["Venue", "Accommodation", "Wedding planning", "Catering"],
+    "startingPriceMinor": null,
+    "website": "https://www.theblades.co.za",
+    "instagramHandle": null,
+    "profileImage": null,
+    "portfolioImages": [],
+    "published": true,
+    "claimed": false,
+    "seeded": true,
+    "ownerUserId": null,
+    "source": {
+      "name": "Official website",
+      "url": "https://www.theblades.co.za"
+    }
+  },
+  {
+    "businessName": "Morula Venue",
+    "contactName": null,
+    "bio": "Garden and hall function venue serving the Krugersdorp area.",
+    "serviceArea": "Krugersdorp, Gauteng",
+    "services": ["Venue", "Wedding planning", "Catering", "Decor"],
+    "startingPriceMinor": null,
+    "website": "https://www.morulavenue.co.za",
+    "instagramHandle": null,
+    "profileImage": null,
+    "portfolioImages": [],
+    "published": true,
+    "claimed": false,
+    "seeded": true,
+    "ownerUserId": null,
+    "source": {
+      "name": "Official website",
+      "url": "https://www.morulavenue.co.za"
+    }
+  },
+  {
+    "businessName": "Oakfield Farm",
+    "contactName": null,
+    "bio": "Historic farm estate in Muldersdrift offering a countryside setting for weddings and functions.",
+    "serviceArea": "Muldersdrift, Gauteng",
+    "services": ["Venue", "Wedding planning", "Catering", "Decor"],
+    "startingPriceMinor": null,
+    "website": "https://www.oakfieldfarm.co.za",
+    "instagramHandle": null,
+    "profileImage": null,
+    "portfolioImages": [],
+    "published": true,
+    "claimed": false,
+    "seeded": true,
+    "ownerUserId": null,
+    "source": {
+      "name": "Official website",
+      "url": "https://www.oakfieldfarm.co.za"
+    }
+  },
+  {
+    "businessName": "Black Eagle Hotel & Conference Centre",
+    "contactName": null,
+    "bio": "Hotel, gardens and function venue in Roodepoort.",
+    "serviceArea": "Roodepoort, Gauteng",
+    "services": ["Venue", "Accommodation", "Wedding planning", "Catering"],
+    "startingPriceMinor": null,
+    "website": "https://www.blackeaglehotel.co.za",
+    "instagramHandle": null,
+    "profileImage": null,
+    "portfolioImages": [],
+    "published": true,
+    "claimed": false,
+    "seeded": true,
+    "ownerUserId": null,
+    "source": {
+      "name": "Official website",
+      "url": "https://www.blackeaglehotel.co.za"
+    }
+  },
+  {
+    "businessName": "Rosemary Hill",
+    "contactName": null,
+    "bio": "Working farm and wedding venue in Pretoria East.",
+    "serviceArea": "Pretoria East, Gauteng",
+    "services": ["Venue", "Wedding planning", "Catering", "Accommodation"],
+    "startingPriceMinor": null,
+    "website": "https://www.rosemaryhill.co.za",
+    "instagramHandle": null,
+    "profileImage": null,
+    "portfolioImages": [],
+    "published": true,
+    "claimed": false,
+    "seeded": true,
+    "ownerUserId": null,
+    "source": {
+      "name": "Official website",
+      "url": "https://www.rosemaryhill.co.za"
+    }
+  },
+  {
+    "businessName": "Sajene Country Venue",
+    "contactName": null,
+    "bio": "Rustic farm-style wedding and function venue in Krugersdorp.",
+    "serviceArea": "Krugersdorp, Gauteng",
+    "services": ["Venue", "Wedding planning", "Catering", "Decor"],
+    "startingPriceMinor": null,
+    "website": "https://www.sajenecountry.co.za",
+    "instagramHandle": null,
+    "profileImage": null,
+    "portfolioImages": [],
+    "published": true,
+    "claimed": false,
+    "seeded": true,
+    "ownerUserId": null,
+    "source": {
+      "name": "Official website",
+      "url": "https://www.sajenecountry.co.za"
+    }
+  },
+  {
+    "businessName": "Stone Cradle",
+    "contactName": null,
+    "bio": "Stone and thatch wedding and function venue in the Centurion area.",
+    "serviceArea": "Irene, Centurion, Gauteng",
+    "services": ["Venue", "Wedding planning", "Catering", "Decor"],
+    "startingPriceMinor": null,
+    "website": "https://www.stonecradle.co.za",
+    "instagramHandle": null,
+    "profileImage": null,
+    "portfolioImages": [],
+    "published": true,
+    "claimed": false,
+    "seeded": true,
+    "ownerUserId": null,
+    "source": {
+      "name": "Official website",
+      "url": "https://www.stonecradle.co.za"
+    }
+  },
+  {
+    "businessName": "Primedia Bosveld Venue",
+    "contactName": null,
+    "bio": "Bushveld function venue in Modimolle.",
+    "serviceArea": "Modimolle, Limpopo",
+    "services": ["Venue", "Wedding planning", "Catering", "Decor"],
+    "startingPriceMinor": null,
+    "website": "https://www.bosveldvenue.co.za",
+    "instagramHandle": null,
+    "profileImage": null,
+    "portfolioImages": [],
+    "published": true,
+    "claimed": false,
+    "seeded": true,
+    "ownerUserId": null,
+    "source": {
+      "name": "Official website",
+      "url": "https://www.bosveldvenue.co.za"
+    }
+  },
+  {
+    "businessName": "The Nutcracker Country Venue",
+    "contactName": null,
+    "bio": "Country venue near the Vaal River in Parys.",
+    "serviceArea": "Parys, Free State",
+    "services": ["Venue", "Wedding planning", "Catering", "Decor"],
+    "startingPriceMinor": null,
+    "website": "https://www.thenutcracker.co.za",
+    "instagramHandle": null,
+    "profileImage": null,
+    "portfolioImages": [],
+    "published": true,
+    "claimed": false,
+    "seeded": true,
+    "ownerUserId": null,
+    "source": {
+      "name": "Official website",
+      "url": "https://www.thenutcracker.co.za"
+    }
+  },
+  {
+    "businessName": "Congo Manor",
+    "contactName": null,
+    "bio": "Riverfront estate and function venue in Parys.",
+    "serviceArea": "Parys, Free State",
+    "services": ["Venue", "Wedding planning", "Catering", "Accommodation"],
+    "startingPriceMinor": null,
+    "website": "https://www.congomanor.co.za",
+    "instagramHandle": null,
+    "profileImage": null,
+    "portfolioImages": [],
+    "published": true,
+    "claimed": false,
+    "seeded": true,
+    "ownerUserId": null,
+    "source": {
+      "name": "Official website",
+      "url": "https://www.congomanor.co.za"
+    }
+  },
+  {
+    "businessName": "Casa Toscana Lodge",
+    "contactName": null,
+    "bio": "Italian-inspired Tuscan-style lodge and function venue in Pretoria.",
+    "serviceArea": "Lynnwood Manor, Pretoria, Gauteng",
+    "services": ["Venue", "Accommodation", "Wedding planning", "Catering"],
+    "startingPriceMinor": null,
+    "website": "https://www.casatoscana.co.za",
+    "instagramHandle": null,
+    "profileImage": null,
+    "portfolioImages": [],
+    "published": true,
+    "claimed": false,
+    "seeded": true,
+    "ownerUserId": null,
+    "source": {
+      "name": "Official website",
+      "url": "https://www.casatoscana.co.za"
+    }
+  },
+  {
+    "businessName": "Intundla Game Lodge & Bush Spa",
+    "contactName": null,
+    "bio": "Bush lodge and events venue near Cullinan.",
+    "serviceArea": "Cullinan, Gauteng",
+    "services": ["Venue", "Accommodation", "Wedding planning", "Catering"],
+    "startingPriceMinor": null,
+    "website": "https://www.intundla.co.za",
+    "instagramHandle": null,
+    "profileImage": null,
+    "portfolioImages": [],
+    "published": true,
+    "claimed": false,
+    "seeded": true,
+    "ownerUserId": null,
+    "source": {
+      "name": "Official website",
+      "url": "https://www.intundla.co.za"
+    }
+  },
+  {
+    "businessName": "Aloe Ridge Hotel",
+    "contactName": null,
+    "bio": "Nature-focused hotel and function venue in Muldersdrift.",
+    "serviceArea": "Muldersdrift, Gauteng",
+    "services": ["Venue", "Accommodation", "Wedding planning", "Catering"],
+    "startingPriceMinor": null,
+    "website": "https://www.aloeridge.co.za",
+    "instagramHandle": null,
+    "profileImage": null,
+    "portfolioImages": [],
+    "published": true,
+    "claimed": false,
+    "seeded": true,
+    "ownerUserId": null,
+    "source": {
+      "name": "Official website",
+      "url": "https://www.aloeridge.co.za"
+    }
+  },
+  {
+    "businessName": "Makiti Wedding Venue",
+    "contactName": null,
+    "bio": "Country wedding and function venue near Krugersdorp.",
+    "serviceArea": "Sterkfontein, Krugersdorp, Gauteng",
+    "services": ["Venue", "Wedding planning", "Catering", "Decor"],
+    "startingPriceMinor": null,
+    "website": "https://www.makiti.co.za",
+    "instagramHandle": null,
+    "profileImage": null,
+    "portfolioImages": [],
+    "published": true,
+    "claimed": false,
+    "seeded": true,
+    "ownerUserId": null,
+    "source": {
+      "name": "Official website",
+      "url": "https://www.makiti.co.za"
+    }
+  },
+  {
+    "businessName": "The Fat Olive Country Restaurant",
+    "contactName": null,
+    "bio": "Rustic country restaurant and function venue in the Lanseria area.",
+    "serviceArea": "Lanseria, Gauteng",
+    "services": ["Venue", "Catering", "Wedding planning"],
+    "startingPriceMinor": null,
+    "website": "https://www.thefatolive.co.za",
+    "instagramHandle": null,
+    "profileImage": null,
+    "portfolioImages": [],
+    "published": true,
+    "claimed": false,
+    "seeded": true,
+    "ownerUserId": null,
+    "source": {
+      "name": "Official website",
+      "url": "https://www.thefatolive.co.za"
+    }
+  },
+  {
+    "businessName": "Kleine Constantia Function Venue",
+    "contactName": null,
+    "bio": "Farm-style function and wedding venue in Benoni.",
+    "serviceArea": "Benoni, Gauteng",
+    "services": ["Venue", "Wedding planning", "Catering", "Decor"],
+    "startingPriceMinor": null,
+    "website": "https://www.kleineconstantia.co.za",
+    "instagramHandle": null,
+    "profileImage": null,
+    "portfolioImages": [],
+    "published": true,
+    "claimed": false,
+    "seeded": true,
+    "ownerUserId": null,
+    "source": {
+      "name": "Official website",
+      "url": "https://www.kleineconstantia.co.za"
+    }
+  },
+  {
+    "businessName": "Hingeston Castle",
+    "contactName": null,
+    "bio": "Castle and garden wedding and function venue in Muldersdrift.",
+    "serviceArea": "Muldersdrift, Gauteng",
+    "services": ["Venue", "Wedding planning", "Catering", "Decor"],
+    "startingPriceMinor": null,
+    "website": "https://www.hingestoncastle.co.za",
+    "instagramHandle": null,
+    "profileImage": null,
+    "portfolioImages": [],
+    "published": true,
+    "claimed": false,
+    "seeded": true,
+    "ownerUserId": null,
+    "source": {
+      "name": "Official website",
+      "url": "https://www.hingestoncastle.co.za"
+    }
+  },
+  {
+    "businessName": "Duck Hook Wedding Venue",
+    "contactName": null,
+    "bio": "Country estate and golf setting for weddings and functions in the Muldersdrift area.",
+    "serviceArea": "Muldersdrift, Gauteng",
+    "services": ["Venue", "Wedding planning", "Catering", "Decor"],
+    "startingPriceMinor": null,
+    "website": "https://www.duckhook.co.za",
+    "instagramHandle": null,
+    "profileImage": null,
+    "portfolioImages": [],
+    "published": true,
+    "claimed": false,
+    "seeded": true,
+    "ownerUserId": null,
+    "source": {
+      "name": "Official website",
+      "url": "https://www.duckhook.co.za"
+    }
+  },
+  {
+    "businessName": "Silver Forest Venue",
+    "contactName": null,
+    "bio": "Garden and boutique wedding venue in Somerset West.",
+    "serviceArea": "Somerset West, Western Cape",
+    "services": ["Venue", "Wedding planning", "Catering", "Decor"],
+    "startingPriceMinor": null,
+    "website": "https://www.silverforest.co.za",
+    "instagramHandle": null,
+    "profileImage": null,
+    "portfolioImages": [],
+    "published": true,
+    "claimed": false,
+    "seeded": true,
+    "ownerUserId": null,
+    "source": {
+      "name": "Official website",
+      "url": "https://www.silverforest.co.za"
+    }
+  },
+  {
+    "businessName": "Kronenhoff Estate",
+    "contactName": null,
+    "bio": "Cape Dutch-style manor estate and event venue in the Western Cape.",
+    "serviceArea": "Hout Bay, Cape Town, Western Cape",
+    "services": ["Venue", "Wedding planning", "Catering", "Accommodation"],
+    "startingPriceMinor": null,
+    "website": "https://www.kronenhoff.com",
+    "instagramHandle": null,
+    "profileImage": null,
+    "portfolioImages": [],
+    "published": true,
+    "claimed": false,
+    "seeded": true,
+    "ownerUserId": null,
+    "source": {
+      "name": "Official website",
+      "url": "https://www.kronenhoff.com"
+    }
+  },
+  {
+    "businessName": "Blue Gum Country Estate",
+    "contactName": null,
+    "bio": "Country farm venue in Stanford, Western Cape.",
+    "serviceArea": "Stanford, Western Cape",
+    "services": ["Venue", "Wedding planning", "Catering", "Accommodation"],
+    "startingPriceMinor": null,
+    "website": "https://www.bluegum.co.za",
+    "instagramHandle": null,
+    "profileImage": null,
+    "portfolioImages": [],
+    "published": true,
+    "claimed": false,
+    "seeded": true,
+    "ownerUserId": null,
+    "source": {
+      "name": "Official website",
+      "url": "https://www.bluegum.co.za"
+    }
+  },
+  {
+    "businessName": "Wijnlanden Uitzicht Venue",
+    "contactName": null,
+    "bio": "Winelands function venue in Stellenbosch.",
+    "serviceArea": "Stellenbosch, Western Cape",
+    "services": ["Venue", "Wedding planning", "Catering"],
+    "startingPriceMinor": null,
+    "website": "https://www.wijnlanden.co.za",
+    "instagramHandle": null,
+    "profileImage": null,
+    "portfolioImages": [],
+    "published": true,
+    "claimed": false,
+    "seeded": true,
+    "ownerUserId": null,
+    "source": {
+      "name": "Official website",
+      "url": "https://www.wijnlanden.co.za"
+    }
+  },
+  {
+    "businessName": "Zorgvliet Wines",
+    "contactName": null,
+    "bio": "Vineyard and mountain wedding and function setting in Stellenbosch.",
+    "serviceArea": "Stellenbosch, Western Cape",
+    "services": ["Venue", "Catering", "Wedding planning"],
+    "startingPriceMinor": null,
+    "website": "https://www.zorgvliet.com",
+    "instagramHandle": null,
+    "profileImage": null,
+    "portfolioImages": [],
+    "published": true,
+    "claimed": false,
+    "seeded": true,
+    "ownerUserId": null,
+    "source": {
+      "name": "Official website",
+      "url": "https://www.zorgvliet.com"
+    }
+  },
+  {
+    "businessName": "Goedgedleven",
+    "contactName": null,
+    "bio": "Country barn-style venue in Durbanville, Western Cape.",
+    "serviceArea": "Durbanville, Western Cape",
+    "services": ["Venue", "Wedding planning", "Catering", "Decor"],
+    "startingPriceMinor": null,
+    "website": "https://www.goedgedleven.co.za",
+    "instagramHandle": null,
+    "profileImage": null,
+    "portfolioImages": [],
+    "published": true,
+    "claimed": false,
+    "seeded": true,
+    "ownerUserId": null,
+    "source": {
+      "name": "Official website",
+      "url": "https://www.goedgedleven.co.za"
+    }
+  },
+  {
+    "businessName": "Shongweni Country Club",
+    "contactName": null,
+    "bio": "Country club and event setting near Hillcrest, KwaZulu-Natal.",
+    "serviceArea": "Hillcrest, KwaZulu-Natal",
+    "services": ["Venue", "Wedding planning", "Catering"],
+    "startingPriceMinor": null,
+    "website": "https://www.shongweniclub.co.za",
+    "instagramHandle": null,
+    "profileImage": null,
+    "portfolioImages": [],
+    "published": true,
+    "claimed": false,
+    "seeded": true,
+    "ownerUserId": null,
+    "source": {
+      "name": "Official website",
+      "url": "https://www.shongweniclub.co.za"
+    }
+  },
+  {
+    "businessName": "The Hadeda Venue",
+    "contactName": null,
+    "bio": "Country wedding and function venue in the KwaZulu-Natal Midlands.",
+    "serviceArea": "Hilton, KwaZulu-Natal",
+    "services": ["Venue", "Wedding planning", "Catering", "Decor"],
+    "startingPriceMinor": null,
+    "website": "https://www.thehadeda.co.za",
+    "instagramHandle": null,
+    "profileImage": null,
+    "portfolioImages": [],
+    "published": true,
+    "claimed": false,
+    "seeded": true,
+    "ownerUserId": null,
+    "source": {
+      "name": "Official website",
+      "url": "https://www.thehadeda.co.za"
+    }
+  },
+  {
+    "businessName": "Moya Farm",
+    "contactName": null,
+    "bio": "Drakensberg mountain farm and barn-style venue in Underberg.",
+    "serviceArea": "Underberg, KwaZulu-Natal",
+    "services": ["Venue", "Wedding planning", "Catering", "Accommodation"],
+    "startingPriceMinor": null,
+    "website": "https://www.moyafarm.co.za",
+    "instagramHandle": null,
+    "profileImage": null,
+    "portfolioImages": [],
+    "published": true,
+    "claimed": false,
+    "seeded": true,
+    "ownerUserId": null,
+    "source": {
+      "name": "Official website",
+      "url": "https://www.moyafarm.co.za"
+    }
+  }
+]

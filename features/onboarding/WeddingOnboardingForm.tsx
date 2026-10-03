@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/Button";
 import { useLanguage } from "@/components/providers/LanguageProvider";
 import { apiRequest } from "@/lib/api/client";
 import moment from "moment";
+import { VowSelect } from "@/components/ui/VowSelect";
 
 export type WeddingOnboardingValue = {
   firstName: string;
@@ -162,19 +163,21 @@ export function WeddingOnboardingForm({ initialValue }: { initialValue?: Wedding
       </div>
       <label>
         {text("Wedding style")}
-        <select
-          onChange={(event) => update("weddingStyle", event.target.value)}
+        <VowSelect
+          ariaLabel={text("Wedding style")}
+          onChange={(nextValue) => update("weddingStyle", nextValue)}
+          options={[
+            "Classic",
+            "Modern",
+            "Romantic",
+            "Minimal",
+            "Traditional",
+            "Destination",
+            "Other",
+          ].map((item) => ({ value: item, label: text(item) }))}
+          placeholder={text("Select a style")}
           value={value.weddingStyle}
-        >
-          <option value="">{text("Select a style")}</option>
-          <option value="Classic">{text("Classic")}</option>
-          <option value="Modern">{text("Modern")}</option>
-          <option value="Romantic">{text("Romantic")}</option>
-          <option value="Minimal">{text("Minimal")}</option>
-          <option value="Traditional">{text("Traditional")}</option>
-          <option value="Destination">{text("Destination")}</option>
-          <option value="Other">{text("Other")}</option>
-        </select>
+        />
       </label>
       <label>
         {text("Planning notes")}

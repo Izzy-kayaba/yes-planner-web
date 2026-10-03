@@ -8,7 +8,13 @@ export default async function MessagesPage() {
   const text = await getTextTranslator();
   return (
     <div className="section-stack">
-      <PageHeader eyebrow={text("Private workspace")} title={text("Messages")} description={text("Keep conversations with your connected wedding professionals in one place.")} />
+      <PageHeader
+        eyebrow={text("Private workspace")}
+        title={text("Messages")}
+        description={text(
+          "Keep conversations with your connected wedding professionals in one place.",
+        )}
+      />
       <MessagesWorkspace />
     </div>
   );

@@ -29,20 +29,26 @@ export function MessagesWorkspace() {
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
 
-  const load = useCallback(async (quiet = false) => {
-    if (!quiet) setLoading(true);
-    try {
-      const result = await apiRequest<{ conversations: Conversation[] }>("/api/v1/messages", {
-        cache: "no-store",
-      });
-      setConversations(result.conversations);
-      setActiveId((current) => current || result.conversations[0]?.id || "");
-    } catch (error) {
-      if (!quiet) toast.error(error instanceof Error ? error.message : text("Messages could not be loaded."));
-    } finally {
-      if (!quiet) setLoading(false);
-    }
-  }, [text]);
+  const load = useCallback(
+    async (quiet = false) => {
+      if (!quiet) setLoading(true);
+      try {
+        const result = await apiRequest<{ conversations: Conversation[] }>("/api/v1/messages", {
+          cache: "no-store",
+        });
+        setConversations(result.conversations);
+        setActiveId((current) => current || result.conversations[0]?.id || "");
+      } catch (error) {
+        if (!quiet)
+          toast.error(
+            error instanceof Error ? error.message : text("Messages could not be loaded."),
+          );
+      } finally {
+        if (!quiet) setLoading(false);
+      }
+    },
+    [text],
+  );
 
   useEffect(() => {
     void load();
@@ -52,7 +58,10 @@ export function MessagesWorkspace() {
 
   const active = conversations.find((item) => item.id === activeId);
   const filtered = useMemo(
-    () => conversations.filter((item) => `${item.name} ${item.service}`.toLowerCase().includes(query.toLowerCase())),
+    () =>
+      conversations.filter((item) =>
+        `${item.name} ${item.service}`.toLowerCase().includes(query.toLowerCase()),
+      ),
     [conversations, query],
   );
 
@@ -93,34 +102,90 @@ export function MessagesWorkspace() {
 
   if (loading) return <div className="panel messages-loading">{text("Loading messages…")}</div>;
   if (!conversations.length) {
-    return <div className="panel messages-empty"><ImageIcon size={28} /><h2>{text("No conversations yet")}</h2><p>{text("An accepted vendor request will open a private conversation here.")}</p></div>;
+    return (
+      <div className="panel messages-empty">
+        <ImageIcon size={28} />
+        <h2>{text("No conversations yet")}</h2>
+        <p>{text("An accepted vendor request will open a private conversation here.")}</p>
+      </div>
+    );
   }
 
   return (
     <section className="messages-panel">
       <aside>
-        <label className="table-search"><Search size={15} /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder={text("Search conversations")} /></label>
+        <label className="table-search">
+          <Search size={15} />
+          <input
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+            placeholder={text("Search conversations")}
+          />
+        </label>
         {filtered.map((conversation) => (
-          <button className={conversation.id === activeId ? "active" : ""} key={conversation.id} onClick={() => void selectConversation(conversation)} type="button">
-            <span className="avatar">{conversation.image ? <Image alt="" fill src={conversation.image} unoptimized /> : getInitials(conversation.name)}</span>
-            <p><strong>{conversation.name}</strong><small>{text(conversation.service)}</small></p>
-            {conversation.unreadCount > 0 && <b className="message-unread">{conversation.unreadCount}</b>}
+          <button
+            className={conversation.id === activeId ? "active" : ""}
+            key={conversation.id}
+            onClick={() => void selectConversation(conversation)}
+            type="button"
+          >
+            <span className="avatar">
+              {conversation.image ? (
+                <Image alt="" fill src={conversation.image} unoptimized />
+              ) : (
+                getInitials(conversation.name)
+              )}
+            </span>
+            <p>
+              <strong>{conversation.name}</strong>
+              <small>{text(conversation.service)}</small>
+            </p>
+            {conversation.unreadCount > 0 && (
+              <b className="message-unread">{conversation.unreadCount}</b>
+            )}
           </button>
         ))}
       </aside>
       {active && (
         <article>
-          <header className="chat-header"><span className="avatar">{getInitials(active.name)}</span><p><strong>{active.name}</strong><small>{text(active.service)}</small></p></header>
+          <header className="chat-header">
+            <span className="avatar">{getInitials(active.name)}</span>
+            <p>
+              <strong>{active.name}</strong>
+              <small>{text(active.service)}</small>
+            </p>
+          </header>
           <div className="chat-body">
-            {active.messages.length ? active.messages.map((message) => (
-              <div className={`message ${message.sentByMe ? "sent" : "received"}`} key={message.id}>
-                <p>{message.body}</p><time>{formatDate(message.createdAt, "D MMM · HH:mm", language)}</time>
-              </div>
-            )) : <p className="messages-conversation-empty">{text("Start the conversation.")}</p>}
+            {active.messages.length ? (
+              active.messages.map((message) => (
+                <div
+                  className={`message ${message.sentByMe ? "sent" : "received"}`}
+                  key={message.id}
+                >
+                  <p>{message.body}</p>
+                  <time>{formatDate(message.createdAt, "D MMM · HH:mm", language)}</time>
+                </div>
+              ))
+            ) : (
+              <p className="messages-conversation-empty">{text("Start the conversation.")}</p>
+            )}
           </div>
           <form className="message-compose" onSubmit={send}>
-            <input aria-label={text("Message")} maxLength={2000} onChange={(event) => setBody(event.target.value)} placeholder={text("Write a message…")} value={body} />
-            <button className="send-button" disabled={sending || !body.trim()} type="submit" aria-label={text("Send message")}><Send size={16} /></button>
+            <input
+              aria-label={text("Message")}
+              maxLength={2000}
+              onChange={(event) => setBody(event.target.value)}
+              placeholder={text("Write a message…")}
+              value={body}
+            />
+            <button
+              className="send-button"
+              disabled={sending || !body.trim()}
+              type="submit"
+              aria-label={text("Send message")}
+            >
+              <Send size={16} />
+            </button>
           </form>
         </article>
       )}

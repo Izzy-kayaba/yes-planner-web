@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
+import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 import {
   convertUsdToZar,
   defaultCurrency,
@@ -10,17 +10,13 @@ import {
 
 type CurrencyContextValue = {
   currency: SupportedCurrency;
-  availableCurrencies: SupportedCurrency[];
-  setCurrency: (currency: SupportedCurrency) => void;
   displayMoney: (usdAmountMinor: number) => string;
 };
 
-const storageKey = "vow-planner-display-currency";
 const CurrencyContext = createContext<CurrencyContextValue | null>(null);
 
 export function CurrencyProvider({ children }: { children: ReactNode }) {
   const [currency, setSelectedCurrency] = useState<SupportedCurrency>(defaultCurrency);
-  const [southAfrican, setSouthAfrican] = useState(false);
   const [usdToZarRate, setUsdToZarRate] = useState<number | null>(null);
 
   useEffect(() => {
@@ -39,12 +35,8 @@ export function CurrencyProvider({ children }: { children: ReactNode }) {
       })
       .then((result) => {
         if (!active) return;
-        setSouthAfrican(result.southAfrican);
         setUsdToZarRate(result.usdToZarRate);
-        const stored = window.localStorage.getItem(storageKey);
-        if (stored === "ZAR" && result.southAfrican && result.usdToZarRate) {
-          setSelectedCurrency("ZAR");
-        }
+        setSelectedCurrency(result.southAfrican && result.usdToZarRate ? "ZAR" : "USD");
       })
       .catch(() => {
         if (active) setSelectedCurrency(defaultCurrency);
@@ -53,17 +45,6 @@ export function CurrencyProvider({ children }: { children: ReactNode }) {
       active = false;
     };
   }, []);
-
-  const availableCurrencies = useMemo<SupportedCurrency[]>(
-    () => (southAfrican && usdToZarRate ? ["USD", "ZAR"] : ["USD"]),
-    [southAfrican, usdToZarRate],
-  );
-
-  function setCurrency(nextCurrency: SupportedCurrency) {
-    const allowed = availableCurrencies.includes(nextCurrency) ? nextCurrency : defaultCurrency;
-    setSelectedCurrency(allowed);
-    window.localStorage.setItem(storageKey, allowed);
-  }
 
   function displayMoney(usdAmountMinor: number) {
     const amount =
@@ -74,7 +55,7 @@ export function CurrencyProvider({ children }: { children: ReactNode }) {
   }
 
   return (
-    <CurrencyContext.Provider value={{ currency, availableCurrencies, setCurrency, displayMoney }}>
+    <CurrencyContext.Provider value={{ currency, displayMoney }}>
       {children}
     </CurrencyContext.Provider>
   );

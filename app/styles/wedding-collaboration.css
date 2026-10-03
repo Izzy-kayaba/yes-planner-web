@@ -98,7 +98,10 @@
   gap: 12px;
   padding: 24px;
   background: color-mix(in srgb, var(--surface-soft) 45%, var(--surface));
+  max-height: 500px;
+  overflow-y: auto;
 }
+
 .chat-date {
   align-self: center;
   color: var(--muted);

@@ -121,12 +121,14 @@
   overflow-y: auto;
 }
 .auth-card .language-switcher {
-  min-width: 6rem;
-  justify-content: center;
-  border-color: color-mix(in srgb, var(--wine) 30%, var(--line));
-  background: var(--blush);
-  border-radius: 1rem;
-  color: var(--wine);
+  width: 100%;
+}
+.auth-card .language-switcher .vow-select {
+  width: 100%;
+}
+.auth-card .language-switcher .vow-select-trigger {
+  border-color: color-mix(in srgb, var(--wine) 24%, var(--line));
+  background: color-mix(in srgb, var(--blush) 55%, var(--surface));
 }
 .auth-form input[aria-invalid="true"],
 .auth-form .phone-input:has(input[aria-invalid="true"]) {
@@ -449,7 +451,11 @@
   position: relative;
   overflow: hidden;
   background:
-    radial-gradient(circle at 100% 0, color-mix(in srgb, var(--blush) 72%, transparent), transparent 38%),
+    radial-gradient(
+      circle at 100% 0,
+      color-mix(in srgb, var(--blush) 72%, transparent),
+      transparent 38%
+    ),
     var(--surface);
 }
 .vendor-profile-photo {
@@ -479,6 +485,26 @@
   color: var(--muted);
   font-size: 12px;
   font-weight: 750;
+}
+.vendor-service-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+  margin-top: 18px;
+}
+.vendor-service-chip {
+  min-height: 34px;
+  display: inline-flex;
+  align-items: center;
+  padding: 7px 12px;
+  border: 1px solid color-mix(in srgb, var(--sage) 34%, var(--line));
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--sage-soft) 68%, var(--surface));
+  color: var(--sage);
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1.2;
+  white-space: nowrap;
 }
 .vendor-public-gallery {
   display: grid;

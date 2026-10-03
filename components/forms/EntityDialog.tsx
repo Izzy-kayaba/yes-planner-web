@@ -4,6 +4,7 @@ import { useEffect, useState, type FormEvent } from "react";
 import { useLanguage } from "@/components/providers/LanguageProvider";
 import { Button } from "@/components/ui/Button";
 import { Modal } from "@/components/ui/Modal";
+import { VowSelect } from "@/components/ui/VowSelect";
 
 export type EntityFormValue = string | number;
 
@@ -75,21 +76,16 @@ export function EntityDialog({
                 placeholder={field.placeholder ? text(field.placeholder) : undefined}
               />
             ) : field.type === "select" ? (
-              <select
-                className="h-11 px-3 text-sm"
+              <VowSelect
+                ariaLabel={text(field.label)}
+                defaultValue={String(defaults[field.name] ?? "")}
                 name={field.name}
-                required={field.required}
-                defaultValue={defaults[field.name] ?? ""}
-              >
-                <option value="" disabled>
-                  {text("Select an option")}
-                </option>
-                {field.options?.map((option) => (
-                  <option value={option} key={option}>
-                    {text(option)}
-                  </option>
-                ))}
-              </select>
+                placeholder={text("Select an option")}
+                options={(field.options ?? []).map((option) => ({
+                  value: option,
+                  label: text(option),
+                }))}
+              />
             ) : (
               <input
                 className="h-11 px-3 text-sm"

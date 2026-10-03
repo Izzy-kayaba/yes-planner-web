@@ -8,6 +8,7 @@ import { StatusPill } from "@/components/ui/StatusPill";
 import { useLanguage } from "@/components/providers/LanguageProvider";
 import { vendors } from "@/lib/demo-data";
 import { VendorPortfolioCarousel } from "@/features/marketplace/VendorPortfolioCarousel";
+import { VowSelect } from "@/components/ui/VowSelect";
 
 const categories = ["All", "Photography", "Catering", "Florist", "Music & DJ"];
 
@@ -98,16 +99,16 @@ export function Marketplace() {
             {results.length} {text("exceptional matches")}
           </h3>
         </div>
-        <select
-          className="button button-secondary"
+        <VowSelect
+          ariaLabel={text("Sort vendors")}
+          className="marketplace-sort"
+          options={["Best match", "Rating", "Name"].map((item) => ({
+            value: item,
+            label: text(item),
+          }))}
           value={sort}
-          onChange={(event) => setSort(event.target.value)}
-          aria-label={text("Sort vendors")}
-        >
-          <option value="Best match">{text("Best match")}</option>
-          <option value="Rating">{text("Rating")}</option>
-          <option value="Name">{text("Name")}</option>
-        </select>
+          onChange={setSort}
+        />
       </div>
       <section className="vendor-grid marketplace-grid">
         {results.map((vendor, index) => (

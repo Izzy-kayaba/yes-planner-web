@@ -96,7 +96,9 @@ export function AuthenticatedDashboardOverview({ data }: { data: DashboardData }
         <StatCard
           label={text("Unread messages")}
           value={String(data.counts.unreadMessages)}
-          detail={text(data.counts.unreadMessages ? "Needs your attention" : "You're all caught up")}
+          detail={text(
+            data.counts.unreadMessages ? "Needs your attention" : "You're all caught up",
+          )}
           tone="rose"
         />
       </section>
@@ -135,12 +137,14 @@ export function AuthenticatedDashboardOverview({ data }: { data: DashboardData }
           <p className="mt-2 text-sm text-vow-muted">
             {text("Open a vendor profile to contact them directly on WhatsApp.")}
           </p>
-          <Link className="button button-secondary mt-5" href="/marketplace">
-            {text("Browse vendors")}
-          </Link>
-          <Link className="button button-secondary mt-3" href="/messages">
-            {text("Open messages")}
-          </Link>
+          <div className="flex gap-2">
+            <Link className="button button-secondary mt-3" href="/marketplace">
+              {text("Browse vendors")}
+            </Link>
+            <Link className="button button-secondary mt-3" href="/messages">
+              {text("Open messages")}
+            </Link>
+          </div>
         </article>
       </section>
     </div>

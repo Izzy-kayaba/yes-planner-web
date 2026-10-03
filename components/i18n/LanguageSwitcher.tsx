@@ -1,9 +1,9 @@
 "use client";
 
-import { Languages } from "lucide-react";
+import { Globe2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useLanguage } from "@/components/providers/LanguageProvider";
-import { cn } from "@/lib/cn";
+import { VowSelect } from "@/components/ui/VowSelect";
 
 export function LanguageSwitcher({ compact = false }: { compact?: boolean }) {
   const { language, setLanguage, t } = useLanguage();
@@ -16,27 +16,18 @@ export function LanguageSwitcher({ compact = false }: { compact?: boolean }) {
   }
 
   return (
-    <label
-      className={cn(
-        "language-switcher inline-flex items-center gap-2 text-vow-muted",
-        compact && "language-switcher-compact",
-        !compact && "rounded-xl border border-vow-line bg-vow-surface px-1",
-      )}
-    >
-      <Languages size={16} aria-hidden="true" />
-      <span className="sr-only">{t("settings.preferredLanguage")}</span>
-      <select
-        className={cn(
-          "language-switcher-select h-10 border-0 bg-transparent p-0 text-sm font-bold shadow-none",
-          compact && "w-12",
-        )}
+    <div className={`language-switcher${compact ? " language-switcher-compact" : ""}`}>
+      <VowSelect
+        ariaLabel={t("settings.preferredLanguage")}
+        compact={compact}
+        leadingIcon={<Globe2 size={15} aria-hidden="true" />}
+        options={[
+          { value: "en", label: compact ? "EN" : t("language.english") },
+          { value: "fr", label: compact ? "FR" : t("language.french") },
+        ]}
         value={language}
-        onChange={(event) => changeLanguage(event.target.value as "en" | "fr")}
-        aria-label={t("settings.preferredLanguage")}
-      >
-        <option value="en">{compact ? "EN" : t("language.english")}</option>
-        <option value="fr">{compact ? "FR" : t("language.french")}</option>
-      </select>
-    </label>
+        onChange={(value) => changeLanguage(value as "en" | "fr")}
+      />
+    </div>
   );
 }

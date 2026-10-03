@@ -8,6 +8,7 @@ import { getTextTranslator } from "@/lib/i18n-server";
 import { requirePageRole } from "@/lib/auth/session";
 import { mongoDb } from "@/lib/mongodb";
 import { VendorWorkspace, type VendorRequestValue } from "@/features/vendors/VendorWorkspace";
+import { VowSelect } from "@/components/ui/VowSelect";
 
 export async function generateMetadata(): Promise<Metadata> {
   const text = await getTextTranslator();
@@ -150,11 +151,15 @@ export default async function VendorPage() {
             <p className="eyebrow">{text("Performance")}</p>
             <h3>{text("Enquiries to confirmed bookings")}</h3>
           </div>
-          <select className="button button-secondary" aria-label={text("Performance period")}>
-            <option>{text("Last 6 months")}</option>
-            <option>{text("Last 12 months")}</option>
-            <option>{text("This year")}</option>
-          </select>
+          <VowSelect
+            ariaLabel={text("Performance period")}
+            className="performance-period"
+            defaultValue="Last 6 months"
+            options={["Last 6 months", "Last 12 months", "This year"].map((item) => ({
+              value: item,
+              label: text(item),
+            }))}
+          />
         </div>
         <div className="performance-layout">
           <div className="conversion-ring">

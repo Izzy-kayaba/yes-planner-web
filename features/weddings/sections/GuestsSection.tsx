@@ -5,6 +5,7 @@ import { useMemo, useState } from "react";
 import { EntityDialog, type EntityFormValue } from "@/components/forms/EntityDialog";
 import { useLanguage } from "@/components/providers/LanguageProvider";
 import { SearchField } from "@/components/forms/SearchField";
+import { VowSelect } from "@/components/ui/VowSelect";
 import { StatusPill } from "@/components/ui/StatusPill";
 import { MetricGrid } from "@/features/weddings/MetricGrid";
 import { useWorkspaceCollection } from "@/hooks/useWorkspaceCollection";
@@ -84,16 +85,16 @@ export function GuestsSection() {
         <div className="table-toolbar">
           <SearchField value={query} onChange={setQuery} placeholder="Search guests" />
           <div>
-            <select
+            <VowSelect
+              ariaLabel={text("Filter guests by RSVP")}
+              className="guest-status-filter"
+              options={["All", "Attending", "Pending", "Declined"].map((item) => ({
+                value: item,
+                label: text(item),
+              }))}
               value={status}
-              onChange={(event) => setStatus(event.target.value)}
-              aria-label={text("Filter guests by RSVP")}
-            >
-              <option value="All">{text("All")}</option>
-              <option value="Attending">{text("Attending")}</option>
-              <option value="Pending">{text("Pending")}</option>
-              <option value="Declined">{text("Declined")}</option>
-            </select>
+              onChange={setStatus}
+            />
             <button
               className="button button-primary"
               onClick={() => {

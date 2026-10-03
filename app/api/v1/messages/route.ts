@@ -14,7 +14,12 @@ const readSchema = z.object({
   weddingKey: z.string().min(1).max(160),
 });
 
-async function acceptedConnection(userId: string, role: string, otherUserId: string, weddingKey: string) {
+async function acceptedConnection(
+  userId: string,
+  role: string,
+  otherUserId: string,
+  weddingKey: string,
+) {
   if (role === "Couple") {
     return mongoDb.collection("vendorRequests").findOne({
       coupleUserId: userId,
@@ -39,7 +44,10 @@ export async function GET(request: Request) {
   if (authentication.error) return authentication.error;
   const { id: userId, role } = authentication.session.user;
   if (role !== "Couple" && role !== "Vendor") {
-    return NextResponse.json({ message: "Messaging is available to couples and vendors." }, { status: 403 });
+    return NextResponse.json(
+      { message: "Messaging is available to couples and vendors." },
+      { status: 403 },
+    );
   }
 
   const requestFilter = role === "Couple" ? { coupleUserId: userId } : { vendorUserId: userId };
@@ -102,7 +110,10 @@ export async function GET(request: Request) {
         id: String(message._id),
         body: String(message.body),
         sentByMe: message.senderUserId === userId,
-        createdAt: message.createdAt instanceof Date ? message.createdAt.toISOString() : String(message.createdAt),
+        createdAt:
+          message.createdAt instanceof Date
+            ? message.createdAt.toISOString()
+            : String(message.createdAt),
       })),
     };
   });
@@ -113,7 +124,8 @@ export async function POST(request: Request) {
   const authentication = await requireApiSession(request.headers);
   if (authentication.error) return authentication.error;
   const parsed = sendSchema.safeParse(await request.json().catch(() => null));
-  if (!parsed.success) return NextResponse.json({ message: "Enter a valid message." }, { status: 400 });
+  if (!parsed.success)
+    return NextResponse.json({ message: "Enter a valid message." }, { status: 400 });
   const { id: userId, role } = authentication.session.user;
   const connection = await acceptedConnection(
     userId,
@@ -140,7 +152,8 @@ export async function PATCH(request: Request) {
   const authentication = await requireApiSession(request.headers);
   if (authentication.error) return authentication.error;
   const parsed = readSchema.safeParse(await request.json().catch(() => null));
-  if (!parsed.success) return NextResponse.json({ message: "Invalid conversation." }, { status: 400 });
+  if (!parsed.success)
+    return NextResponse.json({ message: "Invalid conversation." }, { status: 400 });
   const userId = authentication.session.user.id;
   await mongoDb.collection("messages").updateMany(
     {

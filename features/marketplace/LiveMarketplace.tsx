@@ -67,7 +67,9 @@ export function LiveMarketplace({ vendors }: { vendors: MarketplaceVendor[] }) {
         <section className="vendor-grid marketplace-grid">
           {results.map((vendor) => (
             <article className="vendor-card" key={vendor.id}>
-              <div className={`vendor-cover tall tone-rose${vendor.profileImage ? " has-image" : ""}`}>
+              <div
+                className={`vendor-cover tall tone-rose${vendor.profileImage ? " has-image" : ""}`}
+              >
                 {vendor.profileImage ? (
                   <Image
                     alt={`${vendor.businessName} profile`}

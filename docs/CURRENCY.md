@@ -8,20 +8,20 @@ For example, `priceMinor: 150000` means 1,500 USD.
 
 ## Display rule
 
-USD is always available and is the default. The currency selector offers ZAR only when the server can establish that the request comes from South Africa and the current USD-to-ZAR rate is available. Location never changes the selection automatically. A user's explicit selection is kept in local storage between navigations and reloads.
+The interface does not show a currency selector. When the server can establish that the viewer is in South Africa and a current exchange rate is available, prices display in ZAR automatically. All other viewers see USD.
 
-The server recognises the `x-vercel-ip-country`, `cf-ipcountry` and trusted deployment `x-country-code` headers. If no country can be established, the application provides USD only. Set `DEVELOPMENT_COUNTRY=ZA` in `.env.local` to test both options locally.
+The server recognises the `x-vercel-ip-country`, `cf-ipcountry` and trusted deployment `x-country-code` headers. During local development, the browser locale and `Africa/Johannesburg` time zone provide a fallback because localhost has no country header. If South Africa cannot be established, the application safely displays USD. Set `DEVELOPMENT_COUNTRY=ZA` in `.env.local` for an explicit local override.
 
 ## Conversion and formatting
 
 The server obtains the USD-to-ZAR rate from Frankfurter's v2 rate endpoint. Next.js caches that request for six hours, so individual prices never make their own exchange-rate request. If the provider is unavailable, the application safely remains in USD.
 
-Components call the currency context's `displayMoney()` function. It converts USD cents only when ZAR is selected and then delegates formatting to the shared `formatMoney(amountMinor, currency)` utility.
+Components call the currency context's `displayMoney()` function. It converts USD cents only for a detected South African viewer and then delegates formatting to the shared `formatMoney(amountMinor, currency)` utility.
 
 - USD: `1,000$`
 - ZAR: `R 17,500`
 
-Normal prices have comma separators and no decimal places. Changing display currency never writes to MongoDB and never changes the original USD value.
+Normal prices have comma separators and no decimal places. Display conversion never writes to MongoDB and never changes the original USD value.
 
 ## Existing data
 

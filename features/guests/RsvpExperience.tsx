@@ -8,6 +8,7 @@ import { z } from "zod";
 import { Brand } from "@/components/ui/Brand";
 import { useLanguage } from "@/components/providers/LanguageProvider";
 import { cn } from "@/lib/cn";
+import { VowSelect } from "@/components/ui/VowSelect";
 
 const rsvpSchema = z
   .object({
@@ -43,6 +44,7 @@ export function RsvpExperience() {
     defaultValues: { response: undefined, mealPreference: "", dietaryNotes: "" },
   });
   const response = watch("response");
+  const mealPreference = watch("mealPreference") ?? "";
 
   function submit(values: RsvpValues) {
     const result = rsvpSchema.safeParse(values);
@@ -149,19 +151,19 @@ export function RsvpExperience() {
             <div className="rsvp-details">
               <label>
                 {text("Meal preference")}
-                <select
-                  {...register("mealPreference")}
-                  aria-invalid={Boolean(errors.mealPreference)}
-                  defaultValue=""
-                >
-                  <option value="" disabled>
-                    {text("Select a meal")}
-                  </option>
-                  <option value="Standard menu">{text("Standard menu")}</option>
-                  <option value="Vegetarian">{text("Vegetarian")}</option>
-                  <option>Halaal</option>
-                  <option value="Children’s menu">{text("Children’s menu")}</option>
-                </select>
+                <VowSelect
+                  ariaLabel={text("Meal preference")}
+                  invalid={Boolean(errors.mealPreference)}
+                  onChange={(value) => setValue("mealPreference", value, { shouldValidate: true })}
+                  options={[
+                    { value: "Standard menu", label: text("Standard menu") },
+                    { value: "Vegetarian", label: text("Vegetarian") },
+                    { value: "Halaal", label: "Halaal" },
+                    { value: "Children’s menu", label: text("Children’s menu") },
+                  ]}
+                  placeholder={text("Select a meal")}
+                  value={mealPreference}
+                />
                 {errors.mealPreference && (
                   <small className="text-vow-wine">
                     {text(errors.mealPreference.message ?? "")}

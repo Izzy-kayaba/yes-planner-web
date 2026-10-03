@@ -223,9 +223,6 @@
     grid-template-columns: 1fr;
     padding-block: 85px;
   }
-  .feature-art {
-    height: 210px;
-  }
   .story-photo {
     min-height: 360px;
   }
@@ -333,9 +330,21 @@
   .messages-panel {
     min-height: 650px;
     grid-template-columns: 1fr;
+    grid-template-rows: auto minmax(0, 1fr);
   }
   .messages-panel > aside {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding: 12px;
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .messages-panel > aside .table-search {
     display: none;
+  }
+  .messages-panel aside > button {
+    min-width: 190px;
   }
   .message {
     max-width: 85%;
@@ -476,7 +485,10 @@
     gap: 5px;
   }
   .language-switcher-compact {
-    gap: 4px;
+    width: 78px;
+  }
+  .language-switcher-compact .vow-select-compact {
+    width: 78px;
   }
 }
 

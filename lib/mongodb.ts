@@ -81,9 +81,6 @@ export async function ensureMongoIndexes() {
       ),
     mongoDb
       .collection("messages")
-      .createIndex(
-        { recipientUserId: 1, readAt: 1, createdAt: -1 },
-        { name: "message_unread" },
-      ),
+      .createIndex({ recipientUserId: 1, readAt: 1, createdAt: -1 }, { name: "message_unread" }),
   ]);
 }

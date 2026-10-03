@@ -9,6 +9,7 @@ import { useCurrency } from "@/components/providers/CurrencyProvider";
 import { Button } from "@/components/ui/Button";
 import { AtSign, ExternalLink, MessageCircle } from "lucide-react";
 import { apiRequest } from "@/lib/api/client";
+import { VowSelect } from "@/components/ui/VowSelect";
 
 export function VendorPublicProfile({
   vendor,
@@ -78,9 +79,9 @@ export function VendorPublicProfile({
           <h1>{vendor.businessName}</h1>
           {vendor.contactName && <p className="vendor-contact-name">{vendor.contactName}</p>}
           <p>{vendor.bio}</p>
-          <div className="mt-4 flex flex-wrap gap-2">
+          <div className="vendor-service-list">
             {vendor.services.map((item) => (
-              <span className="status-pill tone-sage" key={item}>
+              <span className="vendor-service-chip" key={item}>
                 {text(item)}
               </span>
             ))}
@@ -164,13 +165,12 @@ export function VendorPublicProfile({
           )}
           <label>
             {text("Service")}
-            <select onChange={(event) => setService(event.target.value)} required value={service}>
-              {vendor.services.map((item) => (
-                <option key={item} value={item}>
-                  {text(item)}
-                </option>
-              ))}
-            </select>
+            <VowSelect
+              ariaLabel={text("Service")}
+              options={vendor.services.map((item) => ({ value: item, label: text(item) }))}
+              value={service}
+              onChange={setService}
+            />
           </label>
           <label>
             {text("Message")}

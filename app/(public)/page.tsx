@@ -5,7 +5,6 @@ import { getTextTranslator } from "@/lib/i18n-server";
 import Image from "next/image";
 import { CoupleTestimonials } from "@/features/public/CoupleTestimonials";
 import { DisplayMoney } from "@/components/currency/DisplayMoney";
-import { CurrencySwitcher } from "@/components/currency/CurrencySwitcher";
 import { getAuthorizedSession } from "@/lib/auth/session";
 
 const features = [
@@ -56,7 +55,6 @@ export default async function HomePage() {
           <a href="#stories">{text("Stories")}</a>
         </div>
         <div className="landing-actions">
-          <CurrencySwitcher />
           <Link className="text-link" href="/login">
             {text("Sign in")}
           </Link>
