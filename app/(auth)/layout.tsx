@@ -40,13 +40,6 @@ export default async function AuthLayout({ children }: { children: ReactNode }) 
         <div className="auth-orbit orbit-two" />
       </section>
       <section className="auth-panel">
-        {/* <Link
-          className="auth-home-button auth-home-mobile"
-          href="/"
-          aria-label={text("Back to home")}
-        >
-          <ArrowLeft size={19} />
-        </Link> */}
         {children}
       </section>
     </main>

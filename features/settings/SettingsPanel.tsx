@@ -25,6 +25,7 @@ import { PageHeader } from "@/components/ui/PageHeader";
 import { apiRequest } from "@/lib/api/client";
 import { authClient } from "@/lib/auth-client";
 import { cn } from "@/lib/cn";
+import { FieldLabel } from "@/components/forms/FieldLabel";
 
 const tabs = [
   ["profile", "settings.profile"],
@@ -211,7 +212,7 @@ export function SettingsPanel() {
               </div>
               <div className="form-row">
                 <label>
-                  {t("auth.firstName")}
+                  <FieldLabel required>{t("auth.firstName")}</FieldLabel>
                   <input
                     name="firstName"
                     onChange={(event) => updateProfile("firstName", event.target.value)}
@@ -220,7 +221,7 @@ export function SettingsPanel() {
                   />
                 </label>
                 <label>
-                  {t("auth.lastName")}
+                  <FieldLabel required>{t("auth.lastName")}</FieldLabel>
                   <input
                     name="lastName"
                     onChange={(event) => updateProfile("lastName", event.target.value)}
@@ -230,7 +231,7 @@ export function SettingsPanel() {
                 </label>
               </div>
               <label>
-                {t("auth.email")}
+                <FieldLabel required>{t("auth.email")}</FieldLabel>
                 <input name="email" readOnly required type="email" value={profile.email} />
               </label>
               <label className="settings-toggle-row">
@@ -247,7 +248,7 @@ export function SettingsPanel() {
                 </span>
               </label>
               <label>
-                {t("auth.phone")}
+                <FieldLabel required>{t("auth.phone")}</FieldLabel>
                 <PhoneInput
                   className="phone-input"
                   defaultCountry="ZA"
@@ -255,6 +256,7 @@ export function SettingsPanel() {
                   countryCallingCodeEditable={false}
                   onChange={(value) => updateProfile("phoneNumber", value ?? "")}
                   value={profile.phoneNumber}
+                  required
                 />
               </label>
               <div className="settings-actions">

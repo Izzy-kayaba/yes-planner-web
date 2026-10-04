@@ -208,7 +208,7 @@
   }
   .partner-strip > div {
     gap: 22px;
-    font-size: 14px;
+    font-size: var(--font-size-14);
   }
   .experience {
     padding-block: 80px;

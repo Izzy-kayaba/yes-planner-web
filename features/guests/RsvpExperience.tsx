@@ -9,6 +9,8 @@ import { Brand } from "@/components/ui/Brand";
 import { useLanguage } from "@/components/providers/LanguageProvider";
 import { cn } from "@/lib/cn";
 import { YesSelect } from "@/components/ui/YesSelect";
+import { CharacterCount } from "@/components/forms/CharacterCount";
+import { FieldLabel } from "@/components/forms/FieldLabel";
 
 const rsvpSchema = z
   .object({
@@ -119,7 +121,9 @@ export function RsvpExperience() {
           </div>
         </div>
         <form className="rsvp-form" onSubmit={handleSubmit(submit)} noValidate>
-          <h2>{text("Will you be joining us?")}</h2>
+          <h2>
+            <FieldLabel required>{text("Will you be joining us?")}</FieldLabel>
+          </h2>
           <div className="rsvp-choice">
             <button
               className={cn(response === "yes" && "selected")}
@@ -150,7 +154,7 @@ export function RsvpExperience() {
           {response === "yes" && (
             <div className="rsvp-details">
               <label>
-                {text("Meal preference")}
+                <FieldLabel required>{text("Meal preference")}</FieldLabel>
                 <YesSelect
                   ariaLabel={text("Meal preference")}
                   invalid={Boolean(errors.mealPreference)}
@@ -162,6 +166,7 @@ export function RsvpExperience() {
                     { value: "Children’s menu", label: text("Children’s menu") },
                   ]}
                   placeholder={text("Select a meal")}
+                  required
                   value={mealPreference}
                 />
                 {errors.mealPreference && (
@@ -175,8 +180,10 @@ export function RsvpExperience() {
                 <textarea
                   {...register("dietaryNotes")}
                   aria-invalid={Boolean(errors.dietaryNotes)}
+                  maxLength={500}
                   placeholder={text("Allergies or requirements we should know about")}
                 />
+                <CharacterCount value={watch("dietaryNotes") ?? ""} max={500} />
                 {errors.dietaryNotes && (
                   <small className="text-yes-wine">{text(errors.dietaryNotes.message ?? "")}</small>
                 )}

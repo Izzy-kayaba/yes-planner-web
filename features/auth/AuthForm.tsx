@@ -16,6 +16,8 @@ import { useLanguage } from "@/components/providers/LanguageProvider";
 import { getBackend } from "@/lib/api/backend";
 import type { RegisterInput } from "@/lib/api/contracts";
 import { authClient } from "@/lib/auth-client";
+import { FieldLabel } from "@/components/forms/FieldLabel";
+import { PasswordInput } from "@/components/forms/PasswordInput";
 
 const roles = [
   { value: "Couple", icon: Heart },
@@ -132,43 +134,50 @@ export function AuthForm({ mode }: { mode: "login" | "register" }) {
   return (
     <form className="auth-form" onSubmit={handleSubmit(submit)} noValidate>
       {isRegister && (
-        <div className="role-picker" aria-label={text("Account type")}>
-          {roles.map(({ value, icon: Icon }) => (
-            <button
-              aria-pressed={selectedRole === value}
-              className={cn(selectedRole === value && "selected")}
-              type="button"
-              key={value}
-              onClick={() => setValue("role", value, { shouldValidate: true })}
-            >
-              <Icon size={18} strokeWidth={1.7} aria-hidden="true" />
-              {text(value)}
-            </button>
-          ))}
-        </div>
+        <fieldset className="grid gap-2 border-0 p-0">
+          <legend>
+            <FieldLabel required>{text("Account type")}</FieldLabel>
+          </legend>
+          <div className="role-picker">
+            {roles.map(({ value, icon: Icon }) => (
+              <button
+                aria-pressed={selectedRole === value}
+                className={cn(selectedRole === value && "selected")}
+                type="button"
+                key={value}
+                onClick={() => setValue("role", value, { shouldValidate: true })}
+              >
+                <Icon size={18} strokeWidth={1.7} aria-hidden="true" />
+                {text(value)}
+              </button>
+            ))}
+          </div>
+        </fieldset>
       )}
 
       {isRegister && (
         <div className="form-row">
           <label>
-            {t("auth.firstName")}
+            <FieldLabel required>{t("auth.firstName")}</FieldLabel>
             <input
               {...register("firstName")}
               aria-invalid={Boolean(errors.firstName)}
               placeholder="Alex"
               autoComplete="given-name"
+              required
             />
             {errors.firstName && (
               <small className="form-error">{text(errors.firstName.message ?? "")}</small>
             )}
           </label>
           <label>
-            {t("auth.lastName")}
+            <FieldLabel required>{t("auth.lastName")}</FieldLabel>
             <input
               {...register("lastName")}
               aria-invalid={Boolean(errors.lastName)}
               placeholder="Morgan"
               autoComplete="family-name"
+              required
             />
             {errors.lastName && (
               <small className="form-error">{text(errors.lastName.message ?? "")}</small>
@@ -178,20 +187,21 @@ export function AuthForm({ mode }: { mode: "login" | "register" }) {
       )}
 
       <label>
-        {t("auth.email")}
+        <FieldLabel required>{t("auth.email")}</FieldLabel>
         <input
           {...register("email")}
           aria-invalid={Boolean(errors.email)}
           type="email"
           placeholder="you@example.com"
           autoComplete="email"
+          required
         />
         {errors.email && <small className="form-error">{text(errors.email.message ?? "")}</small>}
       </label>
 
       {isRegister && (
         <label>
-          {t("auth.phone")}
+          <FieldLabel required>{t("auth.phone")}</FieldLabel>
           <Controller
             control={control}
             name="phoneNumber"
@@ -204,6 +214,7 @@ export function AuthForm({ mode }: { mode: "login" | "register" }) {
                 countryCallingCodeEditable={false}
                 aria-invalid={Boolean(errors.phoneNumber)}
                 autoComplete="tel"
+                required
                 onChange={(value) => field.onChange(value ?? "")}
               />
             )}
@@ -216,15 +227,15 @@ export function AuthForm({ mode }: { mode: "login" | "register" }) {
 
       <label>
         <span className="label-row">
-          {t("auth.password")}
+          <FieldLabel required>{t("auth.password")}</FieldLabel>
           {!isRegister && <Link href="/forgot-password">{t("auth.forgot")}</Link>}
         </span>
-        <input
+        <PasswordInput
           {...register("password")}
           aria-invalid={Boolean(errors.password)}
-          type="password"
           placeholder="••••••••••••"
           autoComplete={isRegister ? "new-password" : "current-password"}
+          required
         />
         {errors.password && (
           <small className="form-error">{text(errors.password.message ?? "")}</small>

@@ -187,6 +187,9 @@
   align-items: center;
   justify-content: center;
 }
+.message-compose .character-count {
+  grid-column: 1 / -1;
+}
 .message-compose .send-button {
   background: var(--wine);
   color: #fff;

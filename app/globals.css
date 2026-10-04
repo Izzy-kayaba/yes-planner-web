@@ -28,6 +28,7 @@
 
 /* Foundation */
 :root {
+  --font-size-14: 14px;
   --ink: #282322;
   --muted: #746c68;
   --canvas: #f8f5f1;
@@ -161,7 +162,7 @@
   font-weight: 700;
 }
 .button {
-  @apply inline-flex min-h-11 items-center justify-center gap-2.5 rounded-xl border border-transparent px-5 text-[14px] font-bold transition;
+  @apply inline-flex min-h-11 items-center justify-center gap-2.5 rounded-xl border border-transparent px-[clamp(0.5rem,3.5vw,1.25rem)] text-[14px] font-bold transition;
 }
 .button:hover {
   transform: translateY(-1px);
@@ -180,6 +181,14 @@
 }
 .button-ghost {
   @apply border border-yes-soft bg-transparent text-yes-ink hover:bg-yes-soft;
+}
+:root[data-theme="dark"] .landing .button-ghost {
+  border-color: color-mix(in srgb, white 42%, transparent);
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+:root[data-theme="dark"] .landing .button-ghost:hover {
+  background: rgba(255, 255, 255, 0.16);
 }
 .button-light {
   @apply bg-white text-yes-wine-deep hover:bg-yes-blush;
@@ -319,7 +328,7 @@
   padding: 13px 15px;
   border: 1px solid;
   border-radius: 12px;
-  font-size: 14px;
+  font-size: var(--font-size-14);
   line-height: 1.5;
 }
 .alert-error {
@@ -341,4 +350,30 @@
   color: #28613c;
   border-color: #a8d6b5;
   background: #effaf2;
+}
+
+.field-label-text {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 3px;
+}
+.required-mark {
+  color: #c52f45;
+  font-size: 1.05em;
+  font-weight: 900;
+}
+.character-count {
+  justify-self: end;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 600;
+}
+.character-count.needs-more {
+  color: #a52b3e;
+}
+
+@media (max-width: 374px) {
+  :root {
+    --font-size-14: 12px;
+  }
 }

@@ -37,7 +37,9 @@ function weddingFromDocument(document: Record<string, unknown> | null): WeddingP
     venue: text(document.venue),
     location: text(document.location),
     budgetMinor: typeof document.budgetMinor === "number" ? document.budgetMinor : 0,
+    budgetRangeKey: typeof document.budgetRangeKey === "string" ? document.budgetRangeKey : "",
     estimatedGuests: typeof document.estimatedGuests === "number" ? document.estimatedGuests : 0,
+    guestRangeKey: typeof document.guestRangeKey === "string" ? document.guestRangeKey : "",
     weddingStyle: text(document.weddingStyle),
     planningNotes: text(document.planningNotes),
   };

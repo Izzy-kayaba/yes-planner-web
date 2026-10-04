@@ -19,6 +19,7 @@ export default async function MarketplacePage() {
     services: Array.isArray(profile.services) ? profile.services.map(String) : [],
     serviceArea: String(profile.serviceArea ?? ""),
     startingPriceMinor: Number(profile.startingPriceMinor ?? 0),
+    startingPriceRangeKey: String(profile.startingPriceRangeKey ?? ""),
     profileImage: String(profile.profileImage ?? ""),
   }));
   return <LiveMarketplace vendors={vendors} />;

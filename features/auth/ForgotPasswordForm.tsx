@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import { authClient } from "@/lib/auth-client";
 import { useLanguage } from "@/components/providers/LanguageProvider";
+import { FieldLabel } from "@/components/forms/FieldLabel";
 
 export function ForgotPasswordForm() {
   const { text } = useLanguage();
@@ -37,7 +38,7 @@ export function ForgotPasswordForm() {
     <form className="auth-form" onSubmit={submit}>
       {error && <div className="alert alert-error">{error}</div>}
       <label>
-        {text("Email address")}
+        <FieldLabel required>{text("Email address")}</FieldLabel>
         <input
           required
           type="email"

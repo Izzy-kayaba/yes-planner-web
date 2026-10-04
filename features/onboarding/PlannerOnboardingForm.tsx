@@ -6,6 +6,8 @@ import { toast } from "sonner";
 import { useLanguage } from "@/components/providers/LanguageProvider";
 import { Button } from "@/components/ui/Button";
 import { apiRequest } from "@/lib/api/client";
+import { CharacterCount } from "@/components/forms/CharacterCount";
+import { FieldLabel } from "@/components/forms/FieldLabel";
 
 export type PlannerOnboardingValue = {
   organisationName: string;
@@ -55,7 +57,7 @@ export function PlannerOnboardingForm({ initialValue }: { initialValue: PlannerO
       </div>
       <div className="form-row">
         <label>
-          {text("Organisation name")}
+          <FieldLabel required>{text("Organisation name")}</FieldLabel>
           <input
             required
             value={value.organisationName}
@@ -63,7 +65,7 @@ export function PlannerOnboardingForm({ initialValue }: { initialValue: PlannerO
           />
         </label>
         <label>
-          {text("Contact name")}
+          <FieldLabel required>{text("Contact name")}</FieldLabel>
           <input
             required
             value={value.contactName}
@@ -72,17 +74,19 @@ export function PlannerOnboardingForm({ initialValue }: { initialValue: PlannerO
         </label>
       </div>
       <label>
-        {text("Organisation description")}
+        <FieldLabel required>{text("Organisation description")}</FieldLabel>
         <textarea
+          maxLength={2000}
           minLength={30}
           required
           rows={5}
           value={value.bio}
           onChange={(event) => update("bio", event.target.value)}
         />
+        <CharacterCount value={value.bio} min={30} max={2000} />
       </label>
       <label>
-        {text("Service area")}
+        <FieldLabel required>{text("Service area")}</FieldLabel>
         <input
           required
           value={value.serviceArea}
@@ -91,7 +95,7 @@ export function PlannerOnboardingForm({ initialValue }: { initialValue: PlannerO
       </label>
       <div className="form-row">
         <label>
-          {text("Team size")}
+          <FieldLabel required>{text("Team size")}</FieldLabel>
           <input
             min="1"
             required
@@ -101,7 +105,7 @@ export function PlannerOnboardingForm({ initialValue }: { initialValue: PlannerO
           />
         </label>
         <label>
-          {text("Years of experience")}
+          <FieldLabel required>{text("Years of experience")}</FieldLabel>
           <input
             min="0"
             required

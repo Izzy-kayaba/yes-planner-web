@@ -10,6 +10,9 @@ import { Button } from "@/components/ui/Button";
 import { AtSign, ExternalLink, MessageCircle } from "lucide-react";
 import { apiRequest } from "@/lib/api/client";
 import { YesSelect } from "@/components/ui/YesSelect";
+import { CharacterCount } from "@/components/forms/CharacterCount";
+import { FieldLabel } from "@/components/forms/FieldLabel";
+import { inferMoneyRange, vendorPriceRanges } from "@/lib/estimate-ranges";
 
 export function VendorPublicProfile({
   vendor,
@@ -24,6 +27,7 @@ export function VendorPublicProfile({
     services: string[];
     serviceArea: string;
     startingPriceMinor: number;
+    startingPriceRangeKey?: string;
     website: string;
     instagramHandle: string;
     profileImage: string;
@@ -39,6 +43,12 @@ export function VendorPublicProfile({
   const [service, setService] = useState(vendor.services[0] ?? "");
   const [message, setMessage] = useState("");
   const [sending, setSending] = useState(false);
+  const selectedPriceRange = vendorPriceRanges.find(
+    (range) =>
+      range.id ===
+      (vendor.startingPriceRangeKey ||
+        inferMoneyRange(vendorPriceRanges, vendor.startingPriceMinor)),
+  );
 
   async function sendRequest(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -88,8 +98,10 @@ export function VendorPublicProfile({
           </div>
           <p className="mt-4 text-sm text-yes-muted">
             {vendor.serviceArea} ·{" "}
-            {vendor.startingPriceMinor
-              ? `${text("From")} ${displayMoney(vendor.startingPriceMinor)}`
+            {selectedPriceRange
+              ? selectedPriceRange.maxMinor === null
+                ? `${displayMoney(selectedPriceRange.minMinor)}+`
+                : `${displayMoney(selectedPriceRange.minMinor)} – ${displayMoney(selectedPriceRange.maxMinor)}`
               : text("Quote required")}
           </p>
           <div className="mt-3 flex flex-wrap gap-4 text-sm font-bold text-yes-wine">
@@ -153,7 +165,10 @@ export function VendorPublicProfile({
         )}
       </section>
       {canRequest && (
-        <form className="panel onboarding-form grid gap-4" onSubmit={sendRequest}>
+        <form
+          className="panel onboarding-form vendor-request-form grid gap-4"
+          onSubmit={sendRequest}
+        >
           <div>
             <p className="eyebrow">{text("Work together")}</p>
             <h2>{text("Send a request")}</h2>
@@ -164,10 +179,11 @@ export function VendorPublicProfile({
             </p>
           )}
           <label>
-            {text("Service")}
+            <FieldLabel required>{text("Service")}</FieldLabel>
             <YesSelect
               ariaLabel={text("Service")}
               options={vendor.services.map((item) => ({ value: item, label: text(item) }))}
+              required
               value={service}
               onChange={setService}
             />
@@ -175,11 +191,13 @@ export function VendorPublicProfile({
           <label>
             {text("Message")}
             <textarea
+              maxLength={1000}
               onChange={(event) => setMessage(event.target.value)}
               placeholder={text("Tell the vendor what you need for your wedding.")}
               rows={4}
               value={message}
             />
+            <CharacterCount value={message} max={1000} />
           </label>
           <Button disabled={sending || requestStatus === "Accepted"} type="submit">
             {sending

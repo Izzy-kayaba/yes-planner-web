@@ -12,19 +12,19 @@ const features = [
     number: "01",
     title: "One calm command centre",
     body: "Budget, guests, tasks, vendors and your wedding-day timeline stay beautifully in sync.",
-    image: "/assets/Gemini_Generated_Image_8ebvwt8ebvwt8ebv.jpeg",
+    image: "/assets/home-carrd-1.jpeg",
   },
   {
     number: "02",
     title: "Plan with your people",
     body: "Couples and assigned planners work from the same live plan, with ownership safely protected.",
-    image: "/assets/Gemini_Generated_Image_lnve17lnve17lnve.jpeg",
+    image: "/assets/home-card-2.jpeg",
   },
   {
     number: "03",
     title: "Find exceptional vendors",
     body: "Discover trusted creative partners, compare packages and manage every booking in context.",
-    image: "/assets/Gemini_Generated_Image_nc6koync6koync6k.jpeg",
+    image: "/assets/home-card-3.jpeg",
   },
 ];
 
@@ -119,7 +119,7 @@ export default async function HomePage() {
             <div>
               <span>{text("Budget on track")}</span>
               <strong>
-                <DisplayMoney amountMinor={18_450_000} />
+                <DisplayMoney amountMinor={1_007_000} />
               </strong>
               <small>{text("remaining")}</small>
             </div>

@@ -5,6 +5,8 @@ import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import { authClient } from "@/lib/auth-client";
 import { useLanguage } from "@/components/providers/LanguageProvider";
+import { FieldLabel } from "@/components/forms/FieldLabel";
+import { PasswordInput } from "@/components/forms/PasswordInput";
 
 export function ResetPasswordForm({ token, invalid }: { token?: string; invalid: boolean }) {
   const { text } = useLanguage();
@@ -46,20 +48,18 @@ export function ResetPasswordForm({ token, invalid }: { token?: string; invalid:
     <form className="auth-form" onSubmit={submit}>
       {error && <div className="alert alert-error">{error}</div>}
       <label>
-        {text("New password")}
-        <input
+        <FieldLabel required>{text("New password")}</FieldLabel>
+        <PasswordInput
           required
-          type="password"
           autoComplete="new-password"
           value={password}
           onChange={(event) => setPassword(event.target.value)}
         />
       </label>
       <label>
-        {text("Confirm password")}
-        <input
+        <FieldLabel required>{text("Confirm password")}</FieldLabel>
+        <PasswordInput
           required
-          type="password"
           autoComplete="new-password"
           value={confirmation}
           onChange={(event) => setConfirmation(event.target.value)}

@@ -4,7 +4,8 @@ export const runtime = "nodejs";
 
 function detectedCountry(request: Request) {
   if (process.env.NODE_ENV !== "production" && process.env.DEVELOPMENT_COUNTRY) {
-    return process.env.DEVELOPMENT_COUNTRY.toUpperCase();
+    const configuredCountry = process.env.DEVELOPMENT_COUNTRY.toUpperCase();
+    return configuredCountry === "SA" ? "ZA" : configuredCountry;
   }
   const headerCountry = (
     request.headers.get("x-vercel-ip-country") ??
@@ -12,7 +13,7 @@ function detectedCountry(request: Request) {
     request.headers.get("x-country-code") ??
     ""
   ).toUpperCase();
-  if (headerCountry) return headerCountry;
+  if (headerCountry) return headerCountry === "SA" ? "ZA" : headerCountry;
 
   // Localhost has no IP-country header. Browser hints are sufficient here
   // because location only controls whether the optional ZAR display is shown.

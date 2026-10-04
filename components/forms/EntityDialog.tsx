@@ -5,6 +5,7 @@ import { useLanguage } from "@/components/providers/LanguageProvider";
 import { Button } from "@/components/ui/Button";
 import { Modal } from "@/components/ui/Modal";
 import { YesSelect } from "@/components/ui/YesSelect";
+import { FieldLabel } from "@/components/forms/FieldLabel";
 
 export type EntityFormValue = string | number;
 
@@ -14,7 +15,7 @@ export type EntityField = {
   placeholder?: string;
   required?: boolean;
   type?: "text" | "email" | "tel" | "number" | "date" | "time" | "textarea" | "select";
-  options?: string[];
+  options?: Array<string | { value: string; label: string }>;
 };
 
 export function EntityDialog({
@@ -66,7 +67,7 @@ export function EntityDialog({
       <form className="grid gap-4" key={formKey} onSubmit={submit}>
         {fields.map((field) => (
           <label className="grid gap-1.5 text-sm font-bold" key={field.name}>
-            {text(field.label)}
+            <FieldLabel required={field.required}>{text(field.label)}</FieldLabel>
             {field.type === "textarea" ? (
               <textarea
                 className="min-h-28 p-3 text-sm"
@@ -80,11 +81,13 @@ export function EntityDialog({
                 ariaLabel={text(field.label)}
                 defaultValue={String(defaults[field.name] ?? "")}
                 name={field.name}
+                required={field.required}
                 placeholder={text("Select an option")}
-                options={(field.options ?? []).map((option) => ({
-                  value: option,
-                  label: text(option),
-                }))}
+                options={(field.options ?? []).map((option) =>
+                  typeof option === "string"
+                    ? { value: option, label: text(option) }
+                    : { value: option.value, label: text(option.label) },
+                )}
               />
             ) : (
               <input

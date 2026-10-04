@@ -15,6 +15,7 @@ export async function GET(request: Request) {
       services: 1,
       serviceArea: 1,
       startingPriceMinor: 1,
+      startingPriceRangeKey: 1,
       profileImage: 1,
       portfolioImages: 1,
     })
@@ -28,6 +29,7 @@ export async function GET(request: Request) {
       services: vendor.services,
       serviceArea: vendor.serviceArea,
       startingPriceMinor: vendor.startingPriceMinor,
+      startingPriceRangeKey: vendor.startingPriceRangeKey ?? "",
       profileImage: vendor.profileImage ?? "",
       portfolioImages: vendor.portfolioImages ?? [],
     })),

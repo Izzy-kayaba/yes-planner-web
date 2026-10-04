@@ -8,6 +8,8 @@ import { useLanguage } from "@/components/providers/LanguageProvider";
 import { useCurrency } from "@/components/providers/CurrencyProvider";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { getInitials } from "@/lib/initials";
+import { YesSelect } from "@/components/ui/YesSelect";
+import { inferMoneyRange, vendorPriceRanges } from "@/lib/estimate-ranges";
 
 export type MarketplaceVendor = {
   id: string;
@@ -15,6 +17,7 @@ export type MarketplaceVendor = {
   services: string[];
   serviceArea: string;
   startingPriceMinor: number;
+  startingPriceRangeKey?: string;
   profileImage: string;
 };
 
@@ -23,6 +26,7 @@ export function LiveMarketplace({ vendors }: { vendors: MarketplaceVendor[] }) {
   const { displayMoney } = useCurrency();
   const [query, setQuery] = useState("");
   const [service, setService] = useState("All");
+  const [priceRange, setPriceRange] = useState("All");
   const services = useMemo(
     () => ["All", ...Array.from(new Set(vendors.flatMap((vendor) => vendor.services))).sort()],
     [vendors],
@@ -30,17 +34,35 @@ export function LiveMarketplace({ vendors }: { vendors: MarketplaceVendor[] }) {
   const results = vendors.filter(
     (vendor) =>
       (service === "All" || vendor.services.includes(service)) &&
+      (priceRange === "All" ||
+        (vendor.startingPriceRangeKey ||
+          inferMoneyRange(vendorPriceRanges, vendor.startingPriceMinor)) === priceRange) &&
       `${vendor.businessName} ${vendor.serviceArea} ${vendor.services.join(" ")}`
         .toLowerCase()
         .includes(query.toLowerCase()),
   );
 
+  function priceLabel(vendor: MarketplaceVendor) {
+    const range = vendorPriceRanges.find(
+      (item) =>
+        item.id ===
+        (vendor.startingPriceRangeKey ||
+          inferMoneyRange(vendorPriceRanges, vendor.startingPriceMinor)),
+    );
+    if (!range) return text("Quote required");
+    return range.maxMinor === null
+      ? `${displayMoney(range.minMinor)}+`
+      : `${displayMoney(range.minMinor)} – ${displayMoney(range.maxMinor)}`;
+  }
+
   return (
     <div className="section-stack marketplace-page">
       <PageHeader
-        eyebrow="Vendor marketplace"
-        title="Find your creative team"
-        description="Browse real vendor profiles, portfolios and services, then send a work request."
+        eyebrow={text("Vendor marketplace")}
+        title={text("Find your creative team")}
+        description={text(
+          "Browse real vendor profiles, portfolios and services, then send a work request.",
+        )}
       />
       <section className="marketplace-search">
         <label>
@@ -51,6 +73,21 @@ export function LiveMarketplace({ vendors }: { vendors: MarketplaceVendor[] }) {
             value={query}
           />
         </label>
+        <YesSelect
+          ariaLabel={text("Price range")}
+          onChange={setPriceRange}
+          options={[
+            { value: "All", label: text("All prices") },
+            ...vendorPriceRanges.map((range) => ({
+              value: range.id,
+              label:
+                range.maxMinor === null
+                  ? `${displayMoney(range.minMinor)}+`
+                  : `${displayMoney(range.minMinor)} – ${displayMoney(range.maxMinor)}`,
+            })),
+          ]}
+          value={priceRange}
+        />
       </section>
       <div className="category-scroll">
         {services.map((item) => (
@@ -86,11 +123,7 @@ export function LiveMarketplace({ vendors }: { vendors: MarketplaceVendor[] }) {
                 <p>{vendor.services.map(text).join(" · ")}</p>
                 <h3>{vendor.businessName}</h3>
                 <p>{vendor.serviceArea}</p>
-                <strong>
-                  {vendor.startingPriceMinor
-                    ? `${text("From")} ${displayMoney(vendor.startingPriceMinor)}`
-                    : text("Quote required")}
-                </strong>
+                <strong>{priceLabel(vendor)}</strong>
                 <Link
                   className="button button-secondary button-wide"
                   href={`/marketplace/${encodeURIComponent(vendor.id)}`}

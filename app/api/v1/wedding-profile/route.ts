@@ -5,17 +5,20 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { requireApiSession } from "@/lib/auth/session";
 import { ensureMongoIndexes, mongoDb } from "@/lib/mongodb";
+import { budgetRanges, guestRanges } from "@/lib/estimate-ranges";
 
 const weddingProfileSchema = z.object({
   firstName: z.string().trim().min(2).max(80),
   lastName: z.string().trim().min(2).max(80),
   partnerName: z.string().trim().min(2).max(120),
-  displayName: z.string().trim().min(3).max(180),
+  displayName: z.string().trim().max(100).optional(),
   weddingDate: z.iso.date(),
   venue: z.string().trim().min(2).max(180),
   location: z.string().trim().min(2).max(180),
   budgetMinor: z.coerce.number().int().positive().max(100_000_000_000),
+  budgetRangeKey: z.string().refine((value) => budgetRanges.some((range) => range.id === value)),
   estimatedGuests: z.coerce.number().int().positive().max(100_000),
+  guestRangeKey: z.string().refine((value) => guestRanges.some((range) => range.id === value)),
   weddingStyle: z.string().trim().max(120).default(""),
   planningNotes: z.string().trim().max(2_000).default(""),
   phoneNumber: z.string().trim().optional(),
@@ -33,7 +36,9 @@ function publicProfile(document: Record<string, unknown>, user: Record<string, u
     venue: document.venue,
     location: document.location,
     budgetMinor: document.budgetMinor,
+    budgetRangeKey: document.budgetRangeKey ?? "",
     estimatedGuests: document.estimatedGuests,
+    guestRangeKey: document.guestRangeKey ?? "",
     weddingStyle: document.weddingStyle ?? "",
     planningNotes: document.planningNotes ?? "",
   };
@@ -81,6 +86,7 @@ export async function PUT(request: Request) {
   await ensureMongoIndexes();
   const now = new Date();
   const weddingKey = String(current?.weddingKey ?? `wedding-${randomUUID()}`);
+  const displayName = `${parsed.data.firstName} & ${parsed.data.partnerName}`.slice(0, 100);
   const userUpdate: Record<string, unknown> = {
     firstName: parsed.data.firstName,
     lastName: parsed.data.lastName,
@@ -98,12 +104,14 @@ export async function PUT(request: Request) {
       {
         $set: {
           partnerName: parsed.data.partnerName,
-          displayName: parsed.data.displayName,
+          displayName,
           weddingDate: parsed.data.weddingDate,
           venue: parsed.data.venue,
           location: parsed.data.location,
           budgetMinor: parsed.data.budgetMinor,
+          budgetRangeKey: parsed.data.budgetRangeKey,
           estimatedGuests: parsed.data.estimatedGuests,
+          guestRangeKey: parsed.data.guestRangeKey,
           weddingStyle: parsed.data.weddingStyle,
           planningNotes: parsed.data.planningNotes,
           updatedAt: now,

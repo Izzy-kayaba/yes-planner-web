@@ -16,12 +16,12 @@ export function Brand({ compact = false }: { compact?: boolean }) {
         className="grid size-10 -rotate-3 place-items-center rounded-[50%_50%_46%_54%] bg-yes-wine text-white shadow-[inset_-5px_-5px_0_rgba(255,255,255,.08)]"
         aria-hidden="true"
       >
-        <span className="rotate-3 font-display text-2xl">V</span>
+        <span className="rotate-3 font-display text-2xl font-bold">Y</span>
       </span>
       {!compact && (
-        <span className="brand-wordmark flex items-baseline gap-1 font-display text-[21px] max-[424px]:hidden">
-          <strong className="font-bold">Yes</strong>
-          <span className="brand-planner italic text-yes-wine">Planner</span>
+        <span className="brand-wordmark flex items-baseline gap-1 font-display text-[21px] font-bold max-[424px]:hidden">
+          <strong>Yes</strong>
+          <strong className="brand-planner italic text-yes-wine">Planner</strong>
         </span>
       )}
     </Link>

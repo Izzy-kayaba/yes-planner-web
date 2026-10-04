@@ -40,6 +40,7 @@ export default async function VendorProfilePage({
         services: Array.isArray(profile.services) ? profile.services.map(String) : [],
         serviceArea: String(profile.serviceArea ?? ""),
         startingPriceMinor: Number(profile.startingPriceMinor ?? 0),
+        startingPriceRangeKey: String(profile.startingPriceRangeKey ?? ""),
         website: String(profile.website ?? ""),
         instagramHandle: String(profile.instagramHandle ?? ""),
         profileImage: String(profile.profileImage ?? ""),

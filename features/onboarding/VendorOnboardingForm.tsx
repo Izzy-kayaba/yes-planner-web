@@ -9,6 +9,11 @@ import { useLanguage } from "@/components/providers/LanguageProvider";
 import { Button } from "@/components/ui/Button";
 import { apiRequest } from "@/lib/api/client";
 import { vendorServices } from "@/lib/vendors/services";
+import { CharacterCount } from "@/components/forms/CharacterCount";
+import { FieldLabel } from "@/components/forms/FieldLabel";
+import { useCurrency } from "@/components/providers/CurrencyProvider";
+import { inferMoneyRange, moneyRangeValue, vendorPriceRanges } from "@/lib/estimate-ranges";
+import { YesSelect } from "@/components/ui/YesSelect";
 
 export type VendorOnboardingValue = {
   businessName: string;
@@ -17,6 +22,7 @@ export type VendorOnboardingValue = {
   services: string[];
   serviceArea: string;
   startingPriceMinor: number;
+  startingPriceRangeKey?: string;
   website: string;
   instagramHandle: string;
   profileImage: string;
@@ -50,6 +56,7 @@ async function removeImage(url: string) {
 export function VendorOnboardingForm({ initialValue }: { initialValue?: VendorOnboardingValue }) {
   const router = useRouter();
   const { text } = useLanguage();
+  const { currency, displayMoney } = useCurrency();
   const [value, setValue] = useState(initialValue ?? emptyValue);
   const [saving, setSaving] = useState(false);
   const [removedImages, setRemovedImages] = useState<string[]>([]);
@@ -102,7 +109,12 @@ export function VendorOnboardingForm({ initialValue }: { initialValue?: VendorOn
     try {
       await apiRequest("/api/v1/vendor-profile", {
         method: "PUT",
-        body: JSON.stringify(value),
+        body: JSON.stringify({
+          ...value,
+          startingPriceRangeKey:
+            value.startingPriceRangeKey ||
+            inferMoneyRange(vendorPriceRanges, value.startingPriceMinor),
+        }),
       });
       await Promise.all(removedImages.map((image) => removeImage(image).catch(() => undefined)));
       setRemovedImages([]);
@@ -129,7 +141,7 @@ export function VendorOnboardingForm({ initialValue }: { initialValue?: VendorOn
       </div>
       <div className="form-row">
         <label>
-          {text("Business name")}
+          <FieldLabel required>{text("Business name")}</FieldLabel>
           <input
             onChange={(event) => update("businessName", event.target.value)}
             required
@@ -137,7 +149,7 @@ export function VendorOnboardingForm({ initialValue }: { initialValue?: VendorOn
           />
         </label>
         <label>
-          {text("Contact name")}
+          <FieldLabel required>{text("Contact name")}</FieldLabel>
           <input
             onChange={(event) => update("contactName", event.target.value)}
             required
@@ -146,8 +158,9 @@ export function VendorOnboardingForm({ initialValue }: { initialValue?: VendorOn
         </label>
       </div>
       <label>
-        {text("Business description")}
+        <FieldLabel required>{text("Business description")}</FieldLabel>
         <textarea
+          maxLength={2000}
           minLength={30}
           onChange={(event) => update("bio", event.target.value)}
           placeholder={text(
@@ -157,12 +170,15 @@ export function VendorOnboardingForm({ initialValue }: { initialValue?: VendorOn
           rows={5}
           value={value.bio}
         />
+        <CharacterCount value={value.bio} min={30} max={2000} />
       </label>
 
       <div className="onboarding-section-heading">
         <span>2</span>
         <div>
-          <h2>{text("Services offered")}</h2>
+          <h2>
+            <FieldLabel required>{text("Services offered")}</FieldLabel>
+          </h2>
           <p>{text("Choose every service couples can request from you.")}</p>
         </div>
       </div>
@@ -181,7 +197,7 @@ export function VendorOnboardingForm({ initialValue }: { initialValue?: VendorOn
       </div>
       <div className="form-row">
         <label>
-          {text("Service area")}
+          <FieldLabel required>{text("Service area")}</FieldLabel>
           <input
             onChange={(event) => update("serviceArea", event.target.value)}
             placeholder={text("Johannesburg, Gauteng or nationwide")}
@@ -190,19 +206,33 @@ export function VendorOnboardingForm({ initialValue }: { initialValue?: VendorOn
           />
         </label>
         <label>
-          {text("Starting price")} (USD)
-          <span className="input-with-prefix">
-            <b>$</b>
-            <input
-              min="0"
-              onChange={(event) =>
-                update("startingPriceMinor", Math.round(Number(event.target.value) * 100))
-              }
-              required
-              type="number"
-              value={value.startingPriceMinor ? value.startingPriceMinor / 100 : ""}
-            />
-          </span>
+          <FieldLabel required>
+            {text("Starting price range")} ({currency})
+          </FieldLabel>
+          <YesSelect
+            ariaLabel={text("Starting price range")}
+            onChange={(rangeKey) => {
+              const range = vendorPriceRanges.find((item) => item.id === rangeKey)!;
+              setValue((current) => ({
+                ...current,
+                startingPriceRangeKey: rangeKey,
+                startingPriceMinor: moneyRangeValue(range),
+              }));
+            }}
+            options={vendorPriceRanges.map((range) => ({
+              value: range.id,
+              label:
+                range.maxMinor === null
+                  ? `${displayMoney(range.minMinor)}+`
+                  : `${displayMoney(range.minMinor)} – ${displayMoney(range.maxMinor)}`,
+            }))}
+            placeholder={text("Select a price range")}
+            required
+            value={
+              value.startingPriceRangeKey ||
+              inferMoneyRange(vendorPriceRanges, value.startingPriceMinor)
+            }
+          />
         </label>
       </div>
       <div className="form-row">

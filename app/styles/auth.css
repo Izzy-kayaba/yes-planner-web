@@ -28,7 +28,7 @@
 }
 .auth-story nav > a:last-child {
   color: #dfcbd0;
-  font-size: 14px;
+  font-size: var(--font-size-14);
 }
 .auth-home-button {
   width: 42px;
@@ -182,7 +182,7 @@
   display: grid;
   gap: 8px;
   color: var(--ink);
-  font-size: 14px;
+  font-size: var(--font-size-14);
   font-weight: 700;
 }
 .auth-form input,
@@ -254,7 +254,7 @@
   margin: 4px 0 0;
   color: var(--muted);
   text-align: center;
-  font-size: 14px;
+  font-size: var(--font-size-14);
 }
 .auth-switch a {
   color: var(--wine);
@@ -274,8 +274,34 @@
   border: 1px solid var(--line);
   border-radius: 11px;
   background: var(--surface);
-  font-size: 14px;
+  font-size: var(--font-size-14);
   font-weight: 700;
+}
+
+.password-input {
+  position: relative;
+  display: block;
+}
+.password-input input {
+  padding-right: 48px;
+}
+.password-input button {
+  width: 40px;
+  height: 40px;
+  position: absolute;
+  top: 50%;
+  right: 5px;
+  display: grid;
+  place-items: center;
+  transform: translateY(-50%);
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--muted);
+}
+.password-input button:hover {
+  background: var(--surface-soft);
+  color: var(--wine);
 }
 .role-picker button span {
   color: var(--wine);
@@ -329,7 +355,7 @@
   display: flex;
   align-items: center;
   gap: 13px;
-  padding-top: 4px;
+  padding-top: 10px;
   border-top: 1px solid var(--line);
 }
 .onboarding-section-heading:first-child {

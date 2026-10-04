@@ -10,19 +10,19 @@ const testimonials = [
     comment: "We stopped feeling like project managers and started enjoying our engagement again.",
     names: "Thandi & Michael",
     location: "Cape Town",
-    image: "/assets/Engaged-Couple.jpeg",
+    image: "/assets/testimonial-1.jpeg",
   },
   {
     comment: "Every supplier, payment and guest detail finally lived in one calm, beautiful place.",
     names: "Naledi & James",
     location: "Johannesburg",
-    image: "/yes-planner-profile-1.jpeg",
+    image: "/assets/testimonial-2.jpeg",
   },
   {
     comment: "Our planner and family always knew what was next, without endless message threads.",
     names: "Amina & Daniel",
     location: "Durban",
-    image: "/yes-planner-profile-2.jpeg",
+    image: "/assets/testimonial-3.jpeg",
   },
 ];
 

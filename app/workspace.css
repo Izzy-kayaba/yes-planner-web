@@ -224,7 +224,7 @@
 .banner-copy > p {
   margin-bottom: 24px;
   color: #ead5da;
-  font-size: 14px;
+  font-size: var(--font-size-14);
 }
 .banner-copy p span {
   margin: 0 7px;
@@ -557,7 +557,7 @@
 .overview-hero p {
   max-width: 610px;
   color: #cfdbd4;
-  font-size: 14px;
+  font-size: var(--font-size-14);
   line-height: 1.6;
 }
 .overview-ring {

@@ -4,6 +4,7 @@ import { z } from "zod";
 import { requireApiSession } from "@/lib/auth/session";
 import { ensureMongoIndexes, mongoDb } from "@/lib/mongodb";
 import { isVendorService } from "@/lib/vendors/services";
+import { vendorPriceRanges } from "@/lib/estimate-ranges";
 
 const imageSchema = z
   .string()
@@ -17,6 +18,9 @@ const profileSchema = z.object({
   services: z.array(z.string()).min(1).max(10),
   serviceArea: z.string().trim().min(2).max(180),
   startingPriceMinor: z.coerce.number().int().nonnegative().max(100_000_000_000),
+  startingPriceRangeKey: z
+    .string()
+    .refine((value) => vendorPriceRanges.some((range) => range.id === value)),
   website: z.union([z.url(), z.literal("")]),
   instagramHandle: z.string().trim().max(80),
   profileImage: z.union([imageSchema, z.literal("")]),
@@ -32,6 +36,7 @@ function publicProfile(document: Record<string, unknown>) {
     services: document.services,
     serviceArea: document.serviceArea,
     startingPriceMinor: document.startingPriceMinor,
+    startingPriceRangeKey: document.startingPriceRangeKey ?? "",
     website: document.website ?? "",
     instagramHandle: document.instagramHandle ?? "",
     profileImage: document.profileImage ?? "",

@@ -30,7 +30,12 @@ const fields = [
     name: "color",
     label: "Colour",
     type: "select" as const,
-    options: ["#8d4656", "#71826b", "#b99052", "#74859d"],
+    options: [
+      { value: "#8d4656", label: "Burgundy" },
+      { value: "#71826b", label: "Sage Green" },
+      { value: "#b99052", label: "Gold" },
+      { value: "#74859d", label: "Dusty Blue" },
+    ],
     required: true,
   },
 ];

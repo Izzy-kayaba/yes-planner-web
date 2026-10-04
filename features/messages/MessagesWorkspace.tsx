@@ -8,6 +8,7 @@ import { useLanguage } from "@/components/providers/LanguageProvider";
 import { apiRequest } from "@/lib/api/client";
 import { formatDate } from "@/lib/date-time";
 import { getInitials } from "@/lib/initials";
+import { CharacterCount } from "@/components/forms/CharacterCount";
 
 type Conversation = {
   id: string;
@@ -186,6 +187,7 @@ export function MessagesWorkspace() {
             >
               <Send size={16} />
             </button>
+            <CharacterCount value={body} max={2000} />
           </form>
         </article>
       )}

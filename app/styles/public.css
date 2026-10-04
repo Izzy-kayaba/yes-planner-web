@@ -16,7 +16,7 @@
 .landing-links {
   display: flex;
   gap: 34px;
-  font-size: 14px;
+  font-size: var(--font-size-14);
   color: #625854;
 }
 .landing-links a:hover {
@@ -26,7 +26,7 @@
   display: flex;
   align-items: center;
   gap: 20px;
-  font-size: 14px;
+  font-size: var(--font-size-14);
 }
 .hero {
   min-height: 690px;
@@ -118,7 +118,7 @@
 }
 .trust-row strong {
   font-family: var(--display);
-  font-size: 14px;
+  font-size: var(--font-size-14);
 }
 .trust-row small,
 .trust-row span {
@@ -358,12 +358,12 @@
 .feature-card p {
   min-height: 68px;
   color: #776d68;
-  font-size: 14px;
+  font-size: var(--font-size-14);
   line-height: 1.7;
 }
 .feature-card a {
   color: #7f3448;
-  font-size: 14px;
+  font-size: var(--font-size-14);
   font-weight: 800;
 }
 .professional-band {
@@ -504,7 +504,7 @@
 .story-copy > p:not(.story-mark) {
   margin-bottom: 30px;
   color: #8a7c76;
-  font-size: 14px;
+  font-size: var(--font-size-14);
 }
 .story-dots {
   display: flex;
@@ -541,7 +541,7 @@
 .landing-footer p {
   margin: 0 auto;
   color: #8b7d77;
-  font-size: 14px;
+  font-size: var(--font-size-14);
 }
 .landing-footer > span {
   color: #9a8d87;

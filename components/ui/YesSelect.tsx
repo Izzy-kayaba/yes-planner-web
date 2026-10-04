@@ -15,6 +15,7 @@ export function YesSelect({
   name,
   disabled = false,
   invalid = false,
+  required = false,
   compact = false,
   leadingIcon,
   className,
@@ -28,6 +29,7 @@ export function YesSelect({
   name?: string;
   disabled?: boolean;
   invalid?: boolean;
+  required?: boolean;
   compact?: boolean;
   leadingIcon?: ReactNode;
   className?: string;
@@ -80,6 +82,7 @@ export function YesSelect({
         aria-expanded={open}
         aria-haspopup="listbox"
         aria-invalid={invalid || undefined}
+        aria-required={required || undefined}
         aria-label={ariaLabel}
         className="yes-select-trigger"
         disabled={disabled}

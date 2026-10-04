@@ -8,6 +8,17 @@ import { useLanguage } from "@/components/providers/LanguageProvider";
 import { apiRequest } from "@/lib/api/client";
 import moment from "moment";
 import { YesSelect } from "@/components/ui/YesSelect";
+import { CharacterCount } from "@/components/forms/CharacterCount";
+import { FieldLabel } from "@/components/forms/FieldLabel";
+import { useCurrency } from "@/components/providers/CurrencyProvider";
+import {
+  budgetRanges,
+  guestRanges,
+  guestRangeValue,
+  inferGuestRange,
+  inferMoneyRange,
+  moneyRangeValue,
+} from "@/lib/estimate-ranges";
 
 export type WeddingOnboardingValue = {
   firstName: string;
@@ -18,7 +29,9 @@ export type WeddingOnboardingValue = {
   venue: string;
   location: string;
   budgetMinor: number;
+  budgetRangeKey?: string;
   estimatedGuests: number;
+  guestRangeKey?: string;
   weddingStyle: string;
   planningNotes: string;
   phoneNumber?: string;
@@ -41,15 +54,17 @@ const emptyValue: WeddingOnboardingValue = {
 export function WeddingOnboardingForm({ initialValue }: { initialValue?: WeddingOnboardingValue }) {
   const router = useRouter();
   const { text } = useLanguage();
+  const { currency, displayMoney } = useCurrency();
   const [value, setValue] = useState(initialValue ?? emptyValue);
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    if (!value.displayName && value.firstName && value.partnerName) {
-      setValue((current) => ({
-        ...current,
-        displayName: `${current.firstName} & ${current.partnerName}`,
-      }));
+    const displayName = [value.firstName.trim(), value.partnerName.trim()]
+      .filter(Boolean)
+      .join(" & ")
+      .slice(0, 100);
+    if (value.displayName !== displayName) {
+      setValue((current) => ({ ...current, displayName }));
     }
   }, [value.displayName, value.firstName, value.partnerName]);
 
@@ -66,7 +81,11 @@ export function WeddingOnboardingForm({ initialValue }: { initialValue?: Wedding
     try {
       await apiRequest("/api/v1/wedding-profile", {
         method: "PUT",
-        body: JSON.stringify(value),
+        body: JSON.stringify({
+          ...value,
+          budgetRangeKey: value.budgetRangeKey || inferMoneyRange(budgetRanges, value.budgetMinor),
+          guestRangeKey: value.guestRangeKey || inferGuestRange(value.estimatedGuests),
+        }),
       });
       toast.success(text("Wedding details saved."));
       router.push("/dashboard");
@@ -91,7 +110,7 @@ export function WeddingOnboardingForm({ initialValue }: { initialValue?: Wedding
       </div>
       <div className="form-row">
         <label>
-          {text("Your first name")}
+          <FieldLabel required>{text("Your first name")}</FieldLabel>
           <input
             autoComplete="given-name"
             onChange={(event) => update("firstName", event.target.value)}
@@ -100,7 +119,7 @@ export function WeddingOnboardingForm({ initialValue }: { initialValue?: Wedding
           />
         </label>
         <label>
-          {text("Your last name")}
+          <FieldLabel required>{text("Your last name")}</FieldLabel>
           <input
             autoComplete="family-name"
             onChange={(event) => update("lastName", event.target.value)}
@@ -118,7 +137,7 @@ export function WeddingOnboardingForm({ initialValue }: { initialValue?: Wedding
       </div>
       <div className="form-row">
         <label>
-          {text("Partner's name")}
+          <FieldLabel required>{text("Partner's name")}</FieldLabel>
           <input
             onChange={(event) => update("partnerName", event.target.value)}
             required
@@ -126,38 +145,56 @@ export function WeddingOnboardingForm({ initialValue }: { initialValue?: Wedding
           />
         </label>
         <label>
-          {text("Couple display name")}
-          <input
-            onChange={(event) => update("displayName", event.target.value)}
-            required
-            value={value.displayName}
-          />
+          <FieldLabel required>{text("Couple display name")}</FieldLabel>
+          <input maxLength={100} readOnly required value={value.displayName} />
         </label>
       </div>
       <div className="form-row">
         <label>
-          {text("Estimated wedding budget")} (USD)
-          <span className="input-with-prefix">
-            <b>$</b>
-            <input
-              min="1"
-              onChange={(event) =>
-                update("budgetMinor", Math.round(Number(event.target.value) * 100))
-              }
-              required
-              type="number"
-              value={value.budgetMinor ? value.budgetMinor / 100 : ""}
-            />
-          </span>
+          <FieldLabel required>
+            {text("Estimated wedding budget")} ({currency})
+          </FieldLabel>
+          <YesSelect
+            ariaLabel={text("Estimated wedding budget")}
+            onChange={(rangeKey) => {
+              const range = budgetRanges.find((item) => item.id === rangeKey)!;
+              setValue((current) => ({
+                ...current,
+                budgetRangeKey: rangeKey,
+                budgetMinor: moneyRangeValue(range),
+              }));
+            }}
+            options={budgetRanges.map((range) => ({
+              value: range.id,
+              label:
+                range.maxMinor === null
+                  ? `${displayMoney(range.minMinor)}+`
+                  : `${displayMoney(range.minMinor)} – ${displayMoney(range.maxMinor)}`,
+            }))}
+            placeholder={text("Select a budget range")}
+            required
+            value={value.budgetRangeKey || inferMoneyRange(budgetRanges, value.budgetMinor)}
+          />
         </label>
         <label>
-          {text("Estimated guest count")}
-          <input
-            min="1"
-            onChange={(event) => update("estimatedGuests", Number(event.target.value))}
+          <FieldLabel required>{text("Estimated guests")}</FieldLabel>
+          <YesSelect
+            ariaLabel={text("Estimated guests")}
+            onChange={(rangeKey) => {
+              const range = guestRanges.find((item) => item.id === rangeKey)!;
+              setValue((current) => ({
+                ...current,
+                guestRangeKey: rangeKey,
+                estimatedGuests: guestRangeValue(range),
+              }));
+            }}
+            options={guestRanges.map((range) => ({
+              value: range.id,
+              label: range.max === null ? `${range.min}+` : `${range.min} – ${range.max}`,
+            }))}
+            placeholder={text("Select a guest range")}
             required
-            type="number"
-            value={value.estimatedGuests || ""}
+            value={value.guestRangeKey || inferGuestRange(value.estimatedGuests)}
           />
         </label>
       </div>
@@ -182,6 +219,7 @@ export function WeddingOnboardingForm({ initialValue }: { initialValue?: Wedding
       <label>
         {text("Planning notes")}
         <textarea
+          maxLength={2000}
           onChange={(event) => update("planningNotes", event.target.value)}
           placeholder={text(
             "Accessibility, cultural traditions, priorities or anything your team should know",
@@ -189,9 +227,10 @@ export function WeddingOnboardingForm({ initialValue }: { initialValue?: Wedding
           rows={4}
           value={value.planningNotes}
         />
+        <CharacterCount value={value.planningNotes} max={2000} />
       </label>
       <label>
-        {text("Wedding date")}
+        <FieldLabel required>{text("Wedding date")}</FieldLabel>
         <input
           min={moment().format("YYYY-MM-DD")}
           onChange={(event) => update("weddingDate", event.target.value)}
@@ -202,7 +241,7 @@ export function WeddingOnboardingForm({ initialValue }: { initialValue?: Wedding
       </label>
       <div className="form-row">
         <label>
-          {text("Wedding venue")}
+          <FieldLabel required>{text("Wedding venue")}</FieldLabel>
           <input
             onChange={(event) => update("venue", event.target.value)}
             required
@@ -210,7 +249,7 @@ export function WeddingOnboardingForm({ initialValue }: { initialValue?: Wedding
           />
         </label>
         <label>
-          {text("Wedding location")}
+          <FieldLabel required>{text("Wedding location")}</FieldLabel>
           <input
             onChange={(event) => update("location", event.target.value)}
             placeholder={text("City or area")}

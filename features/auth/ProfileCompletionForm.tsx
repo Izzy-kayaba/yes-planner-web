@@ -9,6 +9,7 @@ import { toast } from "sonner";
 import { apiRequest } from "@/lib/api/client";
 import { Button } from "@/components/ui/Button";
 import { useLanguage } from "@/components/providers/LanguageProvider";
+import { FieldLabel } from "@/components/forms/FieldLabel";
 
 export function ProfileCompletionForm({
   firstName: initialFirstName,
@@ -58,7 +59,7 @@ export function ProfileCompletionForm({
     <form className="auth-form" onSubmit={submit}>
       <div className="form-row">
         <label>
-          {text("First name")}
+          <FieldLabel required>{text("First name")}</FieldLabel>
           <input
             required
             value={firstName}
@@ -66,12 +67,12 @@ export function ProfileCompletionForm({
           />
         </label>
         <label>
-          {text("Last name")}
+          <FieldLabel required>{text("Last name")}</FieldLabel>
           <input required value={lastName} onChange={(event) => setLastName(event.target.value)} />
         </label>
       </div>
       <label>
-        {text("Phone number")}
+        <FieldLabel required>{text("Phone number")}</FieldLabel>
         <PhoneInput
           className="phone-input"
           defaultCountry={defaultCountry}
@@ -79,6 +80,7 @@ export function ProfileCompletionForm({
           countryCallingCodeEditable={false}
           value={phoneNumber}
           onChange={(value) => setPhoneNumber(value ?? "")}
+          required
         />
       </label>
       <p className="form-hint">

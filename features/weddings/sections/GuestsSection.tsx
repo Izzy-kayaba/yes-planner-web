@@ -81,7 +81,7 @@ export function GuestsSection() {
           },
         ]}
       />
-      <section className="panel table-panel">
+      <section className="panel table-panel guest-table-panel">
         <div className="table-toolbar">
           <SearchField value={query} onChange={setQuery} placeholder="Search guests" />
           <div>

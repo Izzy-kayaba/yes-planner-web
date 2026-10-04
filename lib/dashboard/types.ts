@@ -8,7 +8,9 @@ export type WeddingProfile = {
   venue: string;
   location: string;
   budgetMinor: number;
+  budgetRangeKey?: string;
   estimatedGuests: number;
+  guestRangeKey?: string;
   weddingStyle: string;
   planningNotes: string;
 };
