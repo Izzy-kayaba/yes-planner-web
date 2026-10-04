@@ -796,7 +796,6 @@ const frenchByEnglish: Record<string, string> = {
   "Invalid image.": "Image invalide.",
   "Johannesburg, Gauteng or nationwide": "Johannesburg, Gauteng ou national",
   "Last name": "Nom",
-  "Loading messages…": "Chargement…",
   "Manage your public profile, enquiries and active wedding workspaces.":
     "Gérez votre profil, vos demandes et vos projets.",
   Me: "Moi",
