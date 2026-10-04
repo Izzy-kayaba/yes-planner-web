@@ -189,7 +189,7 @@
 .floating-card span,
 .floating-card small {
   color: #756965;
-  font-size: 12px;
+  font-size: 14px;
 }
 .floating-card strong {
   font-family: var(--display);

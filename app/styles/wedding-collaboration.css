@@ -43,7 +43,7 @@
   margin: 0;
 }
 .messages-panel aside strong {
-  font-size: 12px;
+  font-size: 14px;
 }
 .messages-panel aside small,
 .messages-panel aside em {
@@ -111,7 +111,7 @@
   max-width: 68%;
   padding: 12px 15px;
   border-radius: 13px;
-  font-size: 12px;
+  font-size: 14px;
   line-height: 1.6;
 }
 .message.received {
@@ -246,7 +246,7 @@
 }
 .note-card p {
   color: var(--muted);
-  font-size: 12px;
+  font-size: 14px;
   line-height: 1.7;
 }
 .note-card small {

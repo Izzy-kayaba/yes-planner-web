@@ -301,7 +301,7 @@
 .yes-select-compact .yes-select-trigger {
   min-height: 42px;
   padding: 0 7px;
-  font-size: 12px;
+  font-size: 14px;
 }
 .yes-select-compact .yes-select-value {
   gap: 7px;
@@ -320,7 +320,7 @@
 .yes-select-compact .yes-select-options button {
   min-height: 42px;
   padding: 9px;
-  font-size: 12px;
+  font-size: 14px;
 }
 .alert {
   display: flex;
@@ -365,7 +365,7 @@
 .character-count {
   justify-self: end;
   color: var(--muted);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 600;
 }
 .character-count.needs-more {
