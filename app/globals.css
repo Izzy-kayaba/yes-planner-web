@@ -372,7 +372,7 @@
   color: #a52b3e;
 }
 
-@media (max-width: 374px) {
+@media (max-width: 325px) {
   :root {
     --font-size-14: 12px;
   }
