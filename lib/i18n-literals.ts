@@ -852,6 +852,63 @@ const frenchByEnglish: Record<string, string> = {
   "Sage Green": "Vert sauge",
   Gold: "Doré",
   "Dusty Blue": "Bleu poudré",
+  WEDDINGS: "MARIAGES",
+  CONCEPTS: "CONCEPTS",
+  "Shepstone Gardens": "Shepstone Gardens",
+  Johannesburg: "Johannesburg",
+  "Ruth & Izzy": "Ruth & Izzy",
+  "Manage your organisation profile and the weddings shared with your planning team.":
+    "Gérez votre profil et vos mariages partagés.",
+  "Edit planner profile": "Modifier le profil",
+  "Shared client workspaces": "Espaces clients partagés",
+  "Organisation members": "Membres de l’organisation",
+  "Years in wedding planning": "Années dans le mariage",
+  "New wedding": "Nouveau mariage",
+  "Browse real vendor profiles, portfolios and services, then send a work request.":
+    "Consultez les profils et envoyez une demande.",
+  "Active identities": "Identités actives",
+  "Amount (USD)": "Montant (USD)",
+  "Ask Gogo about the family blessing and send Lerato the final English translation.":
+    "Demander la bénédiction familiale à Gogo et envoyer la traduction à Lerato.",
+  "Authentication required.": "Connexion requise.",
+  "Beautiful Day Events": "Beautiful Day Events",
+  "Ceremony readings": "Lectures de cérémonie",
+  "Committed amount (USD)": "Montant engagé (USD)",
+  "Complete these details before opening wedding-specific planning tools. You can update them later.":
+    "Complétez ces informations avant d’accéder aux outils. Vous pourrez les modifier.",
+  "Complete your profile and phone number before continuing.":
+    "Complétez votre profil et votre téléphone.",
+  "Couple accounts": "Comptes couples",
+  "Create the organisation profile your team will use to manage client weddings.":
+    "Créez le profil utilisé par votre équipe.",
+  "Database-backed records": "Données de la base",
+  "Golden-hour portraits near the stone arches.": "Portraits au coucher du soleil près des arches.",
+  Halaal: "Halal",
+  "Keep the profile couples see accurate and show your strongest recent work.":
+    "Gardez votre profil à jour et montrez vos meilleurs travaux.",
+  "Loading dashboard": "Chargement du tableau de bord",
+  "Lumen & Lace Studio": "Lumen & Lace Studio",
+  "MongoDB users": "Utilisateurs MongoDB",
+  "Our celebration": "Notre célébration",
+  "Photo ideas": "Idées photo",
+  "Planned budget (USD)": "Budget prévu (USD)",
+  "Planner workspace": "Espace planificateur",
+  "Planners and vendors": "Planificateurs et prestataires",
+  "Price (USD)": "Prix (USD)",
+  "Professional accounts": "Comptes professionnels",
+  "Protected platform oversight for users, roles and application activity.":
+    "Supervision sécurisée des utilisateurs, rôles et activités.",
+  "Public profile and portfolio": "Profil public et portfolio",
+  "Registered users": "Utilisateurs inscrits",
+  "Tell couples what you offer and show them the work that represents your business.":
+    "Présentez vos services et vos réalisations.",
+  "Things to ask the venue": "Questions pour le lieu",
+  "Vendor account": "Compte prestataire",
+  "Vendor workspace": "Espace prestataire",
+  "Wedding details": "Détails du mariage",
+  "Wet-weather plan, candles and vendor load-in entrance.":
+    "Plan pluie, bougies et entrée des prestataires.",
+  "Workspace records": "Données des espaces",
   characters: "caractères",
   minimum: "minimum",
 };

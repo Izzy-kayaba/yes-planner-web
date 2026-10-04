@@ -71,6 +71,7 @@ export function EntityDialog({
             {field.type === "textarea" ? (
               <textarea
                 className="min-h-28 p-3 text-sm"
+                id={field.name}
                 name={field.name}
                 required={field.required}
                 defaultValue={defaults[field.name]}
@@ -80,6 +81,7 @@ export function EntityDialog({
               <YesSelect
                 ariaLabel={text(field.label)}
                 defaultValue={String(defaults[field.name] ?? "")}
+                id={field.name}
                 name={field.name}
                 required={field.required}
                 placeholder={text("Select an option")}
@@ -92,6 +94,7 @@ export function EntityDialog({
             ) : (
               <input
                 className="h-11 px-3 text-sm"
+                id={field.name}
                 name={field.name}
                 type={field.type ?? "text"}
                 required={field.required}

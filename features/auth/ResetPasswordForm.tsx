@@ -50,6 +50,8 @@ export function ResetPasswordForm({ token, invalid }: { token?: string; invalid:
       <label>
         <FieldLabel required>{text("New password")}</FieldLabel>
         <PasswordInput
+          id="reset-password"
+          name="password"
           required
           autoComplete="new-password"
           value={password}
@@ -59,6 +61,8 @@ export function ResetPasswordForm({ token, invalid }: { token?: string; invalid:
       <label>
         <FieldLabel required>{text("Confirm password")}</FieldLabel>
         <PasswordInput
+          id="reset-password-confirmation"
+          name="passwordConfirmation"
           required
           autoComplete="new-password"
           value={confirmation}

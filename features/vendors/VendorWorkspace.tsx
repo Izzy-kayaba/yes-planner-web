@@ -108,7 +108,8 @@ export function VendorWorkspace({
                   <p>
                     <strong>{request.coupleName}</strong>
                     <small>
-                      {formatDate(request.weddingDate, "D MMM YYYY", language)} · {request.service}
+                      {formatDate(request.weddingDate, "D MMM YYYY", language)} ·{" "}
+                      {text(request.service)}
                     </small>
                     {request.message && <small>{request.message}</small>}
                   </p>

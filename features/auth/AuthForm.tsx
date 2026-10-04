@@ -161,6 +161,8 @@ export function AuthForm({ mode }: { mode: "login" | "register" }) {
             <FieldLabel required>{t("auth.firstName")}</FieldLabel>
             <input
               {...register("firstName")}
+              id="auth-first-name"
+              name="firstName"
               aria-invalid={Boolean(errors.firstName)}
               placeholder="Alex"
               autoComplete="given-name"
@@ -174,6 +176,8 @@ export function AuthForm({ mode }: { mode: "login" | "register" }) {
             <FieldLabel required>{t("auth.lastName")}</FieldLabel>
             <input
               {...register("lastName")}
+              id="auth-last-name"
+              name="lastName"
               aria-invalid={Boolean(errors.lastName)}
               placeholder="Morgan"
               autoComplete="family-name"
@@ -190,6 +194,8 @@ export function AuthForm({ mode }: { mode: "login" | "register" }) {
         <FieldLabel required>{t("auth.email")}</FieldLabel>
         <input
           {...register("email")}
+          id="auth-email"
+          name="email"
           aria-invalid={Boolean(errors.email)}
           type="email"
           placeholder="you@example.com"
@@ -208,6 +214,8 @@ export function AuthForm({ mode }: { mode: "login" | "register" }) {
             render={({ field }) => (
               <PhoneInput
                 {...field}
+                id="auth-phone-number"
+                name="phoneNumber"
                 className="phone-input"
                 defaultCountry={defaultCountry}
                 international
@@ -232,6 +240,8 @@ export function AuthForm({ mode }: { mode: "login" | "register" }) {
         </span>
         <PasswordInput
           {...register("password")}
+          id="auth-password"
+          name="password"
           aria-invalid={Boolean(errors.password)}
           placeholder="••••••••••••"
           autoComplete={isRegister ? "new-password" : "current-password"}

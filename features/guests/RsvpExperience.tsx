@@ -115,8 +115,8 @@ export function RsvpExperience() {
           </div>
           <i />
           <div>
-            <span>Shepstone Gardens</span>
-            <strong>Johannesburg</strong>
+            <span>{text("Shepstone Gardens")}</span>
+            <strong>{text("Johannesburg")}</strong>
             <small>{text("Dress: Garden formal")}</small>
           </div>
         </div>
@@ -158,6 +158,8 @@ export function RsvpExperience() {
                 <YesSelect
                   ariaLabel={text("Meal preference")}
                   invalid={Boolean(errors.mealPreference)}
+                  id="rsvp-meal-preference"
+                  name="mealPreference"
                   onChange={(value) => setValue("mealPreference", value, { shouldValidate: true })}
                   options={[
                     { value: "Standard menu", label: text("Standard menu") },
@@ -179,6 +181,8 @@ export function RsvpExperience() {
                 {text("Dietary notes")}
                 <textarea
                   {...register("dietaryNotes")}
+                  id="rsvp-dietary-notes"
+                  name="dietaryNotes"
                   aria-invalid={Boolean(errors.dietaryNotes)}
                   maxLength={500}
                   placeholder={text("Allergies or requirements we should know about")}

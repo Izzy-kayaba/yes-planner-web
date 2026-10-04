@@ -105,15 +105,21 @@ export function VendorOnboardingForm({ initialValue }: { initialValue?: VendorOn
       toast.error(text("Select at least one service."));
       return;
     }
+    const startingPriceRangeKey =
+      value.startingPriceRangeKey ||
+      inferMoneyRange(vendorPriceRanges, value.startingPriceMinor) ||
+      vendorPriceRanges[0].id;
+    const startingPriceRange = vendorPriceRanges.find(
+      (range) => range.id === startingPriceRangeKey,
+    )!;
     setSaving(true);
     try {
       await apiRequest("/api/v1/vendor-profile", {
         method: "PUT",
         body: JSON.stringify({
           ...value,
-          startingPriceRangeKey:
-            value.startingPriceRangeKey ||
-            inferMoneyRange(vendorPriceRanges, value.startingPriceMinor),
+          startingPriceMinor: moneyRangeValue(startingPriceRange),
+          startingPriceRangeKey,
         }),
       });
       await Promise.all(removedImages.map((image) => removeImage(image).catch(() => undefined)));
@@ -143,6 +149,8 @@ export function VendorOnboardingForm({ initialValue }: { initialValue?: VendorOn
         <label>
           <FieldLabel required>{text("Business name")}</FieldLabel>
           <input
+            id="vendor-business-name"
+            name="businessName"
             onChange={(event) => update("businessName", event.target.value)}
             required
             value={value.businessName}
@@ -151,6 +159,8 @@ export function VendorOnboardingForm({ initialValue }: { initialValue?: VendorOn
         <label>
           <FieldLabel required>{text("Contact name")}</FieldLabel>
           <input
+            id="vendor-contact-name"
+            name="contactName"
             onChange={(event) => update("contactName", event.target.value)}
             required
             value={value.contactName}
@@ -160,8 +170,10 @@ export function VendorOnboardingForm({ initialValue }: { initialValue?: VendorOn
       <label>
         <FieldLabel required>{text("Business description")}</FieldLabel>
         <textarea
+          id="vendor-description"
           maxLength={2000}
           minLength={30}
+          name="bio"
           onChange={(event) => update("bio", event.target.value)}
           placeholder={text(
             "Describe your approach, experience and what makes your service special.",
@@ -199,6 +211,8 @@ export function VendorOnboardingForm({ initialValue }: { initialValue?: VendorOn
         <label>
           <FieldLabel required>{text("Service area")}</FieldLabel>
           <input
+            id="vendor-service-area"
+            name="serviceArea"
             onChange={(event) => update("serviceArea", event.target.value)}
             placeholder={text("Johannesburg, Gauteng or nationwide")}
             required
@@ -211,6 +225,8 @@ export function VendorOnboardingForm({ initialValue }: { initialValue?: VendorOn
           </FieldLabel>
           <YesSelect
             ariaLabel={text("Starting price range")}
+            id="vendor-price-range"
+            name="startingPriceRangeKey"
             onChange={(rangeKey) => {
               const range = vendorPriceRanges.find((item) => item.id === rangeKey)!;
               setValue((current) => ({
@@ -239,6 +255,8 @@ export function VendorOnboardingForm({ initialValue }: { initialValue?: VendorOn
         <label>
           {text("Website")}
           <input
+            id="vendor-website"
+            name="website"
             onChange={(event) => update("website", event.target.value)}
             placeholder="https://"
             type="url"
@@ -248,6 +266,8 @@ export function VendorOnboardingForm({ initialValue }: { initialValue?: VendorOn
         <label>
           {text("Instagram handle")}
           <input
+            id="vendor-instagram"
+            name="instagramHandle"
             onChange={(event) => update("instagramHandle", event.target.value)}
             placeholder="@business"
             value={value.instagramHandle}
@@ -275,6 +295,8 @@ export function VendorOnboardingForm({ initialValue }: { initialValue?: VendorOn
           <input
             accept="image/jpeg,image/png,image/webp"
             hidden
+            id="vendor-profile-image"
+            name="profileImage"
             onChange={selectProfileImage}
             type="file"
           />
@@ -305,6 +327,8 @@ export function VendorOnboardingForm({ initialValue }: { initialValue?: VendorOn
               <input
                 accept="image/jpeg,image/png,image/webp"
                 hidden
+                id="vendor-portfolio-images"
+                name="portfolioImages"
                 multiple
                 onChange={addPortfolioImages}
                 type="file"

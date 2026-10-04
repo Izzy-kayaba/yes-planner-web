@@ -68,6 +68,8 @@ export function LiveMarketplace({ vendors }: { vendors: MarketplaceVendor[] }) {
         <label>
           <Search size={16} />
           <input
+            id="marketplace-search"
+            name="marketplaceSearch"
             onChange={(event) => setQuery(event.target.value)}
             placeholder={text("Search vendors")}
             value={query}
@@ -75,6 +77,8 @@ export function LiveMarketplace({ vendors }: { vendors: MarketplaceVendor[] }) {
         </label>
         <YesSelect
           ariaLabel={text("Price range")}
+          id="marketplace-price-range"
+          name="priceRange"
           onChange={setPriceRange}
           options={[
             { value: "All", label: text("All prices") },

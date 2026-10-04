@@ -47,6 +47,8 @@ export function Marketplace() {
         <label>
           <Search size={16} />
           <input
+            id="demo-marketplace-search"
+            name="marketplaceSearch"
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             placeholder={text("Search photographers, florists, venues…")}
@@ -100,6 +102,8 @@ export function Marketplace() {
           </h3>
         </div>
         <YesSelect
+          id="demo-marketplace-sort"
+          name="marketplaceSort"
           ariaLabel={text("Sort vendors")}
           className="marketplace-sort"
           options={["Best match", "Rating", "Name"].map((item) => ({

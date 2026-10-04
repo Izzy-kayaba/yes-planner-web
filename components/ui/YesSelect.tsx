@@ -12,6 +12,7 @@ export function YesSelect({
   options,
   placeholder = "Select an option",
   ariaLabel,
+  id,
   name,
   disabled = false,
   invalid = false,
@@ -26,6 +27,7 @@ export function YesSelect({
   options: YesSelectOption[];
   placeholder?: string;
   ariaLabel: string;
+  id?: string;
   name?: string;
   disabled?: boolean;
   invalid?: boolean;
@@ -35,7 +37,9 @@ export function YesSelect({
   className?: string;
   onChange?: (value: string) => void;
 }) {
-  const generatedId = useId();
+  const generatedId = useId().replaceAll(":", "");
+  const controlId = id ?? `yes-select-${generatedId}`;
+  const controlName = name ?? controlId;
   const root = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState(false);
   const [internalValue, setInternalValue] = useState(defaultValue);
@@ -76,9 +80,10 @@ export function YesSelect({
 
   return (
     <div className={cn("yes-select", compact && "yes-select-compact", className)} ref={root}>
-      {name && <input name={name} type="hidden" value={selectedValue} />}
+      <input id={`${controlId}-value`} name={controlName} type="hidden" value={selectedValue} />
       <button
-        aria-controls={`${generatedId}-options`}
+        id={controlId}
+        aria-controls={`${controlId}-options`}
         aria-expanded={open}
         aria-haspopup="listbox"
         aria-invalid={invalid || undefined}
@@ -99,7 +104,7 @@ export function YesSelect({
         <ChevronDown aria-hidden="true" className="yes-select-chevron" size={16} />
       </button>
       {open && (
-        <div className="yes-select-options" id={`${generatedId}-options`} role="listbox">
+        <div className="yes-select-options" id={`${controlId}-options`} role="listbox">
           {options.map((option) => (
             <button
               aria-selected={option.value === selectedValue}

@@ -89,6 +89,8 @@ export function DocumentsSection() {
         <div>
           <input
             className="hidden"
+            id="document-upload"
+            name="documentUpload"
             ref={fileInput}
             type="file"
             onChange={(event) => void receiveFile(event.target.files?.[0])}

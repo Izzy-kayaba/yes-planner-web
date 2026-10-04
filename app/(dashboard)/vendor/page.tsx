@@ -110,7 +110,7 @@ export default async function VendorPage() {
           <div className="panel-header">
             <div>
               <p className="eyebrow">{text("Next booking")}</p>
-              <h3>Ruth & Izzy</h3>
+              <h3>{text("Ruth & Izzy")}</h3>
             </div>
             <StatusPill tone="sage">Confirmed</StatusPill>
           </div>
@@ -122,7 +122,7 @@ export default async function VendorPage() {
               2026
             </span>
             <div>
-              <p>Shepstone Gardens</p>
+              <p>{text("Shepstone Gardens")}</p>
               <small>{text("Johannesburg · 12:30 arrival")}</small>
             </div>
           </div>
@@ -155,6 +155,8 @@ export default async function VendorPage() {
             ariaLabel={text("Performance period")}
             className="performance-period"
             defaultValue="Last 6 months"
+            id="vendor-performance-period"
+            name="performancePeriod"
             options={["Last 6 months", "Last 12 months", "This year"].map((item) => ({
               value: item,
               label: text(item),

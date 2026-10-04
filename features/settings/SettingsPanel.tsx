@@ -214,6 +214,7 @@ export function SettingsPanel() {
                 <label>
                   <FieldLabel required>{t("auth.firstName")}</FieldLabel>
                   <input
+                    id="settings-first-name"
                     name="firstName"
                     onChange={(event) => updateProfile("firstName", event.target.value)}
                     required
@@ -223,6 +224,7 @@ export function SettingsPanel() {
                 <label>
                   <FieldLabel required>{t("auth.lastName")}</FieldLabel>
                   <input
+                    id="settings-last-name"
                     name="lastName"
                     onChange={(event) => updateProfile("lastName", event.target.value)}
                     required
@@ -232,10 +234,19 @@ export function SettingsPanel() {
               </div>
               <label>
                 <FieldLabel required>{t("auth.email")}</FieldLabel>
-                <input name="email" readOnly required type="email" value={profile.email} />
+                <input
+                  id="settings-email"
+                  name="email"
+                  readOnly
+                  required
+                  type="email"
+                  value={profile.email}
+                />
               </label>
               <label className="settings-toggle-row">
                 <input
+                  id="settings-whatsapp-notifications"
+                  name="whatsappNotifications"
                   checked={profile.whatsappNotifications}
                   onChange={(event) => updateProfile("whatsappNotifications", event.target.checked)}
                   type="checkbox"
@@ -252,6 +263,8 @@ export function SettingsPanel() {
                 <PhoneInput
                   className="phone-input"
                   defaultCountry="ZA"
+                  id="settings-phone-number"
+                  name="phoneNumber"
                   international
                   countryCallingCodeEditable={false}
                   onChange={(value) => updateProfile("phoneNumber", value ?? "")}
@@ -339,6 +352,8 @@ function PreferenceList({ items, storageKey }: { items: Preference[]; storageKey
           </span>
           <input
             className="settings-checkbox size-4"
+            id={`${storageKey}-${item.id}`}
+            name={`${storageKey}-${item.id}`}
             type="checkbox"
             checked={Boolean(enabled[item.id])}
             onChange={(event) => updatePreference(item, event.target.checked)}

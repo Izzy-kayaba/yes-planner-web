@@ -61,6 +61,8 @@ export function ProfileCompletionForm({
         <label>
           <FieldLabel required>{text("First name")}</FieldLabel>
           <input
+            id="profile-first-name"
+            name="firstName"
             required
             value={firstName}
             onChange={(event) => setFirstName(event.target.value)}
@@ -68,7 +70,13 @@ export function ProfileCompletionForm({
         </label>
         <label>
           <FieldLabel required>{text("Last name")}</FieldLabel>
-          <input required value={lastName} onChange={(event) => setLastName(event.target.value)} />
+          <input
+            id="profile-last-name"
+            name="lastName"
+            required
+            value={lastName}
+            onChange={(event) => setLastName(event.target.value)}
+          />
         </label>
       </div>
       <label>
@@ -77,6 +85,8 @@ export function ProfileCompletionForm({
           className="phone-input"
           defaultCountry={defaultCountry}
           international
+          id="profile-phone-number"
+          name="phoneNumber"
           countryCallingCodeEditable={false}
           value={phoneNumber}
           onChange={(value) => setPhoneNumber(value ?? "")}

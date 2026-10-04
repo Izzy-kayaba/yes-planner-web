@@ -142,12 +142,12 @@ export default async function HomePage() {
           <span>
             VOGUE
             <br />
-            <small>WEDDINGS</small>
+            <small>{text("WEDDINGS")}</small>
           </span>
           <span>
             WEDDING
             <br />
-            <small>CONCEPTS</small>
+            <small>{text("CONCEPTS")}</small>
           </span>
           <span>THE KNOT</span>
           <span>BRIDES</span>

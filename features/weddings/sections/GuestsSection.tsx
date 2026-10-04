@@ -87,6 +87,8 @@ export function GuestsSection() {
           <div>
             <YesSelect
               ariaLabel={text("Filter guests by RSVP")}
+              id="guest-status-filter"
+              name="guestStatusFilter"
               className="guest-status-filter"
               options={["All", "Attending", "Pending", "Declined"].map((item) => ({
                 value: item,
@@ -110,7 +112,7 @@ export function GuestsSection() {
           <div className="table-head">
             <span>{text("Guest")}</span>
             <span>{text("Group")}</span>
-            <span>RSVP</span>
+            <span>{text("RSVP")}</span>
             <span>{text("Meal")}</span>
             <span>{text("Table")}</span>
             <span />

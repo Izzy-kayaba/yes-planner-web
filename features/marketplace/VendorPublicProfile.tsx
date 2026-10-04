@@ -182,6 +182,8 @@ export function VendorPublicProfile({
             <FieldLabel required>{text("Service")}</FieldLabel>
             <YesSelect
               ariaLabel={text("Service")}
+              id="vendor-request-service"
+              name="service"
               options={vendor.services.map((item) => ({ value: item, label: text(item) }))}
               required
               value={service}
@@ -191,7 +193,9 @@ export function VendorPublicProfile({
           <label>
             {text("Message")}
             <textarea
+              id="vendor-request-message"
               maxLength={1000}
+              name="message"
               onChange={(event) => setMessage(event.target.value)}
               placeholder={text("Tell the vendor what you need for your wedding.")}
               rows={4}

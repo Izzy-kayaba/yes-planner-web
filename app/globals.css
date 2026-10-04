@@ -183,12 +183,16 @@
   @apply border border-yes-soft bg-transparent text-yes-ink hover:bg-yes-soft;
 }
 :root[data-theme="dark"] .landing .button-ghost {
-  border-color: color-mix(in srgb, white 42%, transparent);
-  background: rgba(255, 255, 255, 0.08);
-  color: #fff;
+  color: var(--wine-deep);
+  background: var(--surface);
+  border-color: var(--line);
+  box-shadow: var(--shadow-soft);
 }
 :root[data-theme="dark"] .landing .button-ghost:hover {
-  background: rgba(255, 255, 255, 0.16);
+  color: var(--surface);
+  background: var(--wine-deep);
+  border-color: var(--wine-deep);
+  box-shadow: var(--shadow);
 }
 .button-light {
   @apply bg-white text-yes-wine-deep hover:bg-yes-blush;

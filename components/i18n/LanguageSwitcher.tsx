@@ -19,6 +19,8 @@ export function LanguageSwitcher({ compact = false }: { compact?: boolean }) {
     <div className={`language-switcher${compact ? " language-switcher-compact" : ""}`}>
       <YesSelect
         ariaLabel={t("settings.preferredLanguage")}
+        id={compact ? "language-compact" : "language"}
+        name="language"
         compact={compact}
         leadingIcon={<Globe2 size={15} aria-hidden="true" />}
         options={[

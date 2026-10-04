@@ -118,6 +118,8 @@ export function MessagesWorkspace() {
         <label className="table-search">
           <Search size={15} />
           <input
+            id="conversation-search"
+            name="conversationSearch"
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             placeholder={text("Search conversations")}
@@ -174,7 +176,9 @@ export function MessagesWorkspace() {
           <form className="message-compose" onSubmit={send}>
             <input
               aria-label={text("Message")}
+              id="message-body"
               maxLength={2000}
+              name="messageBody"
               onChange={(event) => setBody(event.target.value)}
               placeholder={text("Write a message…")}
               value={body}

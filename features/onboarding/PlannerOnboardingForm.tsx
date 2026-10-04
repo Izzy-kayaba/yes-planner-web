@@ -59,6 +59,8 @@ export function PlannerOnboardingForm({ initialValue }: { initialValue: PlannerO
         <label>
           <FieldLabel required>{text("Organisation name")}</FieldLabel>
           <input
+            id="planner-organisation-name"
+            name="organisationName"
             required
             value={value.organisationName}
             onChange={(event) => update("organisationName", event.target.value)}
@@ -67,6 +69,8 @@ export function PlannerOnboardingForm({ initialValue }: { initialValue: PlannerO
         <label>
           <FieldLabel required>{text("Contact name")}</FieldLabel>
           <input
+            id="planner-contact-name"
+            name="contactName"
             required
             value={value.contactName}
             onChange={(event) => update("contactName", event.target.value)}
@@ -76,8 +80,10 @@ export function PlannerOnboardingForm({ initialValue }: { initialValue: PlannerO
       <label>
         <FieldLabel required>{text("Organisation description")}</FieldLabel>
         <textarea
+          id="planner-description"
           maxLength={2000}
           minLength={30}
+          name="bio"
           required
           rows={5}
           value={value.bio}
@@ -88,6 +94,8 @@ export function PlannerOnboardingForm({ initialValue }: { initialValue: PlannerO
       <label>
         <FieldLabel required>{text("Service area")}</FieldLabel>
         <input
+          id="planner-service-area"
+          name="serviceArea"
           required
           value={value.serviceArea}
           onChange={(event) => update("serviceArea", event.target.value)}
@@ -97,7 +105,9 @@ export function PlannerOnboardingForm({ initialValue }: { initialValue: PlannerO
         <label>
           <FieldLabel required>{text("Team size")}</FieldLabel>
           <input
+            id="planner-team-size"
             min="1"
+            name="teamSize"
             required
             type="number"
             value={value.teamSize || ""}
@@ -107,7 +117,9 @@ export function PlannerOnboardingForm({ initialValue }: { initialValue: PlannerO
         <label>
           <FieldLabel required>{text("Years of experience")}</FieldLabel>
           <input
+            id="planner-years-experience"
             min="0"
+            name="yearsExperience"
             required
             type="number"
             value={value.yearsExperience}
@@ -118,6 +130,8 @@ export function PlannerOnboardingForm({ initialValue }: { initialValue: PlannerO
       <label>
         {text("Website")}
         <input
+          id="planner-website"
+          name="website"
           type="url"
           placeholder="https://"
           value={value.website}

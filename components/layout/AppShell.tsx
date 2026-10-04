@@ -282,6 +282,8 @@ export function AppShell({
             <form className="quick-search" onSubmit={submitSearch}>
               <Search size={16} aria-hidden="true" />
               <input
+                id="global-search"
+                name="globalSearch"
                 ref={searchInput}
                 value={search}
                 onChange={(event) => setSearch(event.target.value)}

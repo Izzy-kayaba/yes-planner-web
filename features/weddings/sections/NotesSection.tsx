@@ -96,8 +96,8 @@ export function NotesSection() {
               </button>
             </div>
             <span>✦</span>
-            <h3>{note.title}</h3>
-            <p>{note.body}</p>
+            <h3>{text(note.title)}</h3>
+            <p>{text(note.body)}</p>
             <small>{text(note.date)}</small>
           </article>
         ))}

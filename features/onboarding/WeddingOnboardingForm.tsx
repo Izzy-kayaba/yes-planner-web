@@ -77,14 +77,24 @@ export function WeddingOnboardingForm({ initialValue }: { initialValue?: Wedding
 
   async function save(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    const budgetRangeKey =
+      value.budgetRangeKey ||
+      inferMoneyRange(budgetRanges, value.budgetMinor) ||
+      budgetRanges[0].id;
+    const guestRangeKey =
+      value.guestRangeKey || inferGuestRange(value.estimatedGuests) || guestRanges[0].id;
+    const budgetRange = budgetRanges.find((range) => range.id === budgetRangeKey)!;
+    const guestRange = guestRanges.find((range) => range.id === guestRangeKey)!;
     setSaving(true);
     try {
       await apiRequest("/api/v1/wedding-profile", {
         method: "PUT",
         body: JSON.stringify({
           ...value,
-          budgetRangeKey: value.budgetRangeKey || inferMoneyRange(budgetRanges, value.budgetMinor),
-          guestRangeKey: value.guestRangeKey || inferGuestRange(value.estimatedGuests),
+          budgetMinor: moneyRangeValue(budgetRange),
+          budgetRangeKey,
+          estimatedGuests: guestRangeValue(guestRange),
+          guestRangeKey,
         }),
       });
       toast.success(text("Wedding details saved."));
@@ -112,6 +122,8 @@ export function WeddingOnboardingForm({ initialValue }: { initialValue?: Wedding
         <label>
           <FieldLabel required>{text("Your first name")}</FieldLabel>
           <input
+            id="wedding-first-name"
+            name="firstName"
             autoComplete="given-name"
             onChange={(event) => update("firstName", event.target.value)}
             required
@@ -121,6 +133,8 @@ export function WeddingOnboardingForm({ initialValue }: { initialValue?: Wedding
         <label>
           <FieldLabel required>{text("Your last name")}</FieldLabel>
           <input
+            id="wedding-last-name"
+            name="lastName"
             autoComplete="family-name"
             onChange={(event) => update("lastName", event.target.value)}
             required
@@ -139,6 +153,8 @@ export function WeddingOnboardingForm({ initialValue }: { initialValue?: Wedding
         <label>
           <FieldLabel required>{text("Partner's name")}</FieldLabel>
           <input
+            id="wedding-partner-name"
+            name="partnerName"
             onChange={(event) => update("partnerName", event.target.value)}
             required
             value={value.partnerName}
@@ -146,7 +162,14 @@ export function WeddingOnboardingForm({ initialValue }: { initialValue?: Wedding
         </label>
         <label>
           <FieldLabel required>{text("Couple display name")}</FieldLabel>
-          <input maxLength={100} readOnly required value={value.displayName} />
+          <input
+            id="wedding-display-name"
+            maxLength={100}
+            name="displayName"
+            readOnly
+            required
+            value={value.displayName}
+          />
         </label>
       </div>
       <div className="form-row">
@@ -156,6 +179,8 @@ export function WeddingOnboardingForm({ initialValue }: { initialValue?: Wedding
           </FieldLabel>
           <YesSelect
             ariaLabel={text("Estimated wedding budget")}
+            id="wedding-budget-range"
+            name="budgetRangeKey"
             onChange={(rangeKey) => {
               const range = budgetRanges.find((item) => item.id === rangeKey)!;
               setValue((current) => ({
@@ -180,6 +205,8 @@ export function WeddingOnboardingForm({ initialValue }: { initialValue?: Wedding
           <FieldLabel required>{text("Estimated guests")}</FieldLabel>
           <YesSelect
             ariaLabel={text("Estimated guests")}
+            id="wedding-guest-range"
+            name="guestRangeKey"
             onChange={(rangeKey) => {
               const range = guestRanges.find((item) => item.id === rangeKey)!;
               setValue((current) => ({
@@ -194,7 +221,9 @@ export function WeddingOnboardingForm({ initialValue }: { initialValue?: Wedding
             }))}
             placeholder={text("Select a guest range")}
             required
-            value={value.guestRangeKey || inferGuestRange(value.estimatedGuests)}
+            value={
+              value.guestRangeKey || inferGuestRange(value.estimatedGuests) || guestRanges[0].id
+            }
           />
         </label>
       </div>
@@ -202,6 +231,8 @@ export function WeddingOnboardingForm({ initialValue }: { initialValue?: Wedding
         {text("Wedding style")}
         <YesSelect
           ariaLabel={text("Wedding style")}
+          id="wedding-style"
+          name="weddingStyle"
           onChange={(nextValue) => update("weddingStyle", nextValue)}
           options={[
             "Classic",
@@ -219,7 +250,9 @@ export function WeddingOnboardingForm({ initialValue }: { initialValue?: Wedding
       <label>
         {text("Planning notes")}
         <textarea
+          id="wedding-planning-notes"
           maxLength={2000}
+          name="planningNotes"
           onChange={(event) => update("planningNotes", event.target.value)}
           placeholder={text(
             "Accessibility, cultural traditions, priorities or anything your team should know",
@@ -232,7 +265,9 @@ export function WeddingOnboardingForm({ initialValue }: { initialValue?: Wedding
       <label>
         <FieldLabel required>{text("Wedding date")}</FieldLabel>
         <input
+          id="wedding-date"
           min={moment().format("YYYY-MM-DD")}
+          name="weddingDate"
           onChange={(event) => update("weddingDate", event.target.value)}
           required
           type="date"
@@ -243,6 +278,8 @@ export function WeddingOnboardingForm({ initialValue }: { initialValue?: Wedding
         <label>
           <FieldLabel required>{text("Wedding venue")}</FieldLabel>
           <input
+            id="wedding-venue"
+            name="venue"
             onChange={(event) => update("venue", event.target.value)}
             required
             value={value.venue}
@@ -251,6 +288,8 @@ export function WeddingOnboardingForm({ initialValue }: { initialValue?: Wedding
         <label>
           <FieldLabel required>{text("Wedding location")}</FieldLabel>
           <input
+            id="wedding-location"
+            name="location"
             onChange={(event) => update("location", event.target.value)}
             placeholder={text("City or area")}
             required
