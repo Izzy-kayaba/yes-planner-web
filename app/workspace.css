@@ -115,7 +115,7 @@
 }
 .sidebar-profile strong {
   overflow: hidden;
-  font-size: 14px;
+  font-size: 12px;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -317,7 +317,7 @@
 .panel-header > a,
 .panel-header > div > a {
   color: var(--wine);
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 800;
 }
 .task-list {
@@ -392,7 +392,7 @@
   border: 0;
   background: transparent;
   color: var(--wine);
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 800;
 }
 .event-list {
@@ -490,7 +490,7 @@
 }
 .vendor-pulse > a {
   color: var(--wine);
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 800;
 }
 .avatar-stack.small span {
@@ -530,7 +530,7 @@
   display: grid;
   gap: 3px;
   margin: 0;
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 500;
 }
 .activity-list p small {
@@ -600,7 +600,7 @@
   margin-bottom: 7px;
 }
 .budget-bars b {
-  font-size: 14px;
+  font-size: 12px;
 }
 .budget-bars small {
   color: var(--muted);
@@ -670,7 +670,7 @@
   margin: 0;
 }
 .vendor-lineup strong {
-  font-size: 14px;
+  font-size: 12px;
 }
 .vendor-lineup small {
   color: var(--muted);

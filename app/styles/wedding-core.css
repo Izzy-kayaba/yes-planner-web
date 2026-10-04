@@ -70,7 +70,7 @@
   min-height: 68px;
   border-bottom: 1px solid var(--line);
   color: var(--muted);
-  font-size: 14px;
+  font-size: 12px;
 }
 .table-row:last-child {
   border: 0;
@@ -101,7 +101,7 @@
   display: grid;
   gap: 3px;
   color: var(--ink);
-  font-size: 14px;
+  font-size: 12px;
 }
 .person-cell small {
   color: var(--muted);
@@ -159,7 +159,7 @@
 }
 .budget-summary-card > div > span {
   color: #e5cfd5;
-  font-size: 14px;
+  font-size: 12px;
 }
 .budget-donut {
   width: 120px;
@@ -212,7 +212,7 @@
   margin: 0;
 }
 .payment-list p strong {
-  font-size: 14px;
+  font-size: 12px;
 }
 .payment-list p small {
   color: var(--muted);
@@ -342,7 +342,7 @@
 .vendor-card-copy > strong {
   display: block;
   margin: 13px 0;
-  font-size: 14px;
+  font-size: 12px;
 }
 .rating {
   color: var(--gold);
@@ -453,7 +453,7 @@
   gap: 4px;
 }
 .timeline-row strong {
-  font-size: 14px;
+  font-size: 12px;
 }
 .timeline-row small {
   color: var(--muted);
@@ -565,7 +565,7 @@
   margin: 0;
 }
 .meal-list strong {
-  font-size: 14px;
+  font-size: 12px;
 }
 .meal-list small {
   color: var(--muted);
@@ -600,7 +600,7 @@
   color: #775926;
 }
 .dietary-alert strong {
-  font-size: 14px;
+  font-size: 12px;
 }
 .dietary-alert span {
   font-size: 10px;
@@ -632,7 +632,7 @@
   margin: 0;
 }
 .file-list strong {
-  font-size: 14px;
+  font-size: 12px;
 }
 .file-list small,
 .file-list > div > span:not(.file-icon) {
@@ -699,7 +699,7 @@
   font: 17px var(--display);
 }
 .booking-card > strong {
-  font-size: 14px;
+  font-size: 12px;
 }
 .booking-card > span {
   color: var(--muted);
@@ -745,7 +745,7 @@
 }
 .invoice-list p strong,
 .invoice-list > div > b {
-  font-size: 14px;
+  font-size: 12px;
 }
 .invoice-list small {
   color: var(--muted);
