@@ -23,7 +23,7 @@ export async function GET(request: Request) {
     .toArray();
   return NextResponse.json(
     vendors.map((vendor) => ({
-      id: String(vendor.ownerUserId),
+      id: String(vendor._id),
       businessName: vendor.businessName,
       bio: vendor.bio,
       services: vendor.services,

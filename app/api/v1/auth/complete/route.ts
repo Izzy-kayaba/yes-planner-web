@@ -2,6 +2,7 @@ import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import { requireApiSession } from "@/lib/auth/session";
 import { isSelfServiceRole } from "@/lib/auth/roles";
+import { isExistingGoogleRegistration } from "@/lib/auth/social-registration";
 import { mongoDb } from "@/lib/mongodb";
 
 export async function GET(request: Request) {
@@ -10,6 +11,21 @@ export async function GET(request: Request) {
 
   const cookieStore = await cookies();
   const requestedRole = cookieStore.get("yes-pending-role")?.value;
+  const authIntent = cookieStore.get("yes-auth-intent")?.value;
+  const user = await mongoDb
+    .collection("user")
+    .findOne(
+      { email: authentication.session.user.email.toLowerCase() },
+      { projection: { createdAt: 1 } },
+    );
+  const existingGoogleAccount = isExistingGoogleRegistration(authIntent, user?.createdAt);
+
+  if (existingGoogleAccount) {
+    const response = NextResponse.redirect(new URL("/register?notice=account-exists", request.url));
+    response.cookies.delete("yes-pending-role");
+    response.cookies.delete("yes-auth-intent");
+    return response;
+  }
 
   if (isSelfServiceRole(requestedRole)) {
     await mongoDb.collection("user").updateOne(
@@ -25,5 +41,6 @@ export async function GET(request: Request) {
 
   const response = NextResponse.redirect(new URL("/dashboard", request.url));
   response.cookies.delete("yes-pending-role");
+  response.cookies.delete("yes-auth-intent");
   return response;
 }

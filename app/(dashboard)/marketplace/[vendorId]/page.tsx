@@ -11,29 +11,32 @@ export default async function VendorProfilePage({
 }) {
   const session = await requirePageRole();
   const { vendorId } = await params;
+  if (!ObjectId.isValid(vendorId)) notFound();
   const profile = await mongoDb
     .collection("vendorProfiles")
-    .findOne({ ownerUserId: decodeURIComponent(vendorId), published: true });
+    .findOne({ _id: new ObjectId(vendorId), published: true });
   if (!profile) notFound();
-  const ownerId = String(profile.ownerUserId);
-  const vendorUser = await mongoDb
-    .collection("user")
-    .findOne(ObjectId.isValid(ownerId) ? { _id: new ObjectId(ownerId) } : { id: ownerId }, {
-      projection: { phoneNumber: 1 },
-    });
+  const ownerId = typeof profile.ownerUserId === "string" ? profile.ownerUserId : "";
+  const vendorUser = ownerId
+    ? await mongoDb
+        .collection("user")
+        .findOne(ObjectId.isValid(ownerId) ? { _id: new ObjectId(ownerId) } : { id: ownerId }, {
+          projection: { phoneNumber: 1 },
+        })
+    : null;
   const existingRequest =
-    session.user.role === "Couple"
+    session.user.role === "Couple" && ownerId
       ? await mongoDb.collection("vendorRequests").findOne({
           coupleUserId: session.user.id,
-          vendorUserId: String(profile.ownerUserId),
+          vendorUserId: ownerId,
         })
       : null;
   return (
     <VendorPublicProfile
-      canRequest={session.user.role === "Couple"}
+      canRequest={session.user.role === "Couple" && Boolean(ownerId)}
       requestStatus={existingRequest ? String(existingRequest.status) : undefined}
       vendor={{
-        id: String(profile.ownerUserId),
+        id: ownerId,
         businessName: String(profile.businessName ?? ""),
         contactName: String(profile.contactName ?? ""),
         bio: String(profile.bio ?? ""),

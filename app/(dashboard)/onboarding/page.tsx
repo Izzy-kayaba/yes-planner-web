@@ -21,11 +21,17 @@ export const metadata: Metadata = { title: "Wedding details" };
 export default async function OnboardingPage() {
   if ((process.env.NEXT_PUBLIC_DATA_SOURCE ?? "api") === "demo") redirect("/dashboard");
   const session = await requirePageRole(["Couple", "Vendor", "Planner"]);
-  const [user, wedding, vendor, planner] = await Promise.all([
+  const [user, wedding, vendor, planner, venueVendors] = await Promise.all([
     mongoDb.collection("user").findOne({ email: session.user.email }),
     mongoDb.collection("weddingProfiles").findOne({ ownerUserId: session.user.id }),
     mongoDb.collection("vendorProfiles").findOne({ ownerUserId: session.user.id }),
     mongoDb.collection("plannerProfiles").findOne({ ownerUserId: session.user.id }),
+    mongoDb
+      .collection("vendorProfiles")
+      .find({ published: true, services: "Venue" })
+      .project({ businessName: 1 })
+      .sort({ businessName: 1 })
+      .toArray(),
   ]);
   if (session.user.role === "Vendor") {
     const initialVendor: VendorOnboardingValue = {
@@ -96,7 +102,10 @@ export default async function OnboardingPage() {
         title={wedding ? "Edit your wedding details" : "Let’s personalise your workspace"}
         description="Complete these details before opening wedding-specific planning tools. You can update them later."
       />
-      <WeddingOnboardingForm initialValue={initialValue} />
+      <WeddingOnboardingForm
+        initialValue={initialValue}
+        venueOptions={venueVendors.map((venueVendor) => String(venueVendor.businessName ?? ""))}
+      />
     </div>
   );
 }

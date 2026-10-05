@@ -58,9 +58,14 @@ export async function ensureMongoIndexes() {
     mongoDb
       .collection("weddingProfiles")
       .createIndex({ weddingKey: 1 }, { name: "wedding_profile_key", unique: true }),
-    mongoDb
-      .collection("vendorProfiles")
-      .createIndex({ ownerUserId: 1 }, { name: "vendor_profile_owner", unique: true }),
+    mongoDb.collection("vendorProfiles").createIndex(
+      { ownerUserId: 1 },
+      {
+        name: "vendor_profile_owner",
+        unique: true,
+        partialFilterExpression: { ownerUserId: { $type: "string" } },
+      },
+    ),
     mongoDb
       .collection("plannerProfiles")
       .createIndex({ ownerUserId: 1 }, { name: "planner_profile_owner", unique: true }),

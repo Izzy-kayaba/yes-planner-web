@@ -8,11 +8,16 @@ export async function generateMetadata(): Promise<Metadata> {
   return { title: text("Create account") };
 }
 
-export default function RegisterPage() {
+export default async function RegisterPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ notice?: string }>;
+}) {
+  const { notice } = await searchParams;
   return (
     <div className="auth-card register-card">
       <AuthHeading mode="register" />
-      <AuthForm mode="register" />
+      <AuthForm mode="register" initialNotice={notice === "account-exists" ? notice : undefined} />
     </div>
   );
 }

@@ -7,12 +7,14 @@
     "build": "next build",
     "admin:set": "node scripts/set-system-admin.mjs",
     "media:cleanup": "node scripts/cleanup-orphaned-media.mjs",
+    "seed:vendors": "node scripts/seed-vendors.mjs",
     "check:lines": "node scripts/check-file-lines.mjs",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "start": "next start",
+    "test:auth": "node --no-warnings --experimental-strip-types --test tests/auth/*.test.mjs",
     "typecheck": "tsc --noEmit",
-    "validate": "npm run format:check && npm run check:lines && npm run typecheck && npm run build"
+    "validate": "npm run format:check && npm run check:lines && npm run test:auth && npm run typecheck && npm run build"
   },
   "dependencies": {
     "better-auth": "^1.7.7",

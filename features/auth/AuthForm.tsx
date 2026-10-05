@@ -56,7 +56,13 @@ type AuthValues = {
   password: string;
 };
 
-export function AuthForm({ mode }: { mode: "login" | "register" }) {
+export function AuthForm({
+  mode,
+  initialNotice,
+}: {
+  mode: "login" | "register";
+  initialNotice?: "account-exists";
+}) {
   const router = useRouter();
   const { t, text } = useLanguage();
   const isRegister = mode === "register";
@@ -93,6 +99,12 @@ export function AuthForm({ mode }: { mode: "login" | "register" }) {
       .catch(() => setDefaultCountry("ZA"));
   }, [isRegister]);
 
+  useEffect(() => {
+    if (initialNotice !== "account-exists") return;
+    void authClient.signOut();
+    toast.error(text("An account already exists with this email. Sign in instead."));
+  }, [initialNotice, text]);
+
   async function submit(values: AuthValues) {
     // Zod remains the single definition of valid input while React Hook Form handles field state.
     const result = (isRegister ? registrationSchema : loginSchema).safeParse(values);
@@ -123,6 +135,7 @@ export function AuthForm({ mode }: { mode: "login" | "register" }) {
   async function socialSignIn(provider: "google" | "instagram") {
     if (isRegister) {
       document.cookie = `yes-pending-role=${selectedRole}; Path=/; Max-Age=600; SameSite=Lax`;
+      document.cookie = `yes-auth-intent=register:${provider}:${Date.now()}; Path=/; Max-Age=600; SameSite=Lax`;
     }
     const result = await authClient.signIn.social({
       provider,

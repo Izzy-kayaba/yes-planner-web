@@ -51,7 +51,13 @@ const emptyValue: WeddingOnboardingValue = {
   planningNotes: "",
 };
 
-export function WeddingOnboardingForm({ initialValue }: { initialValue?: WeddingOnboardingValue }) {
+export function WeddingOnboardingForm({
+  initialValue,
+  venueOptions = [],
+}: {
+  initialValue?: WeddingOnboardingValue;
+  venueOptions?: string[];
+}) {
   const router = useRouter();
   const { text } = useLanguage();
   const { currency, displayMoney } = useCurrency();
@@ -279,11 +285,18 @@ export function WeddingOnboardingForm({ initialValue }: { initialValue?: Wedding
           <FieldLabel required>{text("Wedding venue")}</FieldLabel>
           <input
             id="wedding-venue"
+            list="wedding-venue-options"
             name="venue"
             onChange={(event) => update("venue", event.target.value)}
+            placeholder={text("Choose a venue or type another name")}
             required
             value={value.venue}
           />
+          <datalist id="wedding-venue-options">
+            {venueOptions.map((venue) => (
+              <option key={venue} value={venue} />
+            ))}
+          </datalist>
         </label>
         <label>
           <FieldLabel required>{text("Wedding location")}</FieldLabel>

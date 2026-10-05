@@ -14,7 +14,7 @@ export default async function MarketplacePage() {
   await requirePageRole();
   const profiles = await mongoDb.collection("vendorProfiles").find({ published: true }).toArray();
   const vendors: MarketplaceVendor[] = profiles.map((profile) => ({
-    id: String(profile.ownerUserId),
+    id: String(profile._id),
     businessName: String(profile.businessName ?? ""),
     services: Array.isArray(profile.services) ? profile.services.map(String) : [],
     serviceArea: String(profile.serviceArea ?? ""),
