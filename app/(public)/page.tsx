@@ -6,6 +6,7 @@ import Image from "next/image";
 import { CoupleTestimonials } from "@/features/public/CoupleTestimonials";
 import { DisplayMoney } from "@/components/currency/DisplayMoney";
 import { getAuthorizedSession } from "@/lib/auth/session";
+import { siteDescription, siteUrl } from "@/lib/site";
 
 const features = [
   {
@@ -44,9 +45,24 @@ export default async function HomePage() {
     }
   }
   const text = await getTextTranslator();
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    name: "Yes Planner",
+    applicationCategory: "LifestyleApplication",
+    operatingSystem: "Web",
+    url: siteUrl.toString(),
+    description: siteDescription,
+  };
 
   return (
     <main className="landing">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(structuredData).replaceAll("<", "\\u003c"),
+        }}
+      />
       <nav className="landing-nav page-width">
         <Brand />
         <div className="landing-links">

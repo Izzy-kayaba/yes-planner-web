@@ -7,6 +7,7 @@ import { mongoDb } from "@/lib/mongodb";
 import { validateWorkspaceMoney } from "@/lib/api/workspace-validation";
 import { after } from "next/server";
 import { notifyWeddingParticipants } from "@/lib/whatsapp";
+import { validateConnectedVendor } from "@/lib/vendors/connected";
 
 type RouteContext = {
   params: Promise<{ weddingKey: string; module: string; recordId: string }>;
@@ -60,6 +61,13 @@ export async function PUT(request: Request, context: RouteContext) {
   const { id, ...data } = value as Record<string, unknown>;
   const moneyError = validateWorkspaceMoney(authorization.params.module, data);
   if (moneyError) return NextResponse.json({ message: moneyError }, { status: 400 });
+  const vendorError = await validateConnectedVendor(
+    authorization.resourceOwnerId,
+    authorization.params.weddingKey,
+    authorization.params.module,
+    data,
+  );
+  if (vendorError) return NextResponse.json({ message: vendorError }, { status: 400 });
   const filter = {
     ownerUserId: authorization.resourceOwnerId,
     weddingKey: authorization.params.weddingKey,

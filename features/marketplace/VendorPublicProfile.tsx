@@ -13,6 +13,7 @@ import { YesSelect } from "@/components/ui/YesSelect";
 import { CharacterCount } from "@/components/forms/CharacterCount";
 import { FieldLabel } from "@/components/forms/FieldLabel";
 import { inferMoneyRange, vendorPriceRanges } from "@/lib/estimate-ranges";
+import { BackButton } from "@/components/navigation/BackButton";
 
 export function VendorPublicProfile({
   vendor,
@@ -69,6 +70,7 @@ export function VendorPublicProfile({
 
   return (
     <div className="section-stack vendor-public-profile">
+      <BackButton fallback="/marketplace" />
       <section className="panel vendor-profile-hero">
         <div className="vendor-profile-photo">
           {vendor.profileImage ? (

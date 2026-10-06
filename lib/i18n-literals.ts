@@ -117,6 +117,10 @@ const frenchByEnglish: Record<string, string> = {
   "An account already exists with this email. Sign in instead.":
     "Un compte existe déjà avec cet e-mail. Connectez-vous.",
   "Choose a venue or type another name": "Choisissez un lieu ou saisissez un autre nom",
+  Back: "Retour",
+  Pagination: "Pagination",
+  Previous: "Précédent",
+  Page: "Page",
   "Use at least 8 characters with a number and a symbol.":
     "Utilisez au moins 8 caractères, un chiffre et un symbole.",
   "or continue with": "ou continuer avec",

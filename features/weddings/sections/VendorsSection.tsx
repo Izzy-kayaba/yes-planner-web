@@ -2,7 +2,11 @@
 
 import { Heart, Pencil, Plus, Trash2 } from "lucide-react";
 import { useState } from "react";
-import { EntityDialog, type EntityFormValue } from "@/components/forms/EntityDialog";
+import {
+  EntityDialog,
+  type EntityField,
+  type EntityFormValue,
+} from "@/components/forms/EntityDialog";
 import { useLanguage } from "@/components/providers/LanguageProvider";
 import { useCurrency } from "@/components/providers/CurrencyProvider";
 import { SearchField } from "@/components/forms/SearchField";
@@ -11,6 +15,7 @@ import { MetricGrid } from "@/features/weddings/MetricGrid";
 import { useWorkspaceCollection } from "@/hooks/useWorkspaceCollection";
 import { vendors } from "@/lib/demo-data";
 import { getInitials } from "@/lib/initials";
+import { useConnectedVendors } from "@/hooks/useConnectedVendors";
 
 type Vendor = {
   id: string | number;
@@ -29,27 +34,33 @@ const seed: Vendor[] = vendors.map((vendor, index) => ({
   priceMinor: 0,
   saved: false,
 }));
-const fields = [
-  { name: "name", label: "Vendor name", required: true },
-  { name: "category", label: "Category", required: true },
-  { name: "rating", label: "Rating", type: "number" as const, required: true },
-  { name: "priceUsd", label: "Price (USD)", type: "number" as const, required: true },
-  {
-    name: "status",
-    label: "Status",
-    type: "select" as const,
-    options: ["Confirmed", "Quote received", "Shortlisted"],
-    required: true,
-  },
-];
-
 export function VendorsSection() {
   const { text } = useLanguage();
   const { displayMoney } = useCurrency();
   const { items, create, update, remove } = useWorkspaceCollection<Vendor>("vendors", seed);
+  const connectedVendors = useConnectedVendors();
   const [query, setQuery] = useState("");
   const [editing, setEditing] = useState<Vendor | null>(null);
   const [open, setOpen] = useState(false);
+  const fields: EntityField[] = [
+    {
+      name: "name",
+      label: "Vendor name",
+      type: "select",
+      options: connectedVendors.map((vendor) => ({ value: vendor.name, label: vendor.name })),
+      required: true,
+    },
+    { name: "category", label: "Category", required: true },
+    { name: "rating", label: "Rating", type: "number", required: true },
+    { name: "priceUsd", label: "Price (USD)", type: "number", required: true },
+    {
+      name: "status",
+      label: "Status",
+      type: "select",
+      options: ["Confirmed", "Quote received", "Shortlisted"],
+      required: true,
+    },
+  ];
   const shown = items.filter((vendor) =>
     `${vendor.name} ${vendor.category}`.toLowerCase().includes(query.toLowerCase()),
   );

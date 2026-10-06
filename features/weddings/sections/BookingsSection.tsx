@@ -2,11 +2,16 @@
 
 import { Pencil, Plus, Trash2 } from "lucide-react";
 import { useState } from "react";
-import { EntityDialog, type EntityFormValue } from "@/components/forms/EntityDialog";
+import {
+  EntityDialog,
+  type EntityField,
+  type EntityFormValue,
+} from "@/components/forms/EntityDialog";
 import { useLanguage } from "@/components/providers/LanguageProvider";
 import { useCurrency } from "@/components/providers/CurrencyProvider";
 import { SearchField } from "@/components/forms/SearchField";
 import { useWorkspaceCollection } from "@/hooks/useWorkspaceCollection";
+import { useConnectedVendors } from "@/hooks/useConnectedVendors";
 
 type Booking = {
   id: string | number;
@@ -42,27 +47,33 @@ const seed: Booking[] = [
     next: "Awaiting vendor reply",
   },
 ];
-const fields = [
-  { name: "vendor", label: "Vendor", required: true },
-  { name: "service", label: "Service", required: true },
-  { name: "amountUsd", label: "Amount (USD)", type: "number" as const, required: true },
-  {
-    name: "status",
-    label: "Status",
-    type: "select" as const,
-    options: ["Pending", "Quote received", "Confirmed"],
-    required: true,
-  },
-  { name: "next", label: "Next action", required: true },
-];
-
 export function BookingsSection() {
   const { text } = useLanguage();
   const { displayMoney } = useCurrency();
   const { items, create, update, remove } = useWorkspaceCollection<Booking>("bookings", seed);
+  const connectedVendors = useConnectedVendors();
   const [query, setQuery] = useState("");
   const [editing, setEditing] = useState<Booking | null>(null);
   const [open, setOpen] = useState(false);
+  const fields: EntityField[] = [
+    {
+      name: "vendor",
+      label: "Vendor",
+      type: "select",
+      options: connectedVendors.map((vendor) => ({ value: vendor.name, label: vendor.name })),
+      required: true,
+    },
+    { name: "service", label: "Service", required: true },
+    { name: "amountUsd", label: "Amount (USD)", type: "number", required: true },
+    {
+      name: "status",
+      label: "Status",
+      type: "select",
+      options: ["Pending", "Quote received", "Confirmed"],
+      required: true,
+    },
+    { name: "next", label: "Next action", required: true },
+  ];
   async function save(values: Record<string, EntityFormValue>) {
     const input = {
       vendor: String(values.vendor),

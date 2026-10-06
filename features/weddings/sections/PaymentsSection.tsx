@@ -2,13 +2,18 @@
 
 import { Download, Pencil, Plus, Trash2 } from "lucide-react";
 import { useState } from "react";
-import { EntityDialog, type EntityFormValue } from "@/components/forms/EntityDialog";
+import {
+  EntityDialog,
+  type EntityField,
+  type EntityFormValue,
+} from "@/components/forms/EntityDialog";
 import { useLanguage } from "@/components/providers/LanguageProvider";
 import { useCurrency } from "@/components/providers/CurrencyProvider";
 import { StatusPill } from "@/components/ui/StatusPill";
 import { MetricGrid } from "@/features/weddings/MetricGrid";
 import { useWorkspaceCollection } from "@/hooks/useWorkspaceCollection";
 import { getInitials } from "@/lib/initials";
+import { useConnectedVendors } from "@/hooks/useConnectedVendors";
 
 type Payment = {
   id: string | number;
@@ -44,26 +49,32 @@ const seed: Payment[] = [
     status: "Paid",
   },
 ];
-const fields = [
-  { name: "vendor", label: "Vendor", required: true },
-  { name: "reference", label: "Invoice reference", required: true },
-  { name: "amountUsd", label: "Amount (USD)", type: "number" as const, required: true },
-  { name: "due", label: "Due date", required: true },
-  {
-    name: "status",
-    label: "Status",
-    type: "select" as const,
-    options: ["Due soon", "Scheduled", "Paid", "Overdue"],
-    required: true,
-  },
-];
-
 export function PaymentsSection() {
   const { text } = useLanguage();
   const { displayMoney } = useCurrency();
   const { items, create, update, remove } = useWorkspaceCollection<Payment>("payments", seed);
+  const connectedVendors = useConnectedVendors();
   const [editing, setEditing] = useState<Payment | null>(null);
   const [open, setOpen] = useState(false);
+  const fields: EntityField[] = [
+    {
+      name: "vendor",
+      label: "Vendor",
+      type: "select",
+      options: connectedVendors.map((vendor) => ({ value: vendor.name, label: vendor.name })),
+      required: true,
+    },
+    { name: "reference", label: "Invoice reference", required: true },
+    { name: "amountUsd", label: "Amount (USD)", type: "number", required: true },
+    { name: "due", label: "Due date", required: true },
+    {
+      name: "status",
+      label: "Status",
+      type: "select",
+      options: ["Due soon", "Scheduled", "Paid", "Overdue"],
+      required: true,
+    },
+  ];
   async function save(values: Record<string, EntityFormValue>) {
     const input = {
       vendor: String(values.vendor),

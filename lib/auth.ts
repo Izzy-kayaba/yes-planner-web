@@ -6,6 +6,7 @@ import { genericOAuth } from "better-auth/plugins";
 import { after } from "next/server";
 import { mongoClient, mongoDb } from "@/lib/mongodb";
 import { sendPasswordResetEmail } from "@/lib/email";
+import { mapInstagramProfile, type InstagramProfile } from "@/lib/auth/instagram";
 
 const googleConfigured = Boolean(process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET);
 const instagramConfigured = Boolean(
@@ -55,15 +56,7 @@ const instagramPlugin = genericOAuth({
               `https://graph.instagram.com/me?fields=id,username&access_token=${encodeURIComponent(tokens.accessToken)}`,
             );
             if (!response.ok) return null;
-            const profile = (await response.json()) as { id?: string; username?: string };
-            if (!profile.id) return null;
-            const username = profile.username?.trim() || `instagram-${profile.id}`;
-            return {
-              id: profile.id,
-              name: username,
-              email: `${profile.id}@instagram.yesplanner.invalid`,
-              emailVerified: false,
-            };
+            return mapInstagramProfile((await response.json()) as InstagramProfile);
           },
         },
       ]

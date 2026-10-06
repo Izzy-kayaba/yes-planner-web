@@ -10,6 +10,7 @@ import { PageHeader } from "@/components/ui/PageHeader";
 import { getInitials } from "@/lib/initials";
 import { YesSelect } from "@/components/ui/YesSelect";
 import { inferMoneyRange, vendorPriceRanges } from "@/lib/estimate-ranges";
+import { LIST_PAGE_SIZE, Pagination } from "@/components/ui/Pagination";
 
 export type MarketplaceVendor = {
   id: string;
@@ -27,6 +28,7 @@ export function LiveMarketplace({ vendors }: { vendors: MarketplaceVendor[] }) {
   const [query, setQuery] = useState("");
   const [service, setService] = useState("All");
   const [priceRange, setPriceRange] = useState("All");
+  const [page, setPage] = useState(1);
   const services = useMemo(
     () => ["All", ...Array.from(new Set(vendors.flatMap((vendor) => vendor.services))).sort()],
     [vendors],
@@ -40,6 +42,11 @@ export function LiveMarketplace({ vendors }: { vendors: MarketplaceVendor[] }) {
       `${vendor.businessName} ${vendor.serviceArea} ${vendor.services.join(" ")}`
         .toLowerCase()
         .includes(query.toLowerCase()),
+  );
+  const currentPage = Math.min(page, Math.max(1, Math.ceil(results.length / LIST_PAGE_SIZE)));
+  const visibleResults = results.slice(
+    (currentPage - 1) * LIST_PAGE_SIZE,
+    currentPage * LIST_PAGE_SIZE,
   );
 
   function priceLabel(vendor: MarketplaceVendor) {
@@ -106,7 +113,7 @@ export function LiveMarketplace({ vendors }: { vendors: MarketplaceVendor[] }) {
       </div>
       {results.length ? (
         <section className="vendor-grid marketplace-grid">
-          {results.map((vendor) => (
+          {visibleResults.map((vendor) => (
             <article className="vendor-card" key={vendor.id}>
               <div
                 className={`vendor-cover tall tone-rose${vendor.profileImage ? " has-image" : ""}`}
@@ -143,6 +150,7 @@ export function LiveMarketplace({ vendors }: { vendors: MarketplaceVendor[] }) {
           {text("No vendor profiles match this search yet.")}
         </section>
       )}
+      <Pagination page={currentPage} total={results.length} onChange={setPage} />
     </div>
   );
 }
