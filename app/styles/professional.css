@@ -11,7 +11,7 @@
 }
 .marketplace-search {
   display: grid;
-  grid-template-columns: 1fr auto;
+  grid-template-columns: 1fr minmax(320px, 1fr);
   gap: 10px;
   padding: 10px;
   border: 1px solid var(--line);
@@ -20,7 +20,7 @@
   box-shadow: var(--shadow-soft);
 }
 .marketplace-search > .yes-select {
-  width: min(260px, 100%);
+  width: min(768px, 100%);
 }
 .marketplace-search label {
   display: flex;
@@ -42,6 +42,7 @@
   display: flex;
   gap: 8px;
   overflow-x: auto;
+  padding-bottom: 0.5rem;
 }
 .category-scroll button {
   min-width: max-content;
