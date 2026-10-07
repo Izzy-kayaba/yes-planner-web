@@ -48,7 +48,9 @@ export async function generateMetadata(): Promise<Metadata> {
       title: "Yes Planner · Wedding planning, beautifully organised",
       description: siteDescription,
       url: "/",
-      images: [{ url: "/favicon/android-chrome-512x512.png", width: 512, height: 512, alt: "Yes Planner" }],
+      images: [
+        { url: "/favicon/android-chrome-512x512.png", width: 512, height: 512, alt: "Yes Planner" },
+      ],
     },
     twitter: {
       card: "summary",

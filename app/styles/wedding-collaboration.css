@@ -109,6 +109,7 @@
 }
 .message {
   max-width: 68%;
+  min-width: 0;
   padding: 12px 15px;
   border-radius: 13px;
   font-size: 12px;
@@ -166,7 +167,9 @@
 }
 .message p {
   margin: 0;
+  max-width: 100%;
   overflow-wrap: anywhere;
+  word-break: break-word;
   white-space: pre-wrap;
   unicode-bidi: plaintext;
 }

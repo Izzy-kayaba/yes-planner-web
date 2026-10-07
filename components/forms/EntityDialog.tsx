@@ -7,6 +7,7 @@ import { Modal } from "@/components/ui/Modal";
 import { YesSelect } from "@/components/ui/YesSelect";
 import { FieldLabel } from "@/components/forms/FieldLabel";
 import PhoneInput from "react-phone-number-input";
+import Link from "next/link";
 
 export type EntityFormValue = string | number | boolean;
 
@@ -17,6 +18,9 @@ export type EntityField = {
   required?: boolean;
   type?: "text" | "email" | "tel" | "number" | "date" | "time" | "textarea" | "select" | "checkbox";
   options?: Array<string | { value: string; label: string }>;
+  emptyMessage?: string;
+  setupHref?: string;
+  setupLabel?: string;
 };
 
 function TelephoneField({
@@ -101,54 +105,72 @@ export function EntityDialog({
       <form className="grid gap-4" key={formKey} onSubmit={submit}>
         {fields.map((field) => (
           <label className="grid gap-1.5 text-sm font-bold" key={field.name}>
-            <FieldLabel required={field.required}>{text(field.label)}</FieldLabel>
             {field.type === "checkbox" ? (
-              <input
-                className="size-5"
-                defaultChecked={Boolean(defaults[field.name])}
-                id={field.name}
-                name={field.name}
-                type="checkbox"
-              />
-            ) : field.type === "tel" ? (
-              <TelephoneField
-                field={field}
-                initialValue={String(defaults[field.name] ?? "")}
-                placeholder={field.placeholder ? text(field.placeholder) : undefined}
-              />
-            ) : field.type === "textarea" ? (
-              <textarea
-                className="min-h-28 p-3 text-sm"
-                id={field.name}
-                name={field.name}
-                required={field.required}
-                defaultValue={String(defaults[field.name] ?? "")}
-                placeholder={field.placeholder ? text(field.placeholder) : undefined}
-              />
-            ) : field.type === "select" ? (
-              <YesSelect
-                ariaLabel={text(field.label)}
-                defaultValue={String(defaults[field.name] ?? "")}
-                id={field.name}
-                name={field.name}
-                required={field.required}
-                placeholder={text("Select an option")}
-                options={(field.options ?? []).map((option) =>
-                  typeof option === "string"
-                    ? { value: option, label: text(option) }
-                    : { value: option.value, label: text(option.label) },
-                )}
-              />
+              <span className="inline-flex items-center gap-2">
+                <input
+                  className="size-5"
+                  defaultChecked={Boolean(defaults[field.name])}
+                  id={field.name}
+                  name={field.name}
+                  type="checkbox"
+                />
+                <FieldLabel required={field.required}>{text(field.label)}</FieldLabel>
+              </span>
             ) : (
-              <input
-                className="h-11 px-3 text-sm"
-                id={field.name}
-                name={field.name}
-                type={field.type ?? "text"}
-                required={field.required}
-                defaultValue={String(defaults[field.name] ?? "")}
-                placeholder={field.placeholder ? text(field.placeholder) : undefined}
-              />
+              <>
+                <FieldLabel required={field.required}>{text(field.label)}</FieldLabel>
+                {field.type === "tel" ? (
+                  <TelephoneField
+                    field={field}
+                    initialValue={String(defaults[field.name] ?? "")}
+                    placeholder={field.placeholder ? text(field.placeholder) : undefined}
+                  />
+                ) : field.type === "textarea" ? (
+                  <textarea
+                    className="min-h-28 p-3 text-sm"
+                    id={field.name}
+                    name={field.name}
+                    required={field.required}
+                    defaultValue={String(defaults[field.name] ?? "")}
+                    placeholder={field.placeholder ? text(field.placeholder) : undefined}
+                  />
+                ) : field.type === "select" ? (
+                  <>
+                    <YesSelect
+                      ariaLabel={text(field.label)}
+                      defaultValue={String(defaults[field.name] ?? "")}
+                      disabled={!field.options?.length}
+                      id={field.name}
+                      name={field.name}
+                      required={field.required}
+                      placeholder={text("Select an option")}
+                      options={(field.options ?? []).map((option) =>
+                        typeof option === "string"
+                          ? { value: option, label: text(option) }
+                          : { value: option.value, label: text(option.label) },
+                      )}
+                    />
+                    {!field.options?.length && field.setupHref && (
+                      <label className="select-setup-hint">
+                        <span>{text(field.emptyMessage ?? "This list is empty.")}</span>{" "}
+                        <Link href={field.setupHref}>
+                          {text(field.setupLabel ?? "Set it up first")}
+                        </Link>
+                      </label>
+                    )}
+                  </>
+                ) : (
+                  <input
+                    className="h-11 px-3 text-sm"
+                    id={field.name}
+                    name={field.name}
+                    type={field.type ?? "text"}
+                    required={field.required}
+                    defaultValue={String(defaults[field.name] ?? "")}
+                    placeholder={field.placeholder ? text(field.placeholder) : undefined}
+                  />
+                )}
+              </>
             )}
           </label>
         ))}

@@ -7,7 +7,7 @@ import { toast } from "sonner";
 import { useLanguage } from "@/components/providers/LanguageProvider";
 import { useCurrency } from "@/components/providers/CurrencyProvider";
 import { Button } from "@/components/ui/Button";
-import { AtSign, ExternalLink, MessageCircle } from "lucide-react";
+import { AtSign, BadgeCheck, ExternalLink, MessageCircle } from "lucide-react";
 import { apiRequest } from "@/lib/api/client";
 import { YesSelect } from "@/components/ui/YesSelect";
 import { CharacterCount } from "@/components/forms/CharacterCount";
@@ -19,6 +19,9 @@ export function VendorPublicProfile({
   vendor,
   canRequest,
   requestStatus,
+  canClaim,
+  profileId,
+  claimed,
 }: {
   vendor: {
     id: string;
@@ -37,6 +40,9 @@ export function VendorPublicProfile({
   };
   canRequest: boolean;
   requestStatus?: string;
+  canClaim: boolean;
+  profileId: string;
+  claimed: boolean;
 }) {
   const router = useRouter();
   const { text } = useLanguage();
@@ -44,6 +50,7 @@ export function VendorPublicProfile({
   const [service, setService] = useState(vendor.services[0] ?? "");
   const [message, setMessage] = useState("");
   const [sending, setSending] = useState(false);
+  const [claiming, setClaiming] = useState(false);
   const selectedPriceRange = vendorPriceRanges.find(
     (range) =>
       range.id ===
@@ -68,6 +75,23 @@ export function VendorPublicProfile({
     }
   }
 
+  async function claimProfile() {
+    setClaiming(true);
+    try {
+      await apiRequest("/api/v1/vendor-profile/claim", {
+        method: "POST",
+        body: JSON.stringify({ profileId }),
+      });
+      toast.success(text("Claim request sent for review."));
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : text("Claim request could not be sent."),
+      );
+    } finally {
+      setClaiming(false);
+    }
+  }
+
   return (
     <div className="section-stack vendor-public-profile">
       <BackButton fallback="/marketplace" />
@@ -89,6 +113,13 @@ export function VendorPublicProfile({
         <div className="vendor-profile-copy">
           <p className="eyebrow">{vendor.services.map(text).join(" · ")}</p>
           <h1>{vendor.businessName}</h1>
+          {claimed && (
+            <BadgeCheck
+              aria-label={text("Verified business")}
+              className="vendor-verified-icon"
+              size={20}
+            />
+          )}
           {vendor.contactName && <p className="vendor-contact-name">{vendor.contactName}</p>}
           <p>{vendor.bio}</p>
           <div className="vendor-service-list">
@@ -143,6 +174,19 @@ export function VendorPublicProfile({
           </div>
         </div>
       </section>
+      {canClaim && (
+        <section className="panel vendor-claim-panel">
+          <p className="eyebrow">{text("Is this your business?")}</p>
+          <p>
+            {text(
+              "Create a business account, then request ownership so you can manage this profile and portfolio.",
+            )}
+          </p>
+          <Button disabled={claiming} onClick={() => void claimProfile()} type="button">
+            {claiming ? text("Sending…") : text("Claim this business")}
+          </Button>
+        </section>
+      )}
       <section className="panel">
         <p className="eyebrow">{text("Portfolio")}</p>
         <h2>{text("Selected work")}</h2>

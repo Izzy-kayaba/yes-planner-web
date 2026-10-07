@@ -34,6 +34,11 @@ export default async function VendorProfilePage({
   return (
     <VendorPublicProfile
       canRequest={session.user.role === "Couple" && Boolean(ownerId)}
+      canClaim={
+        ["Vendor", "Venue"].includes(session.user.role) && !ownerId && Boolean(profile.seeded)
+      }
+      profileId={vendorId}
+      claimed={Boolean(profile.claimed || (ownerId && !profile.seeded))}
       requestStatus={existingRequest ? String(existingRequest.status) : undefined}
       vendor={{
         id: ownerId,

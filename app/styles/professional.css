@@ -11,7 +11,7 @@
 }
 .marketplace-search {
   display: grid;
-  grid-template-columns: 1fr 320px;
+  grid-template-columns: 1fr auto auto;
   gap: 10px;
   padding: 10px;
   border: 1px solid var(--line);
@@ -583,4 +583,32 @@
 }
 .language-switcher:not(.language-switcher-compact) .yes-select {
   width: 190px;
+}
+.vendor-verified-icon {
+  color: var(--sage);
+  flex: 0 0 auto;
+}
+
+.vendor-claim-panel {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.select-setup-hint {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  color: var(--muted);
+  font-size: 0.78rem;
+  line-height: 1.4;
+}
+
+.select-setup-hint input {
+  margin-top: 0.15rem;
+}
+
+.select-setup-hint a {
+  color: var(--wine);
+  font-weight: 800;
+  text-decoration: underline;
 }

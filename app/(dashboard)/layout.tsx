@@ -5,6 +5,8 @@ import { loadDashboardData } from "@/lib/dashboard/server";
 import { redirect } from "next/navigation";
 import { mongoDb } from "@/lib/mongodb";
 
+export const metadata = { robots: { index: false, follow: false } };
+
 export default async function DashboardLayout({ children }: { children: ReactNode }) {
   const demoMode = (process.env.NEXT_PUBLIC_DATA_SOURCE ?? "api") === "demo";
   const session = demoMode ? undefined : await requirePageRole();

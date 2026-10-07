@@ -307,64 +307,73 @@ export function VendorOnboardingForm({
       <div className="onboarding-section-heading">
         <span>3</span>
         <div>
-          <h2>{text("Profile and portfolio")}</h2>
-          <p>{text("Upload clear images that couples can see before sending a request.")}</p>
+          <h2>{text("Profile image")}</h2>
+          <p>{text("Choose the main image that represents your business in search results.")}</p>
         </div>
       </div>
-      <div className="vendor-upload-grid">
-        <label className="image-upload-tile profile-upload">
-          {value.profileImage ? (
-            <Image alt="" fill sizes="180px" src={value.profileImage} unoptimized />
-          ) : (
-            <>
-              <ImagePlus />
-              <span>{text("Profile image")}</span>
-            </>
-          )}
-          <input
-            accept="image/jpeg,image/png,image/webp"
-            hidden
-            id="vendor-profile-image"
-            name="profileImage"
-            onChange={selectProfileImage}
-            type="file"
-          />
-        </label>
-        <div className="portfolio-upload-list">
-          {value.portfolioImages.map((image, index) => (
-            <div className="portfolio-upload-preview" key={`${image.slice(-20)}-${index}`}>
-              <Image alt="" fill sizes="140px" src={image} unoptimized />
-              <button
-                aria-label={text("Remove image")}
-                onClick={() => {
-                  setRemovedImages((current) => [...current, image]);
-                  update(
-                    "portfolioImages",
-                    value.portfolioImages.filter((_, item) => item !== index),
-                  );
-                }}
-                type="button"
-              >
-                <X size={14} />
-              </button>
-            </div>
-          ))}
-          {value.portfolioImages.length < 6 && (
-            <label className="image-upload-tile">
-              <ImagePlus />
-              <span>{text("Add work")}</span>
-              <input
-                accept="image/jpeg,image/png,image/webp"
-                hidden
-                id="vendor-portfolio-images"
-                name="portfolioImages"
-                multiple
-                onChange={addPortfolioImages}
-                type="file"
-              />
-            </label>
-          )}
+      <label className="image-upload-tile profile-upload">
+        {value.profileImage ? (
+          <Image alt="" fill sizes="180px" src={value.profileImage} unoptimized />
+        ) : (
+          <>
+            <ImagePlus />
+            <span>{text("Profile image")}</span>
+          </>
+        )}
+        <input
+          accept="image/jpeg,image/png,image/webp"
+          hidden
+          id="vendor-profile-image"
+          name="profileImage"
+          onChange={selectProfileImage}
+          type="file"
+        />
+      </label>
+      <div className="onboarding-section-heading">
+        <span>4</span>
+        <div>
+          <h2>{text("Portfolio images")}</h2>
+          <p>
+            {text(
+              "Show selected examples of your work. These images are separate from your profile image.",
+            )}
+          </p>
         </div>
+      </div>
+      <div className="portfolio-upload-list">
+        {value.portfolioImages.map((image, index) => (
+          <div className="portfolio-upload-preview" key={`${image.slice(-20)}-${index}`}>
+            <Image alt="" fill sizes="140px" src={image} unoptimized />
+            <button
+              aria-label={text("Remove image")}
+              onClick={() => {
+                setRemovedImages((current) => [...current, image]);
+                update(
+                  "portfolioImages",
+                  value.portfolioImages.filter((_, item) => item !== index),
+                );
+              }}
+              type="button"
+            >
+              <X size={14} />
+            </button>
+          </div>
+        ))}
+        {value.portfolioImages.length < 6 && (
+          <label className="image-upload-tile">
+            <ImagePlus />
+            <span>{text("Add work")}</span>
+            <input
+              accept="image/jpeg,image/png,image/webp"
+              hidden
+              id="vendor-portfolio-images"
+              name="portfolioImages"
+              multiple
+              onChange={addPortfolioImages}
+              type="file"
+            />
+          </label>
+        )}
       </div>
       <small>{text("Up to 6 JPG, PNG or WebP images, each smaller than 5 MB.")}</small>
       <div className="settings-actions">

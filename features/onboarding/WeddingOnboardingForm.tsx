@@ -11,6 +11,7 @@ import { YesSelect } from "@/components/ui/YesSelect";
 import { CharacterCount } from "@/components/forms/CharacterCount";
 import { FieldLabel } from "@/components/forms/FieldLabel";
 import { useCurrency } from "@/components/providers/CurrencyProvider";
+import { countryOptions } from "@/lib/countries";
 import {
   budgetRanges,
   guestRanges,
@@ -59,7 +60,7 @@ export function WeddingOnboardingForm({
   venueOptions?: string[];
 }) {
   const router = useRouter();
-  const { text } = useLanguage();
+  const { language, text } = useLanguage();
   const { currency, displayMoney } = useCurrency();
   const [value, setValue] = useState(initialValue ?? emptyValue);
   const [saving, setSaving] = useState(false);
@@ -304,11 +305,13 @@ export function WeddingOnboardingForm({
         </label>
         <label>
           <FieldLabel required>{text("Wedding location")}</FieldLabel>
-          <input
+          <YesSelect
+            ariaLabel={text("Wedding location")}
             id="wedding-location"
             name="location"
-            onChange={(event) => update("location", event.target.value)}
-            placeholder={text("City or area")}
+            onChange={(country) => update("location", country)}
+            options={countryOptions(language)}
+            placeholder={text("Select a country")}
             required
             value={value.location}
           />

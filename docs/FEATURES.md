@@ -21,6 +21,7 @@
 - Note search, creation, editing and removal
 - Responsive reports and marketplace portfolios
 - Profile settings, language settings and preference toggles
+- Seeded vendor listings show only a verification icon after an administrator approves an ownership claim. Business users submit claims from the listing profile; administrators review them in the System Admin dashboard.
 
 Preview changes persist in the browser. API mode persists wedding-module records through the current .NET backend.
 

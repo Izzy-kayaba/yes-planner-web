@@ -1,6 +1,6 @@
 "use client";
 
-import { Search } from "lucide-react";
+import { BadgeCheck, Search } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useMemo, useState } from "react";
@@ -22,6 +22,7 @@ export type MarketplaceVendor = {
   startingPriceMinor: number;
   startingPriceRangeKey?: string;
   profileImage: string;
+  claimed: boolean;
 };
 
 export function LiveMarketplace({ vendors }: { vendors: MarketplaceVendor[] }) {
@@ -150,6 +151,13 @@ export function LiveMarketplace({ vendors }: { vendors: MarketplaceVendor[] }) {
               <div className="vendor-card-copy">
                 <p>{vendor.services.map(text).join(" · ")}</p>
                 <h3>{vendor.businessName}</h3>
+                {vendor.claimed && (
+                  <BadgeCheck
+                    aria-label={text("Verified business")}
+                    className="vendor-verified-icon"
+                    size={17}
+                  />
+                )}
                 <p>{vendor.serviceArea}</p>
                 <strong>{priceLabel(vendor)}</strong>
                 <Link

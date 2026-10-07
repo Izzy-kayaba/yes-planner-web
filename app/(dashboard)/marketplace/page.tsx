@@ -22,6 +22,7 @@ export default async function MarketplacePage() {
     startingPriceMinor: Number(profile.startingPriceMinor ?? 0),
     startingPriceRangeKey: String(profile.startingPriceRangeKey ?? ""),
     profileImage: String(profile.profileImage ?? ""),
+    claimed: Boolean(profile.claimed || (profile.ownerUserId && !profile.seeded)),
   }));
   return <LiveMarketplace vendors={vendors} />;
 }

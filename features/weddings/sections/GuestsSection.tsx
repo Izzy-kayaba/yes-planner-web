@@ -2,6 +2,7 @@
 
 import { Pencil, Plus, Trash2 } from "lucide-react";
 import { useMemo, useState } from "react";
+import { useParams } from "next/navigation";
 import {
   EntityDialog,
   type EntityField,
@@ -25,6 +26,8 @@ export function GuestsSection() {
   const { items, create, update, remove } = useWorkspaceCollection<Guest>("guests", guestSeed);
   const { items: tables } = useWorkspaceCollection<TableOption>("seating", []);
   const { items: menus } = useWorkspaceCollection<MenuOption>("food-drinks", []);
+  const params = useParams<{ weddingId?: string }>();
+  const weddingPath = params.weddingId ? `/weddings/${params.weddingId}` : "/weddings";
   const [query, setQuery] = useState("");
   const [status, setStatus] = useState("All");
   const [editing, setEditing] = useState<Guest | null>(null);
@@ -55,6 +58,9 @@ export function GuestsSection() {
       type: "select",
       options: menus.map((menu) => menu.name),
       required: true,
+      emptyMessage: "No meal options exist yet.",
+      setupHref: `${weddingPath}/food-drinks`,
+      setupLabel: "Set up meal options",
     },
     {
       name: "table",
@@ -62,6 +68,9 @@ export function GuestsSection() {
       type: "select",
       options: tables.map((table) => table.name),
       required: true,
+      emptyMessage: "No tables exist yet.",
+      setupHref: `${weddingPath}/seating`,
+      setupLabel: "Set up tables",
     },
   ];
   const filtered = useMemo(
@@ -139,64 +148,66 @@ export function GuestsSection() {
             </button>
           </div>
         </div>
-        <div className="data-table">
-          <div className="table-head">
-            <span>{text("Guest")}</span>
-            <span>{text("Group")}</span>
-            <span>{text("RSVP")}</span>
-            <span>{text("Meal")}</span>
-            <span>{text("Table")}</span>
-            <span />
-          </div>
-          {filtered.map((guest) => (
-            <div className="table-row" key={guest.id}>
-              <span className="person-cell">
-                <i>{getInitials(guest.name)}</i>
-                <b>
-                  {guest.name}
-                  <small>{guest.phoneNumber}</small>
-                  {guest.email && <small>{guest.email}</small>}
-                </b>
-              </span>
-              <span>{text(guest.group)}</span>
-              <span>
-                <StatusPill
-                  tone={
-                    guest.status === "Attending"
-                      ? "sage"
-                      : guest.status === "Declined"
-                        ? "rose"
-                        : "gold"
-                  }
-                >
-                  {guest.status}
-                </StatusPill>
-              </span>
-              <span>{text(guest.meal)}</span>
-              <span>{text(guest.table)}</span>
-              <span className="flex justify-end gap-2">
-                <button
-                  className="icon-button"
-                  aria-label={`${text("Edit")} ${guest.name}`}
-                  onClick={() => {
-                    setEditing(guest);
-                    setDialogOpen(true);
-                  }}
-                >
-                  <Pencil size={14} />
-                </button>
-                <button
-                  className="icon-button"
-                  aria-label={`${text("Delete")} ${guest.name}`}
-                  onClick={() => {
-                    if (window.confirm(`${text("Remove")} ${guest.name}?`)) void remove(guest.id);
-                  }}
-                >
-                  <Trash2 size={14} />
-                </button>
-              </span>
+        <div className="guest-table-scroll">
+          <div className="data-table">
+            <div className="table-head">
+              <span>{text("Guest")}</span>
+              <span>{text("Group")}</span>
+              <span>{text("RSVP")}</span>
+              <span>{text("Meal")}</span>
+              <span>{text("Table")}</span>
+              <span />
             </div>
-          ))}
+            {filtered.map((guest) => (
+              <div className="table-row" key={guest.id}>
+                <span className="person-cell">
+                  <i>{getInitials(guest.name)}</i>
+                  <b>
+                    {guest.name}
+                    <small>{guest.phoneNumber}</small>
+                    {guest.email && <small>{guest.email}</small>}
+                  </b>
+                </span>
+                <span>{text(guest.group)}</span>
+                <span>
+                  <StatusPill
+                    tone={
+                      guest.status === "Attending"
+                        ? "sage"
+                        : guest.status === "Declined"
+                          ? "rose"
+                          : "gold"
+                    }
+                  >
+                    {guest.status}
+                  </StatusPill>
+                </span>
+                <span>{text(guest.meal)}</span>
+                <span>{text(guest.table)}</span>
+                <span className="flex justify-end gap-2">
+                  <button
+                    className="icon-button"
+                    aria-label={`${text("Edit")} ${guest.name}`}
+                    onClick={() => {
+                      setEditing(guest);
+                      setDialogOpen(true);
+                    }}
+                  >
+                    <Pencil size={14} />
+                  </button>
+                  <button
+                    className="icon-button"
+                    aria-label={`${text("Delete")} ${guest.name}`}
+                    onClick={() => {
+                      if (window.confirm(`${text("Remove")} ${guest.name}?`)) void remove(guest.id);
+                    }}
+                  >
+                    <Trash2 size={14} />
+                  </button>
+                </span>
+              </div>
+            ))}
+          </div>
         </div>
         <div className="table-footer">
           <span>

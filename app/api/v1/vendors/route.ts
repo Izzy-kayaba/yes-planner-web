@@ -19,6 +19,8 @@ export async function GET(request: Request) {
       startingPriceRangeKey: 1,
       profileImage: 1,
       portfolioImages: 1,
+      claimed: 1,
+      seeded: 1,
     })
     .sort({ businessName: 1 })
     .toArray();
@@ -34,6 +36,7 @@ export async function GET(request: Request) {
       startingPriceRangeKey: vendor.startingPriceRangeKey ?? "",
       profileImage: vendor.profileImage ?? "",
       portfolioImages: vendor.portfolioImages ?? [],
+      claimed: Boolean(vendor.claimed || (vendor.ownerUserId && !vendor.seeded)),
     })),
   );
 }

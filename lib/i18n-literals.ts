@@ -828,7 +828,6 @@ const frenchByEnglish: Record<string, string> = {
   "Request could not be updated.": "Demande non mise à jour.",
   "Security controls": "Contrôles de sécurité",
   "Selected work": "Réalisations",
-  "Sending…": "Envoi…",
   "Server protected": "Protégé par le serveur",
   "Set up the details clients and team members will use.": "Configurez les informations utiles.",
   "System administration": "Administration système",
@@ -947,6 +946,21 @@ const frenchByEnglish: Record<string, string> = {
   "Your RSVP could not be saved.": "Votre r\u00e9ponse n'a pas \u00e9t\u00e9 enregistr\u00e9e.",
   "Business description must contain at least 30 characters.":
     "La description doit contenir au moins 30 caract\u00e8res.",
+  "Claimed business": "Entreprise revendiqu\u00e9e",
+  "Unclaimed listing": "Fiche non revendiqu\u00e9e",
+  "Is this your business?": "Cette entreprise est-elle la v\u00f4tre ?",
+  "Create a business account, then request ownership so you can manage this profile and portfolio.":
+    "Cr\u00e9ez un compte professionnel, puis demandez la propri\u00e9t\u00e9 de cette fiche.",
+  "Claim this business": "Revendiquer cette entreprise",
+  "Claim request sent for review.": "Demande de revendication envoy\u00e9e.",
+  "Claim request could not be sent.": "Demande de revendication impossible.",
+  "Sending…": "Envoi…",
+  "Choose the main image that represents your business in search results.":
+    "Choisissez l'image principale de votre entreprise dans les recherches.",
+  "Show selected examples of your work. These images are separate from your profile image.":
+    "Montrez vos r\u00e9alisations. Ces images sont distinctes de votre profil.",
+  "Suggested couple display names": "Suggestions de nom du couple",
+  "Choose a suggested name": "Choisir un nom sugg\u00e9r\u00e9",
 };
 
 const literalKeyByEnglish = new Map(

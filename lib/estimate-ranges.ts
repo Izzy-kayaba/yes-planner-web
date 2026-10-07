@@ -19,11 +19,12 @@ export const budgetRanges: MoneyRange[] = [
 ];
 
 export const vendorPriceRanges: MoneyRange[] = [
-  { id: "under-500", minMinor: 0, maxMinor: 50_000 },
-  { id: "500-1000", minMinor: 50_000, maxMinor: 100_000 },
-  { id: "1000-2500", minMinor: 100_000, maxMinor: 250_000 },
-  { id: "2500-5000", minMinor: 250_000, maxMinor: 500_000 },
-  { id: "5000-plus", minMinor: 500_000, maxMinor: null },
+  // Keep the first legacy key so existing profiles remain readable, but never present a zero-price range.
+  { id: "under-500", minMinor: 50_000, maxMinor: 500_000 },
+  { id: "500-1000", minMinor: 500_000, maxMinor: 1_000_000 },
+  { id: "1000-2500", minMinor: 1_000_000, maxMinor: 2_500_000 },
+  { id: "2500-5000", minMinor: 2_500_000, maxMinor: 5_000_000 },
+  { id: "5000-plus", minMinor: 5_000_000, maxMinor: null },
 ];
 
 export const guestRanges: GuestRange[] = [

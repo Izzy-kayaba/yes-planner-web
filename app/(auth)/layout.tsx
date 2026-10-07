@@ -39,9 +39,7 @@ export default async function AuthLayout({ children }: { children: ReactNode }) 
         <div className="auth-orbit orbit-one" />
         <div className="auth-orbit orbit-two" />
       </section>
-      <section className="auth-panel">
-        {children}
-      </section>
+      <section className="auth-panel">{children}</section>
     </main>
   );
 }

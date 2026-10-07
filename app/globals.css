@@ -273,11 +273,39 @@
   display: grid;
   grid-auto-columns: 1fr;
   overflow-y: auto;
+  scrollbar-color: color-mix(in srgb, var(--wine) 42%, var(--line)) var(--surface-soft);
+  scrollbar-width: thin;
   padding: 6px;
   border: 1px solid var(--line);
   border-radius: 14px;
   background: var(--surface);
   box-shadow: var(--shadow);
+}
+.yes-select-options::-webkit-scrollbar {
+  width: 0.45rem;
+}
+.yes-select-options::-webkit-scrollbar-track {
+  background: var(--surface-soft);
+  border-radius: 999px;
+}
+.yes-select-options::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--wine) 42%, var(--line));
+  border-radius: 999px;
+}
+.yes-modal-scroll {
+  scrollbar-color: color-mix(in srgb, var(--wine) 42%, var(--line)) transparent;
+  scrollbar-width: thin;
+}
+.yes-modal-scroll::-webkit-scrollbar {
+  width: 0.45rem;
+}
+.yes-modal-scroll::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 999px;
+}
+.yes-modal-scroll::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--wine) 42%, var(--line));
+  border-radius: 999px;
 }
 .yes-select-options button {
   width: 100%;

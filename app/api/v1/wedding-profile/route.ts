@@ -14,7 +14,11 @@ const weddingProfileSchema = z.object({
   displayName: z.string().trim().max(100).optional(),
   weddingDate: z.iso.date(),
   venue: z.string().trim().min(2).max(180),
-  location: z.string().trim().min(2).max(180),
+  location: z
+    .string()
+    .trim()
+    .length(2)
+    .regex(/^[A-Z]{2}$/, "Select a valid wedding country."),
   budgetMinor: z.coerce.number().int().positive().max(100_000_000_000),
   budgetRangeKey: z.string().refine((value) => budgetRanges.some((range) => range.id === value)),
   estimatedGuests: z.coerce.number().int().positive().max(100_000),

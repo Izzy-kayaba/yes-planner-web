@@ -6,6 +6,7 @@ import { requirePageRole } from "@/lib/auth/session";
 import { getInitials } from "@/lib/initials";
 import { getTextTranslator } from "@/lib/i18n-server";
 import { mongoDb } from "@/lib/mongodb";
+import { ClaimReviewPanel } from "@/features/admin/ClaimReviewPanel";
 
 export async function generateMetadata(): Promise<Metadata> {
   const text = await getTextTranslator();
@@ -20,6 +21,7 @@ export default async function AdminPage() {
     ? { users: 0, couples: 0, professionals: 0, records: 0 }
     : await loadMetrics();
   const users = demoMode ? [] : await loadRecentUsers();
+  const claims = demoMode ? [] : await loadClaims();
 
   return (
     <div className="section-stack">
@@ -55,6 +57,7 @@ export default async function AdminPage() {
         />
       </section>
       <section className="dashboard-grid">
+        <ClaimReviewPanel initialClaims={claims} />
         <article className="panel">
           <div className="panel-header">
             <div>
@@ -109,6 +112,21 @@ export default async function AdminPage() {
       </section>
     </div>
   );
+}
+
+async function loadClaims() {
+  const claims = await mongoDb
+    .collection("vendorClaims")
+    .find({ status: "Pending" })
+    .sort({ createdAt: 1 })
+    .limit(50)
+    .toArray();
+  return claims.map((claim) => ({
+    id: String(claim._id),
+    businessName: String(claim.businessName ?? ""),
+    claimantUserId: String(claim.claimantUserId ?? ""),
+    createdAt: String(claim.createdAt ?? ""),
+  }));
 }
 
 async function loadMetrics() {
