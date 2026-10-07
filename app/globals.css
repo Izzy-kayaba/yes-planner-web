@@ -263,12 +263,11 @@
 }
 .yes-select-options {
   width: max-content;
-  min-width: 100%;
   max-height: 260px;
   max-width: min(500px, calc(100vw - 24px));
-  position: absolute;
+  position: fixed;
   z-index: 80;
-  top: calc(100% + 7px);
+  top: 0;
   left: 0;
   display: grid;
   grid-auto-columns: 1fr;
@@ -280,6 +279,7 @@
   border-radius: 14px;
   background: var(--surface);
   box-shadow: var(--shadow);
+  visibility: hidden;
 }
 .yes-select-options::-webkit-scrollbar {
   width: 0.45rem;
@@ -348,12 +348,7 @@
   border-radius: 0;
   background: transparent;
 }
-.yes-select-compact .yes-select-options {
-  width: 100%;
-  right: 0;
-  left: auto;
-}
-.yes-select-compact .yes-select-options button {
+.yes-select-options-compact button {
   min-height: 42px;
   padding: 9px;
   font-size: 12px;

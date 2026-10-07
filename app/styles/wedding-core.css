@@ -3,16 +3,6 @@
   overflow: hidden;
   padding: 0;
 }
-.guest-table-panel:has(.yes-select-trigger[aria-expanded="true"]) {
-  position: relative;
-  z-index: 10;
-  overflow: visible;
-}
-.guest-table-panel .table-toolbar {
-  position: relative;
-  z-index: 2;
-}
-
 .guest-table-scroll {
   max-width: 100%;
   max-height: min(70vh, 42rem);

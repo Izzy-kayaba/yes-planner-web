@@ -70,10 +70,10 @@ export default async function HomePage() {
         </div>
         <div className="landing-actions">
           <Link className="text-link" href="/login">
-            {text("Sign in")}
+            {text("Start planning")}
           </Link>
           <Link className="button button-primary text-center" href="/register">
-            {text("Start planning")}
+            {text("Sign in")}
           </Link>
         </div>
       </nav>
