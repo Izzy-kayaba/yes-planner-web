@@ -247,12 +247,58 @@
   gap: 10px;
   border-bottom: 1px solid var(--line);
 }
+.claim-review-list > div {
+  grid-template-columns: minmax(0, 1fr) auto;
+  padding-block: 12px;
+  border-radius: 10px;
+}
+.claim-review-list > .claim-review-item-clickable {
+  padding-inline: 12px;
+  cursor: pointer;
+  transition: background-color 150ms ease;
+}
+.claim-review-list > .claim-review-item-clickable:hover,
+.claim-review-list > .claim-review-item-clickable:focus-within {
+  background-color: color-mix(in srgb, var(--wine) 5%, transparent);
+}
+.claim-review-list > .claim-review-item-static {
+  padding-inline: 0;
+  cursor: default;
+}
+.claim-review-list > div:last-child {
+  border-bottom: 0;
+}
+.claim-review-list p {
+  min-width: 0;
+}
+.claim-review-row-link {
+  display: block;
+  min-width: 0;
+  border-radius: 8px;
+  color: inherit;
+  text-decoration: none;
+}
+.claim-review-row-link:focus-visible {
+  outline: 2px solid var(--wine);
+  outline-offset: 3px;
+}
+.claim-review-list p small {
+  overflow-wrap: anywhere;
+}
 .workload-list > div {
   min-height: 60px;
   display: grid;
   grid-template-columns: 38px 1fr 110px 30px;
   align-items: center;
   gap: 10px;
+}
+@media (max-width: 520px) {
+  .claim-review-list > div {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .claim-review-list > div > span {
+    justify-content: flex-start;
+  }
 }
 .revenue-number {
   display: grid;

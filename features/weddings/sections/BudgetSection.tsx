@@ -5,6 +5,7 @@ import { useState } from "react";
 import { EntityDialog, type EntityFormValue } from "@/components/forms/EntityDialog";
 import { useLanguage } from "@/components/providers/LanguageProvider";
 import { useCurrency } from "@/components/providers/CurrencyProvider";
+import { Pagination } from "@/components/ui/Pagination";
 import { useWorkspaceCollection } from "@/hooks/useWorkspaceCollection";
 import { budgetCategories } from "@/lib/demo-data";
 
@@ -43,7 +44,8 @@ const fields = [
 export function BudgetSection() {
   const { text } = useLanguage();
   const { displayMoney } = useCurrency();
-  const { items, create, update, remove } = useWorkspaceCollection<BudgetCategory>("budget", seed);
+  const { items, create, update, remove, page, setPage, pagination } =
+    useWorkspaceCollection<BudgetCategory>("budget", seed);
   const [editing, setEditing] = useState<BudgetCategory | null>(null);
   const [open, setOpen] = useState(false);
   const total = items.reduce((sum, item) => sum + item.budgetMinor, 0);
@@ -135,6 +137,12 @@ export function BudgetSection() {
             </div>
           ))}
         </div>
+        <Pagination
+          page={page}
+          pageSize={pagination.pageSize}
+          total={pagination.totalItems}
+          onChange={setPage}
+        />
       </section>
       <EntityDialog
         open={open}

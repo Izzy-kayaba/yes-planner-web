@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { requireApiSession } from "@/lib/auth/session";
 import { ensureMongoIndexes, mongoDb } from "@/lib/mongodb";
-import { isVendorService } from "@/lib/vendors/services";
+import { isVendorService, weddingPlanningService } from "@/lib/vendors/services";
 import { vendorPriceRanges } from "@/lib/estimate-ranges";
 
 const imageSchema = z
@@ -50,6 +50,7 @@ function publicProfile(document: Record<string, unknown>) {
   };
 }
 
+// Return only the signed-in business owner's profile, never another account's draft.
 export async function GET(request: Request) {
   const authentication = await requireApiSession(request.headers);
   if (authentication.error) return authentication.error;
@@ -102,6 +103,15 @@ export async function PUT(request: Request) {
   if (authentication.session.user.role === "Venue" && !parsed.data.services.includes("Venue")) {
     return NextResponse.json(
       { message: "A venue account must include the Venue service." },
+      { status: 400 },
+    );
+  }
+  if (
+    authentication.session.user.role === "Venue" &&
+    parsed.data.services.includes(weddingPlanningService)
+  ) {
+    return NextResponse.json(
+      { message: "Venue accounts cannot offer wedding-planning management." },
       { status: 400 },
     );
   }

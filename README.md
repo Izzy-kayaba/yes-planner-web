@@ -1,42 +1,21 @@
-# Yes Planner Frontend
+# Yes Planner
 
-This repository contains the mobile-first Next.js application for Yes Planner. Its server routes provide Better Auth, MongoDB-backed application data and access control. The older ASP.NET Core project remains in a separate repository as a legacy integration option.
+Yes Planner is a mobile-first wedding-planning web application built with Next.js, React, TypeScript, Better Auth, and MongoDB.
 
-## Included experiences
+## What is included
 
-- Premium public landing and authentication pages
-- Shared couple and Full Manager wedding workspace
-- Guests, budget, tasks, vendors, timeline, seating, menus, documents, bookings, payments, notes and reports
-- Direct vendor contact and opt-in event notifications through WhatsApp
-- Venue organisation experience
-- Vendor marketplace and business dashboard; Wedding Planning is a vendor service
-- Mobile guest invitation and RSVP journey
-- Platform administration and account settings
-- Responsive light and dark themes
-- Central API client, display permission helpers and translation foundation
+- Couple wedding workspace for guests, budget, tasks, vendors, timeline, seating, food, documents, bookings, payments, and notes.
+- Vendor and Venue business profiles and marketplace discovery.
+- Couple-assigned, wedding-specific planner access.
+- Read-only wedding brief for an assigned Venue.
+- Guest invitation and RSVP experience.
+- English and French interface, responsive navigation, and light/dark themes.
 
-## Frontend design system
+The Venue organisation, staff, subscription, and production media-storage capabilities described in the long-term product direction are not all implemented yet. Read the [feature matrix](docs/product/FEATURE_MATRIX.md) before assuming a capability is available.
 
-Tailwind CSS owns the shared Yes Planner design tokens and reusable utility styles. The token bridge is defined in `app/globals.css` and covers the wine, blush, sage, gold, blue and neutral palette together with display typography and shadows.
+## Quick start
 
-Reusable interface components live in `components/ui`, while wedding-specific components live with the wedding feature. Bespoke CSS is reserved for decorative editorial artwork and complex layouts that are clearer as named visual compositions.
-
-The runtime dependency set is deliberately focused. Next.js and React provide the application structure, while Tailwind CSS owns visual consistency. The supporting libraries each have one defined responsibility:
-
-- `lucide-react` for accessible, consistent interface icons
-- `react-hook-form` and `zod` for efficient form state and shared validation rules
-- `sonner` for global notifications
-- `date-fns` for date formatting and countdown calculations
-- `clsx` and `tailwind-merge` for reusable conditional Tailwind classes
-- `recharts` for dashboard analytics only
-- `embla-carousel-react` for touch-friendly vendor portfolios
-- `next-themes` for persistent light, dark and system preferences
-
-HTTP requests continue to use the native `fetch` wrapper in `lib/api/client.ts`; Axios and a general-purpose component library are intentionally not included.
-
-The proposal contains more modules than the persisted data layer currently covers. Those screens can still use realistic demonstration data for review, while API mode is the secure foundation for authentication, profile information and editable workspace records. Server routes remain the final authority for every permission decision.
-
-## Local development
+Requirements: Node.js 20.9 or newer, npm, and MongoDB for persisted API mode.
 
 ```powershell
 Copy-Item .env.example .env.local
@@ -44,24 +23,12 @@ npm.cmd install
 npm.cmd run dev
 ```
 
-Open `http://localhost:3000`. The invitation preview is at `/invite/ruth-and-izzy`.
-
-API mode is the default. Run MongoDB and configure `.env.local` to use real accounts and server-managed sessions. Set `NEXT_PUBLIC_DATA_SOURCE=demo` only when a browser-persisted preview is needed.
-
-## Documentation
-
-- [Currency display and USD storage](docs/CURRENCY.md)
-
-- [Project overview for teams](docs/PROJECT_OVERVIEW.md)
-- [Folder structure](docs/FOLDER_STRUCTURE.md)
-- [Running locally](docs/RUNNING_LOCALLY.md)
-- [Backend integration and replacement](docs/BACKEND_INTEGRATION.md)
-- [Authentication, MongoDB and access control](docs/AUTHENTICATION_AND_SECURITY.md)
-- [Feature status](docs/FEATURES.md)
+Set `NEXT_PUBLIC_DATA_SOURCE=demo` for a browser-only preview or `api` for MongoDB-backed accounts and data. Keep credentials out of source control.
 
 ## Verification
 
 ```powershell
-npm.cmd run typecheck
-npm.cmd run build
+npm.cmd run test:all
 ```
+
+For local setup, test configuration, API conventions, architecture, permissions, and operational guidance, start at the [documentation index](docs/README.md).

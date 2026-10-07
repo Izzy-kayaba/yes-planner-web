@@ -10,7 +10,9 @@ export function useConnectedVendors() {
   const params = useParams<{ weddingId?: string }>();
   const [vendors, setVendors] = useState<ConnectedVendor[]>([]);
   useEffect(() => {
+    // Demo mode uses local sample data, and requests need a real wedding key in API mode.
     if (!params.weddingId || (process.env.NEXT_PUBLIC_DATA_SOURCE ?? "api") === "demo") return;
+    // Prevent an older wedding's response from replacing the current wedding's vendor list.
     let active = true;
     apiRequest<ConnectedVendor[]>(
       `/api/v1/connected-vendors?weddingKey=${encodeURIComponent(params.weddingId)}`,

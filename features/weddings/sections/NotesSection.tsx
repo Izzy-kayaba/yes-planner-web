@@ -6,6 +6,7 @@ import { EntityDialog, type EntityFormValue } from "@/components/forms/EntityDia
 import { useLanguage } from "@/components/providers/LanguageProvider";
 import { SearchField } from "@/components/forms/SearchField";
 import { useWorkspaceCollection } from "@/hooks/useWorkspaceCollection";
+import { Pagination } from "@/components/ui/Pagination";
 
 type Note = { id: string | number; title: string; body: string; color: string; date: string };
 const seed: Note[] = [
@@ -45,7 +46,10 @@ const fields = [
 
 export function NotesSection() {
   const { text } = useLanguage();
-  const { items, create, update, remove } = useWorkspaceCollection<Note>("notes", seed);
+  const { items, create, update, remove, page, setPage, pagination } = useWorkspaceCollection<Note>(
+    "notes",
+    seed,
+  );
   const [query, setQuery] = useState("");
   const [editing, setEditing] = useState<Note | null>(null);
   const [open, setOpen] = useState(false);
@@ -102,6 +106,12 @@ export function NotesSection() {
           </article>
         ))}
       </section>
+      <Pagination
+        page={page}
+        pageSize={pagination.pageSize}
+        total={pagination.totalItems}
+        onChange={setPage}
+      />
       <EntityDialog
         open={open}
         title={editing ? "Edit note" : "New note"}

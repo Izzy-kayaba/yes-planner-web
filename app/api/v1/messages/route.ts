@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { requireApiSession } from "@/lib/auth/session";
 import { ensureMongoIndexes, mongoDb } from "@/lib/mongodb";
+import { paginatedResult, parsePagination } from "@/lib/api/pagination";
 
 const sendSchema = z.object({
   recipientUserId: z.string().min(1).max(200),
@@ -39,6 +40,7 @@ async function acceptedConnection(
   return null;
 }
 
+// This route serves either the user's accepted conversations or one authorized message history.
 export async function GET(request: Request) {
   const authentication = await requireApiSession(request.headers);
   if (authentication.error) return authentication.error;
@@ -49,16 +51,65 @@ export async function GET(request: Request) {
       { status: 403 },
     );
   }
+  const query = new URL(request.url).searchParams;
+  const pagination = parsePagination(query, 25);
+  if (!pagination) {
+    return NextResponse.json({ message: "Invalid pagination parameters." }, { status: 400 });
+  }
+  await ensureMongoIndexes();
+  const participantUserId = query.get("participantUserId");
+  const weddingKey = query.get("weddingKey");
+  if (Boolean(participantUserId) !== Boolean(weddingKey)) {
+    return NextResponse.json({ message: "Invalid conversation." }, { status: 400 });
+  }
+  if (participantUserId && weddingKey) {
+    const connection = await acceptedConnection(userId, role, participantUserId, weddingKey);
+    if (!connection) {
+      return NextResponse.json({ message: "Conversation not found." }, { status: 404 });
+    }
+    const filter = {
+      weddingKey,
+      $or: [
+        { senderUserId: userId, recipientUserId: participantUserId },
+        { senderUserId: participantUserId, recipientUserId: userId },
+      ],
+    };
+    const totalItems = await mongoDb.collection("messages").countDocuments(filter);
+    const messages = await mongoDb
+      .collection("messages")
+      .find(filter)
+      .sort({ createdAt: -1, _id: -1 })
+      .skip(pagination.skip)
+      .limit(pagination.pageSize)
+      .toArray();
+    const items = messages.reverse().map((message) => ({
+      id: String(message._id),
+      body: String(message.body),
+      sentByMe: message.senderUserId === userId,
+      createdAt:
+        message.createdAt instanceof Date
+          ? message.createdAt.toISOString()
+          : String(message.createdAt),
+    }));
+    return NextResponse.json(
+      paginatedResult(items, pagination.page, pagination.pageSize, totalItems),
+    );
+  }
 
   const requestFilter = role === "Couple" ? { coupleUserId: userId } : { vendorUserId: userId };
+  const connectionFilter = { ...requestFilter, status: "Accepted" };
+  const totalItems = await mongoDb.collection("vendorRequests").countDocuments(connectionFilter);
   const connections = await mongoDb
     .collection("vendorRequests")
-    .find({ ...requestFilter, status: "Accepted" })
+    .find(connectionFilter)
+    .sort({ createdAt: -1, _id: -1 })
+    .skip(pagination.skip)
+    .limit(pagination.pageSize)
     .toArray();
   const participantIds = connections.map((connection) =>
     String(role === "Couple" ? connection.vendorUserId : connection.coupleUserId),
   );
-  const [vendorProfiles, weddingProfiles, messages] = await Promise.all([
+  const [vendorProfiles, weddingProfiles] = await Promise.all([
     mongoDb
       .collection("vendorProfiles")
       .find({ ownerUserId: { $in: participantIds } })
@@ -69,55 +120,42 @@ export async function GET(request: Request) {
       .find({ ownerUserId: { $in: participantIds } })
       .project({ ownerUserId: 1, displayName: 1 })
       .toArray(),
-    mongoDb
-      .collection("messages")
-      .find({ $or: [{ senderUserId: userId }, { recipientUserId: userId }] })
-      .sort({ createdAt: 1 })
-      .limit(1_000)
-      .toArray(),
   ]);
 
-  const conversations = connections.map((connection) => {
-    const participantUserId = String(
-      role === "Couple" ? connection.vendorUserId : connection.coupleUserId,
-    );
-    const weddingKey = String(connection.weddingKey);
-    const profile =
-      role === "Couple"
-        ? vendorProfiles.find((item) => String(item.ownerUserId) === participantUserId)
-        : weddingProfiles.find((item) => String(item.ownerUserId) === participantUserId);
-    const conversationMessages = messages.filter(
-      (message) =>
-        String(message.weddingKey) === weddingKey &&
-        ((message.senderUserId === userId && message.recipientUserId === participantUserId) ||
-          (message.senderUserId === participantUserId && message.recipientUserId === userId)),
-    );
-    return {
-      id: `${weddingKey}:${participantUserId}`,
-      participantUserId,
-      weddingKey,
-      name: String(
+  const conversations = await Promise.all(
+    connections.map(async (connection) => {
+      const participantUserId = String(
+        role === "Couple" ? connection.vendorUserId : connection.coupleUserId,
+      );
+      const weddingKey = String(connection.weddingKey);
+      const profile =
         role === "Couple"
-          ? (profile?.businessName ?? "Vendor")
-          : (profile?.displayName ?? connection.coupleName ?? "Couple"),
-      ),
-      image: role === "Couple" ? String(profile?.profileImage ?? "") : "",
-      service: String(connection.service ?? ""),
-      unreadCount: conversationMessages.filter(
-        (message) => message.recipientUserId === userId && !message.readAt,
-      ).length,
-      messages: conversationMessages.map((message) => ({
-        id: String(message._id),
-        body: String(message.body),
-        sentByMe: message.senderUserId === userId,
-        createdAt:
-          message.createdAt instanceof Date
-            ? message.createdAt.toISOString()
-            : String(message.createdAt),
-      })),
-    };
-  });
-  return NextResponse.json({ conversations });
+          ? vendorProfiles.find((item) => String(item.ownerUserId) === participantUserId)
+          : weddingProfiles.find((item) => String(item.ownerUserId) === participantUserId);
+      const unreadCount = await mongoDb.collection("messages").countDocuments({
+        senderUserId: participantUserId,
+        recipientUserId: userId,
+        weddingKey,
+        readAt: { $exists: false },
+      });
+      return {
+        id: `${weddingKey}:${participantUserId}`,
+        participantUserId,
+        weddingKey,
+        name: String(
+          role === "Couple"
+            ? (profile?.businessName ?? "Vendor")
+            : (profile?.displayName ?? connection.coupleName ?? "Couple"),
+        ),
+        image: role === "Couple" ? String(profile?.profileImage ?? "") : "",
+        service: String(connection.service ?? ""),
+        unreadCount,
+      };
+    }),
+  );
+  return NextResponse.json(
+    paginatedResult(conversations, pagination.page, pagination.pageSize, totalItems),
+  );
 }
 
 export async function POST(request: Request) {

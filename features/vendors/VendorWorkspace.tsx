@@ -10,6 +10,8 @@ import { StatusPill } from "@/components/ui/StatusPill";
 import { apiRequest } from "@/lib/api/client";
 import { getInitials } from "@/lib/initials";
 import { formatDate } from "@/lib/date-time";
+import { Pagination } from "@/components/ui/Pagination";
+import type { Pagination as PaginationMetadata } from "@/lib/api/contracts";
 
 export type VendorRequestValue = {
   id: string;
@@ -28,18 +30,21 @@ export function VendorWorkspace({
   contactName,
   services,
   portfolioCount,
+  activeWeddings,
   requests,
+  requestPagination,
 }: {
   businessName: string;
   contactName: string;
   services: string[];
   portfolioCount: number;
+  activeWeddings: { weddingKey: string; displayName: string; weddingDate: string }[];
   requests: VendorRequestValue[];
+  requestPagination: PaginationMetadata;
 }) {
   const router = useRouter();
   const { language, text } = useLanguage();
   const pending = requests.filter((request) => request.status === "Pending");
-  const accepted = requests.filter((request) => request.status === "Accepted");
 
   async function decide(id: string, status: "Accepted" | "Declined") {
     try {
@@ -50,7 +55,7 @@ export function VendorWorkspace({
       toast.success(text(status === "Accepted" ? "Request accepted." : "Request declined."));
       router.refresh();
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : text("Request could not be updated."));
+      toast.error(text(error instanceof Error ? error.message : "Request could not be updated."));
     }
   }
 
@@ -81,7 +86,7 @@ export function VendorWorkspace({
         />
         <StatCard
           label={text("Active couples")}
-          value={String(accepted.length)}
+          value={String(activeWeddings.length)}
           detail={text("Accepted collaborations")}
           tone="sage"
         />
@@ -133,6 +138,12 @@ export function VendorWorkspace({
               <p className="text-sm text-yes-muted">{text("No pending requests.")}</p>
             )}
           </div>
+          <Pagination
+            page={requestPagination.page}
+            pageSize={requestPagination.pageSize}
+            total={requestPagination.totalItems}
+            onChange={(page) => router.push(`/vendor?requestsPage=${page}`)}
+          />
         </article>
         <article className="panel">
           <div className="panel-header">
@@ -142,19 +153,17 @@ export function VendorWorkspace({
             </div>
           </div>
           <div className="request-list">
-            {accepted.length ? (
-              accepted.map((request) => (
-                <div key={request.id}>
-                  <span className="avatar">{getInitials(request.coupleName)}</span>
+            {activeWeddings.length ? (
+              activeWeddings.map((wedding) => (
+                <div key={wedding.weddingKey}>
+                  <span className="avatar">{getInitials(wedding.displayName)}</span>
                   <p>
-                    <strong>{request.coupleName}</strong>
-                    <small>
-                      {request.venue}, {request.location}
-                    </small>
+                    <strong>{wedding.displayName}</strong>
+                    <small>{formatDate(wedding.weddingDate, "D MMM YYYY", language)}</small>
                   </p>
                   <Link
                     className="button button-secondary"
-                    href={`/weddings/${request.weddingKey}`}
+                    href={`/weddings/${wedding.weddingKey}`}
                   >
                     {text("Open brief")}
                   </Link>

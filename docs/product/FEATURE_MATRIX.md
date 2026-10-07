@@ -1,0 +1,18 @@
+# Feature matrix
+
+“Available” means implemented in the current web repository. “Partial” means the UI or a subset of the workflow exists but the full production capability is not present. “Planned” means it needs future product or infrastructure work.
+
+| Area                                                                                               | Status                        | Notes                                                                                                        |
+| -------------------------------------------------------------------------------------------------- | ----------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| Couple wedding workspace                                                                           | Available                     | Server-authorized API mode; demo mode is for preview only.                                                   |
+| Guest, task, budget, seating, food, timeline, vendor, booking, payment, note, and document records | Available                     | Lists use the common paginated response contract. Document records do not imply private binary file storage. |
+| English and French interface                                                                       | Available, coverage improving | Fixed `text()` copy is checked for a French catalog entry. User-entered content is not translated.           |
+| Vendor and venue business profiles                                                                 | Available                     | Profile imagery currently uses MongoDB GridFS.                                                               |
+| Vendor marketplace and business claims                                                             | Available                     | Claims require administrator review.                                                                         |
+| Planner access                                                                                     | Available                     | A couple must assign a Vendor offering wedding planning; access is wedding-specific and revocable.           |
+| Venue wedding brief                                                                                | Available                     | Read-only fields only; no planner access.                                                                    |
+| Venue organisation, staff, spaces, multi-wedding operations                                        | Planned                       | No production organisation membership model exists yet.                                                      |
+| Subscription billing and entitlements                                                              | Planned                       | No subscription provider or entitlement service is configured.                                               |
+| Private document uploads                                                                           | Planned                       | The current media API is for public vendor-profile imagery.                                                  |
+| S3-compatible storage and malware scanning                                                         | Deferred                      | Intentionally out of current scope; see the [media roadmap](../operations/MEDIA_STORAGE_ROADMAP.md).         |
+| Deployed staging browser checks                                                                    | Partial                       | Tests exist but require a configured staging URL and dedicated test account.                                 |

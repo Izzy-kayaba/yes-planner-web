@@ -33,6 +33,7 @@ function json(message: string, status: number) {
 
 export function createRegistrationHandler(dependencies: RegistrationDependencies) {
   return async function register(request: Request) {
+    // Validate the request shape and account role before performing database or auth operations.
     const parsed = registrationSchema.safeParse(await request.json().catch(() => null));
     const accountType = parsed.success ? (parsed.data.accountType ?? parsed.data.role) : undefined;
     if (!parsed.success || !dependencies.isAllowedRole(accountType ?? "")) {
@@ -42,6 +43,7 @@ export function createRegistrationHandler(dependencies: RegistrationDependencies
     const phone = parsePhoneNumberFromString(parsed.data.phoneNumber);
     if (!phone?.isValid()) return json("Enter a valid phone number.", 400);
 
+    // Create indexes before uniqueness checks so email and phone conflicts are enforced consistently.
     await dependencies.ensureIndexes();
     const email = parsed.data.email.toLowerCase();
     const phoneNumber = phone.number;
@@ -53,6 +55,7 @@ export function createRegistrationHandler(dependencies: RegistrationDependencies
       return json("Phone number already exists.", 409);
     }
 
+    // Only the authentication provider call can fail transiently; report it and return a clear server error.
     let response: Response;
     try {
       response = await dependencies.signUp({
@@ -68,6 +71,7 @@ export function createRegistrationHandler(dependencies: RegistrationDependencies
 
     if (!response.ok) return response;
 
+    // Save profile fields after auth creates the account, using its normalized email as the lookup key.
     await dependencies.updateUser(email, {
       firstName: parsed.data.firstName,
       lastName: parsed.data.lastName,

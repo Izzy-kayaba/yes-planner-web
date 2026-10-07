@@ -7,15 +7,17 @@ export const LIST_PAGE_SIZE = 48;
 
 export function Pagination({
   page,
+  pageSize = LIST_PAGE_SIZE,
   total,
   onChange,
 }: {
   page: number;
+  pageSize?: number;
   total: number;
   onChange(page: number): void;
 }) {
   const { text } = useLanguage();
-  const pages = Math.ceil(total / LIST_PAGE_SIZE);
+  const pages = Math.ceil(total / pageSize);
   if (pages <= 1) return null;
   function changePage(nextPage: number) {
     onChange(nextPage);

@@ -5,6 +5,7 @@ import { ensureMongoIndexes, mongoDb } from "@/lib/mongodb";
 
 const users = mongoDb.collection("user");
 
+// Keep registration checks shared so account creation applies the same role and phone rules.
 export const POST = createRegistrationHandler({
   ensureIndexes: ensureMongoIndexes,
   isAllowedRole: isSelfServiceRole,

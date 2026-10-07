@@ -10,6 +10,7 @@ import {
 import { useLanguage } from "@/components/providers/LanguageProvider";
 import { useCurrency } from "@/components/providers/CurrencyProvider";
 import { SearchField } from "@/components/forms/SearchField";
+import { Pagination } from "@/components/ui/Pagination";
 import { useWorkspaceCollection } from "@/hooks/useWorkspaceCollection";
 import { useConnectedVendors } from "@/hooks/useConnectedVendors";
 
@@ -50,7 +51,8 @@ const seed: Booking[] = [
 export function BookingsSection() {
   const { text } = useLanguage();
   const { displayMoney } = useCurrency();
-  const { items, create, update, remove } = useWorkspaceCollection<Booking>("bookings", seed);
+  const { items, create, update, remove, page, setPage, pagination } =
+    useWorkspaceCollection<Booking>("bookings", seed);
   const connectedVendors = useConnectedVendors();
   const [query, setQuery] = useState("");
   const [editing, setEditing] = useState<Booking | null>(null);
@@ -142,6 +144,12 @@ export function BookingsSection() {
           </div>
         ))}
       </section>
+      <Pagination
+        page={page}
+        pageSize={pagination.pageSize}
+        total={pagination.totalItems}
+        onChange={setPage}
+      />
       <EntityDialog
         open={open}
         title={editing ? "Edit booking" : "Add booking request"}

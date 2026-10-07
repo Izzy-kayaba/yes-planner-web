@@ -9,6 +9,7 @@ const responseSchema = z.object({
   dietaryNotes: z.string().max(500).default(""),
 });
 
+// The unguessable invitation token limits public RSVP updates to one guest record.
 export async function PATCH(request: Request, context: RouteContext) {
   const { token } = await context.params;
   const parsed = responseSchema.safeParse(await request.json().catch(() => null));

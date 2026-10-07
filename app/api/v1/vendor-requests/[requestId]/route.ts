@@ -10,6 +10,7 @@ import { weddingPlanningService } from "@/lib/vendors/services";
 type RouteContext = { params: Promise<{ requestId: string }> };
 const decisionSchema = z.object({ status: z.enum(["Accepted", "Declined"]) });
 
+// A business can decide only requests addressed to its own user account.
 export async function PATCH(request: Request, context: RouteContext) {
   const authentication = await requireApiSession(request.headers);
   if (authentication.error) return authentication.error;
@@ -25,6 +26,22 @@ export async function PATCH(request: Request, context: RouteContext) {
   }
   const parsed = decisionSchema.safeParse(await request.json().catch(() => null));
   if (!parsed.success) return NextResponse.json({ message: "Invalid decision." }, { status: 400 });
+  const existingRequest = await mongoDb.collection("vendorRequests").findOne({
+    _id: new ObjectId(requestId),
+    vendorUserId: authentication.session.user.id,
+  });
+  if (!existingRequest)
+    return NextResponse.json({ message: "Request not found." }, { status: 404 });
+  if (
+    authentication.session.user.role === "Venue" &&
+    parsed.data.status === "Accepted" &&
+    existingRequest.service === weddingPlanningService
+  ) {
+    return NextResponse.json(
+      { message: "Venue accounts cannot accept wedding-planner assignments." },
+      { status: 403 },
+    );
+  }
   const vendorRequest = await mongoDb
     .collection("vendorRequests")
     .findOneAndUpdate(
@@ -52,8 +69,9 @@ export async function PATCH(request: Request, context: RouteContext) {
           weddingOwnerUserId: vendorRequest.coupleUserId,
           role: "Vendor",
           access:
-            existingCollaboration?.access === "FullManager" ||
-            vendorRequest.service === weddingPlanningService
+            authentication.session.user.role === "Vendor" &&
+            (existingCollaboration?.access === "FullManager" ||
+              vendorRequest.service === weddingPlanningService)
               ? "FullManager"
               : "Vendor",
           status: "Active",

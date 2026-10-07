@@ -1,8 +1,8 @@
-import { ObjectId } from "mongodb";
 import { NextResponse } from "next/server";
 import { requireApiSession } from "@/lib/auth/session";
-import { mongoDb } from "@/lib/mongodb";
+import { submitVendorClaim, VendorClaimError } from "@/lib/vendors/claims";
 
+// Create a pending claim for the authenticated business account; admins decide the outcome.
 export async function POST(request: Request) {
   const authentication = await requireApiSession(request.headers);
   if (authentication.error) return authentication.error;
@@ -11,32 +11,13 @@ export async function POST(request: Request) {
   }
   const body = await request.json().catch(() => null);
   const profileId = typeof body?.profileId === "string" ? body.profileId : "";
-  if (!ObjectId.isValid(profileId))
-    return NextResponse.json(
-      { message: "The vendor profile could not be found." },
-      { status: 400 },
-    );
-  const profile = await mongoDb.collection("vendorProfiles").findOne({
-    _id: new ObjectId(profileId),
-    seeded: true,
-    $or: [{ ownerUserId: { $exists: false } }, { ownerUserId: null }, { ownerUserId: "" }],
-  });
-  if (!profile)
-    return NextResponse.json(
-      { message: "This listing is already claimed or unavailable." },
-      { status: 409 },
-    );
-  const existing = await mongoDb
-    .collection("vendorClaims")
-    .findOne({ profileId, claimantUserId: authentication.session.user.id, status: "Pending" });
-  if (existing) return NextResponse.json({ status: "Pending" });
-  await mongoDb.collection("vendorClaims").insertOne({
-    profileId,
-    claimantUserId: authentication.session.user.id,
-    businessName: profile.businessName,
-    status: "Pending",
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  });
-  return NextResponse.json({ status: "Pending" }, { status: 201 });
+  try {
+    const result = await submitVendorClaim(profileId, authentication.session.user.id);
+    return NextResponse.json(result, { status: 201 });
+  } catch (error) {
+    if (error instanceof VendorClaimError) {
+      return NextResponse.json({ message: error.message }, { status: error.status });
+    }
+    throw error;
+  }
 }

@@ -23,6 +23,7 @@ type AuthorizationResult =
       params: { weddingKey: string; module: WorkspaceModule; recordId: string };
     };
 
+// Authorize the requested action before looking up a workspace record by its ID.
 async function authorize(
   request: Request,
   context: RouteContext,

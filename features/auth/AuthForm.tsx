@@ -18,6 +18,8 @@ import type { RegisterInput } from "@/lib/api/contracts";
 import { authClient } from "@/lib/auth-client";
 import { FieldLabel } from "@/components/forms/FieldLabel";
 import { PasswordInput } from "@/components/forms/PasswordInput";
+import { YesSelect } from "@/components/ui/YesSelect";
+import { apiRequest } from "@/lib/api/client";
 
 const accountTypes = [
   { value: "Couple", label: "Couple", icon: Heart },
@@ -36,6 +38,7 @@ const loginSchema = z.object({
 
 const registrationSchema = loginSchema.extend({
   accountType: z.enum(["Couple", "Venue", "Vendor"]),
+  businessProfileId: z.string().optional(),
   firstName: z.string().trim().min(2, "Enter your first name."),
   lastName: z.string().trim().min(2, "Enter your last name."),
   phoneNumber: z
@@ -58,6 +61,14 @@ type AuthValues = {
   email: string;
   phoneNumber: string;
   password: string;
+  businessProfileId?: string;
+};
+
+type ClaimableProfile = {
+  id: string;
+  businessName: string;
+  services: string[];
+  serviceArea: string;
 };
 
 export function AuthForm({
@@ -71,6 +82,8 @@ export function AuthForm({
   const { t, text } = useLanguage();
   const isRegister = mode === "register";
   const [defaultCountry, setDefaultCountry] = useState<Country>("ZA");
+  const [claimableProfiles, setClaimableProfiles] = useState<ClaimableProfile[]>([]);
+  const [claimsLoading, setClaimsLoading] = useState(false);
   const {
     register,
     control,
@@ -87,9 +100,11 @@ export function AuthForm({
       email: "",
       phoneNumber: "",
       password: "",
+      businessProfileId: "",
     },
   });
   const selectedAccountType = watch("accountType");
+  const selectedBusinessProfileId = watch("businessProfileId");
 
   useEffect(() => {
     if (!isRegister) return;
@@ -102,6 +117,35 @@ export function AuthForm({
       })
       .catch(() => setDefaultCountry("ZA"));
   }, [isRegister]);
+
+  useEffect(() => {
+    if (
+      !isRegister ||
+      selectedAccountType === "Couple" ||
+      (process.env.NEXT_PUBLIC_DATA_SOURCE ?? "api") !== "api"
+    ) {
+      setClaimableProfiles([]);
+      return;
+    }
+    const controller = new AbortController();
+    setClaimsLoading(true);
+    fetch("/api/v1/vendor-profile/claimable", { signal: controller.signal })
+      .then(async (response) => {
+        if (!response.ok) throw new Error("Business listings could not be loaded.");
+        return (await response.json()) as ClaimableProfile[];
+      })
+      .then(setClaimableProfiles)
+      .catch((error: unknown) => {
+        if (error instanceof DOMException && error.name === "AbortError") return;
+        toast.error(
+          text(error instanceof Error ? error.message : "Business listings could not be loaded."),
+        );
+      })
+      .finally(() => {
+        if (!controller.signal.aborted) setClaimsLoading(false);
+      });
+    return () => controller.abort();
+  }, [isRegister, selectedAccountType, text]);
 
   useEffect(() => {
     if (initialNotice !== "account-exists") return;
@@ -124,28 +168,57 @@ export function AuthForm({
     try {
       if (isRegister) {
         const registration = result.data as RegisterInput;
-        await getBackend().register({
+        const registered = await getBackend().register({
           ...registration,
           phoneNumber: parsePhoneNumber(registration.phoneNumber).number,
         });
+        if (registration.businessProfileId && registered.userId) {
+          try {
+            await apiRequest("/api/v1/vendor-profile/claim", {
+              method: "POST",
+              body: JSON.stringify({ profileId: registration.businessProfileId }),
+            });
+          } catch (claimError) {
+            toast.error(
+              `Your account was created, but the business claim was not submitted: ${
+                claimError instanceof Error ? claimError.message : "Please sign in and try again."
+              }`,
+            );
+            router.push("/dashboard");
+            return;
+          }
+        }
       } else await getBackend().login(result.data);
       toast.success(text(isRegister ? "Your workspace is ready." : "Welcome back."));
       router.push("/dashboard");
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : text("Authentication failed."));
+      toast.error(text(error instanceof Error ? error.message : "Authentication failed."));
     }
   }
 
   async function socialSignIn(provider: "google" | "instagram") {
     if (isRegister) {
       document.cookie = `yes-pending-account-type=${selectedAccountType}; Path=/; Max-Age=600; SameSite=Lax`;
+      if (selectedBusinessProfileId) {
+        document.cookie = `yes-pending-profile-claim=${selectedBusinessProfileId}; Path=/; Max-Age=600; SameSite=Lax`;
+      } else {
+        document.cookie = "yes-pending-profile-claim=; Path=/; Max-Age=0; SameSite=Lax";
+      }
       document.cookie = `yes-auth-intent=register:${provider}:${Date.now()}; Path=/; Max-Age=600; SameSite=Lax`;
     }
     const result = await authClient.signIn.social({
       provider,
       callbackURL: "/api/v1/auth/complete",
     });
-    if (result?.error) toast.error(result.error.message ?? text("Authentication failed."));
+    if (result?.error) {
+      toast.error(
+        provider === "google"
+          ? text(
+              "If you already created an account with this email, sign in with your password, verify your email, then connect Google from Settings → Security.",
+            )
+          : text(result.error.message ?? "Authentication failed."),
+      );
+    }
   }
 
   return (
@@ -170,6 +243,35 @@ export function AuthForm({
             ))}
           </div>
         </fieldset>
+      )}
+
+      {isRegister && selectedAccountType !== "Couple" && (
+        <label>
+          <FieldLabel>{text("Claim an existing business listing (optional)")}</FieldLabel>
+          <YesSelect
+            ariaLabel={text("Business listing to claim")}
+            value={selectedBusinessProfileId ?? ""}
+            options={[
+              {
+                value: "",
+                label: claimsLoading
+                  ? text("Loading listings…")
+                  : text("Create a new business profile"),
+              },
+              ...claimableProfiles.map((profile) => ({
+                value: profile.id,
+                label: `${profile.businessName}${profile.serviceArea ? ` · ${profile.serviceArea}` : ""}`,
+              })),
+            ]}
+            disabled={claimsLoading}
+            onChange={(value) => setValue("businessProfileId", value)}
+          />
+          <small className="form-hint">
+            {text(
+              "If you claim a listing, an administrator must verify it. Your account creation will still complete if a claim needs review.",
+            )}
+          </small>
+        </label>
       )}
 
       {isRegister && (

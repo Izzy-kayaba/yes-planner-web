@@ -14,6 +14,7 @@ import { MetricGrid } from "@/features/weddings/MetricGrid";
 import { useWorkspaceCollection } from "@/hooks/useWorkspaceCollection";
 import { getInitials } from "@/lib/initials";
 import { useConnectedVendors } from "@/hooks/useConnectedVendors";
+import { Pagination } from "@/components/ui/Pagination";
 
 type Payment = {
   id: string | number;
@@ -52,7 +53,8 @@ const seed: Payment[] = [
 export function PaymentsSection() {
   const { text } = useLanguage();
   const { displayMoney } = useCurrency();
-  const { items, create, update, remove } = useWorkspaceCollection<Payment>("payments", seed);
+  const { items, create, update, remove, page, setPage, pagination } =
+    useWorkspaceCollection<Payment>("payments", seed);
   const connectedVendors = useConnectedVendors();
   const [editing, setEditing] = useState<Payment | null>(null);
   const [open, setOpen] = useState(false);
@@ -216,6 +218,12 @@ export function PaymentsSection() {
             </div>
           ))}
         </div>
+        <Pagination
+          page={page}
+          pageSize={pagination.pageSize}
+          total={pagination.totalItems}
+          onChange={setPage}
+        />
       </section>
       <EntityDialog
         open={open}

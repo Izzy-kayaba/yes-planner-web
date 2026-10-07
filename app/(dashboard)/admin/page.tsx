@@ -1,27 +1,44 @@
 import type { Metadata } from "next";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { StatCard } from "@/components/ui/StatCard";
-import { StatusPill } from "@/components/ui/StatusPill";
 import { requirePageRole } from "@/lib/auth/session";
-import { getInitials } from "@/lib/initials";
 import { getTextTranslator } from "@/lib/i18n-server";
-import { mongoDb } from "@/lib/mongodb";
+import { ensureMongoIndexes, mongoDb } from "@/lib/mongodb";
 import { ClaimReviewPanel } from "@/features/admin/ClaimReviewPanel";
+import { AdminUsersPanel } from "@/features/admin/AdminUsersPanel";
+import { paginatedResult, parsePagination } from "@/lib/api/pagination";
+import { listPendingVendorClaims } from "@/lib/vendors/claims";
 
 export async function generateMetadata(): Promise<Metadata> {
   const text = await getTextTranslator();
   return { title: text("System administration") };
 }
 
-export default async function AdminPage() {
+export default async function AdminPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ claimsPage?: string; usersPage?: string }>;
+}) {
   const demoMode = (process.env.NEXT_PUBLIC_DATA_SOURCE ?? "api") === "demo";
-  if (!demoMode) await requirePageRole(["SystemAdmin"]);
+  if (!demoMode) {
+    await requirePageRole(["SystemAdmin"]);
+    await ensureMongoIndexes();
+  }
+  const params = await searchParams;
+  const claimsPagination =
+    parsePagination(new URLSearchParams({ page: params.claimsPage ?? "1", pageSize: "25" })) ??
+    parsePagination(new URLSearchParams());
+  const usersPagination =
+    parsePagination(new URLSearchParams({ page: params.usersPage ?? "1", pageSize: "25" })) ??
+    parsePagination(new URLSearchParams());
   const text = await getTextTranslator();
   const metrics = demoMode
     ? { users: 0, couples: 0, professionals: 0, records: 0 }
     : await loadMetrics();
-  const users = demoMode ? [] : await loadRecentUsers();
-  const claims = demoMode ? [] : await loadClaims();
+  const users = demoMode ? paginatedResult([], 1, 25, 0) : await loadRecentUsers(usersPagination!);
+  const claims = demoMode
+    ? { items: [], pagination: claimsPagination && paginatedResult([], 1, 25, 0).pagination }
+    : await loadClaims(claimsPagination!);
 
   return (
     <div className="section-stack">
@@ -57,36 +74,11 @@ export default async function AdminPage() {
         />
       </section>
       <section className="dashboard-grid">
-        <ClaimReviewPanel initialClaims={claims} />
-        <article className="panel">
-          <div className="panel-header">
-            <div>
-              <p className="eyebrow">{text("User access")}</p>
-              <h3>{text("Recent accounts")}</h3>
-            </div>
-            <StatusPill tone="sage">{text("Server protected")}</StatusPill>
-          </div>
-          <div className="request-list">
-            {users.length ? (
-              users.map((user: AdminUser) => (
-                <div key={user.id}>
-                  <span className="avatar">{getInitials(user.name)}</span>
-                  <p>
-                    <strong>{user.name}</strong>
-                    <small>{user.email}</small>
-                  </p>
-                  <StatusPill tone={user.role === "SystemAdmin" ? "rose" : "neutral"}>
-                    {user.role}
-                  </StatusPill>
-                </div>
-              ))
-            ) : (
-              <p className="text-sm text-yes-muted">
-                {text("No database users are available yet.")}
-              </p>
-            )}
-          </div>
-        </article>
+        <ClaimReviewPanel
+          initialClaims={claims.items}
+          initialPagination={claims.pagination ?? paginatedResult([], 1, 25, 0).pagination}
+        />
+        <AdminUsersPanel initialUsers={users.items} initialPagination={users.pagination} />
         <article className="panel">
           <div className="panel-header">
             <div>
@@ -114,19 +106,8 @@ export default async function AdminPage() {
   );
 }
 
-async function loadClaims() {
-  const claims = await mongoDb
-    .collection("vendorClaims")
-    .find({ status: "Pending" })
-    .sort({ createdAt: 1 })
-    .limit(50)
-    .toArray();
-  return claims.map((claim) => ({
-    id: String(claim._id),
-    businessName: String(claim.businessName ?? ""),
-    claimantUserId: String(claim.claimantUserId ?? ""),
-    createdAt: String(claim.createdAt ?? ""),
-  }));
+async function loadClaims(pagination: NonNullable<ReturnType<typeof parsePagination>>) {
+  return listPendingVendorClaims(pagination);
 }
 
 async function loadMetrics() {
@@ -141,14 +122,16 @@ async function loadMetrics() {
   return { users: userCount, couples, professionals: venues + vendors, records };
 }
 
-async function loadRecentUsers() {
+async function loadRecentUsers(pagination: NonNullable<ReturnType<typeof parsePagination>>) {
+  const totalItems = await mongoDb.collection("user").countDocuments();
   const users = await mongoDb
     .collection("user")
     .find({}, { projection: { name: 1, email: 1, role: 1, accountType: 1 } })
-    .sort({ createdAt: -1 })
-    .limit(8)
+    .sort({ createdAt: -1, _id: -1 })
+    .skip(pagination.skip)
+    .limit(pagination.pageSize)
     .toArray();
-  return users.map((user: Record<string, unknown>) => ({
+  const items = users.map((user: Record<string, unknown>) => ({
     id: String(user._id),
     name: String(user.name ?? user.email ?? "User"),
     email: String(user.email ?? ""),
@@ -156,11 +139,5 @@ async function loadRecentUsers() {
       user.accountType ?? (user.role === "Planner" ? "Vendor" : (user.role ?? "Couple")),
     ),
   }));
+  return paginatedResult(items, pagination.page, pagination.pageSize, totalItems);
 }
-
-type AdminUser = {
-  id: string;
-  name: string;
-  email: string;
-  role: string;
-};

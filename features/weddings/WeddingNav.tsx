@@ -44,8 +44,8 @@ export function WeddingNav({
     >
       {sections
         .filter(([, slug]) => {
-          if (!role || role !== "Vendor") return true;
-          if (access === "FullManager") return true;
+          if (role === "Venue") return !slug;
+          if (role !== "Vendor") return true;
           if (!slug) return true;
           return isWorkspaceModule(slug) && canUseWorkspaceModule(role, slug, "read", access);
         })

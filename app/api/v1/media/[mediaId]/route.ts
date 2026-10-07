@@ -7,6 +7,7 @@ import { mongoDb } from "@/lib/mongodb";
 export const runtime = "nodejs";
 type RouteContext = { params: Promise<{ mediaId: string }> };
 
+// Media reads are public only when the stored record explicitly marks it as a vendor-profile image.
 export async function GET(_request: Request, context: RouteContext) {
   const { mediaId } = await context.params;
   if (!ObjectId.isValid(mediaId)) return new NextResponse(null, { status: 404 });

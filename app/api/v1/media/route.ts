@@ -8,6 +8,7 @@ export const runtime = "nodejs";
 const allowedImageTypes = new Set(["image/jpeg", "image/png", "image/webp"]);
 const maximumImageBytes = 5_000_000;
 
+// Check file bytes, not only the browser-provided MIME type, before storing an image.
 function matchesImageSignature(buffer: Buffer, mimeType: string) {
   if (mimeType === "image/jpeg")
     return buffer[0] === 0xff && buffer[1] === 0xd8 && buffer[2] === 0xff;

@@ -112,7 +112,7 @@ export function WeddingOnboardingForm({
       router.refresh();
     } catch (error) {
       toast.error(
-        error instanceof Error ? error.message : text("Wedding details could not be saved."),
+        text(error instanceof Error ? error.message : "Wedding details could not be saved."),
       );
     } finally {
       setSaving(false);

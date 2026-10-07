@@ -40,7 +40,7 @@ export function PlannerOnboardingForm({ initialValue }: { initialValue: PlannerO
       router.refresh();
     } catch (error) {
       toast.error(
-        error instanceof Error ? error.message : text("Planner profile could not be saved."),
+        text(error instanceof Error ? error.message : "Planner profile could not be saved."),
       );
     } finally {
       setSaving(false);

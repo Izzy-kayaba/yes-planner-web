@@ -1,9 +1,12 @@
+import { ObjectId } from "mongodb";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { requireApiSession } from "@/lib/auth/session";
 import { ensureMongoIndexes, mongoDb } from "@/lib/mongodb";
 import { after } from "next/server";
 import { notifyUserEvent } from "@/lib/whatsapp";
+import { weddingPlanningService } from "@/lib/vendors/services";
+import { paginatedResult, parsePagination } from "@/lib/api/pagination";
 
 const requestSchema = z.object({
   vendorUserId: z.string().min(1),
@@ -28,6 +31,7 @@ function publicRequest(document: Record<string, unknown>) {
   };
 }
 
+// Couples see requests they sent; businesses see only requests sent to their own account.
 export async function GET(request: Request) {
   const authentication = await requireApiSession(request.headers);
   if (authentication.error) return authentication.error;
@@ -35,16 +39,26 @@ export async function GET(request: Request) {
   if (role !== "Vendor" && role !== "Venue" && role !== "Couple") {
     return NextResponse.json({ message: "Access denied." }, { status: 403 });
   }
+  const pagination = parsePagination(new URL(request.url).searchParams);
+  if (!pagination) {
+    return NextResponse.json({ message: "Invalid pagination parameters." }, { status: 400 });
+  }
+  await ensureMongoIndexes();
   const filter =
     role === "Vendor" || role === "Venue"
       ? { vendorUserId: authentication.session.user.id }
       : { coupleUserId: authentication.session.user.id };
+  const totalItems = await mongoDb.collection("vendorRequests").countDocuments(filter);
   const requests = await mongoDb
     .collection("vendorRequests")
     .find(filter)
-    .sort({ createdAt: -1 })
+    .sort({ createdAt: -1, _id: -1 })
+    .skip(pagination.skip)
+    .limit(pagination.pageSize)
     .toArray();
-  return NextResponse.json(requests.map(publicRequest));
+  return NextResponse.json(
+    paginatedResult(requests.map(publicRequest), pagination.page, pagination.pageSize, totalItems),
+  );
 }
 
 export async function POST(request: Request) {
@@ -72,6 +86,22 @@ export async function POST(request: Request) {
       { message: "That vendor does not offer this service." },
       { status: 400 },
     );
+  }
+  if (parsed.data.service === weddingPlanningService) {
+    const vendorUserId = parsed.data.vendorUserId;
+    const vendorAccount = ObjectId.isValid(vendorUserId)
+      ? await mongoDb
+          .collection("user")
+          .findOne({ _id: new ObjectId(vendorUserId) }, { projection: { accountType: 1, role: 1 } })
+      : await mongoDb
+          .collection("user")
+          .findOne({ id: vendorUserId }, { projection: { accountType: 1, role: 1 } });
+    if (vendorAccount?.accountType === "Venue" || vendorAccount?.role === "Venue") {
+      return NextResponse.json(
+        { message: "Wedding-planner assignments are available to Vendor accounts only." },
+        { status: 400 },
+      );
+    }
   }
   const existing = await mongoDb.collection("vendorRequests").findOne({
     coupleUserId: authentication.session.user.id,

@@ -6,34 +6,85 @@ import { StatCard } from "@/components/ui/StatCard";
 import { StatusPill } from "@/components/ui/StatusPill";
 import { getTextTranslator } from "@/lib/i18n-server";
 import { requirePageRole } from "@/lib/auth/session";
-import { mongoDb } from "@/lib/mongodb";
+import { ensureMongoIndexes, mongoDb } from "@/lib/mongodb";
 import { VendorWorkspace, type VendorRequestValue } from "@/features/vendors/VendorWorkspace";
 import { YesSelect } from "@/components/ui/YesSelect";
+import { paginatedResult, parsePagination } from "@/lib/api/pagination";
 
 export async function generateMetadata(): Promise<Metadata> {
   const text = await getTextTranslator();
   return { title: text("Vendor portal") };
 }
 
-export default async function VendorPage() {
+export default async function VendorPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ requestsPage?: string }>;
+}) {
   const demoMode = (process.env.NEXT_PUBLIC_DATA_SOURCE ?? "api") === "demo";
   if (!demoMode) {
     const session = await requirePageRole(["Vendor", "Venue"]);
-    const [profile, requests] = await Promise.all([
+    await ensureMongoIndexes();
+    const params = await searchParams;
+    const pagination =
+      parsePagination(new URLSearchParams({ page: params.requestsPage ?? "1", pageSize: "25" })) ??
+      parsePagination(new URLSearchParams())!;
+    const requestFilter = { vendorUserId: session.user.id, status: "Pending" };
+    const [profile, totalRequests, requests] = await Promise.all([
       mongoDb.collection("vendorProfiles").findOne({ ownerUserId: session.user.id }),
+      mongoDb.collection("vendorRequests").countDocuments(requestFilter),
       mongoDb
         .collection("vendorRequests")
-        .find({ vendorUserId: session.user.id })
-        .sort({ createdAt: -1 })
+        .find(requestFilter)
+        .sort({ createdAt: -1, _id: -1 })
+        .skip(pagination.skip)
+        .limit(pagination.pageSize)
         .toArray(),
     ]);
     if (!profile) redirect("/onboarding");
+    const collaborations = await mongoDb
+      .collection("weddingCollaborators")
+      .find({ userId: session.user.id, status: "Active" })
+      .project<{ weddingKey: string; weddingOwnerUserId: string }>({
+        weddingKey: 1,
+        weddingOwnerUserId: 1,
+      })
+      .toArray();
+    const weddings = collaborations.length
+      ? await mongoDb
+          .collection("weddingProfiles")
+          .find({
+            $or: collaborations.map(({ weddingKey, weddingOwnerUserId }) => ({
+              weddingKey,
+              ownerUserId: weddingOwnerUserId,
+            })),
+          })
+          .project<{
+            ownerUserId: string;
+            weddingKey: string;
+            displayName: string;
+            weddingDate: string;
+          }>({ ownerUserId: 1, weddingKey: 1, displayName: 1, weddingDate: 1 })
+          .toArray()
+      : [];
+    const weddingByKey = new Map(
+      weddings.map((wedding) => [`${wedding.ownerUserId}:${wedding.weddingKey}`, wedding]),
+    );
+    const activeWeddings = collaborations.flatMap(({ weddingKey, weddingOwnerUserId }) => {
+      const wedding = weddingByKey.get(`${weddingOwnerUserId}:${weddingKey}`);
+      return wedding ? [{ ...wedding }] : [];
+    });
     return (
       <VendorWorkspace
         businessName={String(profile.businessName)}
         contactName={String(profile.contactName)}
         portfolioCount={Array.isArray(profile.portfolioImages) ? profile.portfolioImages.length : 0}
         services={Array.isArray(profile.services) ? profile.services.map(String) : []}
+        activeWeddings={activeWeddings.map((wedding) => ({
+          weddingKey: wedding.weddingKey,
+          displayName: wedding.displayName,
+          weddingDate: wedding.weddingDate,
+        }))}
         requests={requests.map((request) => ({
           id: String(request._id),
           coupleName: String(request.coupleName ?? ""),
@@ -45,6 +96,9 @@ export default async function VendorPage() {
           status: String(request.status ?? "Pending") as VendorRequestValue["status"],
           weddingKey: String(request.weddingKey ?? ""),
         }))}
+        requestPagination={
+          paginatedResult([], pagination.page, pagination.pageSize, totalRequests).pagination
+        }
       />
     );
   }

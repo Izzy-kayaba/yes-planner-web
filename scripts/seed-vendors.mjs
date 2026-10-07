@@ -1,12 +1,14 @@
 import fs from "node:fs";
 import path from "node:path";
 import { MongoClient } from "mongodb";
-import { databaseEnvironment, loadProjectEnvironment } from "./environment.mjs";
+import { databaseEnvironment, parseScriptArguments } from "./environment.mjs";
 
 const projectRoot = process.cwd();
-loadProjectEnvironment();
-const dataFile = process.argv[2] ?? "data.json";
-const { uri, databaseName } = databaseEnvironment();
+const { environment, positional } = parseScriptArguments(process.argv.slice(2));
+if (positional.length > 1) throw new Error("Pass at most one vendor data-file path.");
+const dataFile = positional[0] ?? "data.json";
+const { uri, databaseName } = databaseEnvironment(environment);
+process.stdout.write(`Target environment: ${environment} (${databaseName})\n`);
 
 const vendors = JSON.parse(fs.readFileSync(path.resolve(projectRoot, dataFile), "utf8"));
 if (!Array.isArray(vendors) || vendors.length === 0) {

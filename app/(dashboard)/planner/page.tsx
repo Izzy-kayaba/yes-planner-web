@@ -5,6 +5,7 @@ import { StatCard } from "@/components/ui/StatCard";
 import { requirePageRole } from "@/lib/auth/session";
 import { mongoDb } from "@/lib/mongodb";
 import { getTextTranslator } from "@/lib/i18n-server";
+import { getInitials } from "@/lib/initials";
 import { offersWeddingPlanning } from "@/lib/vendors/services";
 
 export default async function PlannerPage() {
@@ -17,7 +18,41 @@ export default async function PlannerPage() {
   if (!offersWeddingPlanning(profile.services)) redirect("/vendor");
   const collaborations = await mongoDb
     .collection("weddingCollaborators")
-    .countDocuments({ userId: session.user.id, access: "FullManager", status: "Active" });
+    .find({ userId: session.user.id, access: "FullManager", status: "Active" })
+    .project<{ weddingKey: string; weddingOwnerUserId: string }>({
+      weddingKey: 1,
+      weddingOwnerUserId: 1,
+    })
+    .toArray();
+  const weddings = collaborations.length
+    ? await mongoDb
+        .collection("weddingProfiles")
+        .find({
+          $or: collaborations.map(({ weddingKey, weddingOwnerUserId }) => ({
+            weddingKey,
+            ownerUserId: weddingOwnerUserId,
+          })),
+        })
+        .project<{
+          ownerUserId: string;
+          weddingKey: string;
+          displayName: string;
+          weddingDate: string;
+        }>({
+          ownerUserId: 1,
+          weddingKey: 1,
+          displayName: 1,
+          weddingDate: 1,
+        })
+        .toArray()
+    : [];
+  const weddingByKey = new Map(
+    weddings.map((wedding) => [`${wedding.ownerUserId}:${wedding.weddingKey}`, wedding]),
+  );
+  const activeWeddings = collaborations.flatMap(({ weddingKey, weddingOwnerUserId }) => {
+    const wedding = weddingByKey.get(`${weddingOwnerUserId}:${weddingKey}`);
+    return wedding ? [{ ...wedding, weddingOwnerUserId }] : [];
+  });
   return (
     <div className="section-stack">
       <PageHeader
@@ -33,14 +68,14 @@ export default async function PlannerPage() {
       <section className="stats-grid">
         <StatCard
           label="Active weddings"
-          value={String(collaborations)}
+          value={String(activeWeddings.length)}
           detail="Shared client workspaces"
           tone="rose"
         />
         <StatCard
-          label="Team size"
+          label="Business services"
           value={String(Array.isArray(profile.services) ? profile.services.length : 0)}
-          detail="Business services"
+          detail="Services offered"
           tone="sage"
         />
         <StatCard label="Experience" value="Planning" detail="Management eligibility" tone="gold" />
@@ -49,6 +84,39 @@ export default async function PlannerPage() {
         <p className="eyebrow">{text("Service area")}</p>
         <h2>{String(profile.serviceArea)}</h2>
         <p className="mt-3 max-w-3xl text-yes-muted">{String(profile.bio)}</p>
+      </section>
+      <section className="panel">
+        <div className="panel-header">
+          <div>
+            <p className="eyebrow">{text("Client workspaces")}</p>
+            <h3>{text("Your active weddings")}</h3>
+          </div>
+        </div>
+        <div className="request-list">
+          {activeWeddings.length ? (
+            activeWeddings.map((wedding) => (
+              <div key={`${wedding.weddingOwnerUserId}:${wedding.weddingKey}`}>
+                <span className="avatar">
+                  {getInitials(wedding.displayName || text("Wedding"))}
+                </span>
+                <p>
+                  <strong>{String(wedding.displayName || text("Wedding"))}</strong>
+                  <small>{String(wedding.weddingDate ?? "")}</small>
+                </p>
+                <Link
+                  className="button button-secondary"
+                  href={`/weddings/${encodeURIComponent(wedding.weddingKey)}`}
+                >
+                  {text("Open brief")}
+                </Link>
+              </div>
+            ))
+          ) : (
+            <p className="text-sm text-yes-muted">
+              {text("Accepted wedding-planning requests will appear here.")}
+            </p>
+          )}
+        </div>
       </section>
     </div>
   );

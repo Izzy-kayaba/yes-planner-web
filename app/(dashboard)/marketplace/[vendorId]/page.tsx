@@ -31,6 +31,13 @@ export default async function VendorProfilePage({
           vendorUserId: ownerId,
         })
       : null;
+  const existingClaim =
+    ["Vendor", "Venue"].includes(session.user.role) && !ownerId
+      ? await mongoDb.collection("vendorClaims").findOne({
+          profileId: vendorId,
+          claimantUserId: session.user.id,
+        })
+      : null;
   return (
     <VendorPublicProfile
       canRequest={session.user.role === "Couple" && Boolean(ownerId)}
@@ -39,6 +46,7 @@ export default async function VendorProfilePage({
       }
       profileId={vendorId}
       claimed={Boolean(profile.claimed || (ownerId && !profile.seeded))}
+      claimStatus={existingClaim ? String(existingClaim.status) : undefined}
       requestStatus={existingRequest ? String(existingRequest.status) : undefined}
       vendor={{
         id: ownerId,

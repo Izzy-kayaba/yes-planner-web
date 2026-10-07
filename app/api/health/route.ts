@@ -3,6 +3,7 @@ import { mongoDb } from "@/lib/mongodb";
 
 export const dynamic = "force-dynamic";
 
+// Keep this check independent of user sign-in so monitors can detect database outages.
 export async function GET() {
   try {
     await mongoDb.command({ ping: 1 });

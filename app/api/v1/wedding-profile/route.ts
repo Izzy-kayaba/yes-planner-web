@@ -48,6 +48,7 @@ function publicProfile(document: Record<string, unknown>, user: Record<string, u
   };
 }
 
+// Wedding profile reads are scoped to the authenticated user, not a browser-supplied owner ID.
 export async function GET(request: Request) {
   const authentication = await requireApiSession(request.headers);
   if (authentication.error) return authentication.error;

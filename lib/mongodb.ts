@@ -46,6 +46,12 @@ export async function ensureMongoIndexes() {
     mongoDb
       .collection("workspaceItems")
       .createIndex(
+        { ownerUserId: 1, weddingKey: 1, module: 1, deletedAt: 1, createdAt: 1, _id: 1 },
+        { name: "workspace_collection_page_v1" },
+      ),
+    mongoDb
+      .collection("workspaceItems")
+      .createIndex(
         { ownerUserId: 1, weddingKey: 1, module: 1, recordId: 1 },
         { name: "workspace_record", unique: true },
       ),
@@ -76,13 +82,43 @@ export async function ensureMongoIndexes() {
         { name: "couple_vendor_request", unique: true },
       ),
     mongoDb
+      .collection("vendorRequests")
+      .createIndex(
+        { coupleUserId: 1, status: 1, createdAt: -1, _id: -1 },
+        { name: "couple_vendor_requests_page" },
+      ),
+    mongoDb
+      .collection("vendorRequests")
+      .createIndex(
+        { vendorUserId: 1, status: 1, createdAt: -1, _id: -1 },
+        { name: "vendor_couple_requests_page" },
+      ),
+    mongoDb
+      .collection("vendorClaims")
+      .createIndex(
+        { profileId: 1, claimantUserId: 1 },
+        { name: "vendor_claim_profile_claimant", unique: true },
+      ),
+    mongoDb
+      .collection("vendorClaims")
+      .createIndex({ status: 1, createdAt: 1, _id: 1 }, { name: "vendor_claims_pending_page" }),
+    mongoDb
+      .collection("user")
+      .createIndex({ createdAt: -1, _id: -1 }, { name: "admin_users_created_page" }),
+    mongoDb
+      .collection("vendorProfiles")
+      .createIndex(
+        { published: 1, businessName: 1, _id: 1 },
+        { name: "published_vendor_directory_page" },
+      ),
+    mongoDb
       .collection("weddingCollaborators")
       .createIndex({ weddingKey: 1, userId: 1 }, { name: "wedding_collaborator", unique: true }),
     mongoDb
       .collection("messages")
       .createIndex(
-        { senderUserId: 1, recipientUserId: 1, weddingKey: 1, createdAt: 1 },
-        { name: "message_conversation" },
+        { senderUserId: 1, recipientUserId: 1, weddingKey: 1, createdAt: -1, _id: -1 },
+        { name: "message_conversation_page_v1" },
       ),
     mongoDb
       .collection("messages")

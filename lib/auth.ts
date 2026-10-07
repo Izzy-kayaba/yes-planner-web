@@ -5,7 +5,7 @@ import { mongodbAdapter } from "better-auth/adapters/mongodb";
 import { genericOAuth } from "better-auth/plugins";
 import { after } from "next/server";
 import { mongoClient, mongoDb } from "@/lib/mongodb";
-import { sendPasswordResetEmail } from "@/lib/email";
+import { sendPasswordResetEmail, sendVerificationEmail } from "@/lib/email";
 import { mapInstagramProfile, type InstagramProfile } from "@/lib/auth/instagram";
 
 const googleConfigured = Boolean(process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET);
@@ -84,7 +84,40 @@ export const auth = betterAuth({
     resetPasswordTokenExpiresIn: 3_600,
     revokeSessionsOnPasswordReset: true,
     sendResetPassword: async ({ user, url }) => {
-      after(() => sendPasswordResetEmail(user.email, url));
+      after(async () => {
+        try {
+          await sendPasswordResetEmail(user.email, url);
+        } catch (error) {
+          console.error("Password reset email delivery failed", {
+            name: error instanceof Error ? error.name : "UnknownError",
+            message: error instanceof Error ? error.message : "Unknown email delivery error",
+          });
+          throw error;
+        }
+      });
+    },
+  },
+  emailVerification: {
+    sendOnSignUp: true,
+    autoSignInAfterVerification: true,
+    sendVerificationEmail: async ({ user, url }) => {
+      after(async () => {
+        try {
+          await sendVerificationEmail(user.email, url);
+        } catch (error) {
+          console.error("Verification email delivery failed", {
+            name: error instanceof Error ? error.name : "UnknownError",
+            message: error instanceof Error ? error.message : "Unknown email delivery error",
+          });
+          throw error;
+        }
+      });
+    },
+  },
+  account: {
+    accountLinking: {
+      enabled: true,
+      trustedProviders: ["google"],
     },
   },
   socialProviders: googleConfigured

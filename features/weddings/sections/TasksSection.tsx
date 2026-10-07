@@ -6,6 +6,7 @@ import { EntityDialog, type EntityFormValue } from "@/components/forms/EntityDia
 import { useLanguage } from "@/components/providers/LanguageProvider";
 import { SearchField } from "@/components/forms/SearchField";
 import { StatusPill } from "@/components/ui/StatusPill";
+import { Pagination } from "@/components/ui/Pagination";
 import { useWorkspaceCollection } from "@/hooks/useWorkspaceCollection";
 import { tasks as taskSeed } from "@/lib/demo-data";
 import type { WeddingTask } from "@/types";
@@ -26,7 +27,8 @@ const fields = [
 
 export function TasksSection() {
   const { text } = useLanguage();
-  const { items, create, update, remove } = useWorkspaceCollection<WeddingTask>("tasks", taskSeed);
+  const { items, create, update, remove, page, setPage, pagination } =
+    useWorkspaceCollection<WeddingTask>("tasks", taskSeed);
   const [filter, setFilter] = useState("All");
   const [query, setQuery] = useState("");
   const [editing, setEditing] = useState<WeddingTask | null>(null);
@@ -120,6 +122,12 @@ export function TasksSection() {
           </div>
         ))}
       </div>
+      <Pagination
+        page={page}
+        pageSize={pagination.pageSize}
+        total={pagination.totalItems}
+        onChange={setPage}
+      />
       <EntityDialog
         open={open}
         title={editing ? "Edit task" : "Add task"}

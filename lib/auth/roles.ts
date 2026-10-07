@@ -20,6 +20,7 @@ export function isSelfServiceRole(value: unknown): value is SelfServiceRole {
 
 /** Converts stored legacy roles without treating a business service as an account type. */
 export function accountTypeFromStoredUser(role: unknown, accountType: unknown): AccountType | null {
+  // Older planner-only accounts are now Vendors; new records prefer their explicit account type.
   if (role === "Planner") return "Vendor";
   if (isAccountType(role)) return role;
   return isAccountType(accountType) ? accountType : null;

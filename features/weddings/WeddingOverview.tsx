@@ -146,7 +146,7 @@ export function WeddingOverview() {
       </section>
       <EntityDialog
         open={editing}
-        title="Edit wedding details"
+        title={text("Edit wedding details")}
         fields={[
           { name: "partnerNames", label: "Couple names", required: true },
           { name: "date", label: "Wedding date", required: true },

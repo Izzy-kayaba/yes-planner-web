@@ -5,6 +5,7 @@ import { useState } from "react";
 import { EntityDialog, type EntityFormValue } from "@/components/forms/EntityDialog";
 import { useLanguage } from "@/components/providers/LanguageProvider";
 import { useWorkspaceCollection } from "@/hooks/useWorkspaceCollection";
+import { Pagination } from "@/components/ui/Pagination";
 
 type Menu = { id: string | number; name: string; starter: string; main: string; dessert: string };
 const fields = [
@@ -16,7 +17,10 @@ const fields = [
 
 export function FoodSection() {
   const { text } = useLanguage();
-  const { items, create, update, remove } = useWorkspaceCollection<Menu>("food-drinks", []);
+  const { items, create, update, remove, page, setPage, pagination } = useWorkspaceCollection<Menu>(
+    "food-drinks",
+    [],
+  );
   const { items: guests } = useWorkspaceCollection<{ id: string | number; meal: string }>(
     "guests",
     [],
@@ -93,6 +97,12 @@ export function FoodSection() {
           <p>{text("Add the meal choices guests can select from their invitation.")}</p>
         </article>
       )}
+      <Pagination
+        page={page}
+        pageSize={pagination.pageSize}
+        total={pagination.totalItems}
+        onChange={setPage}
+      />
       <EntityDialog
         open={open}
         title={editing ? "Edit meal option" : "Add meal option"}

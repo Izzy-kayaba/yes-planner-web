@@ -24,7 +24,7 @@ export function ForgotPasswordForm() {
     });
     setSending(false);
     if (result.error) {
-      setError(result.error.message ?? text("Password reset request failed."));
+      setError(text(result.error.message ?? "Password reset request failed."));
       return;
     }
     setSent(true);

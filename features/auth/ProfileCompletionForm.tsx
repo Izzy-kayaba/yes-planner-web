@@ -50,7 +50,7 @@ export function ProfileCompletionForm({
       router.push("/dashboard");
       router.refresh();
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : text("Profile could not be saved."));
+      toast.error(text(error instanceof Error ? error.message : "Profile could not be saved."));
     } finally {
       setSaving(false);
     }

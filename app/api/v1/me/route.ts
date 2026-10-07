@@ -18,11 +18,25 @@ function profile(document: Record<string, unknown>) {
     firstName: document.firstName ?? "",
     lastName: document.lastName ?? "",
     email: document.email,
+    emailVerified: document.emailVerified === true,
     phoneNumber: document.phoneNumber ?? "",
     whatsappNotifications: document.whatsappNotifications === true,
     role: document.role,
     accountType: document.accountType ?? (document.role === "Planner" ? "Vendor" : document.role),
     image: document.image ?? null,
+  };
+}
+
+// Report linked login methods without exposing provider tokens or account records.
+async function authenticationMethods(userId: string) {
+  const accounts = await mongoDb
+    .collection("account")
+    .find({ userId }, { projection: { providerId: 1 } })
+    .toArray();
+  const providers = [...new Set(accounts.map((account) => String(account.providerId)))];
+  return {
+    linkedProviders: providers.filter((provider) => provider !== "credential"),
+    hasPassword: providers.includes("credential"),
   };
 }
 
@@ -37,7 +51,10 @@ export async function GET(request: Request) {
     .collection("user")
     .findOne({ email: authentication.session.user.email });
   if (!user) return NextResponse.json({ message: "User not found." }, { status: 404 });
-  return NextResponse.json(profile(user));
+  return NextResponse.json({
+    ...profile(user),
+    ...(await authenticationMethods(authentication.session.user.id)),
+  });
 }
 
 export async function PATCH(request: Request) {
@@ -78,5 +95,8 @@ export async function PATCH(request: Request) {
     throw error;
   }
   if (!user) return NextResponse.json({ message: "User not found." }, { status: 404 });
-  return NextResponse.json(profile(user));
+  return NextResponse.json({
+    ...profile(user),
+    ...(await authenticationMethods(authentication.session.user.id)),
+  });
 }

@@ -23,12 +23,14 @@ export async function getAuthorizedSession(requestHeaders?: Headers) {
   const session = await auth.api.getSession({ headers: requestHeaders ?? (await headers()) });
   if (!session) return null;
   const storedUser = session.user as AuthSession["user"] & { accountType?: unknown };
+  // System Admin is a platform role, not a business account type, so preserve it separately.
   if (storedUser.role === "SystemAdmin") {
     return {
       ...session,
       user: { ...storedUser, role: "SystemAdmin", accountType: null },
     } as AuthorizedSession;
   }
+  // Convert legacy stored roles to a supported account type before using them for permissions.
   const accountType = accountTypeFromStoredUser(storedUser.role, storedUser.accountType);
   if (!accountType || !isPlatformRole(accountType)) return null;
   return {
@@ -46,6 +48,7 @@ export async function requireApiSession(
     return { error: NextResponse.json({ message: "Authentication required." }, { status: 401 }) };
   }
   if (!options.allowIncompleteProfile) {
+    // A session alone is not enough for normal API use until onboarding provides a phone number.
     const user = await mongoDb
       .collection("user")
       .findOne({ email: session.user.email }, { projection: { phoneNumber: 1 } });
@@ -64,6 +67,7 @@ export async function requireApiSession(
 export async function requirePageRole(allowedRoles?: readonly PlatformRole[]) {
   const session = await getAuthorizedSession();
   if (!session) redirect("/login");
+  // Send signed-in users without permission to their own settings area, not a protected page.
   if (allowedRoles && !allowedRoles.includes(session.user.role)) redirect("/settings");
   return session;
 }

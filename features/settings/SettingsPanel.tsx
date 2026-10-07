@@ -122,7 +122,13 @@ export function SettingsPanel() {
     email: "",
     phoneNumber: "",
     whatsappNotifications: false,
+    emailVerified: false,
+    linkedProviders: [] as string[],
+    hasPassword: false,
   });
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [passwordSaving, setPasswordSaving] = useState(false);
 
   useEffect(() => {
     if ((process.env.NEXT_PUBLIC_DATA_SOURCE ?? "api") === "demo") {
@@ -143,7 +149,7 @@ export function SettingsPanel() {
     }
     apiRequest<typeof profile>("/api/v1/me")
       .then(setProfile)
-      .catch((error: Error) => toast.error(error.message));
+      .catch((error: Error) => toast.error(text(error.message)));
   }, []);
 
   async function saveProfile(event: FormEvent<HTMLFormElement>) {
@@ -166,13 +172,73 @@ export function SettingsPanel() {
       toast.success(text("Profile settings saved."));
     } catch (error) {
       toast.error(
-        error instanceof Error ? error.message : text("Profile settings could not be saved."),
+        text(error instanceof Error ? error.message : "Profile settings could not be saved."),
       );
     }
   }
 
   function updateProfile<K extends keyof typeof profile>(field: K, value: (typeof profile)[K]) {
     setProfile((current) => ({ ...current, [field]: value }));
+  }
+
+  async function connectGoogle() {
+    const result = await authClient.linkSocial({
+      provider: "google",
+      callbackURL: `${window.location.origin}/settings`,
+    });
+    if (result.error) toast.error(text(result.error.message ?? "Google could not be connected."));
+  }
+
+  async function savePassword(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (newPassword.length < 8 || !/[0-9]/.test(newPassword) || !/[^A-Za-z0-9]/.test(newPassword)) {
+      toast.error(text("Use at least 8 characters with a number and a symbol."));
+      return;
+    }
+    setPasswordSaving(true);
+    try {
+      const result = profile.hasPassword
+        ? await authClient.changePassword({
+            currentPassword,
+            newPassword,
+            revokeOtherSessions: true,
+          })
+        : await apiRequest<{ status: true }>("/api/v1/me/password", {
+            method: "POST",
+            body: JSON.stringify({ newPassword }),
+          });
+      if ("error" in result && result.error)
+        throw new Error(text(result.error.message ?? "Password could not be saved."));
+      setCurrentPassword("");
+      setNewPassword("");
+      setProfile((current) => ({ ...current, hasPassword: true }));
+      toast.success(text(profile.hasPassword ? "Password changed." : "Password added."));
+    } catch (error) {
+      toast.error(text(error instanceof Error ? error.message : "Password could not be saved."));
+    } finally {
+      setPasswordSaving(false);
+    }
+  }
+
+  async function sendVerificationEmail() {
+    const result = await authClient.sendVerificationEmail({
+      email: profile.email,
+      callbackURL: `${window.location.origin}/settings`,
+    });
+    if (result.error) {
+      toast.error(text(result.error.message ?? "Verification email could not be sent."));
+      return;
+    }
+    toast.success(text("Verification email sent. Check your inbox."));
+  }
+
+  async function sendTestEmail() {
+    try {
+      await apiRequest("/api/v1/me/email-test", { method: "POST" });
+      toast.success(text("Test email sent. Check your inbox."));
+    } catch (error) {
+      toast.error(text(error instanceof Error ? error.message : "Test email could not be sent."));
+    }
   }
 
   return (
@@ -272,6 +338,42 @@ export function SettingsPanel() {
                   required
                 />
               </label>
+              <section className="grid gap-2 border-t border-yes-line pt-4">
+                <h3>{text("Sign-in providers")}</h3>
+                <p className="text-sm text-yes-muted">
+                  {text("Email and password")}:{" "}
+                  {profile.hasPassword ? text("Available") : text("Not set")}
+                  {" · "}
+                  {text("Social providers")}:{" "}
+                  {profile.linkedProviders.length
+                    ? profile.linkedProviders
+                        .map((provider) => (provider === "google" ? "Google" : provider))
+                        .join(", ")
+                    : text("None connected")}
+                </p>
+                <p className="text-sm text-yes-muted">
+                  {text(profile.emailVerified ? "Email verified" : "Email not verified")}
+                </p>
+                {!profile.emailVerified &&
+                  (process.env.NEXT_PUBLIC_DATA_SOURCE ?? "api") !== "demo" && (
+                    <button
+                      className="button button-secondary w-fit"
+                      onClick={() => void sendVerificationEmail()}
+                      type="button"
+                    >
+                      {text("Send verification email")}
+                    </button>
+                  )}
+                {(process.env.NEXT_PUBLIC_DATA_SOURCE ?? "api") !== "demo" && (
+                  <button
+                    className="button button-secondary w-fit"
+                    onClick={() => void sendTestEmail()}
+                    type="button"
+                  >
+                    {text("Send test email")}
+                  </button>
+                )}
+              </section>
               <div className="settings-actions">
                 {session?.user.role === "Couple" && (
                   <Link className="button button-secondary" href="/onboarding">
@@ -303,7 +405,78 @@ export function SettingsPanel() {
             <PreferenceList items={notificationPreferences} storageKey="notifications" />
           )}
           {active === "security" && (
-            <PreferenceList items={securityPreferences} storageKey="security" />
+            <div className="grid gap-6">
+              <section className="grid gap-4">
+                <div>
+                  <h3>{text("Sign-in methods")}</h3>
+                  <p className="mt-2 text-sm text-yes-muted">
+                    {text(
+                      "Connect Google while signed in to combine it with your existing account.",
+                    )}
+                  </p>
+                </div>
+                <p className="text-sm">
+                  {text("Connected")}:{" "}
+                  {profile.linkedProviders.length
+                    ? profile.linkedProviders
+                        .map((provider) => (provider === "google" ? "Google" : provider))
+                        .join(", ")
+                    : text("Email and password only")}
+                </p>
+                {!profile.linkedProviders.includes("google") && (
+                  <button
+                    className="button button-secondary w-fit"
+                    onClick={() => void connectGoogle()}
+                    type="button"
+                  >
+                    {text("Connect Google")}
+                  </button>
+                )}
+                <p className="text-sm text-yes-muted">
+                  {text(profile.emailVerified ? "Email verified" : "Email not verified")}
+                </p>
+              </section>
+              <form className="grid gap-4 border-t border-yes-line pt-5" onSubmit={savePassword}>
+                <div>
+                  <h3>{text(profile.hasPassword ? "Change password" : "Add a password")}</h3>
+                  <p className="mt-2 text-sm text-yes-muted">
+                    {text("Use a password as another way to sign in to this account.")}
+                  </p>
+                </div>
+                {profile.hasPassword && (
+                  <label>
+                    <FieldLabel required>{text("Current password")}</FieldLabel>
+                    <input
+                      autoComplete="current-password"
+                      onChange={(event) => setCurrentPassword(event.target.value)}
+                      required
+                      type="password"
+                      value={currentPassword}
+                    />
+                  </label>
+                )}
+                <label>
+                  <FieldLabel required>
+                    {text(profile.hasPassword ? "New password" : "Password")}
+                  </FieldLabel>
+                  <input
+                    autoComplete="new-password"
+                    onChange={(event) => setNewPassword(event.target.value)}
+                    required
+                    type="password"
+                    value={newPassword}
+                  />
+                </label>
+                <button
+                  className="button button-primary w-fit"
+                  disabled={passwordSaving}
+                  type="submit"
+                >
+                  {text(profile.hasPassword ? "Change password" : "Add password")}
+                </button>
+              </form>
+              <PreferenceList items={securityPreferences} storageKey="security" />
+            </div>
           )}
           {active === "connections" && (
             <PreferenceList items={connectionPreferences} storageKey="connections" />

@@ -10,7 +10,7 @@ export async function WeddingWorkspaceHeader({
   role,
 }: {
   access?: "Owner" | "FullManager" | "Vendor";
-  wedding?: WeddingProfile | null;
+  wedding?: Pick<WeddingProfile, "displayName" | "weddingDate"> | null;
   role?: PlatformRole;
 }) {
   const text = await getTextTranslator();
@@ -36,11 +36,13 @@ export async function WeddingWorkspaceHeader({
       </div>
       <span className="rounded-full border border-yes-line px-2.5 py-1.5 text-[11px] font-extrabold text-yes-muted max-sm:hidden">
         {text(
-          access === "FullManager"
-            ? "Wedding planner"
-            : role === "Vendor"
-              ? "Vendor collaborator"
-              : "Wedding owner",
+          role === "Venue"
+            ? "Venue viewer"
+            : access === "FullManager"
+              ? "Wedding planner"
+              : role === "Vendor"
+                ? "Vendor collaborator"
+                : "Wedding owner",
         )}
       </span>
     </div>

@@ -3,6 +3,7 @@ import { requireApiSession } from "@/lib/auth/session";
 import { resolveWeddingOwner } from "@/lib/auth/wedding-access";
 import { getConnectedVendors } from "@/lib/vendors/connected";
 
+// Resolve wedding access before returning the businesses connected to that wedding.
 export async function GET(request: Request) {
   const authentication = await requireApiSession(request.headers);
   if (authentication.error) return authentication.error;

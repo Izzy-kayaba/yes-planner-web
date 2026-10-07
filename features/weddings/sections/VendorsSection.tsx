@@ -11,6 +11,7 @@ import { useLanguage } from "@/components/providers/LanguageProvider";
 import { useCurrency } from "@/components/providers/CurrencyProvider";
 import { SearchField } from "@/components/forms/SearchField";
 import { StatusPill } from "@/components/ui/StatusPill";
+import { Pagination } from "@/components/ui/Pagination";
 import { MetricGrid } from "@/features/weddings/MetricGrid";
 import { useWorkspaceCollection } from "@/hooks/useWorkspaceCollection";
 import { vendors } from "@/lib/demo-data";
@@ -37,7 +38,8 @@ const seed: Vendor[] = vendors.map((vendor, index) => ({
 export function VendorsSection() {
   const { text } = useLanguage();
   const { displayMoney } = useCurrency();
-  const { items, create, update, remove } = useWorkspaceCollection<Vendor>("vendors", seed);
+  const { items, create, update, remove, page, setPage, pagination } =
+    useWorkspaceCollection<Vendor>("vendors", seed);
   const connectedVendors = useConnectedVendors();
   const [query, setQuery] = useState("");
   const [editing, setEditing] = useState<Vendor | null>(null);
@@ -151,7 +153,7 @@ export function VendorsSection() {
               </div>
               <h3>{vendor.name}</h3>
               <p>
-                <span className="rating">★ {vendor.rating}</span> · Johannesburg
+                <span className="rating">★ {vendor.rating}</span> {text("· Johannesburg")}
               </p>
               <strong>
                 {vendor.priceMinor ? displayMoney(vendor.priceMinor) : text("Quote required")}
@@ -180,6 +182,12 @@ export function VendorsSection() {
           </article>
         ))}
       </section>
+      <Pagination
+        page={page}
+        pageSize={pagination.pageSize}
+        total={pagination.totalItems}
+        onChange={setPage}
+      />
       <EntityDialog
         open={open}
         title={editing ? "Edit vendor" : "Add vendor"}

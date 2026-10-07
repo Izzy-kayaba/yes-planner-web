@@ -1,7 +1,10 @@
 import { MongoClient } from "mongodb";
-import { databaseEnvironment } from "./environment.mjs";
+import { databaseEnvironment, parseScriptArguments } from "./environment.mjs";
 
-const { uri, databaseName } = databaseEnvironment();
+const { environment, positional } = parseScriptArguments(process.argv.slice(2));
+if (positional.length) throw new Error("This command does not accept positional arguments.");
+const { uri, databaseName } = databaseEnvironment(environment);
+process.stdout.write(`Target environment: ${environment} (${databaseName})\n`);
 
 const client = new MongoClient(uri);
 

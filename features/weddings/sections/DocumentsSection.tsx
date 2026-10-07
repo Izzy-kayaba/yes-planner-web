@@ -6,6 +6,7 @@ import { EntityDialog, type EntityFormValue } from "@/components/forms/EntityDia
 import { useLanguage } from "@/components/providers/LanguageProvider";
 import { SearchField } from "@/components/forms/SearchField";
 import { StatusPill } from "@/components/ui/StatusPill";
+import { Pagination } from "@/components/ui/Pagination";
 import { useWorkspaceCollection } from "@/hooks/useWorkspaceCollection";
 import { formatDate } from "@/lib/date-time";
 
@@ -59,7 +60,8 @@ const fields = [
 
 export function DocumentsSection() {
   const { language, text } = useLanguage();
-  const { items, create, update, remove } = useWorkspaceCollection<DocumentItem>("documents", seed);
+  const { items, create, update, remove, page, setPage, pagination } =
+    useWorkspaceCollection<DocumentItem>("documents", seed);
   const [query, setQuery] = useState("");
   const [editing, setEditing] = useState<DocumentItem | null>(null);
   const [open, setOpen] = useState(false);
@@ -147,6 +149,12 @@ export function DocumentsSection() {
           </div>
         ))}
       </div>
+      <Pagination
+        page={page}
+        pageSize={pagination.pageSize}
+        total={pagination.totalItems}
+        onChange={setPage}
+      />
       <EntityDialog
         open={open}
         title={editing ? "Edit document" : "Add document"}

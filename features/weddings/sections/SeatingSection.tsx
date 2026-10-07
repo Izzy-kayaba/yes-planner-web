@@ -5,6 +5,7 @@ import { useState } from "react";
 import { EntityDialog, type EntityFormValue } from "@/components/forms/EntityDialog";
 import { useLanguage } from "@/components/providers/LanguageProvider";
 import { MetricGrid } from "@/features/weddings/MetricGrid";
+import { Pagination } from "@/components/ui/Pagination";
 import { useWorkspaceCollection } from "@/hooks/useWorkspaceCollection";
 
 type SeatingTable = { id: string | number; name: string; label: string; capacity: number };
@@ -24,7 +25,8 @@ const fields = [
 
 export function SeatingSection() {
   const { text } = useLanguage();
-  const { items, create, update, remove } = useWorkspaceCollection<SeatingTable>("seating", []);
+  const { items, create, update, remove, page, setPage, pagination } =
+    useWorkspaceCollection<SeatingTable>("seating", []);
   const { items: guests } = useWorkspaceCollection<GuestAssignment>("guests", []);
   const [editing, setEditing] = useState<SeatingTable | null>(null);
   const [open, setOpen] = useState(false);
@@ -121,6 +123,12 @@ export function SeatingSection() {
           <p>{text("Add tables before assigning guests to the seating plan.")}</p>
         </section>
       )}
+      <Pagination
+        page={page}
+        pageSize={pagination.pageSize}
+        total={pagination.totalItems}
+        onChange={setPage}
+      />
       <EntityDialog
         open={open}
         title={editing ? "Arrange table" : "Add table"}

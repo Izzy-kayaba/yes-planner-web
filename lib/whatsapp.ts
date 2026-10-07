@@ -71,12 +71,24 @@ export async function notifyUserEvent(userId: string, eventDescription: string) 
     .findOne(ObjectId.isValid(userId) ? { _id: new ObjectId(userId) } : { id: userId }, {
       projection: { email: 1 },
     });
-  await Promise.allSettled([
+  const results = await Promise.allSettled([
     sendWhatsAppEvent(userId, eventDescription),
     typeof user?.email === "string"
       ? sendEventEmail(user.email, "Yes Planner update", eventDescription)
       : Promise.resolve(),
   ]);
+  results.forEach((result, index) => {
+    if (result.status === "rejected") {
+      console.error(
+        index === 0 ? "WhatsApp event delivery failed" : "Email event delivery failed",
+        {
+          name: result.reason instanceof Error ? result.reason.name : "UnknownError",
+          message:
+            result.reason instanceof Error ? result.reason.message : "Unknown delivery error",
+        },
+      );
+    }
+  });
 }
 
 export async function notifyWeddingParticipants(

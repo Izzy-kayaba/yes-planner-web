@@ -8,7 +8,7 @@ import { toast } from "sonner";
 import { useLanguage } from "@/components/providers/LanguageProvider";
 import { Button } from "@/components/ui/Button";
 import { apiRequest } from "@/lib/api/client";
-import { vendorServices } from "@/lib/vendors/services";
+import { vendorServices, weddingPlanningService } from "@/lib/vendors/services";
 import { CharacterCount } from "@/components/forms/CharacterCount";
 import { FieldLabel } from "@/components/forms/FieldLabel";
 import { useCurrency } from "@/components/providers/CurrencyProvider";
@@ -73,9 +73,10 @@ export function VendorOnboardingForm({
   const { currency, displayMoney } = useCurrency();
   const [value, setValue] = useState(() => {
     const startingValue = initialValue ?? emptyValue;
-    return accountType === "Venue" && !startingValue.services.includes("Venue")
-      ? { ...startingValue, services: ["Venue", ...startingValue.services] }
-      : startingValue;
+    if (accountType !== "Venue") return startingValue;
+    const services = startingValue.services.filter((service) => service !== weddingPlanningService);
+    if (!services.includes("Venue")) services.unshift("Venue");
+    return { ...startingValue, services };
   });
   const [saving, setSaving] = useState(false);
   const [removedImages, setRemovedImages] = useState<string[]>([]);
@@ -88,7 +89,8 @@ export function VendorOnboardingForm({
   }
 
   function toggleService(service: string) {
-    if (accountType === "Venue" && service === "Venue") return;
+    if (accountType === "Venue" && (service === "Venue" || service === weddingPlanningService))
+      return;
     update(
       "services",
       value.services.includes(service)
@@ -105,7 +107,7 @@ export function VendorOnboardingForm({
       if (value.profileImage) setRemovedImages((current) => [...current, value.profileImage]);
       update("profileImage", uploaded.url);
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : text("Invalid image."));
+      toast.error(text(error instanceof Error ? error.message : "Invalid image."));
     }
   }
 
@@ -115,7 +117,7 @@ export function VendorOnboardingForm({
       const images = await Promise.all(files.map(uploadImage));
       update("portfolioImages", [...value.portfolioImages, ...images.map((image) => image.url)]);
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : text("Invalid image."));
+      toast.error(text(error instanceof Error ? error.message : "Invalid image."));
     }
   }
 
@@ -149,7 +151,7 @@ export function VendorOnboardingForm({
       router.refresh();
     } catch (error) {
       toast.error(
-        error instanceof Error ? error.message : text("Vendor profile could not be saved."),
+        text(error instanceof Error ? error.message : "Vendor profile could not be saved."),
       );
     } finally {
       setSaving(false);
@@ -215,18 +217,20 @@ export function VendorOnboardingForm({
         </div>
       </div>
       <div className="service-picker">
-        {vendorServices.map((service) => (
-          <button
-            aria-pressed={value.services.includes(service)}
-            aria-disabled={accountType === "Venue" && service === "Venue"}
-            className={value.services.includes(service) ? "selected" : ""}
-            key={service}
-            onClick={() => toggleService(service)}
-            type="button"
-          >
-            {text(service)}
-          </button>
-        ))}
+        {vendorServices
+          .filter((service) => accountType !== "Venue" || service !== weddingPlanningService)
+          .map((service) => (
+            <button
+              aria-pressed={value.services.includes(service)}
+              aria-disabled={accountType === "Venue" && service === "Venue"}
+              className={value.services.includes(service) ? "selected" : ""}
+              key={service}
+              onClick={() => toggleService(service)}
+              type="button"
+            >
+              {text(service)}
+            </button>
+          ))}
       </div>
       <div className="form-row">
         <label>

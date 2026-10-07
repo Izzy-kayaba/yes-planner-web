@@ -4,6 +4,7 @@ import moment from "moment";
 import { ChevronLeft, ChevronRight, Pencil, Plus, Trash2 } from "lucide-react";
 import { useMemo, useState } from "react";
 import { EntityDialog, type EntityFormValue } from "@/components/forms/EntityDialog";
+import { Pagination } from "@/components/ui/Pagination";
 import { useLanguage } from "@/components/providers/LanguageProvider";
 import { useWorkspaceCollection } from "@/hooks/useWorkspaceCollection";
 
@@ -50,7 +51,8 @@ const fields = [
 
 export function TimelineSection() {
   const { language, text } = useLanguage();
-  const { items, create, update, remove } = useWorkspaceCollection<TimelineEvent>("timeline", seed);
+  const { items, create, update, remove, page, setPage, pagination } =
+    useWorkspaceCollection<TimelineEvent>("timeline", seed);
   const [month, setMonth] = useState(() => moment().startOf("month").toDate());
   const [editing, setEditing] = useState<TimelineEvent | null>(null);
   const [open, setOpen] = useState(false);
@@ -173,6 +175,12 @@ export function TimelineSection() {
             </div>
           ))}
       </article>
+      <Pagination
+        page={page}
+        pageSize={pagination.pageSize}
+        total={pagination.totalItems}
+        onChange={setPage}
+      />
       <EntityDialog
         open={open}
         title={editing ? "Edit event" : "Add event"}

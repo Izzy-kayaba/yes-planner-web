@@ -35,6 +35,7 @@ import { Modal } from "@/components/ui/Modal";
 import { useLanguage } from "@/components/providers/LanguageProvider";
 import { cn } from "@/lib/cn";
 import { authClient } from "@/lib/auth-client";
+import { toast } from "sonner";
 import type { PlatformRole } from "@/lib/auth/roles";
 import type { DashboardData } from "@/lib/dashboard/types";
 import type { TranslationKey } from "@/lib/i18n";
@@ -47,6 +48,7 @@ type NavigationItem = {
   icon: LucideIcon;
   badge?: string;
   roles?: readonly PlatformRole[];
+  plannerOnly?: boolean;
 };
 
 const navigation: NavigationItem[] = [
@@ -76,10 +78,11 @@ const navigation: NavigationItem[] = [
     roles: ["Couple", "Vendor", "Venue"],
   },
   {
-    labelKey: "nav.organisation",
-    href: "/organisations/beautiful-day",
-    icon: Building2,
-    roles: ["SystemAdmin", "Venue"],
+    labelKey: "nav.planner",
+    href: "/planner",
+    icon: CalendarHeart,
+    roles: ["Vendor"],
+    plannerOnly: true,
   },
   { labelKey: "common.settings", href: "/settings", icon: Settings },
   { labelKey: "nav.admin", href: "/admin", icon: ShieldCheck, roles: ["SystemAdmin"] },
@@ -95,9 +98,11 @@ function matchesNavigation(pathname: string, href: string) {
 export function AppShell({
   children,
   shellData,
+  plannerEligible = false,
 }: {
   children: ReactNode;
   shellData?: DashboardData;
+  plannerEligible?: boolean;
 }) {
   const pathname = usePathname();
   const router = useRouter();
@@ -120,10 +125,7 @@ export function AppShell({
   const resolvedNavigation = navigation
     .map((item) => ({
       ...item,
-      href: (item.href === "/organisations/beautiful-day" && !demoMode
-        ? "/planner"
-        : item.href
-      ).replace("ruth-izzy", weddingKey ?? "wedding-not-configured"),
+      href: item.href.replace("ruth-izzy", weddingKey ?? "wedding-not-configured"),
       badge:
         item.href === "/messages" && shellData?.counts.unreadMessages
           ? String(shellData.counts.unreadMessages)
@@ -132,10 +134,23 @@ export function AppShell({
     .filter(
       (item) =>
         !item.href.startsWith("/weddings/wedding-not-configured") &&
+        (!item.plannerOnly || (!demoMode && plannerEligible)) &&
         (demoMode || !item.roles || (role && item.roles.includes(role))),
     );
 
   useEffect(() => setThemeReady(true), []);
+  useEffect(() => {
+    const query = new URLSearchParams(window.location.search);
+    if (query.get("claimSubmission") !== "failed") return;
+    toast.error(
+      text(
+        "Your account is ready, but the listing claim could not be submitted. Please submit it from your business profile.",
+      ),
+    );
+    query.delete("claimSubmission");
+    const suffix = query.size ? `?${query.toString()}` : "";
+    window.history.replaceState(null, "", `${window.location.pathname}${suffix}`);
+  }, [text]);
   useEffect(() => {
     const focusSearch = (event: KeyboardEvent) => {
       if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
@@ -313,7 +328,7 @@ export function AppShell({
         description="Are you sure you want to log out?"
         onClose={() => setLogoutOpen(false)}
         open={logoutOpen}
-        title="Log out"
+        title={text("Log out")}
       >
         <div className="flex justify-end gap-3">
           <button

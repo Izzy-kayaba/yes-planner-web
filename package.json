@@ -13,9 +13,16 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "start": "next start",
-    "test:auth": "node --no-warnings --experimental-strip-types --test tests/auth/*.test.mjs",
+    "test:authorization": "node --no-warnings --experimental-strip-types --test --test-reporter=spec tests/auth/permissions.test.mjs",
+    "test:api": "node --no-warnings --experimental-strip-types --test --test-reporter=spec tests/api/*.test.mjs",
+    "test:i18n": "node --no-warnings --experimental-strip-types --test --test-reporter=spec tests/i18n/*.test.mjs",
+    "test:ops": "node --no-warnings --experimental-strip-types --test --test-reporter=spec tests/scripts/*.test.mjs",
+    "test:auth": "node --no-warnings --experimental-strip-types --test --test-reporter=spec tests/auth/country.test.mjs tests/auth/instagram.test.mjs tests/auth/register.test.mjs tests/auth/social-registration.test.mjs tests/auth/user-model.test.mjs",
+    "test:unit": "npm run test:authorization && npm run test:api && npm run test:i18n && npm run test:ops && npm run test:auth",
+    "test:e2e": "playwright test",
+    "test:all": "node scripts/test-all.mjs",
     "typecheck": "tsc --noEmit",
-    "validate": "npm run format:check && npm run check:lines && npm run test:auth && npm run typecheck && npm run build"
+    "validate": "npm run format:check && npm run check:lines && npm run test:unit && npm run typecheck && npm run build"
   },
   "dependencies": {
     "better-auth": "^1.7.7",
@@ -41,6 +48,7 @@
     "zod": "^4.6.4"
   },
   "devDependencies": {
+    "@playwright/test": "^1.64.0",
     "@tailwindcss/postcss": "^4.3.3",
     "@types/node": "^22.0.0",
     "@types/react": "^19.0.0",

@@ -1,6 +1,9 @@
-export default function DashboardLoading() {
+import { getTextTranslator } from "@/lib/i18n-server";
+
+export default async function DashboardLoading() {
+  const text = await getTextTranslator();
   return (
-    <div className="dashboard-stack" aria-label="Loading dashboard" aria-busy="true">
+    <div className="dashboard-stack" aria-label={text("Loading dashboard")} aria-busy="true">
       <div className="grid gap-3">
         <div className="h-4 w-36 animate-pulse rounded bg-yes-soft" />
         <div className="h-11 w-72 max-w-full animate-pulse rounded-xl bg-yes-soft" />

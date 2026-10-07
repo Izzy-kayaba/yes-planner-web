@@ -12,6 +12,7 @@ import { sendEventEmail } from "@/lib/email";
 import { siteUrl } from "@/lib/site";
 import { validateConnectedVendor } from "@/lib/vendors/connected";
 import { validateGuestSelections } from "@/lib/guests/validation";
+import { paginatedResult, parsePagination } from "@/lib/api/pagination";
 
 type RouteContext = { params: Promise<{ weddingKey: string; module: string }> };
 type AccessResult =
@@ -35,6 +36,7 @@ function recordData(value: unknown) {
   return data;
 }
 
+// Resolve owner/collaborator access once, then use that trusted scope in every collection query.
 async function access(
   request: Request,
   context: RouteContext,
@@ -75,18 +77,33 @@ async function access(
 export async function GET(request: Request, context: RouteContext) {
   const authorization = await access(request, context, "read");
   if (authorization.error) return authorization.error;
+  const pagination = parsePagination(new URL(request.url).searchParams);
+  if (!pagination) {
+    return NextResponse.json({ message: "Invalid pagination parameters." }, { status: 400 });
+  }
   await ensureMongoIndexes();
+  const filter = {
+    ownerUserId: authorization.resourceOwnerId,
+    weddingKey: authorization.params.weddingKey,
+    module: authorization.params.module,
+    deletedAt: { $exists: false },
+  };
+  const totalItems = await mongoDb.collection("workspaceItems").countDocuments(filter);
   const records = await mongoDb
     .collection("workspaceItems")
-    .find({
-      ownerUserId: authorization.resourceOwnerId,
-      weddingKey: authorization.params.weddingKey,
-      module: authorization.params.module,
-      deletedAt: { $exists: false },
-    })
-    .sort({ createdAt: 1 })
+    .find(filter)
+    .sort({ createdAt: 1, _id: 1 })
+    .skip(pagination.skip)
+    .limit(pagination.pageSize)
     .toArray();
-  return NextResponse.json(records.map((record: Record<string, unknown>) => publicRecord(record)));
+  return NextResponse.json(
+    paginatedResult(
+      records.map((record: Record<string, unknown>) => publicRecord(record)),
+      pagination.page,
+      pagination.pageSize,
+      totalItems,
+    ),
+  );
 }
 
 export async function POST(request: Request, context: RouteContext) {

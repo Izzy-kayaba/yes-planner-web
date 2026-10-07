@@ -22,6 +22,7 @@ export function VendorPublicProfile({
   canClaim,
   profileId,
   claimed,
+  claimStatus,
 }: {
   vendor: {
     id: string;
@@ -43,6 +44,7 @@ export function VendorPublicProfile({
   canClaim: boolean;
   profileId: string;
   claimed: boolean;
+  claimStatus?: string;
 }) {
   const router = useRouter();
   const { text, t } = useLanguage();
@@ -51,6 +53,7 @@ export function VendorPublicProfile({
   const [message, setMessage] = useState("");
   const [sending, setSending] = useState(false);
   const [claiming, setClaiming] = useState(false);
+  const [currentClaimStatus, setCurrentClaimStatus] = useState(claimStatus);
   const selectedPriceRange = vendorPriceRanges.find(
     (range) =>
       range.id ===
@@ -69,7 +72,7 @@ export function VendorPublicProfile({
       toast.success(text("Request sent to vendor."));
       router.refresh();
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : text("Request could not be sent."));
+      toast.error(text(error instanceof Error ? error.message : "Request could not be sent."));
     } finally {
       setSending(false);
     }
@@ -82,10 +85,11 @@ export function VendorPublicProfile({
         method: "POST",
         body: JSON.stringify({ profileId }),
       });
+      setCurrentClaimStatus("Pending");
       toast.success(text("Claim request sent for review."));
     } catch (error) {
       toast.error(
-        error instanceof Error ? error.message : text("Claim request could not be sent."),
+        text(error instanceof Error ? error.message : "Claim request could not be sent."),
       );
     } finally {
       setClaiming(false);
@@ -179,12 +183,28 @@ export function VendorPublicProfile({
         <section className="panel vendor-claim-panel">
           <p className="eyebrow">{text("Is this your business?")}</p>
           <p>
-            {text(
-              "Create a business account, then request ownership so you can manage this profile and portfolio.",
-            )}
+            {currentClaimStatus === "Pending"
+              ? text(
+                  "Your ownership claim is pending administrator review. You cannot withdraw or submit another claim while it is pending.",
+                )
+              : currentClaimStatus === "Declined"
+                ? text(
+                    "Your previous claim was declined. You may submit a new request if you have additional information.",
+                  )
+                : text(
+                    "Create a business account, then request ownership so you can manage this profile and portfolio.",
+                  )}
           </p>
-          <Button disabled={claiming} onClick={() => void claimProfile()} type="button">
-            {claiming ? text("Sending…") : text("Claim this business")}
+          <Button
+            disabled={claiming || currentClaimStatus === "Pending"}
+            onClick={() => void claimProfile()}
+            type="button"
+          >
+            {claiming
+              ? text("Sending…")
+              : currentClaimStatus === "Pending"
+                ? text("Claim pending review")
+                : text("Claim this business")}
           </Button>
         </section>
       )}

@@ -12,6 +12,7 @@ import { useLanguage } from "@/components/providers/LanguageProvider";
 import { SearchField } from "@/components/forms/SearchField";
 import { YesSelect } from "@/components/ui/YesSelect";
 import { StatusPill } from "@/components/ui/StatusPill";
+import { Pagination } from "@/components/ui/Pagination";
 import { MetricGrid } from "@/features/weddings/MetricGrid";
 import { useWorkspaceCollection } from "@/hooks/useWorkspaceCollection";
 import { guests as guestSeed } from "@/lib/demo-data";
@@ -23,7 +24,8 @@ type MenuOption = { id: string | number; name: string };
 
 export function GuestsSection() {
   const { text } = useLanguage();
-  const { items, create, update, remove } = useWorkspaceCollection<Guest>("guests", guestSeed);
+  const { items, create, update, remove, page, setPage, pagination } =
+    useWorkspaceCollection<Guest>("guests", guestSeed);
   const { items: tables } = useWorkspaceCollection<TableOption>("seating", []);
   const { items: menus } = useWorkspaceCollection<MenuOption>("food-drinks", []);
   const params = useParams<{ weddingId?: string }>();
@@ -211,9 +213,16 @@ export function GuestsSection() {
         </div>
         <div className="table-footer">
           <span>
-            {text("Showing")} {filtered.length} {text("of")} {items.length} {text("guests")}
+            {text("Showing")} {filtered.length} {text("of")} {pagination.totalItems}{" "}
+            {text("guests")}
           </span>
         </div>
+        <Pagination
+          page={page}
+          pageSize={pagination.pageSize}
+          total={pagination.totalItems}
+          onChange={setPage}
+        />
       </section>
       <EntityDialog
         open={dialogOpen}

@@ -4,6 +4,7 @@ export const supportedLanguages = ["en", "fr"] as const;
 export type Language = (typeof supportedLanguages)[number];
 export const languageCookieName = "NEXT_LOCALE";
 
+// Check cookie and settings values before using them as a translation catalog key.
 export function isSupportedLanguage(value: string | null | undefined): value is Language {
   return value === "en" || value === "fr";
 }
@@ -20,6 +21,7 @@ const english = {
   "nav.wedding": "Our wedding",
   "nav.marketplace": "Vendor marketplace",
   "nav.organisation": "Organisation",
+  "nav.planner": "Wedding planner",
   "nav.vendor": "Vendor portal",
   "nav.messages": "Messages",
   "nav.admin": "System administration",
@@ -125,6 +127,7 @@ const french = {
   "nav.wedding": "Notre mariage",
   "nav.marketplace": "Prestataires",
   "nav.organisation": "Organisation",
+  "nav.planner": "Organisation de mariage",
   "nav.vendor": "Espace prestataire",
   "nav.messages": "Messages",
   "nav.admin": "Administration système",
@@ -223,6 +226,7 @@ export const messages: Record<Language, Record<TranslationKey, string>> = {
 };
 
 function nestMessages(languageMessages: Record<TranslationKey, string>) {
+  // next-intl expects nested objects; the source catalog stays flat for type safety.
   return Object.entries(languageMessages).reduce<Record<string, Record<string, string>>>(
     (result, [key, value]) => {
       const separator = key.indexOf(".");
@@ -247,6 +251,7 @@ export function translate(
   key: TranslationKey,
   values?: Record<string, string | number>,
 ) {
+  // Replace named placeholders such as {name} without losing numeric values.
   const template = messages[language][key];
   if (!values) return template;
   return Object.entries(values).reduce(

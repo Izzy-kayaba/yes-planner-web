@@ -69,10 +69,10 @@ export default async function HomePage() {
           <a href="#stories">{text("Stories")}</a>
         </div>
         <div className="landing-actions">
-          <Link className="text-link" href="/login">
+          <Link className="text-link" href="/register">
             {text("Start planning")}
           </Link>
-          <Link className="button button-primary text-center" href="/register">
+          <Link className="button button-primary text-center" href="/login">
             {text("Sign in")}
           </Link>
         </div>
@@ -121,7 +121,7 @@ export default async function HomePage() {
             <Image
               className="hero-img"
               src="/assets/hero-image.jpeg"
-              alt="Engaged couple celebrating together"
+              alt={text("Engaged couple celebrating together")}
               width={600}
               height={900}
               priority
@@ -243,7 +243,7 @@ export default async function HomePage() {
       <footer className="landing-footer page-width">
         <Brand />
         <p>{text("Planning made personal, from yes to I do.")}</p>
-        <span>© 2026 Yes Planner</span>
+        <span>{text("© 2026 Yes Planner")}</span>
       </footer>
     </main>
   );

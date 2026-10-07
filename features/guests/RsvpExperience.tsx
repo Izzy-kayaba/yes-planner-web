@@ -84,7 +84,7 @@ export function RsvpExperience({
       setSubmitted(true);
       toast.success(text("Your RSVP has been saved."));
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : text("Your RSVP could not be saved."));
+      toast.error(text(error instanceof Error ? error.message : "Your RSVP could not be saved."));
     }
   }
 

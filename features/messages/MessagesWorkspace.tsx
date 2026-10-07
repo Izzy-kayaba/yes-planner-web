@@ -6,9 +6,11 @@ import { useCallback, useEffect, useMemo, useState, type FormEvent } from "react
 import { toast } from "sonner";
 import { useLanguage } from "@/components/providers/LanguageProvider";
 import { apiRequest } from "@/lib/api/client";
+import type { PaginatedResult, Pagination as PaginationMetadata } from "@/lib/api/contracts";
 import { formatDate } from "@/lib/date-time";
 import { getInitials } from "@/lib/initials";
 import { CharacterCount } from "@/components/forms/CharacterCount";
+import { Pagination } from "@/components/ui/Pagination";
 
 type Conversation = {
   id: string;
@@ -18,37 +20,80 @@ type Conversation = {
   image: string;
   service: string;
   unreadCount: number;
-  messages: { id: string; body: string; sentByMe: boolean; createdAt: string }[];
 };
+type Message = { id: string; body: string; sentByMe: boolean; createdAt: string };
 
 export function MessagesWorkspace() {
   const { language, text } = useLanguage();
   const [conversations, setConversations] = useState<Conversation[]>([]);
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [conversationPage, setConversationPage] = useState(1);
+  const [conversationPagination, setConversationPagination] = useState<PaginationMetadata>({
+    page: 1,
+    pageSize: 25,
+    totalItems: 0,
+    totalPages: 0,
+    hasNextPage: false,
+    hasPreviousPage: false,
+  });
+  const [messagePage, setMessagePage] = useState(1);
+  const [messagePagination, setMessagePagination] = useState<PaginationMetadata>({
+    page: 1,
+    pageSize: 50,
+    totalItems: 0,
+    totalPages: 0,
+    hasNextPage: false,
+    hasPreviousPage: false,
+  });
   const [activeId, setActiveId] = useState("");
   const [query, setQuery] = useState("");
   const [body, setBody] = useState("");
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
 
+  const loadThread = useCallback(async (conversation: Conversation, page = 1) => {
+    const params = new URLSearchParams({
+      participantUserId: conversation.participantUserId,
+      weddingKey: conversation.weddingKey,
+      page: String(page),
+      pageSize: "50",
+    });
+    const result = await apiRequest<PaginatedResult<Message>>(`/api/v1/messages?${params}`, {
+      cache: "no-store",
+    });
+    setMessages(result.items);
+    setMessagePagination(result.pagination);
+    setMessagePage(result.pagination.page);
+  }, []);
+
   const load = useCallback(
     async (quiet = false) => {
       if (!quiet) setLoading(true);
       try {
-        const result = await apiRequest<{ conversations: Conversation[] }>("/api/v1/messages", {
-          cache: "no-store",
+        const params = new URLSearchParams({
+          page: String(conversationPage),
+          pageSize: "25",
         });
-        setConversations(result.conversations);
-        setActiveId((current) => current || result.conversations[0]?.id || "");
+        const result = await apiRequest<PaginatedResult<Conversation>>(
+          `/api/v1/messages?${params}`,
+          { cache: "no-store" },
+        );
+        setConversations(result.items);
+        setConversationPagination(result.pagination);
+        const target = result.items.find((item) => item.id === activeId) ?? result.items[0];
+        setActiveId(target?.id ?? "");
+        if (target) await loadThread(target, messagePage);
+        else setMessages([]);
       } catch (error) {
         if (!quiet)
           toast.error(
-            error instanceof Error ? error.message : text("Messages could not be loaded."),
+            text(error instanceof Error ? error.message : "Messages could not be loaded."),
           );
       } finally {
         if (!quiet) setLoading(false);
       }
     },
-    [text],
+    [activeId, conversationPage, loadThread, messagePage, text],
   );
 
   useEffect(() => {
@@ -68,15 +113,22 @@ export function MessagesWorkspace() {
 
   async function selectConversation(conversation: Conversation) {
     setActiveId(conversation.id);
-    if (!conversation.unreadCount) return;
-    await apiRequest("/api/v1/messages", {
-      method: "PATCH",
-      body: JSON.stringify({
-        participantUserId: conversation.participantUserId,
-        weddingKey: conversation.weddingKey,
-      }),
-    });
-    await load(true);
+    setMessagePage(1);
+    try {
+      await loadThread(conversation, 1);
+      if (conversation.unreadCount) {
+        await apiRequest("/api/v1/messages", {
+          method: "PATCH",
+          body: JSON.stringify({
+            participantUserId: conversation.participantUserId,
+            weddingKey: conversation.weddingKey,
+          }),
+        });
+        await load(true);
+      }
+    } catch (error) {
+      toast.error(text(error instanceof Error ? error.message : "Messages could not be loaded."));
+    }
   }
 
   async function send(event: FormEvent<HTMLFormElement>) {
@@ -95,7 +147,7 @@ export function MessagesWorkspace() {
       setBody("");
       await load(true);
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : text("Message could not be sent."));
+      toast.error(text(error instanceof Error ? error.message : "Message could not be sent."));
     } finally {
       setSending(false);
     }
@@ -148,6 +200,12 @@ export function MessagesWorkspace() {
             )}
           </button>
         ))}
+        <Pagination
+          page={conversationPagination.page}
+          pageSize={conversationPagination.pageSize}
+          total={conversationPagination.totalItems}
+          onChange={setConversationPage}
+        />
       </aside>
       {active && (
         <article>
@@ -159,8 +217,8 @@ export function MessagesWorkspace() {
             </p>
           </header>
           <div className="chat-body">
-            {active.messages.length ? (
-              active.messages.map((message) => (
+            {messages.length ? (
+              messages.map((message) => (
                 <div
                   className={`message ${message.sentByMe ? "sent" : "received"}`}
                   key={message.id}
@@ -172,6 +230,19 @@ export function MessagesWorkspace() {
             ) : (
               <p className="messages-conversation-empty">{text("Start the conversation.")}</p>
             )}
+            <Pagination
+              page={messagePage}
+              pageSize={messagePagination.pageSize}
+              total={messagePagination.totalItems}
+              onChange={(page) => {
+                setMessagePage(page);
+                void loadThread(active, page).catch((error: unknown) =>
+                  toast.error(
+                    text(error instanceof Error ? error.message : "Messages could not be loaded."),
+                  ),
+                );
+              }}
+            />
           </div>
           <form className="message-compose" onSubmit={send}>
             <input

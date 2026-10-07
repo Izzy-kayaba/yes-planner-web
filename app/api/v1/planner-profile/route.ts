@@ -14,6 +14,7 @@ const schema = z.object({
   website: z.union([z.url(), z.literal("")]),
 });
 
+// Compatibility endpoint: save legacy planner fields into the Vendor profile model.
 export async function PUT(request: Request) {
   const authentication = await requireApiSession(request.headers);
   if (authentication.error) return authentication.error;
