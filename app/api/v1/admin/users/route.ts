@@ -13,7 +13,10 @@ export async function GET(request: Request) {
   }
   const users = await mongoDb
     .collection("user")
-    .find({}, { projection: { name: 1, email: 1, role: 1, createdAt: 1, image: 1 } })
+    .find(
+      {},
+      { projection: { name: 1, email: 1, role: 1, accountType: 1, createdAt: 1, image: 1 } },
+    )
     .sort({ createdAt: -1 })
     .limit(100)
     .toArray();
@@ -23,6 +26,7 @@ export async function GET(request: Request) {
       name: user.name,
       email: user.email,
       role: user.role,
+      accountType: user.accountType ?? (user.role === "Planner" ? "Vendor" : user.role),
       image: user.image ?? null,
       createdAt: user.createdAt,
     })),

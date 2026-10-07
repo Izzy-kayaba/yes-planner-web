@@ -7,14 +7,23 @@ import { Modal } from "@/components/ui/Modal";
 import { YesSelect } from "@/components/ui/YesSelect";
 import { FieldLabel } from "@/components/forms/FieldLabel";
 
-export type EntityFormValue = string | number;
+export type EntityFormValue = string | number | boolean;
 
 export type EntityField = {
   name: string;
   label: string;
   placeholder?: string;
   required?: boolean;
-  type?: "text" | "email" | "tel" | "number" | "date" | "time" | "textarea" | "select";
+  type?:
+    | "text"
+    | "email"
+    | "tel"
+    | "number"
+    | "date"
+    | "time"
+    | "textarea"
+    | "select"
+    | "checkbox";
   options?: Array<string | { value: string; label: string }>;
 };
 
@@ -50,7 +59,10 @@ export function EntityDialog({
     const values = Object.fromEntries(
       fields.map((field) => {
         const raw = String(data.get(field.name) ?? "");
-        return [field.name, field.type === "number" ? Number(raw) : raw];
+        return [
+          field.name,
+          field.type === "number" ? Number(raw) : field.type === "checkbox" ? data.has(field.name) : raw,
+        ];
       }),
     );
     setSaving(true);
@@ -68,7 +80,15 @@ export function EntityDialog({
         {fields.map((field) => (
           <label className="grid gap-1.5 text-sm font-bold" key={field.name}>
             <FieldLabel required={field.required}>{text(field.label)}</FieldLabel>
-            {field.type === "textarea" ? (
+            {field.type === "checkbox" ? (
+              <input
+                className="size-5"
+                defaultChecked={Boolean(defaults[field.name])}
+                id={field.name}
+                name={field.name}
+                type="checkbox"
+              />
+            ) : field.type === "textarea" ? (
               <textarea
                 className="min-h-28 p-3 text-sm"
                 id={field.name}

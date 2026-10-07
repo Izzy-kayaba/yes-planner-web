@@ -45,17 +45,16 @@ WhatsApp event delivery is optional and requires `WHATSAPP_ACCESS_TOKEN`, `WHATS
 
 Registration and profile settings use `react-phone-number-input` and `libphonenumber-js`. The UI provides country codes and formatting. Both client and server validate the number, and MongoDB stores its normalized E.164 form.
 
-## Roles and enforcement
+## Account types, services and enforcement
 
-The platform roles are:
+The primary account types are:
 
-- `SystemAdmin`
 - `Couple`
-- `Planner`
+- `Venue`
 - `Vendor`
 - `Guest`
 
-Public registration accepts only Couple, Planner and Vendor. The role stored by Better Auth is server-owned. A System Admin is promoted with an explicit database administration command after the account has registered:
+Public registration accepts Couple, Vendor and Venue. Guests normally enter through an invitation, while `SystemAdmin` is a protected administrative permission rather than a normal account choice. A System Admin is promoted with an explicit database administration command after the account has registered:
 
 ```powershell
 node --env-file=.env.local scripts/set-system-admin.mjs admin@example.com
@@ -63,13 +62,17 @@ node --env-file=.env.local scripts/set-system-admin.mjs admin@example.com
 
 The System Admin dashboard and `/api/v1/admin/*` endpoints require `SystemAdmin`. Wedding workspace endpoints validate the Better Auth session, role, allowed module and record ownership on every request. A hidden frontend control is never treated as authorization.
 
-Current module policy:
+Business services are stored separately on the business profile. A wedding planner is therefore a Vendor whose services include `Wedding planning`; photography, floristry and the other categories are services rather than user roles. A Venue has its own account type and may also list Venue, Catering, Decor or other supported services.
 
-- System Admin, Couple and Planner can use all wedding workspace modules.
-- Vendor can read assigned tasks, vendors, timeline, documents, bookings, payments and notes.
+Current wedding policy:
+
+- System Admin and the owning Couple can use all wedding workspace modules.
+- A Vendor offering Wedding planning becomes eligible for management, but receives no wedding access automatically.
+- When a couple's Wedding planning request is accepted, that business receives `FullManager` access to that wedding only.
+- A Vendor connected for another service receives limited Vendor access to that wedding.
 - Guest cannot use internal wedding workspace APIs.
 
-Records are scoped to the authenticated user until persisted wedding memberships are added. This prevents cross-account access now while retaining a clear path to shared couple/planner wedding membership later.
+The wedding remains owned by the Couple. The `weddingCollaborators` collection records the business's relationship and services separately for each wedding.
 
 ## Wedding onboarding and dashboard data
 
@@ -79,9 +82,9 @@ Authenticated dashboard summaries are assembled on the server from the current u
 
 The former generic internal Messages workspace is not presented as a real-time chat system because it did not provide WebSocket delivery, presence or delivery state. Users can contact vendors directly on WhatsApp. Users may separately opt in to approved-template WhatsApp notifications for vendor-request decisions and shared-workspace changes.
 
-Vendor accounts complete a separate profile containing business details, supported services, service area, starting price and portfolio media. Published vendor profiles are searchable by authenticated platform users. Portfolio uploads accept JPG, PNG and WebP images smaller than 5 MB, with at most six work images per profile. Image bytes are stored separately from profile documents in MongoDB GridFS, and profiles contain only controlled media URLs. Upload and deletion require the vendor's authenticated session; published portfolio reads use unguessable media identifiers and strict content types. Run `npm run media:cleanup` on a daily schedule to remove uploads older than 24 hours that were never attached to a saved vendor profile.
+Vendor and Venue accounts complete a business profile containing business details, supported services, service area, starting price and portfolio media. Published profiles are searchable by authenticated platform users. Portfolio uploads accept JPG, PNG and WebP images smaller than 5 MB, with at most six work images per profile. Image bytes are stored separately from profile documents in MongoDB GridFS, and profiles contain only controlled media URLs. Upload and deletion require the business owner's authenticated session; published portfolio reads use unguessable media identifiers and strict content types. Run `npm run media:cleanup` on a daily schedule to remove uploads older than 24 hours that were never attached to a saved business profile.
 
-Planner accounts complete an organisation profile before opening their planner workspace. Organisation name, contact, service area, team size, experience and website are stored in the `plannerProfiles` collection and scoped to the authenticated planner.
+Existing Planner users are migrated to Vendor accounts with the Wedding planning service. The migration also copies their legacy `plannerProfiles` details into `vendorProfiles`. Run `npm run migrate:user-model` once for each existing database after taking a backup. The runtime still recognises an unmigrated Planner session as a Vendor during the transition.
 
 Couples send vendor requests through `/api/v1/vendor-requests`. Only the selected vendor can accept or decline a request. Acceptance creates an active wedding collaboration. The vendor can then read only the permitted parts of that wedding workspace and can write only within messaging; every access check is repeated by the server.
 
@@ -95,7 +98,7 @@ Couples send vendor requests through `/api/v1/vendor-requests`. Only the selecte
 /api/v1/me
 /api/v1/wedding-profile
 /api/v1/vendor-profile
-/api/v1/planner-profile
+/api/v1/planner-profile (legacy compatibility)
 /api/v1/vendors
 /api/v1/media
 /api/v1/media/{mediaId}

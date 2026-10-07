@@ -21,6 +21,7 @@ function profile(document: Record<string, unknown>) {
     phoneNumber: document.phoneNumber ?? "",
     whatsappNotifications: document.whatsappNotifications === true,
     role: document.role,
+    accountType: document.accountType ?? (document.role === "Planner" ? "Vendor" : document.role),
     image: document.image ?? null,
   };
 }

@@ -5,6 +5,7 @@ import { requireApiSession } from "@/lib/auth/session";
 import { ensureMongoIndexes, mongoDb } from "@/lib/mongodb";
 import { after } from "next/server";
 import { sendWhatsAppEvent } from "@/lib/whatsapp";
+import { weddingPlanningService } from "@/lib/vendors/services";
 
 type RouteContext = { params: Promise<{ requestId: string }> };
 const decisionSchema = z.object({ status: z.enum(["Accepted", "Declined"]) });
@@ -12,8 +13,11 @@ const decisionSchema = z.object({ status: z.enum(["Accepted", "Declined"]) });
 export async function PATCH(request: Request, context: RouteContext) {
   const authentication = await requireApiSession(request.headers);
   if (authentication.error) return authentication.error;
-  if (authentication.session.user.role !== "Vendor") {
-    return NextResponse.json({ message: "Vendor access is required." }, { status: 403 });
+  if (
+    authentication.session.user.role !== "Vendor" &&
+    authentication.session.user.role !== "Venue"
+  ) {
+    return NextResponse.json({ message: "A business account is required." }, { status: 403 });
   }
   const { requestId } = await context.params;
   if (!ObjectId.isValid(requestId)) {
@@ -31,6 +35,13 @@ export async function PATCH(request: Request, context: RouteContext) {
   if (!vendorRequest) return NextResponse.json({ message: "Request not found." }, { status: 404 });
   if (parsed.data.status === "Accepted") {
     await ensureMongoIndexes();
+    const existingCollaboration = await mongoDb.collection("weddingCollaborators").findOne(
+      {
+        weddingKey: vendorRequest.weddingKey,
+        userId: authentication.session.user.id,
+      },
+      { projection: { access: 1 } },
+    );
     await mongoDb.collection("weddingCollaborators").updateOne(
       {
         weddingKey: vendorRequest.weddingKey,
@@ -40,18 +51,36 @@ export async function PATCH(request: Request, context: RouteContext) {
         $set: {
           weddingOwnerUserId: vendorRequest.coupleUserId,
           role: "Vendor",
-          service: vendorRequest.service,
+          access:
+            existingCollaboration?.access === "FullManager" ||
+            vendorRequest.service === weddingPlanningService
+              ? "FullManager"
+              : "Vendor",
           status: "Active",
           updatedAt: new Date(),
         },
+        $addToSet: { services: vendorRequest.service },
         $setOnInsert: { createdAt: new Date() },
       },
       { upsert: true },
     );
   } else {
+    await mongoDb.collection("weddingCollaborators").updateOne(
+      {
+        weddingKey: vendorRequest.weddingKey,
+        userId: authentication.session.user.id,
+      },
+      {
+        $pull: { services: vendorRequest.service },
+        ...(vendorRequest.service === weddingPlanningService
+          ? { $set: { access: "Vendor", updatedAt: new Date() } }
+          : {}),
+      },
+    );
     await mongoDb.collection("weddingCollaborators").deleteOne({
       weddingKey: vendorRequest.weddingKey,
       userId: authentication.session.user.id,
+      services: { $size: 0 },
     });
   }
   after(() =>

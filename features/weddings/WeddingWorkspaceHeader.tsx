@@ -5,9 +5,11 @@ import { getInitials } from "@/lib/initials";
 import type { PlatformRole } from "@/lib/auth/roles";
 
 export async function WeddingWorkspaceHeader({
+  access,
   wedding,
   role,
 }: {
+  access?: "Owner" | "FullManager" | "Vendor";
   wedding?: WeddingProfile | null;
   role?: PlatformRole;
 }) {
@@ -33,7 +35,13 @@ export async function WeddingWorkspaceHeader({
         </p>
       </div>
       <span className="rounded-full border border-yes-line px-2.5 py-1.5 text-[11px] font-extrabold text-yes-muted max-sm:hidden">
-        {text(role === "Vendor" ? "Vendor collaborator" : "Wedding owner")}
+        {text(
+          access === "FullManager"
+            ? "Wedding planner"
+            : role === "Vendor"
+              ? "Vendor collaborator"
+              : "Wedding owner",
+        )}
       </span>
     </div>
   );

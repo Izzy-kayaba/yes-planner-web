@@ -109,6 +109,8 @@ const frenchByEnglish: Record<string, string> = {
   Couple: "Couple",
   Planner: "Organisateur",
   Vendor: "Prestataire",
+  "Vendor / Business": "Prestataire / Entreprise",
+  "Venue / Organisation": "Lieu / Organisation",
   "Account type": "Type de compte",
   "Please check the highlighted details.": "Vérifiez les informations signalées.",
   "Your workspace is ready.": "Votre espace est prêt.",

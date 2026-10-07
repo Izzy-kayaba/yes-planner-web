@@ -26,7 +26,10 @@ export interface Guest {
   id: string | number;
   name: string;
   group: string;
-  email: string;
+  email?: string;
+  phoneNumber: string;
+  isCouple: boolean;
+  hasChildren: boolean;
   status: "Attending" | "Pending" | "Declined";
   meal: string;
   table: string;

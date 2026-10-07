@@ -8,14 +8,14 @@ const validBody = {
   email: "SARAH@example.com",
   phoneNumber: "+27821234567",
   password: "Password!2026",
-  role: "Couple",
+  accountType: "Couple",
 };
 
 function setup(overrides = {}) {
   const calls = { updates: [], signUps: 0, errors: 0 };
   const dependencies = {
     ensureIndexes: async () => {},
-    isAllowedRole: (role) => ["Couple", "Planner", "Vendor"].includes(role),
+    isAllowedRole: (accountType) => ["Couple", "Venue", "Vendor"].includes(accountType),
     findUser: async () => null,
     signUp: async () => {
       calls.signUps += 1;
@@ -44,9 +44,9 @@ test("rejects malformed registration details", async () => {
   assert.equal(response.status, 400);
 });
 
-test("rejects roles that cannot self-register", async () => {
+test("rejects account types that cannot self-register", async () => {
   const { handler } = setup();
-  const response = await handler(request({ ...validBody, role: "SystemAdmin" }));
+  const response = await handler(request({ ...validBody, accountType: "SystemAdmin" }));
   assert.equal(response.status, 400);
 });
 
@@ -101,4 +101,21 @@ test("normalizes identity data and completes a successful registration", async (
   assert.equal(calls.signUps, 1);
   assert.equal(calls.updates[0][0], "sarah@example.com");
   assert.equal(calls.updates[0][1].phoneNumber, "+27821234567");
+  assert.equal(calls.updates[0][1].accountType, "Couple");
+  assert.equal(calls.updates[0][1].role, "Couple");
+});
+
+test("accepts venue as a primary account type", async () => {
+  const { handler, calls } = setup();
+  const response = await handler(request({ ...validBody, accountType: "Venue" }));
+  assert.equal(response.status, 200);
+  assert.equal(calls.updates[0][1].accountType, "Venue");
+});
+
+test("keeps the old role field readable during migration", async () => {
+  const { handler, calls } = setup();
+  const { accountType, ...legacyBody } = validBody;
+  const response = await handler(request({ ...legacyBody, role: "Vendor" }));
+  assert.equal(response.status, 200);
+  assert.equal(calls.updates[0][1].accountType, "Vendor");
 });

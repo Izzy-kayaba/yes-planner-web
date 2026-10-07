@@ -32,11 +32,11 @@ export async function GET(request: Request) {
   const authentication = await requireApiSession(request.headers);
   if (authentication.error) return authentication.error;
   const role = authentication.session.user.role;
-  if (role !== "Vendor" && role !== "Couple") {
+  if (role !== "Vendor" && role !== "Venue" && role !== "Couple") {
     return NextResponse.json({ message: "Access denied." }, { status: 403 });
   }
   const filter =
-    role === "Vendor"
+    role === "Vendor" || role === "Venue"
       ? { vendorUserId: authentication.session.user.id }
       : { coupleUserId: authentication.session.user.id };
   const requests = await mongoDb

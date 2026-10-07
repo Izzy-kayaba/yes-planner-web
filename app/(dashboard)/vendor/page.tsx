@@ -18,7 +18,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function VendorPage() {
   const demoMode = (process.env.NEXT_PUBLIC_DATA_SOURCE ?? "api") === "demo";
   if (!demoMode) {
-    const session = await requirePageRole(["Vendor"]);
+    const session = await requirePageRole(["Vendor", "Venue"]);
     const [profile, requests] = await Promise.all([
       mongoDb.collection("vendorProfiles").findOne({ ownerUserId: session.user.id }),
       mongoDb

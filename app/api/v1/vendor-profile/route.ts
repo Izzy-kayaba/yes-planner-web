@@ -56,13 +56,21 @@ export async function GET(request: Request) {
 export async function PUT(request: Request) {
   const authentication = await requireApiSession(request.headers);
   if (authentication.error) return authentication.error;
-  if (authentication.session.user.role !== "Vendor") {
-    return NextResponse.json({ message: "Vendor access is required." }, { status: 403 });
+  if (
+    !(["Vendor", "Venue"] as const).includes(authentication.session.user.role as "Vendor" | "Venue")
+  ) {
+    return NextResponse.json({ message: "A business account is required." }, { status: 403 });
   }
   const parsed = profileSchema.safeParse(await request.json().catch(() => null));
   if (!parsed.success || parsed.data.services.some((service) => !isVendorService(service))) {
     return NextResponse.json(
       { message: "Please complete all required vendor profile details." },
+      { status: 400 },
+    );
+  }
+  if (authentication.session.user.role === "Venue" && !parsed.data.services.includes("Venue")) {
+    return NextResponse.json(
+      { message: "A venue account must include the Venue service." },
       { status: 400 },
     );
   }

@@ -28,7 +28,7 @@ async function acceptedConnection(
       status: "Accepted",
     });
   }
-  if (role === "Vendor") {
+  if (role === "Vendor" || role === "Venue") {
     return mongoDb.collection("vendorRequests").findOne({
       coupleUserId: otherUserId,
       vendorUserId: userId,
@@ -43,7 +43,7 @@ export async function GET(request: Request) {
   const authentication = await requireApiSession(request.headers);
   if (authentication.error) return authentication.error;
   const { id: userId, role } = authentication.session.user;
-  if (role !== "Couple" && role !== "Vendor") {
+  if (role !== "Couple" && role !== "Vendor" && role !== "Venue") {
     return NextResponse.json(
       { message: "Messaging is available to couples and vendors." },
       { status: 403 },

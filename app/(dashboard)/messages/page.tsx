@@ -4,7 +4,7 @@ import { requirePageRole } from "@/lib/auth/session";
 import { getTextTranslator } from "@/lib/i18n-server";
 
 export default async function MessagesPage() {
-  await requirePageRole(["Couple", "Vendor"]);
+  await requirePageRole(["Couple", "Vendor", "Venue"]);
   const text = await getTextTranslator();
   return (
     <div className="section-stack">

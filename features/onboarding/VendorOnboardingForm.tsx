@@ -53,11 +53,22 @@ async function removeImage(url: string) {
   if (id) await apiRequest(`/api/v1/media/${id}`, { method: "DELETE" });
 }
 
-export function VendorOnboardingForm({ initialValue }: { initialValue?: VendorOnboardingValue }) {
+export function VendorOnboardingForm({
+  accountType = "Vendor",
+  initialValue,
+}: {
+  accountType?: "Vendor" | "Venue";
+  initialValue?: VendorOnboardingValue;
+}) {
   const router = useRouter();
   const { text } = useLanguage();
   const { currency, displayMoney } = useCurrency();
-  const [value, setValue] = useState(initialValue ?? emptyValue);
+  const [value, setValue] = useState(() => {
+    const startingValue = initialValue ?? emptyValue;
+    return accountType === "Venue" && !startingValue.services.includes("Venue")
+      ? { ...startingValue, services: ["Venue", ...startingValue.services] }
+      : startingValue;
+  });
   const [saving, setSaving] = useState(false);
   const [removedImages, setRemovedImages] = useState<string[]>([]);
 
@@ -69,6 +80,7 @@ export function VendorOnboardingForm({ initialValue }: { initialValue?: VendorOn
   }
 
   function toggleService(service: string) {
+    if (accountType === "Venue" && service === "Venue") return;
     update(
       "services",
       value.services.includes(service)
@@ -198,6 +210,7 @@ export function VendorOnboardingForm({ initialValue }: { initialValue?: VendorOn
         {vendorServices.map((service) => (
           <button
             aria-pressed={value.services.includes(service)}
+            aria-disabled={accountType === "Venue" && service === "Venue"}
             className={value.services.includes(service) ? "selected" : ""}
             key={service}
             onClick={() => toggleService(service)}

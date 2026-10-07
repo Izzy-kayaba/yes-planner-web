@@ -7,7 +7,7 @@ import { requirePageRole } from "@/lib/auth/session";
 import { mongoDb } from "@/lib/mongodb";
 
 export default async function VendorAccountPage() {
-  const session = await requirePageRole(["Vendor"]);
+  const session = await requirePageRole(["Vendor", "Venue"]);
   const [user, vendor] = await Promise.all([
     mongoDb.collection("user").findOne({ email: session.user.email }),
     mongoDb.collection("vendorProfiles").findOne({ ownerUserId: session.user.id }),
@@ -33,7 +33,10 @@ export default async function VendorAccountPage() {
         title="Public profile and portfolio"
         description="Keep the profile couples see accurate and show your strongest recent work."
       />
-      <VendorOnboardingForm initialValue={initialValue} />
+      <VendorOnboardingForm
+        accountType={session.user.role === "Venue" ? "Venue" : "Vendor"}
+        initialValue={initialValue}
+      />
     </div>
   );
 }

@@ -34,13 +34,11 @@ export default async function HomePage() {
     const session = await getAuthorizedSession();
     if (session) {
       redirect(
-        session.user.role === "Vendor"
+        session.user.role === "Vendor" || session.user.role === "Venue"
           ? "/vendor"
-          : session.user.role === "Planner"
-            ? "/planner"
-            : session.user.role === "SystemAdmin"
-              ? "/admin"
-              : "/dashboard",
+          : session.user.role === "SystemAdmin"
+            ? "/admin"
+            : "/dashboard",
       );
     }
   }

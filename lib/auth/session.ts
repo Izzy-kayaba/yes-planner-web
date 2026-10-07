@@ -4,11 +4,16 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { NextResponse } from "next/server";
 import { auth, type AuthSession } from "@/lib/auth";
-import { isPlatformRole, type PlatformRole } from "@/lib/auth/roles";
+import {
+  accountTypeFromStoredUser,
+  isPlatformRole,
+  type AccountType,
+  type PlatformRole,
+} from "@/lib/auth/roles";
 import { mongoDb } from "@/lib/mongodb";
 
 export type AuthorizedSession = AuthSession & {
-  user: AuthSession["user"] & { role: PlatformRole };
+  user: AuthSession["user"] & { role: PlatformRole; accountType: AccountType | null };
 };
 
 type ApiSessionResult =
@@ -16,8 +21,20 @@ type ApiSessionResult =
 
 export async function getAuthorizedSession(requestHeaders?: Headers) {
   const session = await auth.api.getSession({ headers: requestHeaders ?? (await headers()) });
-  if (!session || !isPlatformRole(session.user.role)) return null;
-  return session as AuthorizedSession;
+  if (!session) return null;
+  const storedUser = session.user as AuthSession["user"] & { accountType?: unknown };
+  if (storedUser.role === "SystemAdmin") {
+    return {
+      ...session,
+      user: { ...storedUser, role: "SystemAdmin", accountType: null },
+    } as AuthorizedSession;
+  }
+  const accountType = accountTypeFromStoredUser(storedUser.role, storedUser.accountType);
+  if (!accountType || !isPlatformRole(accountType)) return null;
+  return {
+    ...session,
+    user: { ...storedUser, role: accountType, accountType },
+  } as AuthorizedSession;
 }
 
 export async function requireApiSession(

@@ -9,10 +9,6 @@ import {
   VendorOnboardingForm,
   type VendorOnboardingValue,
 } from "@/features/onboarding/VendorOnboardingForm";
-import {
-  PlannerOnboardingForm,
-  type PlannerOnboardingValue,
-} from "@/features/onboarding/PlannerOnboardingForm";
 import { requirePageRole } from "@/lib/auth/session";
 import { mongoDb } from "@/lib/mongodb";
 
@@ -20,12 +16,11 @@ export const metadata: Metadata = { title: "Wedding details" };
 
 export default async function OnboardingPage() {
   if ((process.env.NEXT_PUBLIC_DATA_SOURCE ?? "api") === "demo") redirect("/dashboard");
-  const session = await requirePageRole(["Couple", "Vendor", "Planner"]);
-  const [user, wedding, vendor, planner, venueVendors] = await Promise.all([
+  const session = await requirePageRole(["Couple", "Venue", "Vendor"]);
+  const [user, wedding, vendor, venueVendors] = await Promise.all([
     mongoDb.collection("user").findOne({ email: session.user.email }),
     mongoDb.collection("weddingProfiles").findOne({ ownerUserId: session.user.id }),
     mongoDb.collection("vendorProfiles").findOne({ ownerUserId: session.user.id }),
-    mongoDb.collection("plannerProfiles").findOne({ ownerUserId: session.user.id }),
     mongoDb
       .collection("vendorProfiles")
       .find({ published: true, services: "Venue" })
@@ -33,7 +28,7 @@ export default async function OnboardingPage() {
       .sort({ businessName: 1 })
       .toArray(),
   ]);
-  if (session.user.role === "Vendor") {
+  if (session.user.role === "Vendor" || session.user.role === "Venue") {
     const initialVendor: VendorOnboardingValue = {
       businessName: String(vendor?.businessName ?? ""),
       contactName: String(vendor?.contactName ?? user?.name ?? ""),
@@ -51,32 +46,11 @@ export default async function OnboardingPage() {
     return (
       <div className="section-stack mx-auto w-full max-w-4xl">
         <PageHeader
-          eyebrow="Vendor workspace"
-          title={vendor ? "Edit your public vendor profile" : "Set up your vendor workspace"}
-          description="Tell couples what you offer and show them the work that represents your business."
+          eyebrow={session.user.role === "Venue" ? "Venue organisation" : "Vendor workspace"}
+          title={vendor ? "Edit your public business profile" : "Set up your business workspace"}
+          description="Add the services your business offers and the details couples can view."
         />
-        <VendorOnboardingForm initialValue={initialVendor} />
-      </div>
-    );
-  }
-  if (session.user.role === "Planner") {
-    const initialPlanner: PlannerOnboardingValue = {
-      organisationName: String(planner?.organisationName ?? ""),
-      contactName: String(planner?.contactName ?? user?.name ?? ""),
-      bio: String(planner?.bio ?? ""),
-      serviceArea: String(planner?.serviceArea ?? ""),
-      teamSize: Number(planner?.teamSize ?? 1),
-      yearsExperience: Number(planner?.yearsExperience ?? 0),
-      website: String(planner?.website ?? ""),
-    };
-    return (
-      <div className="section-stack mx-auto w-full max-w-4xl">
-        <PageHeader
-          eyebrow="Planner workspace"
-          title={planner ? "Edit your planner profile" : "Set up your planner workspace"}
-          description="Create the organisation profile your team will use to manage client weddings."
-        />
-        <PlannerOnboardingForm initialValue={initialPlanner} />
+        <VendorOnboardingForm accountType={session.user.role} initialValue={initialVendor} />
       </div>
     );
   }

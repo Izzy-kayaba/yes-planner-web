@@ -7,7 +7,8 @@ const registrationSchema = z.object({
   email: z.string().trim().email().max(254),
   phoneNumber: z.string().trim(),
   password: z.string().min(8).max(128),
-  role: z.string(),
+  accountType: z.string().optional(),
+  role: z.string().optional(),
 });
 
 type Registration = z.infer<typeof registrationSchema>;
@@ -33,7 +34,8 @@ function json(message: string, status: number) {
 export function createRegistrationHandler(dependencies: RegistrationDependencies) {
   return async function register(request: Request) {
     const parsed = registrationSchema.safeParse(await request.json().catch(() => null));
-    if (!parsed.success || !dependencies.isAllowedRole(parsed.data.role)) {
+    const accountType = parsed.success ? (parsed.data.accountType ?? parsed.data.role) : undefined;
+    if (!parsed.success || !dependencies.isAllowedRole(accountType ?? "")) {
       return json("Please provide valid registration details.", 400);
     }
 
@@ -70,7 +72,8 @@ export function createRegistrationHandler(dependencies: RegistrationDependencies
       firstName: parsed.data.firstName,
       lastName: parsed.data.lastName,
       phoneNumber,
-      role: parsed.data.role,
+      accountType,
+      role: accountType,
     });
     return response;
   };

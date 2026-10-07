@@ -24,7 +24,15 @@ const sections: ReadonlyArray<[TranslationKey, string]> = [
   ["wedding.reports", "reports"],
 ];
 
-export function WeddingNav({ weddingId, role }: { weddingId: string; role?: PlatformRole }) {
+export function WeddingNav({
+  access,
+  weddingId,
+  role,
+}: {
+  access?: "Owner" | "FullManager" | "Vendor";
+  weddingId: string;
+  role?: PlatformRole;
+}) {
   const pathname = usePathname();
   const { t, text } = useLanguage();
   const base = `/weddings/${weddingId}`;
@@ -37,8 +45,9 @@ export function WeddingNav({ weddingId, role }: { weddingId: string; role?: Plat
       {sections
         .filter(([, slug]) => {
           if (!role || role !== "Vendor") return true;
+          if (access === "FullManager") return true;
           if (!slug) return true;
-          return isWorkspaceModule(slug) && canUseWorkspaceModule(role, slug, "read");
+          return isWorkspaceModule(slug) && canUseWorkspaceModule(role, slug, "read", access);
         })
         .map(([label, slug]) => {
           const href = slug ? `${base}/${slug}` : base;

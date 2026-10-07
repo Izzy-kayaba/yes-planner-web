@@ -24,8 +24,11 @@ function matchesImageSignature(buffer: Buffer, mimeType: string) {
 export async function POST(request: Request) {
   const authentication = await requireApiSession(request.headers);
   if (authentication.error) return authentication.error;
-  if (authentication.session.user.role !== "Vendor") {
-    return NextResponse.json({ message: "Vendor access is required." }, { status: 403 });
+  if (
+    authentication.session.user.role !== "Vendor" &&
+    authentication.session.user.role !== "Venue"
+  ) {
+    return NextResponse.json({ message: "A business account is required." }, { status: 403 });
   }
 
   const form = await request.formData();

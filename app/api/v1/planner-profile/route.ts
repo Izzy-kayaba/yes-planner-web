@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { requireApiSession } from "@/lib/auth/session";
 import { ensureMongoIndexes, mongoDb } from "@/lib/mongodb";
+import { weddingPlanningService } from "@/lib/vendors/services";
 
 const schema = z.object({
   organisationName: z.string().trim().min(2).max(160),
@@ -16,8 +17,8 @@ const schema = z.object({
 export async function PUT(request: Request) {
   const authentication = await requireApiSession(request.headers);
   if (authentication.error) return authentication.error;
-  if (authentication.session.user.role !== "Planner") {
-    return NextResponse.json({ message: "Planner access is required." }, { status: 403 });
+  if (authentication.session.user.role !== "Vendor") {
+    return NextResponse.json({ message: "A vendor account is required." }, { status: 403 });
   }
   const parsed = schema.safeParse(await request.json().catch(() => null));
   if (!parsed.success) {
@@ -28,13 +29,35 @@ export async function PUT(request: Request) {
   }
   await ensureMongoIndexes();
   const now = new Date();
-  const profile = await mongoDb.collection("plannerProfiles").findOneAndUpdate(
+  const profile = await mongoDb.collection("vendorProfiles").findOneAndUpdate(
     { ownerUserId: authentication.session.user.id },
     {
-      $set: { ...parsed.data, updatedAt: now },
-      $setOnInsert: { ownerUserId: authentication.session.user.id, createdAt: now },
+      $set: {
+        businessName: parsed.data.organisationName,
+        contactName: parsed.data.contactName,
+        bio: parsed.data.bio,
+        serviceArea: parsed.data.serviceArea,
+        website: parsed.data.website,
+        published: true,
+        updatedAt: now,
+      },
+      $addToSet: { services: weddingPlanningService },
+      $setOnInsert: {
+        ownerUserId: authentication.session.user.id,
+        startingPriceMinor: 0,
+        startingPriceRangeKey: "under-500",
+        instagramHandle: "",
+        profileImage: "",
+        portfolioImages: [],
+        createdAt: now,
+      },
     },
     { upsert: true, returnDocument: "after" },
   );
-  return NextResponse.json({ id: String(profile!.ownerUserId), ...parsed.data });
+  return NextResponse.json({
+    id: String(profile!.ownerUserId),
+    ...parsed.data,
+    accountType: "Vendor",
+    services: profile!.services,
+  });
 }

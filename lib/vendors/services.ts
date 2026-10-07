@@ -24,3 +24,9 @@ export type VendorService = (typeof vendorServices)[number];
 export function isVendorService(value: string): value is VendorService {
   return vendorServices.includes(value as VendorService);
 }
+
+export const weddingPlanningService: VendorService = "Wedding planning";
+
+export function offersWeddingPlanning(services: unknown): boolean {
+  return Array.isArray(services) && services.includes(weddingPlanningService);
+}

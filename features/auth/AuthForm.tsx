@@ -1,6 +1,6 @@
 "use client";
 
-import { Camera, Heart, Sparkles, Store, type LucideIcon } from "lucide-react";
+import { Building2, Camera, Heart, Store, type LucideIcon } from "lucide-react";
 import { getCountries, isValidPhoneNumber, parsePhoneNumber } from "libphonenumber-js";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -19,11 +19,15 @@ import { authClient } from "@/lib/auth-client";
 import { FieldLabel } from "@/components/forms/FieldLabel";
 import { PasswordInput } from "@/components/forms/PasswordInput";
 
-const roles = [
-  { value: "Couple", icon: Heart },
-  { value: "Planner", icon: Sparkles },
-  { value: "Vendor", icon: Store },
-] as const satisfies ReadonlyArray<{ value: AccountRole; icon: LucideIcon }>;
+const accountTypes = [
+  { value: "Couple", label: "Couple", icon: Heart },
+  { value: "Vendor", label: "Vendor / Business", icon: Store },
+  { value: "Venue", label: "Venue / Organisation", icon: Building2 },
+] as const satisfies ReadonlyArray<{
+  value: AccountType;
+  label: string;
+  icon: LucideIcon;
+}>;
 
 const loginSchema = z.object({
   email: z.string().trim().email("Enter a valid email address."),
@@ -31,7 +35,7 @@ const loginSchema = z.object({
 });
 
 const registrationSchema = loginSchema.extend({
-  role: z.enum(["Couple", "Planner", "Vendor"]),
+  accountType: z.enum(["Couple", "Venue", "Vendor"]),
   firstName: z.string().trim().min(2, "Enter your first name."),
   lastName: z.string().trim().min(2, "Enter your last name."),
   phoneNumber: z
@@ -45,10 +49,10 @@ const registrationSchema = loginSchema.extend({
     .regex(/[^A-Za-z0-9]/, "Add at least one symbol."),
 });
 
-type AccountRole = "Couple" | "Planner" | "Vendor";
+type AccountType = "Couple" | "Venue" | "Vendor";
 
 type AuthValues = {
-  role: AccountRole;
+  accountType: AccountType;
   firstName: string;
   lastName: string;
   email: string;
@@ -77,7 +81,7 @@ export function AuthForm({
     formState: { errors, isSubmitting },
   } = useForm<AuthValues>({
     defaultValues: {
-      role: "Couple",
+      accountType: "Couple",
       firstName: "",
       lastName: "",
       email: "",
@@ -85,7 +89,7 @@ export function AuthForm({
       password: "",
     },
   });
-  const selectedRole = watch("role");
+  const selectedAccountType = watch("accountType");
 
   useEffect(() => {
     if (!isRegister) return;
@@ -134,7 +138,7 @@ export function AuthForm({
 
   async function socialSignIn(provider: "google" | "instagram") {
     if (isRegister) {
-      document.cookie = `yes-pending-role=${selectedRole}; Path=/; Max-Age=600; SameSite=Lax`;
+      document.cookie = `yes-pending-account-type=${selectedAccountType}; Path=/; Max-Age=600; SameSite=Lax`;
       document.cookie = `yes-auth-intent=register:${provider}:${Date.now()}; Path=/; Max-Age=600; SameSite=Lax`;
     }
     const result = await authClient.signIn.social({
@@ -152,16 +156,16 @@ export function AuthForm({
             <FieldLabel required>{text("Account type")}</FieldLabel>
           </legend>
           <div className="role-picker">
-            {roles.map(({ value, icon: Icon }) => (
+            {accountTypes.map(({ value, label, icon: Icon }) => (
               <button
-                aria-pressed={selectedRole === value}
-                className={cn(selectedRole === value && "selected")}
+                aria-pressed={selectedAccountType === value}
+                className={cn(selectedAccountType === value && "selected")}
                 type="button"
                 key={value}
-                onClick={() => setValue("role", value, { shouldValidate: true })}
+                onClick={() => setValue("accountType", value, { shouldValidate: true })}
               >
                 <Icon size={18} strokeWidth={1.7} aria-hidden="true" />
-                {text(value)}
+                {text(label)}
               </button>
             ))}
           </div>

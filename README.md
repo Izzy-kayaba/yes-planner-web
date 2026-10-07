@@ -8,8 +8,8 @@ This repository contains the mobile-first Next.js application for Yes Planner. I
 - Shared couple and Full Manager wedding workspace
 - Guests, budget, tasks, vendors, timeline, seating, menus, documents, bookings, payments, notes and reports
 - Direct vendor contact and opt-in event notifications through WhatsApp
-- Planner organisation dashboard
-- Vendor marketplace and vendor business dashboard
+- Venue organisation experience
+- Vendor marketplace and business dashboard; Wedding Planning is a vendor service
 - Mobile guest invitation and RSVP journey
 - Platform administration and account settings
 - Responsive light and dark themes

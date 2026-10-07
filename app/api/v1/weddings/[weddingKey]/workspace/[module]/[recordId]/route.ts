@@ -2,9 +2,9 @@ import { NextResponse } from "next/server";
 import type { WorkspaceModule } from "@/lib/api/contracts";
 import { canUseWorkspaceModule, isWorkspaceModule } from "@/lib/auth/permissions";
 import { requireApiSession, type AuthorizedSession } from "@/lib/auth/session";
-import { resolveWeddingOwner } from "@/lib/auth/wedding-access";
+import { resolveWeddingAccess } from "@/lib/auth/wedding-access";
 import { mongoDb } from "@/lib/mongodb";
-import { validateWorkspaceMoney } from "@/lib/api/workspace-validation";
+import { validateWorkspaceMoney, validateWorkspaceRecord } from "@/lib/api/workspace-validation";
 import { after } from "next/server";
 import { notifyWeddingParticipants } from "@/lib/whatsapp";
 import { validateConnectedVendor } from "@/lib/vendors/connected";
@@ -32,7 +32,18 @@ async function authorize(
   if (!isWorkspaceModule(params.module)) {
     return { error: NextResponse.json({ message: "Unknown workspace module." }, { status: 404 }) };
   }
-  if (!canUseWorkspaceModule(authentication.session.user.role, params.module, action)) {
+  const weddingAccess = await resolveWeddingAccess(authentication.session, params.weddingKey);
+  if (!weddingAccess) {
+    return { error: NextResponse.json({ message: "Wedding not found." }, { status: 404 }) };
+  }
+  if (
+    !canUseWorkspaceModule(
+      authentication.session.user.role,
+      params.module,
+      action,
+      weddingAccess.access,
+    )
+  ) {
     return {
       error: NextResponse.json(
         { message: "You do not have permission to change this module." },
@@ -40,13 +51,9 @@ async function authorize(
       ),
     };
   }
-  const resourceOwnerId = await resolveWeddingOwner(authentication.session, params.weddingKey);
-  if (!resourceOwnerId) {
-    return { error: NextResponse.json({ message: "Wedding not found." }, { status: 404 }) };
-  }
   return {
     session: authentication.session,
-    resourceOwnerId,
+    resourceOwnerId: weddingAccess.ownerUserId,
     params: { ...params, module: params.module },
   };
 }
@@ -61,6 +68,8 @@ export async function PUT(request: Request, context: RouteContext) {
   const { id, ...data } = value as Record<string, unknown>;
   const moneyError = validateWorkspaceMoney(authorization.params.module, data);
   if (moneyError) return NextResponse.json({ message: moneyError }, { status: 400 });
+  const recordError = validateWorkspaceRecord(authorization.params.module, data);
+  if (recordError) return NextResponse.json({ message: recordError }, { status: 400 });
   const vendorError = await validateConnectedVendor(
     authorization.resourceOwnerId,
     authorization.params.weddingKey,

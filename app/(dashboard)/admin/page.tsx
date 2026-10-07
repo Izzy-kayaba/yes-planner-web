@@ -44,7 +44,7 @@ export default async function AdminPage() {
         <StatCard
           label="Professional accounts"
           value={String(metrics.professionals)}
-          detail="Planners and vendors"
+          detail="Venues and vendors"
           tone="blue"
         />
         <StatCard
@@ -113,20 +113,20 @@ export default async function AdminPage() {
 
 async function loadMetrics() {
   const users = mongoDb.collection("user");
-  const [userCount, couples, planners, vendors, records] = await Promise.all([
+  const [userCount, couples, venues, vendors, records] = await Promise.all([
     users.countDocuments(),
     users.countDocuments({ role: "Couple" }),
-    users.countDocuments({ role: "Planner" }),
+    users.countDocuments({ role: "Venue" }),
     users.countDocuments({ role: "Vendor" }),
     mongoDb.collection("workspaceItems").countDocuments({ deletedAt: { $exists: false } }),
   ]);
-  return { users: userCount, couples, professionals: planners + vendors, records };
+  return { users: userCount, couples, professionals: venues + vendors, records };
 }
 
 async function loadRecentUsers() {
   const users = await mongoDb
     .collection("user")
-    .find({}, { projection: { name: 1, email: 1, role: 1 } })
+    .find({}, { projection: { name: 1, email: 1, role: 1, accountType: 1 } })
     .sort({ createdAt: -1 })
     .limit(8)
     .toArray();
@@ -134,7 +134,9 @@ async function loadRecentUsers() {
     id: String(user._id),
     name: String(user.name ?? user.email ?? "User"),
     email: String(user.email ?? ""),
-    role: String(user.role ?? "Couple"),
+    role: String(
+      user.accountType ?? (user.role === "Planner" ? "Vendor" : (user.role ?? "Couple")),
+    ),
   }));
 }
 

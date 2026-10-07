@@ -22,7 +22,7 @@ export type RegisterInput = LoginInput & {
   phoneNumber: string;
   firstName: string;
   lastName: string;
-  role: "Couple" | "Planner" | "Vendor";
+  accountType: "Couple" | "Venue" | "Vendor";
 };
 
 export type AuthSession = {

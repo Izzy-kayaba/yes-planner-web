@@ -1,4 +1,5 @@
 import type { WorkspaceModule } from "@/lib/api/contracts";
+import { parsePhoneNumberFromString } from "libphonenumber-js";
 
 const forbiddenMoneyFields = new Set([
   "currency",
@@ -26,5 +27,21 @@ export function validateWorkspaceMoney(module: WorkspaceModule, data: Record<str
       return `${field} must be a non-negative USD minor-unit integer.`;
     }
   }
+  return null;
+}
+
+export function validateWorkspaceRecord(module: WorkspaceModule, data: Record<string, unknown>) {
+  if (module !== "guests") return null;
+  const phone = typeof data.phoneNumber === "string" ? parsePhoneNumberFromString(data.phoneNumber) : null;
+  if (!phone?.isValid()) return "Enter a valid guest WhatsApp phone number with country code.";
+  if (
+    typeof data.email === "string" &&
+    data.email.trim() &&
+    !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email.trim())
+  ) {
+    return "Enter a valid email address or leave it blank.";
+  }
+  data.phoneNumber = phone.number;
+  data.email = typeof data.email === "string" ? data.email.trim().toLowerCase() : "";
   return null;
 }

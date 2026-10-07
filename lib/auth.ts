@@ -98,9 +98,15 @@ export const auth = betterAuth({
   user: {
     additionalFields: {
       role: {
-        type: ["SystemAdmin", "Couple", "Planner", "Vendor", "Guest"],
+        // Planner remains readable only so existing sessions can be migrated safely.
+        type: ["SystemAdmin", "Couple", "Planner", "Venue", "Vendor", "Guest"],
         required: true,
         defaultValue: "Couple",
+        input: false,
+      },
+      accountType: {
+        type: ["Couple", "Venue", "Vendor", "Guest"],
+        required: false,
         input: false,
       },
       firstName: { type: "string", required: false, input: false },

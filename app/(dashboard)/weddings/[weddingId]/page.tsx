@@ -14,7 +14,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function WeddingPage({ params }: { params: Promise<{ weddingId: string }> }) {
   if ((process.env.NEXT_PUBLIC_DATA_SOURCE ?? "api") === "demo") return <WeddingOverview />;
-  const session = await requirePageRole(["SystemAdmin", "Couple", "Planner", "Vendor"]);
+  const session = await requirePageRole(["SystemAdmin", "Couple", "Vendor"]);
   const { weddingId } = await params;
   const ownerUserId = await resolveWeddingOwner(session, weddingId);
   if (!ownerUserId) notFound();
