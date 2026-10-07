@@ -103,11 +103,17 @@ const english = {
   "wedding.messagesDescription": "Keep wedding conversations connected to the plan.",
   "wedding.notesDescription": "Capture ideas, questions and decisions before they disappear.",
   "wedding.reportsDescription": "A clear view of readiness, spend and guest responses.",
+  "pricing.under": "Under {amount}",
+  "pricing.range": "{min} – {max}",
+  "pricing.plus": "{amount}+",
+  "guests.under": "Under {amount}",
+  "guests.range": "{min} – {max}",
+  "guests.plus": "{amount}+",
 } as const;
 
 export type TranslationKey = keyof typeof english;
 
-const french: Record<TranslationKey, string> = {
+const french = {
   "common.addNew": "Ajouter",
   "common.cancel": "Annuler",
   "common.delete": "Supprimer",
@@ -202,7 +208,14 @@ const french: Record<TranslationKey, string> = {
   "wedding.messagesDescription": "Gardez les conversations liées au projet de mariage.",
   "wedding.notesDescription": "Conservez les idées, questions et décisions importantes.",
   "wedding.reportsDescription": "Une vue claire de l’avancement, des dépenses et des réponses.",
-};
+} as Record<TranslationKey, string>;
+
+french["pricing.under"] = "Moins de {amount}";
+french["pricing.range"] = "{min} – {max}";
+french["pricing.plus"] = "{amount}+";
+french["guests.under"] = "Moins de {amount}";
+french["guests.range"] = "{min} – {max}";
+french["guests.plus"] = "{amount}+";
 
 export const messages: Record<Language, Record<TranslationKey, string>> = {
   en: english,

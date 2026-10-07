@@ -9,7 +9,7 @@ import { useCurrency } from "@/components/providers/CurrencyProvider";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { getInitials } from "@/lib/initials";
 import { YesSelect } from "@/components/ui/YesSelect";
-import { inferMoneyRange, vendorPriceRanges } from "@/lib/estimate-ranges";
+import { inferMoneyRange, moneyRangeLabel, vendorPriceRanges } from "@/lib/estimate-ranges";
 import { LIST_PAGE_SIZE, Pagination } from "@/components/ui/Pagination";
 import { countryOptions } from "@/lib/countries";
 
@@ -26,7 +26,7 @@ export type MarketplaceVendor = {
 };
 
 export function LiveMarketplace({ vendors }: { vendors: MarketplaceVendor[] }) {
-  const { language, text } = useLanguage();
+  const { language, text, t } = useLanguage();
   const { displayMoney } = useCurrency();
   const [query, setQuery] = useState("");
   const [service, setService] = useState("All");
@@ -62,9 +62,7 @@ export function LiveMarketplace({ vendors }: { vendors: MarketplaceVendor[] }) {
           inferMoneyRange(vendorPriceRanges, vendor.startingPriceMinor)),
     );
     if (!range) return text("Quote required");
-    return range.maxMinor === null
-      ? `${displayMoney(range.minMinor)}+`
-      : `${displayMoney(range.minMinor)} – ${displayMoney(range.maxMinor)}`;
+    return moneyRangeLabel(range, displayMoney, t);
   }
 
   return (
@@ -96,10 +94,7 @@ export function LiveMarketplace({ vendors }: { vendors: MarketplaceVendor[] }) {
             { value: "All", label: text("All prices") },
             ...vendorPriceRanges.map((range) => ({
               value: range.id,
-              label:
-                range.maxMinor === null
-                  ? `${displayMoney(range.minMinor)}+`
-                  : `${displayMoney(range.minMinor)} – ${displayMoney(range.maxMinor)}`,
+              label: moneyRangeLabel(range, displayMoney, t),
             })),
           ]}
           value={priceRange}
@@ -150,14 +145,16 @@ export function LiveMarketplace({ vendors }: { vendors: MarketplaceVendor[] }) {
               </div>
               <div className="vendor-card-copy">
                 <p>{vendor.services.map(text).join(" · ")}</p>
-                <h3>{vendor.businessName}</h3>
-                {vendor.claimed && (
-                  <BadgeCheck
-                    aria-label={text("Verified business")}
-                    className="vendor-verified-icon"
-                    size={17}
-                  />
-                )}
+                <div className="vendor-name-line">
+                  <h3>{vendor.businessName}</h3>
+                  {vendor.claimed && (
+                    <BadgeCheck
+                      aria-label={text("Verified business")}
+                      className="vendor-verified-icon"
+                      size={17}
+                    />
+                  )}
+                </div>
                 <p>{vendor.serviceArea}</p>
                 <strong>{priceLabel(vendor)}</strong>
                 <Link

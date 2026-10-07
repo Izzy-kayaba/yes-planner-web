@@ -364,6 +364,15 @@
   margin-bottom: 5px;
   font: 20px var(--display);
 }
+.vendor-card-copy .vendor-name-line {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.35rem;
+}
+.vendor-card-copy .vendor-name-line h3 {
+  margin-bottom: 5px;
+}
 .vendor-card-copy > strong {
   display: block;
   margin: 13px 0;

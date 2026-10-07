@@ -69,14 +69,32 @@ export async function PUT(request: Request) {
   }
   const parsed = profileSchema.safeParse(await request.json().catch(() => null));
   if (!parsed.success || parsed.data.services.some((service) => !isVendorService(service))) {
+    const issue = parsed.success ? null : parsed.error.issues[0];
     const bioIssue = parsed.success
       ? null
-      : parsed.error.issues.find((issue) => issue.path[0] === "bio" && issue.code === "too_small");
+      : parsed.error.issues.find((item) => item.path[0] === "bio" && item.code === "too_small");
+    const countryMissing = parsed.success
+      ? false
+      : parsed.error.issues.some(
+          (item) => item.path[0] === "countryCode" || item.path[0] === "serviceArea",
+        );
+    const invalidService = parsed.success
+      ? parsed.data.services.some((service) => !isVendorService(service))
+      : false;
+    const message = countryMissing
+      ? "Please select your service area country."
+      : bioIssue
+        ? "Business description must contain at least 30 characters."
+        : invalidService || issue?.path[0] === "services"
+          ? "Please select at least one service."
+          : issue?.path[0] === "businessName"
+            ? "Please enter your business name."
+            : issue?.path[0] === "contactName"
+              ? "Please enter your contact name."
+              : "Please complete all required vendor profile details.";
     return NextResponse.json(
       {
-        message: bioIssue
-          ? "Business description must contain at least 30 characters."
-          : "Please complete all required vendor profile details.",
+        message,
       },
       { status: 400 },
     );

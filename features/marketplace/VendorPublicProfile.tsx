@@ -12,7 +12,7 @@ import { apiRequest } from "@/lib/api/client";
 import { YesSelect } from "@/components/ui/YesSelect";
 import { CharacterCount } from "@/components/forms/CharacterCount";
 import { FieldLabel } from "@/components/forms/FieldLabel";
-import { inferMoneyRange, vendorPriceRanges } from "@/lib/estimate-ranges";
+import { inferMoneyRange, moneyRangeLabel, vendorPriceRanges } from "@/lib/estimate-ranges";
 import { BackButton } from "@/components/navigation/BackButton";
 
 export function VendorPublicProfile({
@@ -45,7 +45,7 @@ export function VendorPublicProfile({
   claimed: boolean;
 }) {
   const router = useRouter();
-  const { text } = useLanguage();
+  const { text, t } = useLanguage();
   const { displayMoney } = useCurrency();
   const [service, setService] = useState(vendor.services[0] ?? "");
   const [message, setMessage] = useState("");
@@ -112,14 +112,17 @@ export function VendorPublicProfile({
         </div>
         <div className="vendor-profile-copy">
           <p className="eyebrow">{vendor.services.map(text).join(" · ")}</p>
-          <h1>{vendor.businessName}</h1>
-          {claimed && (
-            <BadgeCheck
-              aria-label={text("Verified business")}
-              className="vendor-verified-icon"
-              size={20}
-            />
-          )}
+          <h1 className="flex items-center gap-4">
+            {vendor.businessName}{" "}
+            {claimed && (
+              <BadgeCheck
+                aria-label={text("Verified business")}
+                className="vendor-verified-icon"
+                size={26}
+              />
+            )}
+          </h1>
+
           {vendor.contactName && <p className="vendor-contact-name">{vendor.contactName}</p>}
           <p>{vendor.bio}</p>
           <div className="vendor-service-list">
@@ -132,9 +135,7 @@ export function VendorPublicProfile({
           <p className="mt-4 text-sm text-yes-muted">
             {vendor.serviceArea} ·{" "}
             {selectedPriceRange
-              ? selectedPriceRange.maxMinor === null
-                ? `${displayMoney(selectedPriceRange.minMinor)}+`
-                : `${displayMoney(selectedPriceRange.minMinor)} – ${displayMoney(selectedPriceRange.maxMinor)}`
+              ? moneyRangeLabel(selectedPriceRange, displayMoney, t)
               : text("Quote required")}
           </p>
           <div className="mt-3 flex flex-wrap gap-4 text-sm font-bold text-yes-wine">

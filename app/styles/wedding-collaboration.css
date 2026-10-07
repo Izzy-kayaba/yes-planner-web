@@ -71,7 +71,7 @@
 .messages-panel > article {
   min-width: 0;
   display: grid;
-  grid-template-rows: 72px 1fr 72px;
+  grid-template-rows: 72px minmax(0, 1fr) auto;
 }
 .chat-header {
   display: flex;
@@ -130,6 +130,7 @@
 .message-compose {
   display: grid;
   grid-template-columns: 1fr 36px;
+  grid-template-rows: 42px auto;
   align-items: center;
   gap: 8px;
   padding: 12px 18px;
@@ -195,6 +196,8 @@
 }
 .message-compose .character-count {
   grid-column: 1 / -1;
+  display: block;
+  line-height: 1.2;
 }
 .message-compose .send-button {
   background: var(--wine);

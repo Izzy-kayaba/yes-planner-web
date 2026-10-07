@@ -15,9 +15,11 @@ import { countryOptions } from "@/lib/countries";
 import {
   budgetRanges,
   guestRanges,
+  guestRangeLabel,
   guestRangeValue,
   inferGuestRange,
   inferMoneyRange,
+  moneyRangeLabel,
   moneyRangeValue,
 } from "@/lib/estimate-ranges";
 
@@ -60,7 +62,7 @@ export function WeddingOnboardingForm({
   venueOptions?: string[];
 }) {
   const router = useRouter();
-  const { language, text } = useLanguage();
+  const { language, text, t } = useLanguage();
   const { currency, displayMoney } = useCurrency();
   const [value, setValue] = useState(initialValue ?? emptyValue);
   const [saving, setSaving] = useState(false);
@@ -202,10 +204,7 @@ export function WeddingOnboardingForm({
             }}
             options={budgetRanges.map((range) => ({
               value: range.id,
-              label:
-                range.maxMinor === null
-                  ? `${displayMoney(range.minMinor)}+`
-                  : `${displayMoney(range.minMinor)} – ${displayMoney(range.maxMinor)}`,
+              label: moneyRangeLabel(range, displayMoney, t),
             }))}
             placeholder={text("Select a budget range")}
             required
@@ -228,7 +227,7 @@ export function WeddingOnboardingForm({
             }}
             options={guestRanges.map((range) => ({
               value: range.id,
-              label: range.max === null ? `${range.min}+` : `${range.min} – ${range.max}`,
+              label: guestRangeLabel(range, t),
             }))}
             placeholder={text("Select a guest range")}
             required

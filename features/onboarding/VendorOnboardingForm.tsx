@@ -12,7 +12,12 @@ import { vendorServices } from "@/lib/vendors/services";
 import { CharacterCount } from "@/components/forms/CharacterCount";
 import { FieldLabel } from "@/components/forms/FieldLabel";
 import { useCurrency } from "@/components/providers/CurrencyProvider";
-import { inferMoneyRange, moneyRangeValue, vendorPriceRanges } from "@/lib/estimate-ranges";
+import {
+  inferMoneyRange,
+  moneyRangeLabel,
+  moneyRangeValue,
+  vendorPriceRanges,
+} from "@/lib/estimate-ranges";
 import { YesSelect } from "@/components/ui/YesSelect";
 import { countryOptions } from "@/lib/countries";
 
@@ -64,7 +69,7 @@ export function VendorOnboardingForm({
   initialValue?: VendorOnboardingValue;
 }) {
   const router = useRouter();
-  const { language, text } = useLanguage();
+  const { language, text, t } = useLanguage();
   const { currency, displayMoney } = useCurrency();
   const [value, setValue] = useState(() => {
     const startingValue = initialValue ?? emptyValue;
@@ -162,19 +167,6 @@ export function VendorOnboardingForm({
       </div>
       <div className="form-row">
         <label>
-          <FieldLabel required>{text("Country")}</FieldLabel>
-          <YesSelect
-            ariaLabel={text("Country")}
-            id="vendor-country"
-            name="countryCode"
-            onChange={(countryCode) => update("countryCode", countryCode)}
-            options={countryOptions(language)}
-            placeholder={text("Select a country")}
-            required
-            value={value.countryCode}
-          />
-        </label>
-        <label>
           <FieldLabel required>{text("Business name")}</FieldLabel>
           <input
             id="vendor-business-name"
@@ -239,13 +231,17 @@ export function VendorOnboardingForm({
       <div className="form-row">
         <label>
           <FieldLabel required>{text("Service area")}</FieldLabel>
-          <input
+          <YesSelect
+            ariaLabel={text("Service area")}
             id="vendor-service-area"
             name="serviceArea"
-            onChange={(event) => update("serviceArea", event.target.value)}
-            placeholder={text("Johannesburg, Gauteng or nationwide")}
+            onChange={(countryCode) =>
+              setValue((current) => ({ ...current, serviceArea: countryCode, countryCode }))
+            }
+            options={countryOptions(language)}
+            placeholder={text("Select a country")}
             required
-            value={value.serviceArea}
+            value={value.serviceArea || value.countryCode}
           />
         </label>
         <label>
@@ -266,10 +262,7 @@ export function VendorOnboardingForm({
             }}
             options={vendorPriceRanges.map((range) => ({
               value: range.id,
-              label:
-                range.maxMinor === null
-                  ? `${displayMoney(range.minMinor)}+`
-                  : `${displayMoney(range.minMinor)} – ${displayMoney(range.maxMinor)}`,
+              label: moneyRangeLabel(range, displayMoney, t),
             }))}
             placeholder={text("Select a price range")}
             required
