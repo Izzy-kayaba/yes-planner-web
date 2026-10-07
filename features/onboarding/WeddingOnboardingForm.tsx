@@ -63,16 +63,17 @@ export function WeddingOnboardingForm({
   const { currency, displayMoney } = useCurrency();
   const [value, setValue] = useState(initialValue ?? emptyValue);
   const [saving, setSaving] = useState(false);
+  const [displayNameEdited, setDisplayNameEdited] = useState(Boolean(initialValue?.displayName));
 
   useEffect(() => {
     const displayName = [value.firstName.trim(), value.partnerName.trim()]
       .filter(Boolean)
       .join(" & ")
       .slice(0, 100);
-    if (value.displayName !== displayName) {
+    if (!displayNameEdited && value.displayName !== displayName) {
       setValue((current) => ({ ...current, displayName }));
     }
-  }, [value.displayName, value.firstName, value.partnerName]);
+  }, [displayNameEdited, value.displayName, value.firstName, value.partnerName]);
 
   function update<K extends keyof WeddingOnboardingValue>(
     field: K,
@@ -172,7 +173,10 @@ export function WeddingOnboardingForm({
             id="wedding-display-name"
             maxLength={100}
             name="displayName"
-            readOnly
+            onChange={(event) => {
+              setDisplayNameEdited(true);
+              update("displayName", event.target.value);
+            }}
             required
             value={value.displayName}
           />

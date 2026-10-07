@@ -7,41 +7,34 @@ import { useLanguage } from "@/components/providers/LanguageProvider";
 import { MetricGrid } from "@/features/weddings/MetricGrid";
 import { useWorkspaceCollection } from "@/hooks/useWorkspaceCollection";
 
-type SeatingTable = {
-  id: string | number;
-  name: string;
-  label: string;
-  count: number;
-  capacity: number;
-  guests: string;
-};
-const seed: SeatingTable[] = [
-  { id: 1, name: "Table 01", label: "Family", count: 10, capacity: 10, guests: "Mokoena family" },
-  { id: 2, name: "Table 02", label: "Family", count: 9, capacity: 10, guests: "Dlamini family" },
-  {
-    id: 3,
-    name: "Table 03",
-    label: "Friends",
-    count: 8,
-    capacity: 10,
-    guests: "University friends",
-  },
-];
+type SeatingTable = { id: string | number; name: string; label: string; capacity: number };
+type GuestAssignment = { id: string | number; name: string; table: string; status: string };
+
 const fields = [
   { name: "name", label: "Table name", required: true },
-  { name: "label", label: "Group", required: true },
-  { name: "count", label: "Guests seated", type: "number" as const, required: true },
+  {
+    name: "label",
+    label: "Group",
+    type: "select" as const,
+    options: ["Family", "Friends", "Workmates", "Acquaintance", "Mixed"],
+    required: true,
+  },
   { name: "capacity", label: "Capacity", type: "number" as const, required: true },
-  { name: "guests", label: "Guest names or group", type: "textarea" as const, required: true },
 ];
 
 export function SeatingSection() {
   const { text } = useLanguage();
-  const { items, create, update, remove } = useWorkspaceCollection<SeatingTable>("seating", seed);
+  const { items, create, update, remove } = useWorkspaceCollection<SeatingTable>("seating", []);
+  const { items: guests } = useWorkspaceCollection<GuestAssignment>("guests", []);
   const [editing, setEditing] = useState<SeatingTable | null>(null);
   const [open, setOpen] = useState(false);
-  const seated = items.reduce((sum, table) => sum + table.count, 0);
+  const guestCount = (tableName: string) =>
+    guests.filter((guest) => guest.status !== "Declined" && guest.table === tableName).length;
+  const seated = items.reduce((sum, table) => sum + guestCount(table.name), 0);
   const capacity = items.reduce((sum, table) => sum + table.capacity, 0);
+  const unassigned = guests.filter(
+    (guest) => guest.status !== "Declined" && !items.some((table) => table.name === guest.table),
+  ).length;
 
   async function save(values: Record<string, EntityFormValue>) {
     const input = values as unknown as Omit<SeatingTable, "id">;
@@ -73,7 +66,7 @@ export function SeatingSection() {
           { label: "Tables", value: String(items.length), detail: "Current layout", tone: "rose" },
           {
             label: "Unassigned",
-            value: String(Math.max(0, 118 - seated)),
+            value: String(unassigned),
             detail: "Need table placement",
             tone: "gold",
           },
@@ -85,53 +78,54 @@ export function SeatingSection() {
           },
         ]}
       />
-      <section className="seating-grid">
-        {items.map((table) => (
-          <article className="table-card" key={table.id}>
-            <div className="round-table">
-              <span>
-                {table.count}/{table.capacity}
-              </span>
-              {Array.from({ length: 6 }, (_, index) => (
-                <i key={index} />
-              ))}
-            </div>
-            <h3>{text(table.name)}</h3>
-            <p>
-              {text(table.label)} · {table.guests}
-            </p>
-            <div className="flex items-center justify-center gap-3">
-              <button
-                className="text-link inline-flex items-center gap-1"
-                onClick={() => {
-                  setEditing(table);
-                  setOpen(true);
-                }}
-              >
-                <Pencil size={13} />
-                {text("Arrange")}
-              </button>
-
-              <button
-                className="text-link inline-flex items-center"
-                onClick={() => {
-                  if (window.confirm(`${text("Delete")} ${text(table.name)}?`)) {
-                    void remove(table.id);
-                  }
-                }}
-                aria-label={`${text("Delete")} ${text(table.name)}`}
-              >
-                <Trash2 size={13} />
-              </button>
-            </div>
-          </article>
-        ))}
-      </section>
+      {items.length ? (
+        <section className="seating-grid">
+          {items.map((table) => (
+            <article className="table-card" key={table.id}>
+              <div className="round-table">
+                <span>
+                  {guestCount(table.name)}/{table.capacity}
+                </span>
+                {Array.from({ length: 6 }, (_, index) => (
+                  <i key={index} />
+                ))}
+              </div>
+              <h3>{text(table.name)}</h3>
+              <p>
+                {text(table.label)} · {guestCount(table.name)} {text("guests")}
+              </p>
+              <div className="flex items-center justify-center gap-3">
+                <button
+                  className="text-link inline-flex items-center gap-1"
+                  onClick={() => {
+                    setEditing(table);
+                    setOpen(true);
+                  }}
+                >
+                  <Pencil size={13} /> {text("Arrange")}
+                </button>
+                <button
+                  className="text-link inline-flex items-center"
+                  onClick={() => void remove(table.id)}
+                  aria-label={`${text("Delete")} ${text(table.name)}`}
+                >
+                  <Trash2 size={13} />
+                </button>
+              </div>
+            </article>
+          ))}
+        </section>
+      ) : (
+        <section className="panel empty-state">
+          <h3>{text("No tables yet")}</h3>
+          <p>{text("Add tables before assigning guests to the seating plan.")}</p>
+        </section>
+      )}
       <EntityDialog
         open={open}
         title={editing ? "Arrange table" : "Add table"}
         fields={fields}
-        initialValues={editing ?? { count: 0, capacity: 10 }}
+        initialValues={editing ?? { capacity: 10, label: "Mixed" }}
         onClose={() => setOpen(false)}
         onSave={save}
       />

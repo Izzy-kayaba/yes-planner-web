@@ -3,7 +3,7 @@ import { z } from "zod";
 import { requireApiSession } from "@/lib/auth/session";
 import { ensureMongoIndexes, mongoDb } from "@/lib/mongodb";
 import { after } from "next/server";
-import { sendWhatsAppEvent } from "@/lib/whatsapp";
+import { notifyUserEvent } from "@/lib/whatsapp";
 
 const requestSchema = z.object({
   vendorUserId: z.string().min(1),
@@ -113,7 +113,7 @@ export async function POST(request: Request) {
     { upsert: true, returnDocument: "after" },
   );
   after(() =>
-    sendWhatsAppEvent(
+    notifyUserEvent(
       parsed.data.vendorUserId,
       `${wedding.displayName} sent a ${parsed.data.service} work request in Yes Planner.`,
     ),

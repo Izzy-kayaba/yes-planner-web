@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/Button";
 import { Modal } from "@/components/ui/Modal";
 import { YesSelect } from "@/components/ui/YesSelect";
 import { FieldLabel } from "@/components/forms/FieldLabel";
+import PhoneInput from "react-phone-number-input";
 
 export type EntityFormValue = string | number | boolean;
 
@@ -14,18 +15,35 @@ export type EntityField = {
   label: string;
   placeholder?: string;
   required?: boolean;
-  type?:
-    | "text"
-    | "email"
-    | "tel"
-    | "number"
-    | "date"
-    | "time"
-    | "textarea"
-    | "select"
-    | "checkbox";
+  type?: "text" | "email" | "tel" | "number" | "date" | "time" | "textarea" | "select" | "checkbox";
   options?: Array<string | { value: string; label: string }>;
 };
+
+function TelephoneField({
+  field,
+  initialValue,
+  placeholder,
+}: {
+  field: EntityField;
+  initialValue: string;
+  placeholder?: string;
+}) {
+  const [value, setValue] = useState(initialValue);
+  return (
+    <PhoneInput
+      className="phone-input"
+      countryCallingCodeEditable={false}
+      defaultCountry="ZA"
+      id={field.name}
+      international
+      name={field.name}
+      onChange={(nextValue) => setValue(nextValue ?? "")}
+      placeholder={placeholder}
+      required={field.required}
+      value={value}
+    />
+  );
+}
 
 export function EntityDialog({
   open,
@@ -61,7 +79,11 @@ export function EntityDialog({
         const raw = String(data.get(field.name) ?? "");
         return [
           field.name,
-          field.type === "number" ? Number(raw) : field.type === "checkbox" ? data.has(field.name) : raw,
+          field.type === "number"
+            ? Number(raw)
+            : field.type === "checkbox"
+              ? data.has(field.name)
+              : raw,
         ];
       }),
     );
@@ -88,13 +110,19 @@ export function EntityDialog({
                 name={field.name}
                 type="checkbox"
               />
+            ) : field.type === "tel" ? (
+              <TelephoneField
+                field={field}
+                initialValue={String(defaults[field.name] ?? "")}
+                placeholder={field.placeholder ? text(field.placeholder) : undefined}
+              />
             ) : field.type === "textarea" ? (
               <textarea
                 className="min-h-28 p-3 text-sm"
                 id={field.name}
                 name={field.name}
                 required={field.required}
-                defaultValue={defaults[field.name]}
+                defaultValue={String(defaults[field.name] ?? "")}
                 placeholder={field.placeholder ? text(field.placeholder) : undefined}
               />
             ) : field.type === "select" ? (
@@ -118,7 +146,7 @@ export function EntityDialog({
                 name={field.name}
                 type={field.type ?? "text"}
                 required={field.required}
-                defaultValue={defaults[field.name]}
+                defaultValue={String(defaults[field.name] ?? "")}
                 placeholder={field.placeholder ? text(field.placeholder) : undefined}
               />
             )}

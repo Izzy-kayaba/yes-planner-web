@@ -166,6 +166,9 @@
 }
 .message p {
   margin: 0;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  unicode-bidi: plaintext;
 }
 .message time {
   display: block;

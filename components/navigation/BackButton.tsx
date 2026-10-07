@@ -9,11 +9,13 @@ export function BackButton({ fallback }: { fallback: string }) {
   const { text } = useLanguage();
   return (
     <button
-      className="button button-ghost w-fit"
+      className="auth-home-button auth-home-mobile-static"
       type="button"
+      aria-label={text("Back")}
+      title={text("Back")}
       onClick={() => (window.history.length > 1 ? router.back() : router.push(fallback))}
     >
-      <ArrowLeft size={17} aria-hidden="true" /> {text("Back")}
+      <ArrowLeft size={19} aria-hidden="true" />
     </button>
   );
 }

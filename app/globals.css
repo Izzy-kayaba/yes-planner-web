@@ -379,6 +379,31 @@
 .character-count.needs-more {
   color: #a52b3e;
 }
+.route-loader {
+  min-height: 50vh;
+  display: grid;
+  place-items: center;
+}
+.route-loader span {
+  width: 42px;
+  height: 42px;
+  border: 3px solid var(--line);
+  border-top-color: var(--wine);
+  border-radius: 50%;
+  animation: route-loader-spin 700ms linear infinite;
+}
+.auth-home-mobile-static {
+  position: static;
+  flex: 0 0 auto;
+  border-color: var(--line);
+  color: var(--wine);
+  background: var(--surface);
+}
+@keyframes route-loader-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
 
 @media (max-width: 325px) {
   :root {

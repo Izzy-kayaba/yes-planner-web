@@ -35,6 +35,7 @@ export default async function OnboardingPage() {
       bio: String(vendor?.bio ?? ""),
       services: Array.isArray(vendor?.services) ? vendor.services.map(String) : [],
       serviceArea: String(vendor?.serviceArea ?? ""),
+      countryCode: String(vendor?.countryCode ?? ""),
       startingPriceMinor: Number(vendor?.startingPriceMinor ?? 0),
       website: String(vendor?.website ?? ""),
       instagramHandle: String(vendor?.instagramHandle ?? ""),

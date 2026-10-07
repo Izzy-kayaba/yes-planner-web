@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/Button";
 import { authClient } from "@/lib/auth-client";
 import { useLanguage } from "@/components/providers/LanguageProvider";
 import { FieldLabel } from "@/components/forms/FieldLabel";
+import { ArrowLeft } from "lucide-react";
 
 export function ForgotPasswordForm() {
   const { text } = useLanguage();
@@ -53,7 +54,14 @@ export function ForgotPasswordForm() {
         {text("Send reset link")}
       </Button>
       <p className="auth-switch">
-        <Link href="/login">{text("Back to sign in")}</Link>
+        <Link
+          className="auth-home-button auth-home-mobile-static"
+          href="/login"
+          aria-label={text("Back to sign in")}
+          title={text("Back to sign in")}
+        >
+          <ArrowLeft size={19} />
+        </Link>
       </p>
     </form>
   );

@@ -7,8 +7,11 @@ import { resolveWeddingAccess } from "@/lib/auth/wedding-access";
 import { ensureMongoIndexes, mongoDb } from "@/lib/mongodb";
 import { validateWorkspaceMoney, validateWorkspaceRecord } from "@/lib/api/workspace-validation";
 import { after } from "next/server";
-import { notifyWeddingParticipants } from "@/lib/whatsapp";
+import { notifyWeddingParticipants, sendWhatsAppToPhone } from "@/lib/whatsapp";
+import { sendEventEmail } from "@/lib/email";
+import { siteUrl } from "@/lib/site";
 import { validateConnectedVendor } from "@/lib/vendors/connected";
+import { validateGuestSelections } from "@/lib/guests/validation";
 
 type RouteContext = { params: Promise<{ weddingKey: string; module: string }> };
 type AccessResult =
@@ -95,6 +98,15 @@ export async function POST(request: Request, context: RouteContext) {
   if (moneyError) return NextResponse.json({ message: moneyError }, { status: 400 });
   const recordError = validateWorkspaceRecord(authorization.params.module, data);
   if (recordError) return NextResponse.json({ message: recordError }, { status: 400 });
+  if (authorization.params.module === "guests") {
+    const selectionError = await validateGuestSelections(
+      authorization.resourceOwnerId,
+      authorization.params.weddingKey,
+      data,
+    );
+    if (selectionError) return NextResponse.json({ message: selectionError }, { status: 400 });
+    data.inviteToken = randomUUID();
+  }
   const vendorError = await validateConnectedVendor(
     authorization.resourceOwnerId,
     authorization.params.weddingKey,
@@ -115,6 +127,18 @@ export async function POST(request: Request, context: RouteContext) {
     updatedAt: now,
   };
   await mongoDb.collection("workspaceItems").insertOne(document);
+  if (authorization.params.module === "guests") {
+    const invitationUrl = new URL(`/invite/${String(data.inviteToken)}`, siteUrl).toString();
+    const invitationMessage = `You have been invited through Yes Planner. RSVP here: ${invitationUrl}`;
+    after(() =>
+      Promise.allSettled([
+        sendWhatsAppToPhone(String(data.phoneNumber), invitationMessage),
+        typeof data.email === "string" && data.email
+          ? sendEventEmail(data.email, "Wedding invitation", invitationMessage)
+          : Promise.resolve(),
+      ]),
+    );
+  }
   after(() =>
     notifyWeddingParticipants(
       authorization.params.weddingKey,

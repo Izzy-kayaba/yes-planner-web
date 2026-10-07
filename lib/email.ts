@@ -16,3 +16,15 @@ export async function sendPasswordResetEmail(to: string, resetUrl: string) {
   });
   if (!response.ok) throw new Error("Password reset email could not be sent.");
 }
+
+export async function sendEventEmail(to: string, subject: string, message: string) {
+  const apiKey = process.env.RESEND_API_KEY;
+  const from = process.env.AUTH_EMAIL_FROM;
+  if (!apiKey || !from || !to) return;
+  const response = await fetch("https://api.resend.com/emails", {
+    method: "POST",
+    headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
+    body: JSON.stringify({ from, to: [to], subject, text: message }),
+  });
+  if (!response.ok) throw new Error("Event email could not be sent.");
+}

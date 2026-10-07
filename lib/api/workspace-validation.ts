@@ -32,7 +32,8 @@ export function validateWorkspaceMoney(module: WorkspaceModule, data: Record<str
 
 export function validateWorkspaceRecord(module: WorkspaceModule, data: Record<string, unknown>) {
   if (module !== "guests") return null;
-  const phone = typeof data.phoneNumber === "string" ? parsePhoneNumberFromString(data.phoneNumber) : null;
+  const phone =
+    typeof data.phoneNumber === "string" ? parsePhoneNumberFromString(data.phoneNumber) : null;
   if (!phone?.isValid()) return "Enter a valid guest WhatsApp phone number with country code.";
   if (
     typeof data.email === "string" &&

@@ -17,6 +17,11 @@ const profileSchema = z.object({
   bio: z.string().trim().min(30).max(2_000),
   services: z.array(z.string()).min(1).max(10),
   serviceArea: z.string().trim().min(2).max(180),
+  countryCode: z
+    .string()
+    .trim()
+    .length(2)
+    .regex(/^[A-Z]{2}$/),
   startingPriceMinor: z.coerce.number().int().nonnegative().max(100_000_000_000),
   startingPriceRangeKey: z
     .string()
@@ -35,6 +40,7 @@ function publicProfile(document: Record<string, unknown>) {
     bio: document.bio,
     services: document.services,
     serviceArea: document.serviceArea,
+    countryCode: document.countryCode,
     startingPriceMinor: document.startingPriceMinor,
     startingPriceRangeKey: document.startingPriceRangeKey ?? "",
     website: document.website ?? "",
@@ -63,8 +69,15 @@ export async function PUT(request: Request) {
   }
   const parsed = profileSchema.safeParse(await request.json().catch(() => null));
   if (!parsed.success || parsed.data.services.some((service) => !isVendorService(service))) {
+    const bioIssue = parsed.success
+      ? null
+      : parsed.error.issues.find((issue) => issue.path[0] === "bio" && issue.code === "too_small");
     return NextResponse.json(
-      { message: "Please complete all required vendor profile details." },
+      {
+        message: bioIssue
+          ? "Business description must contain at least 30 characters."
+          : "Please complete all required vendor profile details.",
+      },
       { status: 400 },
     );
   }

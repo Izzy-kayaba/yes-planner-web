@@ -64,3 +64,18 @@ npm.cmd audit --offline
 ```
 
 The legacy .NET project is verified independently in its own repository and is not required by this application at runtime.
+
+## Database maintenance scripts
+
+Maintenance commands load `.env.local` automatically for development. They require `MONGODB_DEVELOPMENT_URI` and `MONGODB_DEVELOPMENT_DATABASE`. For production, set `NODE_ENV=production` and provide `MONGODB_PRODUCTION_URI` and `MONGODB_PRODUCTION_DATABASE` in `.env.production` or `.env.production.local.
+
+They intentionally stop with a clear error when those values are missing. They cannot run in browser demo mode or without database credentials. After confirming the target and taking a backup, run:
+
+```powershell
+npm.cmd run migrate:user-model
+npm.cmd run media:cleanup
+npm.cmd run admin:set -- admin@example.com
+npm.cmd run seed:vendors
+```
+
+`seed:vendors` reads `data.json` by default. Pass another data-file path as its first argument when needed. `MONGODB_USE_TRANSACTIONS` is used by the application runtime, not by these scripts.

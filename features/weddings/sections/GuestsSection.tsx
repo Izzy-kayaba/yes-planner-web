@@ -2,7 +2,11 @@
 
 import { Pencil, Plus, Trash2 } from "lucide-react";
 import { useMemo, useState } from "react";
-import { EntityDialog, type EntityFormValue } from "@/components/forms/EntityDialog";
+import {
+  EntityDialog,
+  type EntityField,
+  type EntityFormValue,
+} from "@/components/forms/EntityDialog";
 import { useLanguage } from "@/components/providers/LanguageProvider";
 import { SearchField } from "@/components/forms/SearchField";
 import { YesSelect } from "@/components/ui/YesSelect";
@@ -13,34 +17,61 @@ import { guests as guestSeed } from "@/lib/demo-data";
 import { getInitials } from "@/lib/initials";
 import type { Guest } from "@/types";
 
-const fields = [
-  { name: "name", label: "Guest name", required: true },
-  { name: "email", label: "Email", type: "email" as const, required: true },
-  { name: "group", label: "Group", required: true },
-  {
-    name: "status",
-    label: "RSVP",
-    type: "select" as const,
-    options: ["Attending", "Pending", "Declined"],
-    required: true,
-  },
-  { name: "meal", label: "Meal preference", required: true },
-  { name: "table", label: "Table", required: true },
-];
+type TableOption = { id: string | number; name: string };
+type MenuOption = { id: string | number; name: string };
 
 export function GuestsSection() {
   const { text } = useLanguage();
   const { items, create, update, remove } = useWorkspaceCollection<Guest>("guests", guestSeed);
+  const { items: tables } = useWorkspaceCollection<TableOption>("seating", []);
+  const { items: menus } = useWorkspaceCollection<MenuOption>("food-drinks", []);
   const [query, setQuery] = useState("");
   const [status, setStatus] = useState("All");
   const [editing, setEditing] = useState<Guest | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const fields: EntityField[] = [
+    { name: "name", label: "Guest name", required: true },
+    { name: "phoneNumber", label: "WhatsApp number", type: "tel", required: true },
+    { name: "email", label: "Email", type: "email" },
+    {
+      name: "group",
+      label: "Group",
+      type: "select",
+      options: ["Family", "Friends", "Workmates", "Acquaintance"],
+      required: true,
+    },
+    { name: "isCouple", label: "This invitation is for a couple", type: "checkbox" },
+    { name: "hasChildren", label: "They have children", type: "checkbox" },
+    {
+      name: "status",
+      label: "RSVP",
+      type: "select",
+      options: ["Attending", "Pending", "Declined"],
+      required: true,
+    },
+    {
+      name: "meal",
+      label: "Meal preference",
+      type: "select",
+      options: menus.map((menu) => menu.name),
+      required: true,
+    },
+    {
+      name: "table",
+      label: "Table",
+      type: "select",
+      options: tables.map((table) => table.name),
+      required: true,
+    },
+  ];
   const filtered = useMemo(
     () =>
       items.filter(
         (guest) =>
           (status === "All" || guest.status === status) &&
-          `${guest.name} ${guest.email} ${guest.group}`.toLowerCase().includes(query.toLowerCase()),
+          `${guest.name} ${guest.email ?? ""} ${guest.phoneNumber} ${guest.group}`
+            .toLowerCase()
+            .includes(query.toLowerCase()),
       ),
     [items, query, status],
   );
@@ -123,7 +154,8 @@ export function GuestsSection() {
                 <i>{getInitials(guest.name)}</i>
                 <b>
                   {guest.name}
-                  <small>{guest.email}</small>
+                  <small>{guest.phoneNumber}</small>
+                  {guest.email && <small>{guest.email}</small>}
                 </b>
               </span>
               <span>{text(guest.group)}</span>
@@ -176,7 +208,8 @@ export function GuestsSection() {
         open={dialogOpen}
         title={editing ? "Edit guest" : "Add guest"}
         fields={fields}
-        initialValues={editing ?? { status: "Pending", meal: "Not selected", table: "Unassigned" }}
+        description="Set up tables and meal options first so they can be selected here."
+        initialValues={editing ?? { status: "Pending", isCouple: false, hasChildren: false }}
         onClose={() => setDialogOpen(false)}
         onSave={save}
       />

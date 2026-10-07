@@ -65,3 +65,7 @@ If the same certificate error occurs on another unrestricted network, export the
 ## External providers still requiring credentials
 
 Instagram sign-in cannot work until `INSTAGRAM_CLIENT_ID` and `INSTAGRAM_CLIENT_SECRET` are configured locally and in Vercel. WhatsApp notifications also require `WHATSAPP_ACCESS_TOKEN` and `WHATSAPP_PHONE_NUMBER_ID`. The current email sender value should be replaced with a verified production sender before testing password-reset delivery.
+
+## Production maintenance scripts
+
+Maintenance scripts do not use Vercel's runtime environment automatically. Before running one locally against production, create a local `.env.production` file (never commit it) containing `MONGODB_PRODUCTION_URI` and `MONGODB_PRODUCTION_DATABASE`, then run with `NODE_ENV=production`. The scripts refuse to run when either value is absent; they do not silently fall back to another database. Take a backup and use a restricted database user before migration or cleanup.

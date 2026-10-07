@@ -14,7 +14,11 @@ export function AuthHeading({ mode }: { mode: "login" | "register" }) {
       <div className="mb-4 flex items-center justify-between gap-4">
         <div className="flex-[3]">
           <span className="min-[915px]:hidden">
-            <Link className="icon-button" href="/" aria-label={text("Back to home")}>
+            <Link
+              className="auth-home-button auth-home-mobile-static"
+              href="/"
+              aria-label={text("Back to home")}
+            >
               <ArrowLeft size={19} />
             </Link>
           </span>

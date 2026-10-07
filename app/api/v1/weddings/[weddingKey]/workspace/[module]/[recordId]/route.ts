@@ -1,3 +1,4 @@
+import { randomUUID } from "node:crypto";
 import { NextResponse } from "next/server";
 import type { WorkspaceModule } from "@/lib/api/contracts";
 import { canUseWorkspaceModule, isWorkspaceModule } from "@/lib/auth/permissions";
@@ -8,6 +9,7 @@ import { validateWorkspaceMoney, validateWorkspaceRecord } from "@/lib/api/works
 import { after } from "next/server";
 import { notifyWeddingParticipants } from "@/lib/whatsapp";
 import { validateConnectedVendor } from "@/lib/vendors/connected";
+import { validateGuestSelections } from "@/lib/guests/validation";
 
 type RouteContext = {
   params: Promise<{ weddingKey: string; module: string; recordId: string }>;
@@ -70,13 +72,6 @@ export async function PUT(request: Request, context: RouteContext) {
   if (moneyError) return NextResponse.json({ message: moneyError }, { status: 400 });
   const recordError = validateWorkspaceRecord(authorization.params.module, data);
   if (recordError) return NextResponse.json({ message: recordError }, { status: 400 });
-  const vendorError = await validateConnectedVendor(
-    authorization.resourceOwnerId,
-    authorization.params.weddingKey,
-    authorization.params.module,
-    data,
-  );
-  if (vendorError) return NextResponse.json({ message: vendorError }, { status: 400 });
   const filter = {
     ownerUserId: authorization.resourceOwnerId,
     weddingKey: authorization.params.weddingKey,
@@ -84,6 +79,24 @@ export async function PUT(request: Request, context: RouteContext) {
     recordId: authorization.params.recordId,
     deletedAt: { $exists: false },
   };
+  if (authorization.params.module === "guests") {
+    const selectionError = await validateGuestSelections(
+      authorization.resourceOwnerId,
+      authorization.params.weddingKey,
+      data,
+    );
+    if (selectionError) return NextResponse.json({ message: selectionError }, { status: 400 });
+    const existing = await mongoDb.collection("workspaceItems").findOne(filter);
+    if (!existing) return NextResponse.json({ message: "Record not found." }, { status: 404 });
+    data.inviteToken = existing.data?.inviteToken ?? randomUUID();
+  }
+  const vendorError = await validateConnectedVendor(
+    authorization.resourceOwnerId,
+    authorization.params.weddingKey,
+    authorization.params.module,
+    data,
+  );
+  if (vendorError) return NextResponse.json({ message: vendorError }, { status: 400 });
   const result = await mongoDb
     .collection("workspaceItems")
     .findOneAndUpdate(

@@ -920,6 +920,33 @@ const frenchByEnglish: Record<string, string> = {
   "Workspace records": "Données des espaces",
   characters: "caractères",
   minimum: "minimum",
+  "WhatsApp number": "Num\u00e9ro WhatsApp",
+  "This invitation is for a couple": "Invitation pour un couple",
+  "They have children": "Avec enfants",
+  Workmates: "Coll\u00e8gues",
+  Acquaintance: "Connaissance",
+  Mixed: "Mixte",
+  "Set up tables and meal options first so they can be selected here.":
+    "Cr\u00e9ez d'abord les tables et repas \u00e0 s\u00e9lectionner ici.",
+  "No tables yet": "Aucune table",
+  "Add tables before assigning guests to the seating plan.":
+    "Ajoutez des tables avant d'y placer les invit\u00e9s.",
+  "Meal option name": "Nom du repas",
+  "Add meal option": "Ajouter un repas",
+  "Meal option": "Repas",
+  "Edit meal option": "Modifier le repas",
+  "No meal options yet": "Aucun repas",
+  "Add the meal choices guests can select from their invitation.":
+    "Ajoutez les repas propos\u00e9s dans l'invitation.",
+  Country: "Pays",
+  "Select a country": "Choisir un pays",
+  "All countries": "Tous les pays",
+  "Wedding invitation": "Invitation au mariage",
+  "You can return to this private invitation to update your response.":
+    "Revenez sur cette invitation priv\u00e9e pour modifier votre r\u00e9ponse.",
+  "Your RSVP could not be saved.": "Votre r\u00e9ponse n'a pas \u00e9t\u00e9 enregistr\u00e9e.",
+  "Business description must contain at least 30 characters.":
+    "La description doit contenir au moins 30 caract\u00e8res.",
 };
 
 const literalKeyByEnglish = new Map(

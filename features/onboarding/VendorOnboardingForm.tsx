@@ -14,6 +14,7 @@ import { FieldLabel } from "@/components/forms/FieldLabel";
 import { useCurrency } from "@/components/providers/CurrencyProvider";
 import { inferMoneyRange, moneyRangeValue, vendorPriceRanges } from "@/lib/estimate-ranges";
 import { YesSelect } from "@/components/ui/YesSelect";
+import { countryOptions } from "@/lib/countries";
 
 export type VendorOnboardingValue = {
   businessName: string;
@@ -21,6 +22,7 @@ export type VendorOnboardingValue = {
   bio: string;
   services: string[];
   serviceArea: string;
+  countryCode: string;
   startingPriceMinor: number;
   startingPriceRangeKey?: string;
   website: string;
@@ -35,6 +37,7 @@ const emptyValue: VendorOnboardingValue = {
   bio: "",
   services: [],
   serviceArea: "",
+  countryCode: "",
   startingPriceMinor: 0,
   website: "",
   instagramHandle: "",
@@ -61,7 +64,7 @@ export function VendorOnboardingForm({
   initialValue?: VendorOnboardingValue;
 }) {
   const router = useRouter();
-  const { text } = useLanguage();
+  const { language, text } = useLanguage();
   const { currency, displayMoney } = useCurrency();
   const [value, setValue] = useState(() => {
     const startingValue = initialValue ?? emptyValue;
@@ -158,6 +161,19 @@ export function VendorOnboardingForm({
         </div>
       </div>
       <div className="form-row">
+        <label>
+          <FieldLabel required>{text("Country")}</FieldLabel>
+          <YesSelect
+            ariaLabel={text("Country")}
+            id="vendor-country"
+            name="countryCode"
+            onChange={(countryCode) => update("countryCode", countryCode)}
+            options={countryOptions(language)}
+            placeholder={text("Select a country")}
+            required
+            value={value.countryCode}
+          />
+        </label>
         <label>
           <FieldLabel required>{text("Business name")}</FieldLabel>
           <input

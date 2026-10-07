@@ -11,23 +11,26 @@ import { getInitials } from "@/lib/initials";
 import { YesSelect } from "@/components/ui/YesSelect";
 import { inferMoneyRange, vendorPriceRanges } from "@/lib/estimate-ranges";
 import { LIST_PAGE_SIZE, Pagination } from "@/components/ui/Pagination";
+import { countryOptions } from "@/lib/countries";
 
 export type MarketplaceVendor = {
   id: string;
   businessName: string;
   services: string[];
   serviceArea: string;
+  countryCode: string;
   startingPriceMinor: number;
   startingPriceRangeKey?: string;
   profileImage: string;
 };
 
 export function LiveMarketplace({ vendors }: { vendors: MarketplaceVendor[] }) {
-  const { text } = useLanguage();
+  const { language, text } = useLanguage();
   const { displayMoney } = useCurrency();
   const [query, setQuery] = useState("");
   const [service, setService] = useState("All");
   const [priceRange, setPriceRange] = useState("All");
+  const [country, setCountry] = useState("All");
   const [page, setPage] = useState(1);
   const services = useMemo(
     () => ["All", ...Array.from(new Set(vendors.flatMap((vendor) => vendor.services))).sort()],
@@ -36,6 +39,7 @@ export function LiveMarketplace({ vendors }: { vendors: MarketplaceVendor[] }) {
   const results = vendors.filter(
     (vendor) =>
       (service === "All" || vendor.services.includes(service)) &&
+      (country === "All" || vendor.countryCode === country) &&
       (priceRange === "All" ||
         (vendor.startingPriceRangeKey ||
           inferMoneyRange(vendorPriceRanges, vendor.startingPriceMinor)) === priceRange) &&
@@ -98,6 +102,19 @@ export function LiveMarketplace({ vendors }: { vendors: MarketplaceVendor[] }) {
             })),
           ]}
           value={priceRange}
+        />
+        <YesSelect
+          ariaLabel={text("Country")}
+          id="marketplace-country"
+          name="country"
+          onChange={setCountry}
+          options={[
+            { value: "All", label: text("All countries") },
+            ...countryOptions(language).filter((option) =>
+              vendors.some((vendor) => vendor.countryCode === option.value),
+            ),
+          ]}
+          value={country}
         />
       </section>
       <div className="category-scroll">

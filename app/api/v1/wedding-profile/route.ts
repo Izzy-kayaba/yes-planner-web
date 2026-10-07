@@ -86,7 +86,9 @@ export async function PUT(request: Request) {
   await ensureMongoIndexes();
   const now = new Date();
   const weddingKey = String(current?.weddingKey ?? `wedding-${randomUUID()}`);
-  const displayName = `${parsed.data.firstName} & ${parsed.data.partnerName}`.slice(0, 100);
+  const displayName = (
+    parsed.data.displayName || `${parsed.data.firstName} & ${parsed.data.partnerName}`
+  ).slice(0, 100);
   const userUpdate: Record<string, unknown> = {
     firstName: parsed.data.firstName,
     lastName: parsed.data.lastName,

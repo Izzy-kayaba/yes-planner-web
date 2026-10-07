@@ -6,6 +6,7 @@ import type { ReactNode } from "react";
 import { LanguageProvider } from "@/components/providers/LanguageProvider";
 import type { Language } from "@/lib/i18n";
 import { CurrencyProvider } from "@/components/providers/CurrencyProvider";
+import { ScrollToTop } from "@/components/navigation/ScrollToTop";
 
 /** Client-only providers shared by every public and authenticated page. */
 export function AppProviders({
@@ -24,6 +25,7 @@ export function AppProviders({
     >
       <LanguageProvider initialLanguage={initialLanguage}>
         <CurrencyProvider>
+          <ScrollToTop />
           {children}
           <ThemeAwareToaster />
         </CurrencyProvider>

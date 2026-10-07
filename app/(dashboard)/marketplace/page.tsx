@@ -18,6 +18,7 @@ export default async function MarketplacePage() {
     businessName: String(profile.businessName ?? ""),
     services: Array.isArray(profile.services) ? profile.services.map(String) : [],
     serviceArea: String(profile.serviceArea ?? ""),
+    countryCode: String(profile.countryCode ?? ""),
     startingPriceMinor: Number(profile.startingPriceMinor ?? 0),
     startingPriceRangeKey: String(profile.startingPriceRangeKey ?? ""),
     profileImage: String(profile.profileImage ?? ""),

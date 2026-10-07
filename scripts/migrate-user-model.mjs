@@ -1,13 +1,7 @@
-import "dotenv/config";
 import { MongoClient } from "mongodb";
+import { databaseEnvironment } from "./environment.mjs";
 
-const production = process.env.NODE_ENV === "production";
-const uri = production ? process.env.MONGODB_PRODUCTION_URI : process.env.MONGODB_DEVELOPMENT_URI;
-const databaseName = production
-  ? process.env.MONGODB_PRODUCTION_DATABASE
-  : process.env.MONGODB_DEVELOPMENT_DATABASE;
-
-if (!uri || !databaseName) throw new Error("MongoDB URI and database name are required.");
+const { uri, databaseName } = databaseEnvironment();
 
 const client = new MongoClient(uri);
 

@@ -11,6 +11,9 @@ import { cn } from "@/lib/cn";
 import { YesSelect } from "@/components/ui/YesSelect";
 import { CharacterCount } from "@/components/forms/CharacterCount";
 import { FieldLabel } from "@/components/forms/FieldLabel";
+import { apiRequest } from "@/lib/api/client";
+import { getInitials } from "@/lib/initials";
+import { formatDate } from "@/lib/date-time";
 
 const rsvpSchema = z
   .object({
@@ -32,8 +35,24 @@ const rsvpSchema = z
 
 type RsvpValues = z.infer<typeof rsvpSchema>;
 
-export function RsvpExperience() {
-  const { text } = useLanguage();
+export function RsvpExperience({
+  token,
+  guestName,
+  coupleName,
+  weddingDate,
+  venue,
+  location,
+  mealOptions,
+}: {
+  token: string;
+  guestName: string;
+  coupleName: string;
+  weddingDate: string;
+  venue: string;
+  location: string;
+  mealOptions: string[];
+}) {
+  const { language, text } = useLanguage();
   const [submitted, setSubmitted] = useState(false);
   const {
     register,
@@ -48,7 +67,7 @@ export function RsvpExperience() {
   const response = watch("response");
   const mealPreference = watch("mealPreference") ?? "";
 
-  function submit(values: RsvpValues) {
+  async function submit(values: RsvpValues) {
     const result = rsvpSchema.safeParse(values);
     if (!result.success) {
       result.error.issues.forEach((issue) => {
@@ -57,8 +76,16 @@ export function RsvpExperience() {
       });
       return;
     }
-    setSubmitted(true);
-    toast.success(text("Your RSVP has been saved."));
+    try {
+      await apiRequest(`/api/v1/invitations/${encodeURIComponent(token)}`, {
+        method: "PATCH",
+        body: JSON.stringify(result.data),
+      });
+      setSubmitted(true);
+      toast.success(text("Your RSVP has been saved."));
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : text("Your RSVP could not be saved."));
+    }
   }
 
   if (submitted) {
@@ -79,9 +106,8 @@ export function RsvpExperience() {
               : text("Thank you for letting us know.")}
           </h1>
           <p>
-            {text(
-              "Ruth and Izzy have received your response. You can return to this invitation at any time.",
-            )}
+            {coupleName}{" "}
+            {text("have received your response. You can return to this invitation at any time.")}
           </p>
           <button className="button button-primary" onClick={() => setSubmitted(false)}>
             {text("Review my response")}
@@ -94,30 +120,25 @@ export function RsvpExperience() {
   return (
     <main className="invite-layout">
       <div className="invite-art">
-        <div className="invite-monogram">
-          A<span>&</span>S
-        </div>
-        <div className="invite-date">18 · 10 · 2026</div>
+        <div className="invite-monogram">{getInitials(coupleName)}</div>
+        <div className="invite-date">{formatDate(weddingDate, "DD · MM · YYYY", language)}</div>
         <div className="invite-botanical">✦</div>
       </div>
       <section className="invite-card">
         <Brand />
         <p className="eyebrow">{text("Together with their families")}</p>
-        <h1>
-          Ruth <em>&</em> Izzy
-        </h1>
+        <h1>{coupleName}</h1>
         <p className="invite-lead">{text("joyfully invite you to celebrate their wedding")}</p>
         <div className="invitation-details">
           <div>
-            <span>{text("Sunday")}</span>
-            <strong>{text("18 October 2026")}</strong>
-            <small>{text("Ceremony at 15:00")}</small>
+            <span>{text("Wedding date")}</span>
+            <strong>{text(weddingDate)}</strong>
+            <small>{guestName}</small>
           </div>
           <i />
           <div>
-            <span>{text("Shepstone Gardens")}</span>
-            <strong>{text("Johannesburg")}</strong>
-            <small>{text("Dress: Garden formal")}</small>
+            <span>{text(venue)}</span>
+            <strong>{text(location)}</strong>
           </div>
         </div>
         <form className="rsvp-form" onSubmit={handleSubmit(submit)} noValidate>
@@ -161,12 +182,7 @@ export function RsvpExperience() {
                   id="rsvp-meal-preference"
                   name="mealPreference"
                   onChange={(value) => setValue("mealPreference", value, { shouldValidate: true })}
-                  options={[
-                    { value: "Standard menu", label: text("Standard menu") },
-                    { value: "Vegetarian", label: text("Vegetarian") },
-                    { value: "Halaal", label: "Halaal" },
-                    { value: "Children’s menu", label: text("Children’s menu") },
-                  ]}
+                  options={mealOptions.map((meal) => ({ value: meal, label: text(meal) }))}
                   placeholder={text("Select a meal")}
                   required
                   value={mealPreference}
@@ -199,7 +215,7 @@ export function RsvpExperience() {
           </button>
         </form>
         <p className="invite-footer">
-          {text("Please reply by 28 September · Questions? Contact Lerato on +27 82 555 0124")}
+          {text("You can return to this private invitation to update your response.")}
         </p>
       </section>
     </main>

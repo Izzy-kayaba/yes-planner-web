@@ -4,7 +4,7 @@ import { z } from "zod";
 import { requireApiSession } from "@/lib/auth/session";
 import { ensureMongoIndexes, mongoDb } from "@/lib/mongodb";
 import { after } from "next/server";
-import { sendWhatsAppEvent } from "@/lib/whatsapp";
+import { notifyUserEvent } from "@/lib/whatsapp";
 import { weddingPlanningService } from "@/lib/vendors/services";
 
 type RouteContext = { params: Promise<{ requestId: string }> };
@@ -84,7 +84,7 @@ export async function PATCH(request: Request, context: RouteContext) {
     });
   }
   after(() =>
-    sendWhatsAppEvent(
+    notifyUserEvent(
       String(vendorRequest.coupleUserId),
       `${String(vendorRequest.service)} request was ${parsed.data.status.toLowerCase()} by the vendor.`,
     ),

@@ -1,47 +1,12 @@
 import fs from "node:fs";
 import path from "node:path";
 import { MongoClient } from "mongodb";
-
-function readEnvironment(fileName) {
-  const values = {};
-
-  for (const line of fs.readFileSync(fileName, "utf8").split(/\r?\n/)) {
-    const trimmed = line.trim();
-    if (!trimmed || trimmed.startsWith("#")) continue;
-
-    const separator = trimmed.indexOf("=");
-    if (separator < 1) continue;
-
-    const key = trimmed.slice(0, separator).trim();
-    let value = trimmed.slice(separator + 1).trim();
-    if (
-      (value.startsWith('"') && value.endsWith('"')) ||
-      (value.startsWith("'") && value.endsWith("'"))
-    ) {
-      value = value.slice(1, -1);
-    }
-    values[key] = value;
-  }
-
-  return values;
-}
+import { databaseEnvironment, loadProjectEnvironment } from "./environment.mjs";
 
 const projectRoot = process.cwd();
-const envFile = process.argv[2] ?? ".env.local";
-const dataFile = process.argv[3] ?? "data.json";
-const environment = readEnvironment(path.resolve(projectRoot, envFile));
-const productionEnvironment = /(?:^|\.)prod(?:uction)?(?:\.|$)/i.test(path.basename(envFile));
-const uri = productionEnvironment
-  ? environment.MONGODB_PRODUCTION_URI
-  : environment.MONGODB_DEVELOPMENT_URI;
-const databaseName = productionEnvironment
-  ? environment.MONGODB_PRODUCTION_DATABASE
-  : environment.MONGODB_DEVELOPMENT_DATABASE;
-
-if (!uri || !databaseName) {
-  const prefix = productionEnvironment ? "MONGODB_PRODUCTION" : "MONGODB_DEVELOPMENT";
-  throw new Error(`${envFile} must define ${prefix}_URI and ${prefix}_DATABASE.`);
-}
+loadProjectEnvironment();
+const dataFile = process.argv[2] ?? "data.json";
+const { uri, databaseName } = databaseEnvironment();
 
 const vendors = JSON.parse(fs.readFileSync(path.resolve(projectRoot, dataFile), "utf8"));
 if (!Array.isArray(vendors) || vendors.length === 0) {
