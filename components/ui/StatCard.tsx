@@ -3,6 +3,7 @@
 import { TrendingUp } from "lucide-react";
 import { useLanguage } from "@/components/providers/LanguageProvider";
 import { cn } from "@/lib/cn";
+import moment from "moment";
 
 export function StatCard({
   label,
@@ -41,7 +42,11 @@ export function StatCard({
       </div>
       <p className="mb-1 mt-3 text-[12px] text-yes-muted">{text(label)}</p>
       <strong className="mb-0.5 block font-display text-2xl font-normal">{value}</strong>
-      <small className="text-[11px] text-yes-muted">{text(detail)}</small>
+      <small className="text-[11px] text-yes-muted">
+        {moment(detail, "YYYY-MM-DD", true).isValid()
+          ? moment(detail).format("D MMMM YYYY")
+          : text(detail)}
+      </small>
     </article>
   );
 }
