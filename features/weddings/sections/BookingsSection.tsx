@@ -13,6 +13,7 @@ import { SearchField } from "@/components/forms/SearchField";
 import { Pagination } from "@/components/ui/Pagination";
 import { useWorkspaceCollection } from "@/hooks/useWorkspaceCollection";
 import { useConnectedVendors } from "@/hooks/useConnectedVendors";
+import { useConfirmation } from "@/hooks/useConfirmation";
 
 type Booking = {
   id: string | number;
@@ -54,6 +55,7 @@ export function BookingsSection() {
   const { items, create, update, remove, page, setPage, pagination } =
     useWorkspaceCollection<Booking>("bookings", seed);
   const connectedVendors = useConnectedVendors();
+  const confirmation = useConfirmation();
   const [query, setQuery] = useState("");
   const [editing, setEditing] = useState<Booking | null>(null);
   const [open, setOpen] = useState(false);
@@ -131,10 +133,16 @@ export function BookingsSection() {
                     </button>
                     <button
                       className="icon-button"
-                      onClick={() => {
-                        if (window.confirm(`${text("Delete booking with")} ${booking.vendor}?`))
-                          void remove(booking.id);
-                      }}
+                      onClick={() =>
+                        void confirmation
+                          .confirm({
+                            description: `${text("Delete booking with")} ${booking.vendor}?`,
+                            confirmLabel: "Delete",
+                          })
+                          .then((confirmed) => {
+                            if (confirmed) void remove(booking.id);
+                          })
+                      }
                     >
                       <Trash2 size={13} />
                     </button>
@@ -162,6 +170,7 @@ export function BookingsSection() {
         onClose={() => setOpen(false)}
         onSave={save}
       />
+      {confirmation.dialog}
     </>
   );
 }

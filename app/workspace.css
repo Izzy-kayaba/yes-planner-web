@@ -6,6 +6,10 @@
 }
 .sidebar {
   @apply sticky top-0 z-30 flex h-screen flex-col border-r border-yes-line bg-yes-surface px-[18px] pb-[19px] pt-[27px];
+  height: 100dvh;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
 }
 .sidebar-brand-row {
   padding: 0 9px 25px;
@@ -302,6 +306,7 @@
 .panel-header {
   min-height: 43px;
   display: flex;
+  flex-wrap: wrap;
   align-items: flex-start;
   justify-content: space-between;
   gap: 20px;

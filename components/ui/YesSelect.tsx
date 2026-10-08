@@ -41,6 +41,7 @@ export function YesSelect({
   const generatedId = useId().replaceAll(":", "");
   const controlId = id ?? `yes-select-${generatedId}`;
   const controlName = name ?? controlId;
+  const isAdminTableSelect = className?.split(/\s+/).includes("admin-table-select") ?? false;
   const root = useRef<HTMLDivElement>(null);
   const trigger = useRef<HTMLButtonElement>(null);
   const optionsList = useRef<HTMLDivElement>(null);
@@ -69,11 +70,18 @@ export function YesSelect({
       const triggerRect = triggerElement.getBoundingClientRect();
       const gap = 7;
       const viewportPadding = 12;
+      const maxMenuWidth = Math.max(0, window.innerWidth - viewportPadding * 2);
       const spaceBelow = window.innerHeight - triggerRect.bottom - gap - viewportPadding;
       const spaceAbove = triggerRect.top - gap - viewportPadding;
 
-      optionsElement.style.minWidth = `${triggerRect.width}px`;
-      optionsElement.style.width = compact ? `${triggerRect.width}px` : "max-content";
+      optionsElement.style.maxWidth = `${maxMenuWidth}px`;
+      optionsElement.style.minWidth = `${Math.min(triggerRect.width, maxMenuWidth)}px`;
+      optionsElement.style.width = "max-content";
+      const contentWidth = optionsElement.getBoundingClientRect().width;
+      optionsElement.style.width = `${Math.min(
+        Math.max(triggerRect.width, contentWidth),
+        maxMenuWidth,
+      )}px`;
       const preferredHeight = Math.min(optionsElement.scrollHeight, 260);
       const opensUp = spaceBelow < preferredHeight && spaceAbove > spaceBelow;
       const availableHeight = Math.max(0, opensUp ? spaceAbove : spaceBelow);
@@ -160,7 +168,11 @@ export function YesSelect({
         typeof document !== "undefined" &&
         createPortal(
           <div
-            className={cn("yes-select-options", compact && "yes-select-options-compact")}
+            className={cn(
+              "yes-select-options",
+              compact && "yes-select-options-compact",
+              isAdminTableSelect && "admin-table-select-options",
+            )}
             id={`${controlId}-options`}
             ref={optionsList}
             role="listbox"

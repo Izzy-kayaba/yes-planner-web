@@ -3,6 +3,7 @@ import "server-only";
 import { ObjectId } from "mongodb";
 import { mongoDb } from "@/lib/mongodb";
 import { paginatedResult, type PaginationParams } from "@/lib/api/pagination";
+import { escapedAdminSearch } from "@/lib/admin/search";
 
 export class VendorClaimError extends Error {
   constructor(
@@ -57,13 +58,51 @@ export async function submitVendorClaim(profileId: string, claimantUserId: strin
   return { status: "Pending", claimId: String(claim!._id) };
 }
 
-export async function listPendingVendorClaims(pagination: PaginationParams) {
-  const filter = { status: "Pending" };
+export async function listPendingVendorClaims(
+  pagination: PaginationParams,
+  search = "",
+  sortBy = "oldest",
+) {
+  const term = search.trim();
+  const expression = term ? { $regex: escapedAdminSearch(term), $options: "i" } : null;
+  let filter: Record<string, unknown> = { status: "Pending" };
+  if (expression) {
+    const matchingUsers = await mongoDb
+      .collection("user")
+      .find(
+        {
+          $or: [
+            { name: expression },
+            { email: expression },
+            ...(ObjectId.isValid(term) ? [{ _id: new ObjectId(term) }] : []),
+          ],
+        },
+        { projection: { _id: 1, id: 1 } },
+      )
+      .toArray();
+    const matchingUserIds = matchingUsers.flatMap((user) =>
+      [String(user._id), typeof user.id === "string" ? user.id : ""].filter(Boolean),
+    );
+    filter = {
+      status: "Pending",
+      $or: [
+        { businessName: expression },
+        { claimantUserId: { $in: matchingUserIds } },
+        ...(ObjectId.isValid(term) ? [{ _id: new ObjectId(term) }] : []),
+      ],
+    };
+  }
   const totalItems = await mongoDb.collection("vendorClaims").countDocuments(filter);
+  const sort: Record<string, 1 | -1> =
+    sortBy === "businessName"
+      ? { businessName: 1 as const, _id: 1 as const }
+      : sortBy === "newest"
+        ? { createdAt: -1 as const, _id: -1 as const }
+        : { createdAt: 1 as const, _id: 1 as const };
   const claims = await mongoDb
     .collection("vendorClaims")
     .find(filter)
-    .sort({ createdAt: 1, _id: 1 })
+    .sort(sort)
     .skip(pagination.skip)
     .limit(pagination.pageSize)
     .toArray();

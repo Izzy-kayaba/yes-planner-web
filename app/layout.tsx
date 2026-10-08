@@ -70,6 +70,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
     <html
       lang={initialLanguage}
       className={`${cardo.variable} ${nunito.variable}`}
+      data-scroll-behavior="smooth"
       suppressHydrationWarning
     >
       <body>

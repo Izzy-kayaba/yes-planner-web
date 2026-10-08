@@ -7,6 +7,7 @@ import { useLanguage } from "@/components/providers/LanguageProvider";
 import { SearchField } from "@/components/forms/SearchField";
 import { useWorkspaceCollection } from "@/hooks/useWorkspaceCollection";
 import { Pagination } from "@/components/ui/Pagination";
+import { useConfirmation } from "@/hooks/useConfirmation";
 
 type Note = { id: string | number; title: string; body: string; color: string; date: string };
 const seed: Note[] = [
@@ -53,6 +54,7 @@ export function NotesSection() {
   const [query, setQuery] = useState("");
   const [editing, setEditing] = useState<Note | null>(null);
   const [open, setOpen] = useState(false);
+  const confirmation = useConfirmation();
   async function save(values: Record<string, EntityFormValue>) {
     const input = { ...(values as unknown as Omit<Note, "id" | "date">), date: "Updated just now" };
     if (editing) await update({ ...input, id: editing.id });
@@ -91,9 +93,16 @@ export function NotesSection() {
               </button>
               <button
                 className="icon-button"
-                onClick={() => {
-                  if (window.confirm(`${text("Delete")} ${note.title}?`)) void remove(note.id);
-                }}
+                onClick={() =>
+                  void confirmation
+                    .confirm({
+                      description: `${text("Delete")} ${note.title}?`,
+                      confirmLabel: "Delete",
+                    })
+                    .then((confirmed) => {
+                      if (confirmed) void remove(note.id);
+                    })
+                }
                 aria-label={`${text("Delete")} ${note.title}`}
               >
                 <Trash2 size={14} />
@@ -120,6 +129,7 @@ export function NotesSection() {
         onClose={() => setOpen(false)}
         onSave={save}
       />
+      {confirmation.dialog}
     </>
   );
 }

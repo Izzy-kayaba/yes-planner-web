@@ -18,6 +18,7 @@ import { useWorkspaceCollection } from "@/hooks/useWorkspaceCollection";
 import { guests as guestSeed } from "@/lib/demo-data";
 import { getInitials } from "@/lib/initials";
 import type { Guest } from "@/types";
+import { useConfirmation } from "@/hooks/useConfirmation";
 
 type TableOption = { id: string | number; name: string };
 type MenuOption = { id: string | number; name: string };
@@ -34,6 +35,7 @@ export function GuestsSection() {
   const [status, setStatus] = useState("All");
   const [editing, setEditing] = useState<Guest | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const confirmation = useConfirmation();
   const fields: EntityField[] = [
     { name: "name", label: "Guest name", required: true },
     { name: "phoneNumber", label: "WhatsApp number", type: "tel", required: true },
@@ -200,9 +202,16 @@ export function GuestsSection() {
                   <button
                     className="icon-button"
                     aria-label={`${text("Delete")} ${guest.name}`}
-                    onClick={() => {
-                      if (window.confirm(`${text("Remove")} ${guest.name}?`)) void remove(guest.id);
-                    }}
+                    onClick={() =>
+                      void confirmation
+                        .confirm({
+                          description: `${text("Remove")} ${guest.name}?`,
+                          confirmLabel: "Remove",
+                        })
+                        .then((confirmed) => {
+                          if (confirmed) void remove(guest.id);
+                        })
+                    }
                   >
                     <Trash2 size={14} />
                   </button>
@@ -233,6 +242,7 @@ export function GuestsSection() {
         onClose={() => setDialogOpen(false)}
         onSave={save}
       />
+      {confirmation.dialog}
     </>
   );
 }

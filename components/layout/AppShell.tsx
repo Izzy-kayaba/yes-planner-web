@@ -3,12 +3,16 @@
 import {
   Building2,
   CalendarHeart,
+  CircleHelp,
+  ClipboardCheck,
   LayoutDashboard,
   LogOut,
   Menu,
   MessageSquareText,
   Moon,
   MoreHorizontal,
+  PlugZap,
+  ScrollText,
   Search,
   Settings,
   ShieldCheck,
@@ -18,7 +22,6 @@ import {
   X,
   type LucideIcon,
 } from "lucide-react";
-import { useTheme } from "next-themes";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
@@ -37,10 +40,13 @@ import { cn } from "@/lib/cn";
 import { authClient } from "@/lib/auth-client";
 import { toast } from "sonner";
 import type { PlatformRole } from "@/lib/auth/roles";
+import type { PlatformPermission } from "@/lib/auth/platform-permissions";
 import type { DashboardData } from "@/lib/dashboard/types";
 import type { TranslationKey } from "@/lib/i18n";
 import { getInitials } from "@/lib/initials";
 import { formatDate } from "@/lib/date-time";
+import { platformAdminNavigation, visiblePlatformAdminNavigation } from "@/lib/admin-navigation";
+import { useTheme } from "@/components/providers/ThemeProvider";
 
 type NavigationItem = {
   labelKey: TranslationKey;
@@ -48,6 +54,7 @@ type NavigationItem = {
   icon: LucideIcon;
   badge?: string;
   roles?: readonly PlatformRole[];
+  requiredPermission?: PlatformPermission;
   plannerOnly?: boolean;
 };
 
@@ -85,8 +92,21 @@ const navigation: NavigationItem[] = [
     plannerOnly: true,
   },
   { labelKey: "common.settings", href: "/settings", icon: Settings },
-  { labelKey: "nav.admin", href: "/admin", icon: ShieldCheck, roles: ["SystemAdmin"] },
+  { labelKey: "nav.support", href: "/support", icon: CircleHelp },
 ];
+
+const adminIcons: Record<(typeof platformAdminNavigation)[number]["href"], LucideIcon> = {
+  "/admin": ShieldCheck,
+  "/admin/users": UsersRound,
+  "/admin/weddings": CalendarHeart,
+  "/admin/businesses": Store,
+  "/admin/venues": Building2,
+  "/admin/verification": ClipboardCheck,
+  "/admin/support": CircleHelp,
+  "/admin/platform/staff": UsersRound,
+  "/admin/system/integrations": PlugZap,
+  "/admin/platform/audit": ScrollText,
+} as const;
 
 function matchesNavigation(pathname: string, href: string) {
   if (href === "/dashboard") return pathname === href;
@@ -99,10 +119,12 @@ export function AppShell({
   children,
   shellData,
   plannerEligible = false,
+  platformPermissions = [],
 }: {
   children: ReactNode;
   shellData?: DashboardData;
   plannerEligible?: boolean;
+  platformPermissions?: readonly PlatformPermission[];
 }) {
   const pathname = usePathname();
   const router = useRouter();
@@ -135,8 +157,10 @@ export function AppShell({
       (item) =>
         !item.href.startsWith("/weddings/wedding-not-configured") &&
         (!item.plannerOnly || (!demoMode && plannerEligible)) &&
+        (!item.requiredPermission || platformPermissions.includes(item.requiredPermission)) &&
         (demoMode || !item.roles || (role && item.roles.includes(role))),
     );
+  const resolvedAdminNavigation = visiblePlatformAdminNavigation(platformPermissions);
 
   useEffect(() => setThemeReady(true), []);
   useEffect(() => {
@@ -210,26 +234,53 @@ export function AppShell({
         </div>
 
         <nav className="sidebar-nav" aria-label={text("Main navigation")}>
-          <p className="nav-label">{t("nav.workspace")}</p>
-          {resolvedNavigation.map((item) => {
-            const active = matchesNavigation(pathname, item.href);
-            const Icon = item.icon;
-            return (
-              <Link
-                className={cn("nav-item", active && "active")}
-                href={item.href}
-                key={item.href}
-                onClick={() => setMenuOpen(false)}
-                aria-current={active ? "page" : undefined}
-              >
-                <span className="nav-icon" aria-hidden="true">
-                  <Icon size={17} strokeWidth={1.8} />
-                </span>
-                <span>{t(item.labelKey)}</span>
-                {item.badge && <small>{item.badge}</small>}
-              </Link>
-            );
-          })}
+          {resolvedAdminNavigation.length > 0 && (
+            <>
+              <p className="nav-label">{t("nav.adminSection")}</p>
+              {resolvedAdminNavigation.map((item) => {
+                const active = matchesNavigation(pathname, item.href);
+                const Icon = adminIcons[item.href];
+                return (
+                  <Link
+                    className={cn("nav-item", active && "active")}
+                    href={item.href}
+                    key={item.href}
+                    onClick={() => setMenuOpen(false)}
+                    aria-current={active ? "page" : undefined}
+                  >
+                    <span className="nav-icon" aria-hidden="true">
+                      <Icon size={17} strokeWidth={1.8} />
+                    </span>
+                    <span>{t(item.labelKey)}</span>
+                  </Link>
+                );
+              })}
+            </>
+          )}
+          {resolvedNavigation.length > 0 && (
+            <>
+              <p className="nav-label">{t("nav.workspace")}</p>
+              {resolvedNavigation.map((item) => {
+                const active = matchesNavigation(pathname, item.href);
+                const Icon = item.icon;
+                return (
+                  <Link
+                    className={cn("nav-item", active && "active")}
+                    href={item.href}
+                    key={item.href}
+                    onClick={() => setMenuOpen(false)}
+                    aria-current={active ? "page" : undefined}
+                  >
+                    <span className="nav-icon" aria-hidden="true">
+                      <Icon size={17} strokeWidth={1.8} />
+                    </span>
+                    <span>{t(item.labelKey)}</span>
+                    {item.badge && <small>{item.badge}</small>}
+                  </Link>
+                );
+              })}
+            </>
+          )}
         </nav>
 
         {showWeddingSummary && (

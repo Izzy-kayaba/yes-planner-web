@@ -162,7 +162,7 @@
   font-weight: 700;
 }
 .button {
-  @apply inline-flex min-h-11 items-center justify-center gap-2.5 rounded-xl border border-transparent px-[clamp(0.5rem,3.5vw,1.25rem)] text-[14px] font-bold transition;
+  @apply inline-flex min-h-11 items-center justify-center gap-2.5 whitespace-nowrap rounded-xl border border-transparent px-[clamp(0.5rem,3.5vw,1.25rem)] text-[14px] font-bold transition;
 }
 .button:hover {
   transform: translateY(-1px);
@@ -271,6 +271,7 @@
   left: 0;
   display: grid;
   grid-auto-columns: 1fr;
+  row-gap: 3px;
   overflow-y: auto;
   scrollbar-color: color-mix(in srgb, var(--wine) 42%, var(--line)) var(--surface-soft);
   scrollbar-width: thin;
@@ -309,18 +310,25 @@
 }
 .yes-select-options button {
   width: 100%;
+  min-width: 0;
   min-height: 48px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  padding: 11px 12px;
+  padding: 11px 12px 15px;
   border: 0;
   border-radius: 9px;
   background: transparent;
   color: var(--ink);
   font: 650 13px var(--sans);
   text-align: left;
+}
+.yes-select-options button > span:first-child {
+  min-width: 0;
+  flex: 1 1 auto;
+  overflow-wrap: anywhere;
+  white-space: normal;
 }
 .yes-select-options button:hover,
 .yes-select-options button:focus-visible {

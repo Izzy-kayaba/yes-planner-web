@@ -123,5 +123,29 @@ export async function ensureMongoIndexes() {
     mongoDb
       .collection("messages")
       .createIndex({ recipientUserId: 1, readAt: 1, createdAt: -1 }, { name: "message_unread" }),
+    mongoDb
+      .collection("supportRequests")
+      .createIndex(
+        { requesterUserId: 1, createdAt: -1, _id: -1 },
+        { name: "support_requester_page" },
+      ),
+    mongoDb
+      .collection("supportRequests")
+      .createIndex({ status: 1, createdAt: -1, _id: -1 }, { name: "support_status_page" }),
+    mongoDb
+      .collection("adminAuditLog")
+      .createIndex({ createdAt: -1, _id: -1 }, { name: "admin_audit_page" }),
+    mongoDb
+      .collection("platformStaffInvitations")
+      .createIndex({ tokenHash: 1 }, { name: "platform_staff_invitation_token", unique: true }),
+    mongoDb
+      .collection("platformStaffInvitations")
+      .createIndex({ email: 1, status: 1 }, { name: "platform_staff_invitation_email_status" }),
+    mongoDb
+      .collection("platformStaffInvitations")
+      .createIndex(
+        { expiresAt: 1 },
+        { name: "platform_staff_invitation_expiry", expireAfterSeconds: 0 },
+      ),
   ]);
 }

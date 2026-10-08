@@ -1,34 +1,37 @@
 import { ObjectId } from "mongodb";
 import { NextResponse } from "next/server";
-import { requireApiSession } from "@/lib/auth/session";
+import { requirePlatformApiPermission } from "@/lib/auth/platform-admin";
+import { recordAdminAuditEvent } from "@/lib/auth/admin-audit";
 import { ensureMongoIndexes, mongoDb } from "@/lib/mongodb";
 import { weddingPlanningService } from "@/lib/vendors/services";
 import { parsePagination } from "@/lib/api/pagination";
 import { listPendingVendorClaims } from "@/lib/vendors/claims";
-
-// Both claim listing and decisions are restricted to System Admin accounts.
-async function admin(request: Request) {
-  const authentication = await requireApiSession(request.headers);
-  if (authentication.error) return authentication.error;
-  return authentication.session.user.role === "SystemAdmin"
-    ? null
-    : NextResponse.json({ message: "System administrator access is required." }, { status: 403 });
-}
+import { parseAdminSearch } from "@/lib/admin/search";
 
 export async function GET(request: Request) {
-  const error = await admin(request);
-  if (error) return error;
-  const pagination = parsePagination(new URL(request.url).searchParams);
+  const authorization = await requirePlatformApiPermission(request.headers, "verification.view");
+  if (authorization.error) return authorization.error;
+  const searchParams = new URL(request.url).searchParams;
+  const pagination = parsePagination(searchParams);
   if (!pagination) {
     return NextResponse.json({ message: "Invalid pagination parameters." }, { status: 400 });
   }
+  const search = parseAdminSearch(searchParams);
+  if (search === null) {
+    return NextResponse.json(
+      { message: "Search must be 100 characters or fewer." },
+      { status: 400 },
+    );
+  }
   await ensureMongoIndexes();
-  return NextResponse.json(await listPendingVendorClaims(pagination));
+  return NextResponse.json(
+    await listPendingVendorClaims(pagination, search, searchParams.get("sort") ?? "oldest"),
+  );
 }
 
 export async function PATCH(request: Request) {
-  const error = await admin(request);
-  if (error) return error;
+  const authorization = await requirePlatformApiPermission(request.headers, "verification.manage");
+  if (authorization.error) return authorization.error;
   const body = await request.json().catch(() => null);
   const claimId = typeof body?.claimId === "string" ? body.claimId : "";
   const status = body?.status === "Approved" || body?.status === "Declined" ? body.status : null;
@@ -166,5 +169,13 @@ export async function PATCH(request: Request) {
       { _id: new ObjectId(claimId) },
       { $set: { status, reviewedAt: new Date(), updatedAt: new Date() } },
     );
+  await recordAdminAuditEvent({
+    actorUserId: authorization.session.user.id,
+    permission: "verification.manage",
+    action: `verification.claim_${status.toLowerCase()}`,
+    resourceType: "business_claim",
+    resourceId: claimId,
+    outcome: "success",
+  });
   return NextResponse.json({ status });
 }

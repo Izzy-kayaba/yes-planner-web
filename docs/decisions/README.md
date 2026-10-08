@@ -7,3 +7,4 @@ Architecture decision records (ADRs) capture important choices and their reasons
 - [ADR-003: Planner access model](ADR-003-planner-access-model.md)
 - [ADR-004: Venue organisation model](ADR-004-venue-organisation-model.md)
 - [ADR-005: Authorization model](ADR-005-authorization-model.md)
+- [ADR-006: Platform staff roles](ADR-006-platform-roles.md)

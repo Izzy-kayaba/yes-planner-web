@@ -5,6 +5,10 @@ const accentColor = /^#[0-9a-fA-F]{6}$/.test(process.env.EMAIL_ACCENT_COLOR ?? "
   ? process.env.EMAIL_ACCENT_COLOR!
   : "#7a3348";
 
+export function isEmailConfigured() {
+  return Boolean(process.env.RESEND_API_KEY && process.env.AUTH_EMAIL_FROM);
+}
+
 function escapeHtml(value: string) {
   return value.replace(/[&<>"']/g, (character) => {
     const entities: Record<string, string> = {
@@ -78,5 +82,22 @@ export async function sendVerificationEmail(to: string, verificationUrl: string)
 
 export async function sendEventEmail(to: string, subject: string, message: string) {
   const { text, html } = emailContent(subject, message);
+  await sendEmail(to, subject, text, html);
+}
+
+export async function sendPlatformStaffInvitationEmail(
+  to: string,
+  inviterName: string,
+  role: string,
+  invitationUrl: string,
+) {
+  const subject = `You are invited to join ${brandName}`;
+  const message = `${inviterName} invited you to join Yes Planner as a ${role}. This invitation expires in 7 days.`;
+  const { text, html } = emailContent(
+    "Join the Yes Planner platform team",
+    message,
+    invitationUrl,
+    "Accept invitation",
+  );
   await sendEmail(to, subject, text, html);
 }

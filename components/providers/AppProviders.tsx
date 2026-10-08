@@ -1,12 +1,12 @@
 "use client";
 
-import { ThemeProvider, useTheme } from "next-themes";
 import { Toaster } from "sonner";
 import type { ReactNode } from "react";
 import { LanguageProvider } from "@/components/providers/LanguageProvider";
 import type { Language } from "@/lib/i18n";
 import { CurrencyProvider } from "@/components/providers/CurrencyProvider";
 import { ScrollToTop } from "@/components/navigation/ScrollToTop";
+import { ThemeProvider, useTheme } from "@/components/providers/ThemeProvider";
 
 /** Client-only providers shared by every public and authenticated page. */
 export function AppProviders({
@@ -17,12 +17,7 @@ export function AppProviders({
   initialLanguage: Language;
 }) {
   return (
-    <ThemeProvider
-      attribute="data-theme"
-      defaultTheme="system"
-      enableSystem
-      disableTransitionOnChange
-    >
+    <ThemeProvider>
       <LanguageProvider initialLanguage={initialLanguage}>
         <CurrencyProvider>
           <ScrollToTop />

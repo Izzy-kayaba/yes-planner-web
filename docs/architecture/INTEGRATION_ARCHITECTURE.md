@@ -11,4 +11,6 @@
 
 Integrations must fail clearly when required credentials are absent. Never place server secrets in `NEXT_PUBLIC_` variables or in a client bundle. Do not claim that a provider is configured just because its UI exists.
 
+Internal email integration checks use the existing Resend service via a permission-protected server API. The browser submits only a test recipient; provider credentials remain server-side. Audit events record the integration name and outcome, never recipient or message content.
+
 Production S3-compatible storage and malware scanning were requested but deferred. The existing GridFS implementation remains in place; see the [media storage roadmap](../operations/MEDIA_STORAGE_ROADMAP.md).

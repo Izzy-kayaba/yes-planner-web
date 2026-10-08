@@ -9,6 +9,7 @@ import { StatusPill } from "@/components/ui/StatusPill";
 import { Pagination } from "@/components/ui/Pagination";
 import { useWorkspaceCollection } from "@/hooks/useWorkspaceCollection";
 import { formatDate } from "@/lib/date-time";
+import { useConfirmation } from "@/hooks/useConfirmation";
 
 type DocumentItem = {
   id: string | number;
@@ -65,6 +66,7 @@ export function DocumentsSection() {
   const [query, setQuery] = useState("");
   const [editing, setEditing] = useState<DocumentItem | null>(null);
   const [open, setOpen] = useState(false);
+  const confirmation = useConfirmation();
   const fileInput = useRef<HTMLInputElement>(null);
   async function save(values: Record<string, EntityFormValue>) {
     const input = values as unknown as Omit<DocumentItem, "id">;
@@ -138,9 +140,16 @@ export function DocumentsSection() {
               </button>
               <button
                 className="icon-button"
-                onClick={() => {
-                  if (window.confirm(`${text("Delete")} ${doc.name}?`)) void remove(doc.id);
-                }}
+                onClick={() =>
+                  void confirmation
+                    .confirm({
+                      description: `${text("Delete")} ${doc.name}?`,
+                      confirmLabel: "Delete",
+                    })
+                    .then((confirmed) => {
+                      if (confirmed) void remove(doc.id);
+                    })
+                }
                 aria-label={`${text("Delete")} ${doc.name}`}
               >
                 <Trash2 size={13} />
@@ -163,6 +172,7 @@ export function DocumentsSection() {
         onClose={() => setOpen(false)}
         onSave={save}
       />
+      {confirmation.dialog}
     </section>
   );
 }

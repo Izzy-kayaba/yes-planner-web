@@ -166,6 +166,20 @@
 }
 
 @media (max-width: 768px) {
+  .dashboard-vendor-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .dashboard-vendor-actions > .button {
+    width: 100%;
+  }
+  .support-request-form {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .support-request-form .field:nth-child(3),
+  .support-request-form > button {
+    grid-column: auto;
+  }
   .page-width {
     width: min(100% - 28px, 1180px);
   }

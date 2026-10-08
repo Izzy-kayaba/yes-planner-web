@@ -4,6 +4,7 @@ Keep development and production databases separate. Database scripts require an 
 
 ```powershell
 npm.cmd run admin:set -- admin@example.com --env development
+npm.cmd run admin:role -- grant Support support@example.com --env development
 npm.cmd run migrate:user-model -- --env development
 npm.cmd run media:cleanup -- --env development
 npm.cmd run seed:vendors -- --env development

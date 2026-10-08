@@ -1,5 +1,7 @@
 import type { WorkspaceModule } from "@/lib/api/contracts";
 import type { PlatformRole } from "@/lib/auth/roles";
+import type { PlatformPermission } from "@/lib/auth/platform-permissions";
+import { platformPermissionForAdminPath } from "../admin-navigation.ts";
 
 export type WorkspaceAction = "read" | "create" | "update" | "delete";
 
@@ -46,10 +48,17 @@ export function canUseWorkspaceModule(
   return false;
 }
 
-export function canAccessRoute(role: PlatformRole, pathname: string) {
+export function canAccessRoute(
+  role: PlatformRole,
+  pathname: string,
+  adminPermissions: readonly PlatformPermission[] = [],
+) {
+  if (pathname === "/admin" || pathname.startsWith("/admin/")) {
+    const requiredPermission = platformPermissionForAdminPath(pathname);
+    return requiredPermission !== null && adminPermissions.includes(requiredPermission);
+  }
   // Route checks mirror account boundaries; venues only receive the top-level wedding brief.
   if (pathname === "/planner" || pathname.startsWith("/planner/")) return role === "Vendor";
-  if (pathname.startsWith("/admin")) return role === "SystemAdmin";
   if (pathname.startsWith("/organisations")) return role === "SystemAdmin" || role === "Venue";
   if (pathname.startsWith("/vendor"))
     return role === "SystemAdmin" || role === "Vendor" || role === "Venue";

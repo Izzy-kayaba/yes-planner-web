@@ -1,32 +1,63 @@
 import { NextResponse } from "next/server";
-import { requireApiSession } from "@/lib/auth/session";
+import { requirePlatformApiPermission } from "@/lib/auth/platform-admin";
 import { ensureMongoIndexes, mongoDb } from "@/lib/mongodb";
 import { paginatedResult, parsePagination } from "@/lib/api/pagination";
+import { escapedAdminSearch, parseAdminSearch } from "@/lib/admin/search";
 
 // Limit this list to System Admins and project only fields needed by the admin screen.
 export async function GET(request: Request) {
-  const authentication = await requireApiSession(request.headers);
-  if ("error" in authentication) return authentication.error;
-  if (authentication.session.user.role !== "SystemAdmin") {
-    return NextResponse.json(
-      { message: "System administrator access is required." },
-      { status: 403 },
-    );
-  }
-  const pagination = parsePagination(new URL(request.url).searchParams);
+  const authorization = await requirePlatformApiPermission(request.headers, "users.view");
+  if (authorization.error) return authorization.error;
+  const searchParams = new URL(request.url).searchParams;
+  const pagination = parsePagination(searchParams);
   if (!pagination) {
     return NextResponse.json({ message: "Invalid pagination parameters." }, { status: 400 });
   }
+  const search = parseAdminSearch(searchParams);
+  if (search === null) {
+    return NextResponse.json(
+      { message: "Search must be 100 characters or fewer." },
+      { status: 400 },
+    );
+  }
   await ensureMongoIndexes();
   const usersCollection = mongoDb.collection("user");
-  const totalItems = await usersCollection.countDocuments();
+  const searchExpression = search ? { $regex: escapedAdminSearch(search), $options: "i" } : null;
+  const filter: Record<string, unknown> = {};
+  if (searchExpression) {
+    filter.$or = [
+      { name: searchExpression },
+      { email: searchExpression },
+      { role: searchExpression },
+      { accountType: searchExpression },
+    ];
+  }
+  const accountType = searchParams.get("accountType");
+  if (accountType && accountType !== "all") {
+    filter.$and = [
+      {
+        $or: [
+          { accountType },
+          { role: accountType },
+          ...(accountType === "Vendor" ? [{ role: "Planner" }] : []),
+        ],
+      },
+    ];
+  }
+  const totalItems = await usersCollection.countDocuments(filter);
+  const sortBy = searchParams.get("sort");
+  const sort: Record<string, 1 | -1> =
+    sortBy === "name"
+      ? { name: 1, _id: 1 }
+      : sortBy === "email"
+        ? { email: 1, _id: 1 }
+        : { createdAt: -1, _id: -1 };
   const users = await mongoDb
     .collection("user")
-    .find(
-      {},
-      { projection: { name: 1, email: 1, role: 1, accountType: 1, createdAt: 1, image: 1 } },
-    )
-    .sort({ createdAt: -1, _id: -1 })
+    .find(filter, {
+      projection: { name: 1, email: 1, role: 1, accountType: 1, createdAt: 1, image: 1 },
+    })
+    .sort(sort)
     .skip(pagination.skip)
     .limit(pagination.pageSize)
     .toArray();

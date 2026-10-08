@@ -53,6 +53,12 @@ test("guest, table and meal setup persists across workspace navigation", async (
 });
 
 test("marketplace search, language, theme and mobile navigation work", async ({ page }) => {
+  const themeScriptErrors: string[] = [];
+  page.on("console", (message) => {
+    if (message.type() === "error" && message.text().includes("Encountered a script tag")) {
+      themeScriptErrors.push(message.text());
+    }
+  });
   await page.goto("/marketplace");
   await page.getByPlaceholder(/search photographers/i).fill("Lumen");
   await page.getByRole("button", { name: /search vendors/i }).click();
@@ -69,6 +75,7 @@ test("marketplace search, language, theme and mobile navigation work", async ({ 
   await page.getByRole("option", { name: "FR" }).click();
   await expect(page.locator("html")).toHaveAttribute("lang", "fr");
   await expect(page.getByText("Tableau de bord", { exact: true })).toBeVisible();
+  expect(themeScriptErrors).toEqual([]);
 });
 
 test("document upload and deletion work in the browser", async ({ page }) => {

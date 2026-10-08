@@ -15,6 +15,7 @@ import { useWorkspaceCollection } from "@/hooks/useWorkspaceCollection";
 import { getInitials } from "@/lib/initials";
 import { useConnectedVendors } from "@/hooks/useConnectedVendors";
 import { Pagination } from "@/components/ui/Pagination";
+import { useConfirmation } from "@/hooks/useConfirmation";
 
 type Payment = {
   id: string | number;
@@ -56,6 +57,7 @@ export function PaymentsSection() {
   const { items, create, update, remove, page, setPage, pagination } =
     useWorkspaceCollection<Payment>("payments", seed);
   const connectedVendors = useConnectedVendors();
+  const confirmation = useConfirmation();
   const [editing, setEditing] = useState<Payment | null>(null);
   const [open, setOpen] = useState(false);
   const fields: EntityField[] = [
@@ -206,10 +208,16 @@ export function PaymentsSection() {
                 </button>
                 <button
                   className="icon-button"
-                  onClick={() => {
-                    if (window.confirm(`${text("Delete")} ${payment.reference}?`))
-                      void remove(payment.id);
-                  }}
+                  onClick={() =>
+                    void confirmation
+                      .confirm({
+                        description: `${text("Delete")} ${payment.reference}?`,
+                        confirmLabel: "Delete",
+                      })
+                      .then((confirmed) => {
+                        if (confirmed) void remove(payment.id);
+                      })
+                  }
                   aria-label={`${text("Delete")} ${payment.reference}`}
                 >
                   <Trash2 size={13} />
@@ -237,6 +245,7 @@ export function PaymentsSection() {
         onClose={() => setOpen(false)}
         onSave={save}
       />
+      {confirmation.dialog}
     </>
   );
 }

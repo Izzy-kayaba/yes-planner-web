@@ -10,6 +10,7 @@ import { Pagination } from "@/components/ui/Pagination";
 import { useWorkspaceCollection } from "@/hooks/useWorkspaceCollection";
 import { tasks as taskSeed } from "@/lib/demo-data";
 import type { WeddingTask } from "@/types";
+import { useConfirmation } from "@/hooks/useConfirmation";
 
 const fields = [
   { name: "title", label: "Task", required: true },
@@ -33,6 +34,7 @@ export function TasksSection() {
   const [query, setQuery] = useState("");
   const [editing, setEditing] = useState<WeddingTask | null>(null);
   const [open, setOpen] = useState(false);
+  const confirmation = useConfirmation();
   const shown = items.filter(
     (task) =>
       (filter === "All" || (filter === "Completed" ? task.complete : !task.complete)) &&
@@ -110,10 +112,16 @@ export function TasksSection() {
               </button>
               <button
                 className="icon-button"
-                onClick={() => {
-                  if (window.confirm(`${text("Delete")} ${text(task.title)}?`))
-                    void remove(task.id);
-                }}
+                onClick={() =>
+                  void confirmation
+                    .confirm({
+                      description: `${text("Delete")} ${text(task.title)}?`,
+                      confirmLabel: "Delete",
+                    })
+                    .then((confirmed) => {
+                      if (confirmed) void remove(task.id);
+                    })
+                }
                 aria-label={`${text("Delete")} ${text(task.title)}`}
               >
                 <Trash2 size={14} />
@@ -136,6 +144,7 @@ export function TasksSection() {
         onClose={() => setOpen(false)}
         onSave={save}
       />
+      {confirmation.dialog}
     </section>
   );
 }

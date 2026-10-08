@@ -40,6 +40,8 @@ This documentation distinguishes **what the application does today** from **idea
 
 - [Weddings](domains/weddings.md), [couples](domains/couples.md), [organisations](domains/organisations.md), and [venues](domains/venues.md)
 - [Vendors](domains/vendors.md), [wedding planners](domains/wedding-planners.md), [guests](domains/guests.md), [marketplace](domains/marketplace.md), and [subscriptions](domains/subscriptions.md)
+- [Platform administration](domains/platform-administration.md)
+- [Support requests](domains/support.md)
 
 ### Decisions
 
@@ -49,11 +51,13 @@ This documentation distinguishes **what the application does today** from **idea
 - [ADR-003: Planner access](decisions/ADR-003-planner-access-model.md)
 - [ADR-004: Venue organisation model](decisions/ADR-004-venue-organisation-model.md)
 - [ADR-005: Authorization](decisions/ADR-005-authorization-model.md)
+- [ADR-006: Platform staff roles](decisions/ADR-006-platform-roles.md)
 
 ### API, security, and operations
 
 - [Endpoint reference](api/ENDPOINTS.md), [API conventions](api/API_CONVENTIONS.md), [error handling](api/ERROR_HANDLING.md), [versioning](api/VERSIONING.md)
 - [Security model](security/SECURITY_MODEL.md), [permission matrix](security/PERMISSION_MATRIX.md), [data access](security/DATA_ACCESS.md), [threat model](security/THREAT_MODEL.md)
+- [Platform staff roles](security/PLATFORM_ROLES.md), [administrative access](security/ADMIN_ACCESS.md)
 - [Environments](operations/ENVIRONMENTS.md), [deployment](operations/DEPLOYMENT.md), [observability](operations/OBSERVABILITY.md), [backup and recovery](operations/BACKUP_RECOVERY.md), [incident response](operations/INCIDENT_RESPONSE.md), [media roadmap](operations/MEDIA_STORAGE_ROADMAP.md)
 
 ### Development

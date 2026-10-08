@@ -7,6 +7,7 @@ import { EntityDialog, type EntityFormValue } from "@/components/forms/EntityDia
 import { Pagination } from "@/components/ui/Pagination";
 import { useLanguage } from "@/components/providers/LanguageProvider";
 import { useWorkspaceCollection } from "@/hooks/useWorkspaceCollection";
+import { useConfirmation } from "@/hooks/useConfirmation";
 
 type TimelineEvent = {
   id: string | number;
@@ -56,6 +57,7 @@ export function TimelineSection() {
   const [month, setMonth] = useState(() => moment().startOf("month").toDate());
   const [editing, setEditing] = useState<TimelineEvent | null>(null);
   const [open, setOpen] = useState(false);
+  const confirmation = useConfirmation();
   const days = useMemo(() => {
     const count = moment(month).daysInMonth();
     return Array.from({ length: count }, (_, index) => moment(month).date(index + 1));
@@ -163,10 +165,16 @@ export function TimelineSection() {
                 </button>
                 <button
                   className="icon-button"
-                  onClick={() => {
-                    if (window.confirm(`${text("Delete")} ${text(event.title)}?`))
-                      void remove(event.id);
-                  }}
+                  onClick={() =>
+                    void confirmation
+                      .confirm({
+                        description: `${text("Delete")} ${text(event.title)}?`,
+                        confirmLabel: "Delete",
+                      })
+                      .then((confirmed) => {
+                        if (confirmed) void remove(event.id);
+                      })
+                  }
                   aria-label={`${text("Delete")} ${text(event.title)}`}
                 >
                   <Trash2 size={13} />
@@ -191,6 +199,7 @@ export function TimelineSection() {
         onClose={() => setOpen(false)}
         onSave={save}
       />
+      {confirmation.dialog}
     </section>
   );
 }

@@ -17,6 +17,7 @@ import { useWorkspaceCollection } from "@/hooks/useWorkspaceCollection";
 import { vendors } from "@/lib/demo-data";
 import { getInitials } from "@/lib/initials";
 import { useConnectedVendors } from "@/hooks/useConnectedVendors";
+import { useConfirmation } from "@/hooks/useConfirmation";
 
 type Vendor = {
   id: string | number;
@@ -41,6 +42,7 @@ export function VendorsSection() {
   const { items, create, update, remove, page, setPage, pagination } =
     useWorkspaceCollection<Vendor>("vendors", seed);
   const connectedVendors = useConnectedVendors();
+  const confirmation = useConfirmation();
   const [query, setQuery] = useState("");
   const [editing, setEditing] = useState<Vendor | null>(null);
   const [open, setOpen] = useState(false);
@@ -170,9 +172,16 @@ export function VendorsSection() {
                 </button>
                 <button
                   className="icon-button shrink-0"
-                  onClick={() => {
-                    if (window.confirm(`${text("Remove")} ${vendor.name}?`)) void remove(vendor.id);
-                  }}
+                  onClick={() =>
+                    void confirmation
+                      .confirm({
+                        description: `${text("Remove")} ${vendor.name}?`,
+                        confirmLabel: "Remove",
+                      })
+                      .then((confirmed) => {
+                        if (confirmed) void remove(vendor.id);
+                      })
+                  }
                   aria-label={`${text("Delete")} ${vendor.name}`}
                 >
                   <Trash2 size={15} />
@@ -200,6 +209,7 @@ export function VendorsSection() {
         onClose={() => setOpen(false)}
         onSave={save}
       />
+      {confirmation.dialog}
     </>
   );
 }

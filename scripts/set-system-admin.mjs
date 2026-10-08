@@ -22,6 +22,7 @@ try {
     .updateOne(
       { email },
       {
+        $addToSet: { platformRoles: "SuperAdmin" },
         $set: {
           role: "SystemAdmin",
           updatedAt: new Date(),

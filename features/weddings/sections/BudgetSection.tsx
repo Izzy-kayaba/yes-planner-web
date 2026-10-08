@@ -7,6 +7,7 @@ import { useLanguage } from "@/components/providers/LanguageProvider";
 import { useCurrency } from "@/components/providers/CurrencyProvider";
 import { Pagination } from "@/components/ui/Pagination";
 import { useWorkspaceCollection } from "@/hooks/useWorkspaceCollection";
+import { useConfirmation } from "@/hooks/useConfirmation";
 import { budgetCategories } from "@/lib/demo-data";
 
 type BudgetCategory = {
@@ -46,6 +47,7 @@ export function BudgetSection() {
   const { displayMoney } = useCurrency();
   const { items, create, update, remove, page, setPage, pagination } =
     useWorkspaceCollection<BudgetCategory>("budget", seed);
+  const confirmation = useConfirmation();
   const [editing, setEditing] = useState<BudgetCategory | null>(null);
   const [open, setOpen] = useState(false);
   const total = items.reduce((sum, item) => sum + item.budgetMinor, 0);
@@ -117,10 +119,16 @@ export function BudgetSection() {
                   <button
                     className="ml-1"
                     aria-label={`${text("Delete")} ${text(item.name)}`}
-                    onClick={() => {
-                      if (window.confirm(`${text("Delete")} ${text(item.name)}?`))
-                        void remove(item.id);
-                    }}
+                    onClick={() =>
+                      void confirmation
+                        .confirm({
+                          description: `${text("Delete")} ${text(item.name)}?`,
+                          confirmLabel: "Delete",
+                        })
+                        .then((confirmed) => {
+                          if (confirmed) void remove(item.id);
+                        })
+                    }
                   >
                     <Trash2 size={12} />
                   </button>
@@ -160,6 +168,7 @@ export function BudgetSection() {
         onClose={() => setOpen(false)}
         onSave={save}
       />
+      {confirmation.dialog}
     </>
   );
 }

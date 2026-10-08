@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { ClaimReviewPanel } from "@/features/admin/ClaimReviewPanel";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { BackButton } from "@/components/navigation/BackButton";
-import { requirePageRole } from "@/lib/auth/session";
+import { requirePlatformPagePermission } from "@/lib/auth/platform-admin";
 import { mongoDb } from "@/lib/mongodb";
 import { ObjectId } from "mongodb";
 import { getTextTranslator } from "@/lib/i18n-server";
@@ -18,7 +18,7 @@ export default async function AdminClaimDetailPage({
 }: {
   params: Promise<{ claimId: string }>;
 }) {
-  await requirePageRole(["SystemAdmin"]);
+  const authorization = await requirePlatformPagePermission("verification.view");
   const text = await getTextTranslator();
   const { claimId } = await params;
   if (!ObjectId.isValid(claimId)) notFound();
@@ -110,6 +110,7 @@ export default async function AdminClaimDetailPage({
       <ClaimReviewPanel
         initialClaims={[detailClaim]}
         showClaimDetails={false}
+        canManageClaims={authorization.permissions.includes("verification.manage")}
         initialPagination={{
           page: 1,
           pageSize: 25,
