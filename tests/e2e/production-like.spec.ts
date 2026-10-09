@@ -87,8 +87,8 @@ test("document upload and deletion work in the browser", async ({ page }) => {
     buffer: Buffer.from("Browser test document"),
   });
   await expect(page.getByText(name)).toBeVisible();
-  page.once("dialog", (dialog) => dialog.accept());
   await page.getByRole("button", { name: `Delete ${name}` }).click();
+  await page.getByRole("button", { name: "Delete", exact: true }).click();
   await expect(page.getByText(name)).toHaveCount(0);
 });
 
@@ -173,8 +173,8 @@ test.describe("staging-only workflows", () => {
       buffer: Buffer.from("Browser test document"),
     });
     await expect(page.getByText(name)).toBeVisible();
-    page.once("dialog", (dialog) => dialog.accept());
     await page.getByRole("button", { name: `Delete ${name}` }).click();
+    await page.getByRole("button", { name: "Delete", exact: true }).click();
     await expect(page.getByText(name)).toHaveCount(0);
   });
 

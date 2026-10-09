@@ -3,7 +3,7 @@
 import { ImagePlus, X } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useState, type ChangeEvent, type FormEvent } from "react";
+import { useEffect, useState, type ChangeEvent, type FormEvent } from "react";
 import { toast } from "sonner";
 import { useLanguage } from "@/components/providers/LanguageProvider";
 import { Button } from "@/components/ui/Button";
@@ -50,6 +50,13 @@ const emptyValue: VendorOnboardingValue = {
   portfolioImages: [],
 };
 
+type ClaimableProfile = {
+  id: string;
+  businessName: string;
+  services: string[];
+  serviceArea: string;
+};
+
 async function uploadImage(file: File) {
   const body = new FormData();
   body.set("file", file);
@@ -80,6 +87,29 @@ export function VendorOnboardingForm({
   });
   const [saving, setSaving] = useState(false);
   const [removedImages, setRemovedImages] = useState<string[]>([]);
+  const [claimableProfiles, setClaimableProfiles] = useState<ClaimableProfile[]>([]);
+  const [selectedBusinessProfileId, setSelectedBusinessProfileId] = useState("");
+  const [claimsLoading, setClaimsLoading] = useState(false);
+
+  useEffect(() => {
+    if ((process.env.NEXT_PUBLIC_DATA_SOURCE ?? "api") !== "api") return;
+    const controller = new AbortController();
+    setClaimsLoading(true);
+    fetch("/api/v1/vendor-profile/claimable", { signal: controller.signal })
+      .then(async (response) => {
+        if (!response.ok) throw new Error("Business listings could not be loaded.");
+        return (await response.json()) as ClaimableProfile[];
+      })
+      .then(setClaimableProfiles)
+      .catch((error: unknown) => {
+        if (error instanceof DOMException && error.name === "AbortError") return;
+        toast.error(
+          text(error instanceof Error ? error.message : "Business listings could not be loaded."),
+        );
+      })
+      .finally(() => setClaimsLoading(false));
+    return () => controller.abort();
+  }, [text]);
 
   function update<K extends keyof VendorOnboardingValue>(
     field: K,
@@ -144,6 +174,12 @@ export function VendorOnboardingForm({
           startingPriceRangeKey,
         }),
       });
+      if (selectedBusinessProfileId) {
+        await apiRequest("/api/v1/vendor-profile/claim", {
+          method: "POST",
+          body: JSON.stringify({ profileId: selectedBusinessProfileId }),
+        });
+      }
       await Promise.all(removedImages.map((image) => removeImage(image).catch(() => undefined)));
       setRemovedImages([]);
       toast.success(text("Vendor profile saved."));
@@ -300,6 +336,32 @@ export function VendorOnboardingForm({
           />
         </label>
       </div>
+      <label>
+        <FieldLabel>{text("Claim an existing business listing (optional)")}</FieldLabel>
+        <YesSelect
+          ariaLabel={text("Business listing to claim")}
+          disabled={claimsLoading}
+          onChange={setSelectedBusinessProfileId}
+          options={[
+            {
+              value: "",
+              label: claimsLoading
+                ? text("Loading listings…")
+                : text("Create a new business profile"),
+            },
+            ...claimableProfiles.map((profile) => ({
+              value: profile.id,
+              label: `${profile.businessName}${profile.serviceArea ? ` · ${profile.serviceArea}` : ""}`,
+            })),
+          ]}
+          value={selectedBusinessProfileId}
+        />
+        <small className="form-hint">
+          {text(
+            "If you claim a listing, an administrator must verify it. Your account creation will still complete if a claim needs review.",
+          )}
+        </small>
+      </label>
 
       <div className="onboarding-section-heading">
         <span>3</span>

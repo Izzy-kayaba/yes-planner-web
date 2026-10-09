@@ -154,18 +154,6 @@ export function AdminSupportPanel({
           setSort(value);
           void loadPage(1, { sort: value });
         }}
-        onClear={() => {
-          setSearch("");
-          setStatusFilter("all");
-          setCategoryFilter("all");
-          setSort("default");
-          void loadPage(1, {
-            status: "all",
-            category: "all",
-            sort: "default",
-            search: "",
-          });
-        }}
       />
       {requests.length ? (
         <div className="section-stack">

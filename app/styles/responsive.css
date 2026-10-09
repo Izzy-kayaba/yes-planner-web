@@ -421,9 +421,6 @@
   .marketplace-grid {
     gap: 14px;
   }
-  .marketplace-grid .vendor-cover.tall {
-    height: 160px;
-  }
   .performance-layout {
     grid-template-columns: 1fr;
     justify-items: center;

@@ -101,11 +101,6 @@ export function ClaimReviewPanel({
           setSort(value);
           void loadPage(1, { sort: value });
         }}
-        onClear={() => {
-          setSearch("");
-          setSort("oldest");
-          void loadPage(1, { sort: "oldest", search: "" });
-        }}
       />
       {claims.length ? (
         <div className="request-list claim-review-list">
