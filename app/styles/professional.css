@@ -150,12 +150,45 @@
   margin: 0;
   font: 24px var(--display);
 }
+.marketplace-vendor-card-link {
+  display: block;
+  height: 100%;
+  color: inherit;
+  text-decoration: none;
+}
+.marketplace-vendor-card-link:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--wine) 48%, transparent);
+  outline-offset: -3px;
+  border-radius: inherit;
+}
 .marketplace-grid .vendor-cover.tall {
-  height: 190px;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
 }
 .marketplace-grid .vendor-cover.has-image > img {
   object-fit: cover;
   object-position: center;
+  transition: transform 240ms ease;
+}
+.marketplace-grid .vendor-cover:not(.has-image)::before,
+.marketplace-grid .vendor-cover:not(.has-image)::after,
+.marketplace-grid .vendor-cover:not(.has-image) > span {
+  transition: transform 240ms ease;
+}
+.marketplace-grid .vendor-card:hover .vendor-cover.has-image > img,
+.marketplace-grid .vendor-card:focus-within .vendor-cover.has-image > img {
+  transform: scale(1.02);
+}
+.marketplace-grid .vendor-card:hover .vendor-cover:not(.has-image)::before,
+.marketplace-grid .vendor-card:focus-within .vendor-cover:not(.has-image)::before,
+.marketplace-grid .vendor-card:hover .vendor-cover:not(.has-image) > span,
+.marketplace-grid .vendor-card:focus-within .vendor-cover:not(.has-image) > span {
+  transform: scale(1.02);
+}
+.marketplace-grid .vendor-card:hover .vendor-cover:not(.has-image)::after,
+.marketplace-grid .vendor-card:focus-within .vendor-cover:not(.has-image)::after {
+  transform: translate(40px, 50px) scale(1.02);
 }
 .marketplace-grid .vendor-cover.has-image::before,
 .marketplace-grid .vendor-cover.has-image::after {
@@ -541,14 +574,16 @@
 }
 .admin-table-select .yes-select-value {
   min-width: 0;
+  overflow: hidden;
   flex: 1 1 auto;
-  overflow: visible;
-  white-space: normal;
+  white-space: nowrap;
 }
 .admin-table-select .yes-select-value > span:last-child {
+  display: block;
   min-width: 0;
-  overflow-wrap: anywhere;
-  white-space: normal;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   line-height: 1.25;
 }
 .admin-table-select-active .yes-select-trigger {
@@ -558,23 +593,6 @@
 }
 .admin-table-select-active .yes-select-chevron {
   color: var(--wine);
-}
-.admin-table-clear {
-  min-height: 40px;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 0 8px;
-  border: 0;
-  background: transparent;
-  color: var(--wine);
-  font-size: 12px;
-  font-weight: 800;
-}
-.admin-table-clear:hover {
-  color: var(--wine-deep);
-  text-decoration: underline;
-  text-underline-offset: 3px;
 }
 .workload-list > div {
   min-height: 60px;

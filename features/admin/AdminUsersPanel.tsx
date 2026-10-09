@@ -95,12 +95,6 @@ export function AdminUsersPanel({
           setSort(value);
           void loadPage(1, { sort: value });
         }}
-        onClear={() => {
-          setSearch("");
-          setAccountType("all");
-          setSort("default");
-          void loadPage(1, { accountType: "all", sort: "default", search: "" });
-        }}
       />
       <div className="request-list">
         {users.length ? (

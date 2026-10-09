@@ -128,42 +128,42 @@ export function LiveMarketplace({ vendors }: { vendors: MarketplaceVendor[] }) {
         <section className="vendor-grid marketplace-grid">
           {visibleResults.map((vendor) => (
             <article className="vendor-card" key={vendor.id}>
-              <div
-                className={`vendor-cover tall tone-rose${vendor.profileImage ? " has-image" : ""}`}
+              <Link
+                aria-label={`${text("View profile")}: ${vendor.businessName}`}
+                className="marketplace-vendor-card-link"
+                href={`/marketplace/${encodeURIComponent(vendor.id)}`}
               >
-                {vendor.profileImage ? (
-                  <Image
-                    alt={`${vendor.businessName} profile`}
-                    fill
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                    src={vendor.profileImage}
-                    unoptimized
-                  />
-                ) : (
-                  <span>{getInitials(vendor.businessName)}</span>
-                )}
-              </div>
-              <div className="vendor-card-copy">
-                <p>{vendor.services.map(text).join(" · ")}</p>
-                <div className="vendor-name-line">
-                  <h3>{vendor.businessName}</h3>
-                  {vendor.claimed && (
-                    <BadgeCheck
-                      aria-label={text("Verified business")}
-                      className="vendor-verified-icon"
-                      size={17}
+                <div
+                  className={`vendor-cover tall tone-rose${vendor.profileImage ? " has-image" : ""}`}
+                >
+                  {vendor.profileImage ? (
+                    <Image
+                      alt=""
+                      fill
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      src={vendor.profileImage}
+                      unoptimized
                     />
+                  ) : (
+                    <span>{getInitials(vendor.businessName)}</span>
                   )}
                 </div>
-                <p>{vendor.serviceArea}</p>
-                <strong>{priceLabel(vendor)}</strong>
-                <Link
-                  className="button button-secondary button-wide"
-                  href={`/marketplace/${encodeURIComponent(vendor.id)}`}
-                >
-                  {text("View profile")}
-                </Link>
-              </div>
+                <div className="vendor-card-copy">
+                  <p>{vendor.services.map(text).join(" · ")}</p>
+                  <div className="vendor-name-line">
+                    <h3>{vendor.businessName}</h3>
+                    {vendor.claimed && (
+                      <BadgeCheck
+                        aria-label={text("Verified business")}
+                        className="vendor-verified-icon"
+                        size={17}
+                      />
+                    )}
+                  </div>
+                  <p>{vendor.serviceArea}</p>
+                  <strong>{priceLabel(vendor)}</strong>
+                </div>
+              </Link>
             </article>
           ))}
         </section>

@@ -121,18 +121,6 @@ export function AdminMetadataPanel({
           setSort(value);
           void loadPage(1, { sort: value });
         }}
-        onClear={() => {
-          setSearch("");
-          setPublication("all");
-          setClaim("all");
-          setSort("default");
-          void loadPage(1, {
-            publication: "all",
-            claim: "all",
-            sort: "default",
-            search: "",
-          });
-        }}
       />
       {items.length ? (
         <div className="overflow-x-auto">

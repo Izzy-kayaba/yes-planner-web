@@ -154,11 +154,11 @@ export function AuthenticatedDashboardOverview({ data }: { data: DashboardData }
           <p className="mt-2 text-sm text-yes-muted">
             {text("Open a vendor profile to contact them directly on WhatsApp.")}
           </p>
-          <div className="dashboard-vendor-actions flex gap-2">
-            <Link className="button button-secondary mt-3" href="/marketplace">
+          <div className="dashboard-vendor-actions flex gap-2 mt-3">
+            <Link className="button button-secondary" href="/marketplace">
               {text("Browse vendors")}
             </Link>
-            <Link className="button button-secondary mt-3" href="/messages">
+            <Link className="button button-secondary" href="/messages">
               {text("Open messages")}
             </Link>
           </div>

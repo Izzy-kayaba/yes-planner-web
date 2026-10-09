@@ -95,12 +95,6 @@ export function AdminAuditPanel({
           setSort(value);
           void loadPage(1, { sort: value });
         }}
-        onClear={() => {
-          setSearch("");
-          setOutcome("all");
-          setSort("default");
-          void loadPage(1, { outcome: "all", sort: "default", search: "" });
-        }}
       />
       <div className="grid">
         {events.length ? (

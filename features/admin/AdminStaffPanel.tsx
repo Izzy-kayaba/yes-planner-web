@@ -184,12 +184,6 @@ export function AdminStaffPanel({
               setSort(value);
               void loadPage(1, { sort: value });
             }}
-            onClear={() => {
-              setSearch("");
-              setPlatformRole("all");
-              setSort("default");
-              void loadPage(1, { platformRole: "all", sort: "default", search: "" });
-            }}
           />
           <div className="grid">
             {accounts.length ? (

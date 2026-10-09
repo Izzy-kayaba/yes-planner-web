@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowDownWideNarrow, Search, SlidersHorizontal, X } from "lucide-react";
+import { ArrowDownWideNarrow, Search, SlidersHorizontal } from "lucide-react";
 import type { FormEvent } from "react";
 import { useLanguage } from "@/components/providers/LanguageProvider";
 import { YesSelect, type YesSelectOption } from "@/components/ui/YesSelect";
@@ -15,7 +15,6 @@ export function AdminSearch({
   defaultSortValue = "default",
   sortOptions = [],
   onSortChange,
-  onClear,
 }: {
   value: string;
   onChange: (value: string) => void;
@@ -31,7 +30,6 @@ export function AdminSearch({
   defaultSortValue?: string;
   sortOptions?: YesSelectOption[];
   onSortChange?: (value: string) => void;
-  onClear?: () => void;
 }) {
   const { text } = useLanguage();
 
@@ -104,15 +102,6 @@ export function AdminSearch({
             />
           </div>
         )}
-        {onClear &&
-          (value.trim() ||
-            filters.some((filter) => filter.value !== "all") ||
-            (sortValue !== undefined && sortValue !== defaultSortValue)) && (
-            <button className="admin-table-clear" onClick={onClear} type="button">
-              <X aria-hidden="true" size={14} />
-              {text("Clear all")}
-            </button>
-          )}
       </div>
     </div>
   );

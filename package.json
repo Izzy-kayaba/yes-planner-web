@@ -13,6 +13,7 @@
     "check:lines": "node scripts/check-file-lines.mjs",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
+    "build:demo": "node scripts/build-demo.mjs",
     "start": "next start",
     "test:authorization": "node --no-warnings --experimental-strip-types --test --test-reporter=spec tests/auth/permissions.test.mjs tests/auth/platform-permissions.test.mjs",
     "test:api": "node --no-warnings --experimental-strip-types --test --test-reporter=spec tests/api/*.test.mjs",
@@ -20,7 +21,7 @@
     "test:ops": "node --no-warnings --experimental-strip-types --test --test-reporter=spec tests/scripts/*.test.mjs",
     "test:auth": "node --no-warnings --experimental-strip-types --test --test-reporter=spec tests/auth/country.test.mjs tests/auth/instagram.test.mjs tests/auth/register.test.mjs tests/auth/social-registration.test.mjs tests/auth/user-model.test.mjs",
     "test:unit": "npm run test:authorization && npm run test:api && npm run test:i18n && npm run test:ops && npm run test:auth",
-    "test:e2e": "playwright test",
+    "test:e2e": "npm run build:demo && playwright test",
     "test:all": "node scripts/test-all.mjs",
     "typecheck": "tsc --noEmit",
     "validate": "npm run format:check && npm run check:lines && npm run test:unit && npm run typecheck && npm run build"

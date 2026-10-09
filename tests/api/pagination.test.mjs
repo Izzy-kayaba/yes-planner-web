@@ -53,3 +53,17 @@ test("returns stable metadata for empty and final pages", () => {
     hasPreviousPage: true,
   });
 });
+
+test("offers no page navigation for an empty collection requested on a later page", () => {
+  assert.deepEqual(paginatedResult([], 4, 25, 0), {
+    items: [],
+    pagination: {
+      page: 4,
+      pageSize: 25,
+      totalItems: 0,
+      totalPages: 0,
+      hasNextPage: false,
+      hasPreviousPage: false,
+    },
+  });
+});
