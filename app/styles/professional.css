@@ -264,8 +264,11 @@
 .request-list p,
 .workload-list p {
   display: grid;
+  justify-items: start;
   gap: 3px;
   margin: 0;
+  min-width: 0;
+  text-align: left;
 }
 .wedding-portfolio p strong,
 .request-list p strong,
@@ -306,8 +309,8 @@
 }
 .request-list > div {
   min-height: 67px;
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
   gap: 10px;
   border-bottom: 1px solid var(--line);
