@@ -5,9 +5,12 @@ import { toast } from "sonner";
 import { useLanguage } from "@/components/providers/LanguageProvider";
 import { Pagination } from "@/components/ui/Pagination";
 import { YesSelect } from "@/components/ui/YesSelect";
+import { FieldLabel } from "@/components/forms/FieldLabel";
+import { StatusPill } from "@/components/ui/StatusPill";
 import { apiRequest } from "@/lib/api/client";
 import type { PaginatedResult } from "@/lib/api/contracts";
 import { supportCategories } from "@/lib/support/contracts";
+import { formatDate } from "@/lib/date-time";
 
 type SupportRequest = {
   id: string;
@@ -30,7 +33,7 @@ export function SupportCenter({
   relatedWeddingKey?: string;
   demoMode?: boolean;
 }) {
-  const { text } = useLanguage();
+  const { language, text } = useLanguage();
   const [requests, setRequests] = useState<SupportRequest[]>([]);
   const [page, setPage] = useState(1);
   const [pagination, setPagination] = useState<PaginatedResult<SupportRequest>["pagination"]>({
@@ -151,19 +154,20 @@ export function SupportCenter({
           onSubmit={(event) => void submitRequest(event)}
         >
           <div className="field">
-            <span>{text("Category")}</span>
+            <FieldLabel required>{text("Category")}</FieldLabel>
             <YesSelect
               ariaLabel={text("Category")}
               className="w-full"
               options={supportCategories.map((value) => ({ value, label: text(value) }))}
               value={category}
+              required
               onChange={(value) => {
                 if (isSupportCategory(value)) setCategory(value);
               }}
             />
           </div>
           <label className="field">
-            <span>{text("Subject")}</span>
+            <FieldLabel required>{text("Subject")}</FieldLabel>
             <input
               required
               minLength={5}
@@ -173,7 +177,7 @@ export function SupportCenter({
             />
           </label>
           <label className="field">
-            <span>{text("How can we help?")}</span>
+            <FieldLabel required>{text("How can we help?")}</FieldLabel>
             <textarea
               required
               minLength={20}
@@ -198,13 +202,27 @@ export function SupportCenter({
         {requests.length ? (
           <div className="request-list">
             {requests.map((request) => (
-              <div key={request.id}>
-                <p>
+              <div
+                className="grid gap-2 border-b border-yes-line py-4 last:border-0"
+                key={request.id}
+              >
+                <div className="flex flex-wrap items-center justify-between gap-3">
                   <strong>{request.subject}</strong>
-                  <small>
-                    {text(request.category)} · {text(request.status)}
-                  </small>
-                </p>
+                  <StatusPill
+                    tone={
+                      request.status === "Closed" || request.status === "Resolved"
+                        ? "sage"
+                        : request.status === "In Progress"
+                          ? "gold"
+                          : "neutral"
+                    }
+                  >
+                    {text(request.status)}
+                  </StatusPill>
+                </div>
+                <small className="text-yes-muted">
+                  {text(request.category)} · {formatDate(request.updatedAt, "D MMM YYYY", language)}
+                </small>
               </div>
             ))}
           </div>

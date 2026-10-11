@@ -12,12 +12,7 @@ import { vendorServices, weddingPlanningService } from "@/lib/vendors/services";
 import { CharacterCount } from "@/components/forms/CharacterCount";
 import { FieldLabel } from "@/components/forms/FieldLabel";
 import { useCurrency } from "@/components/providers/CurrencyProvider";
-import {
-  inferMoneyRange,
-  moneyRangeLabel,
-  moneyRangeValue,
-  vendorPriceRanges,
-} from "@/lib/estimate-ranges";
+import { inferMoneyRange, vendorPriceRanges } from "@/lib/estimate-ranges";
 import { YesSelect } from "@/components/ui/YesSelect";
 import { countryOptions } from "@/lib/countries";
 
@@ -28,6 +23,8 @@ export type VendorOnboardingValue = {
   services: string[];
   serviceArea: string;
   countryCode: string;
+  startingPriceMinMinor: number;
+  startingPriceMaxMinor: number;
   startingPriceMinor: number;
   startingPriceRangeKey?: string;
   website: string;
@@ -43,6 +40,8 @@ const emptyValue: VendorOnboardingValue = {
   services: [],
   serviceArea: "",
   countryCode: "",
+  startingPriceMinMinor: 0,
+  startingPriceMaxMinor: 0,
   startingPriceMinor: 0,
   website: "",
   instagramHandle: "",
@@ -76,11 +75,16 @@ export function VendorOnboardingForm({
   initialValue?: VendorOnboardingValue;
 }) {
   const router = useRouter();
-  const { language, text, t } = useLanguage();
-  const { currency, displayMoney } = useCurrency();
+  const { language, text } = useLanguage();
+  const { currency } = useCurrency();
   const [value, setValue] = useState(() => {
     const startingValue = initialValue ?? emptyValue;
-    if (accountType !== "Venue") return startingValue;
+    if (accountType !== "Venue") {
+      return {
+        ...startingValue,
+        services: startingValue.services.filter((service) => service !== "Venue"),
+      };
+    }
     const services = startingValue.services.filter((service) => service !== weddingPlanningService);
     if (!services.includes("Venue")) services.unshift("Venue");
     return { ...startingValue, services };
@@ -157,20 +161,22 @@ export function VendorOnboardingForm({
       toast.error(text("Select at least one service."));
       return;
     }
+    if (value.startingPriceMinMinor > value.startingPriceMaxMinor) {
+      toast.error(text("Minimum price cannot be greater than maximum price."));
+      return;
+    }
     const startingPriceRangeKey =
       value.startingPriceRangeKey ||
-      inferMoneyRange(vendorPriceRanges, value.startingPriceMinor) ||
-      vendorPriceRanges[0].id;
-    const startingPriceRange = vendorPriceRanges.find(
-      (range) => range.id === startingPriceRangeKey,
-    )!;
+      inferMoneyRange(vendorPriceRanges, value.startingPriceMinMinor);
     setSaving(true);
     try {
       await apiRequest("/api/v1/vendor-profile", {
         method: "PUT",
         body: JSON.stringify({
           ...value,
-          startingPriceMinor: moneyRangeValue(startingPriceRange),
+          startingPriceMinor: value.startingPriceMinMinor,
+          startingPriceMinMinor: value.startingPriceMinMinor,
+          startingPriceMaxMinor: value.startingPriceMaxMinor,
           startingPriceRangeKey,
         }),
       });
@@ -254,6 +260,7 @@ export function VendorOnboardingForm({
       </div>
       <div className="service-picker">
         {vendorServices
+          .filter((service) => accountType === "Venue" || service !== "Venue")
           .filter((service) => accountType !== "Venue" || service !== weddingPlanningService)
           .map((service) => (
             <button
@@ -270,6 +277,40 @@ export function VendorOnboardingForm({
       </div>
       <div className="form-row">
         <label>
+          <FieldLabel required>
+            {text("Minimum price")} ({currency})
+          </FieldLabel>
+          <input
+            id="vendor-minimum-price"
+            min="0"
+            name="startingPriceMinMinor"
+            onChange={(event) =>
+              update("startingPriceMinMinor", Math.round(Number(event.target.value) * 100))
+            }
+            required
+            step="0.01"
+            type="number"
+            value={value.startingPriceMinMinor / 100 || ""}
+          />
+        </label>
+        <label>
+          <FieldLabel required>
+            {text("Maximum price")} ({currency})
+          </FieldLabel>
+          <input
+            id="vendor-maximum-price"
+            min={value.startingPriceMinMinor / 100}
+            name="startingPriceMaxMinor"
+            onChange={(event) =>
+              update("startingPriceMaxMinor", Math.round(Number(event.target.value) * 100))
+            }
+            required
+            step="0.01"
+            type="number"
+            value={value.startingPriceMaxMinor / 100 || ""}
+          />
+        </label>
+        <label>
           <FieldLabel required>{text("Service area")}</FieldLabel>
           <YesSelect
             ariaLabel={text("Service area")}
@@ -284,34 +325,26 @@ export function VendorOnboardingForm({
             value={value.serviceArea || value.countryCode}
           />
         </label>
-        <label>
-          <FieldLabel required>
-            {text("Starting price range")} ({currency})
-          </FieldLabel>
-          <YesSelect
-            ariaLabel={text("Starting price range")}
-            id="vendor-price-range"
-            name="startingPriceRangeKey"
-            onChange={(rangeKey) => {
-              const range = vendorPriceRanges.find((item) => item.id === rangeKey)!;
-              setValue((current) => ({
-                ...current,
-                startingPriceRangeKey: rangeKey,
-                startingPriceMinor: moneyRangeValue(range),
-              }));
-            }}
-            options={vendorPriceRanges.map((range) => ({
-              value: range.id,
-              label: moneyRangeLabel(range, displayMoney, t),
-            }))}
-            placeholder={text("Select a price range")}
-            required
-            value={
-              value.startingPriceRangeKey ||
-              inferMoneyRange(vendorPriceRanges, value.startingPriceMinor)
-            }
-          />
-        </label>
+        {(claimsLoading || claimableProfiles.length > 0) && (
+          <label>
+            <FieldLabel>{text("Claim an existing business listing (optional)")}</FieldLabel>
+            <YesSelect
+              ariaLabel={text("Business listing to claim")}
+              disabled={claimsLoading}
+              onChange={setSelectedBusinessProfileId}
+              options={[
+                ...(claimsLoading
+                  ? [{ value: "", label: text("Loading listings…") }]
+                  : [{ value: "", label: text("Create a new business profile") }]),
+                ...claimableProfiles.map((profile) => ({
+                  value: profile.id,
+                  label: `${profile.businessName}${profile.serviceArea ? ` · ${profile.serviceArea}` : ""}`,
+                })),
+              ]}
+              value={selectedBusinessProfileId}
+            />
+          </label>
+        )}
       </div>
       <div className="form-row">
         <label>
@@ -336,32 +369,6 @@ export function VendorOnboardingForm({
           />
         </label>
       </div>
-      <label>
-        <FieldLabel>{text("Claim an existing business listing (optional)")}</FieldLabel>
-        <YesSelect
-          ariaLabel={text("Business listing to claim")}
-          disabled={claimsLoading}
-          onChange={setSelectedBusinessProfileId}
-          options={[
-            {
-              value: "",
-              label: claimsLoading
-                ? text("Loading listings…")
-                : text("Create a new business profile"),
-            },
-            ...claimableProfiles.map((profile) => ({
-              value: profile.id,
-              label: `${profile.businessName}${profile.serviceArea ? ` · ${profile.serviceArea}` : ""}`,
-            })),
-          ]}
-          value={selectedBusinessProfileId}
-        />
-        <small className="form-hint">
-          {text(
-            "If you claim a listing, an administrator must verify it. Your account creation will still complete if a claim needs review.",
-          )}
-        </small>
-      </label>
 
       <div className="onboarding-section-heading">
         <span>3</span>

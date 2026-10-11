@@ -47,15 +47,14 @@ const seed: DocumentItem[] = [
 ];
 const fields = [
   { name: "name", label: "Document name", required: true },
-  { name: "type", label: "Type", required: true },
-  { name: "owner", label: "Owner", required: true },
-  { name: "date", label: "Display date", required: true },
+  { name: "type", label: "Type" },
+  { name: "owner", label: "Owner" },
+  { name: "date", label: "Display date" },
   {
     name: "access",
     label: "Access",
     type: "select" as const,
     options: ["Private", "Team"],
-    required: true,
   },
 ];
 
@@ -109,7 +108,7 @@ export function DocumentsSection() {
               setOpen(true);
             }}
           >
-            <Plus size={14} /> {text("Add record")}
+            <Plus size={14} /> {text("Add document")}
           </button>
         </div>
       </div>

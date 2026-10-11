@@ -10,8 +10,7 @@ export type WorkspaceModule =
   | "food-drinks"
   | "documents"
   | "bookings"
-  | "payments"
-  | "notes";
+  | "payments";
 
 export type Pagination = {
   page: number;

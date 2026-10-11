@@ -16,9 +16,7 @@ export default async function WeddingLayout({
 }) {
   const { weddingId } = await params;
   const demoMode = (process.env.NEXT_PUBLIC_DATA_SOURCE ?? "api") === "demo";
-  const session = demoMode
-    ? undefined
-    : await requirePageRole(["SystemAdmin", "Couple", "Vendor", "Venue"]);
+  const session = demoMode ? undefined : await requirePageRole(["Couple", "Vendor", "Venue"]);
   const weddingAccess = session ? await resolveWeddingAccess(session, weddingId) : undefined;
   const resourceOwnerId = weddingAccess?.ownerUserId;
   const dashboardData =

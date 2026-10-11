@@ -11,6 +11,7 @@ import {
 } from "@/features/onboarding/VendorOnboardingForm";
 import { requirePageRole } from "@/lib/auth/session";
 import { mongoDb } from "@/lib/mongodb";
+import { vendorPriceRanges } from "@/lib/estimate-ranges";
 
 export const metadata: Metadata = { title: "Wedding details" };
 
@@ -36,6 +37,22 @@ export default async function OnboardingPage() {
       services: Array.isArray(vendor?.services) ? vendor.services.map(String) : [],
       serviceArea: String(vendor?.serviceArea ?? ""),
       countryCode: String(vendor?.countryCode ?? ""),
+      startingPriceMinMinor: Number(
+        vendor?.startingPriceMinMinor ??
+          vendorPriceRanges.find(
+            (range) => range.id === String(vendor?.startingPriceRangeKey ?? ""),
+          )?.minMinor ??
+          vendor?.startingPriceMinor ??
+          0,
+      ),
+      startingPriceMaxMinor: Number(
+        vendor?.startingPriceMaxMinor ??
+          vendorPriceRanges.find(
+            (range) => range.id === String(vendor?.startingPriceRangeKey ?? ""),
+          )?.maxMinor ??
+          vendor?.startingPriceMinor ??
+          0,
+      ),
       startingPriceMinor: Number(vendor?.startingPriceMinor ?? 0),
       website: String(vendor?.website ?? ""),
       instagramHandle: String(vendor?.instagramHandle ?? ""),

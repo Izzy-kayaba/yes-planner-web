@@ -25,20 +25,21 @@ test("Super Admin sees every implemented administration navigation item", () => 
   ]);
 });
 
-test("Support navigation excludes staff, verification, and integrations", () => {
+test("Support can view platform staff but cannot manage them", () => {
   const permissions = permissionsForPlatformRoles(["Support"]);
   const links = visiblePlatformAdminNavigation(permissions).map((item) => item.href);
-  assert.deepEqual(links, ["/admin", "/admin/users", "/admin/support"]);
+  assert.deepEqual(links, ["/admin", "/admin/users", "/admin/support", "/admin/platform/staff"]);
+  assert.equal(hasPlatformPermission(permissions, "platform_staff.view"), true);
   assert.equal(hasPlatformPermission(permissions, "platform_staff.manage"), false);
   assert.equal(hasPlatformPermission(permissions, "integrations.test"), false);
 });
 
-test("Platform Admin can invite staff but cannot manage roles or invite a Super Admin", () => {
+test("Platform Admin can create and manage staff but cannot create a Super Admin", () => {
   const permissions = permissionsForPlatformRoles(["PlatformAdmin"]);
   const links = visiblePlatformAdminNavigation(permissions).map((item) => item.href);
   assert.equal(links.includes("/admin/platform/staff"), true);
   assert.equal(hasPlatformPermission(permissions, "platform_staff.invite"), true);
-  assert.equal(hasPlatformPermission(permissions, "platform_staff.manage"), false);
+  assert.equal(hasPlatformPermission(permissions, "platform_staff.manage"), true);
   assert.equal(canInvitePlatformStaffRole(["PlatformAdmin"], "Support"), true);
   assert.equal(canInvitePlatformStaffRole(["PlatformAdmin"], "SuperAdmin"), false);
   assert.equal(canInvitePlatformStaffRole(["SuperAdmin"], "SuperAdmin"), true);
@@ -47,20 +48,31 @@ test("Platform Admin can invite staff but cannot manage roles or invite a Super 
 test("Verification navigation contains only its dashboard and review queue", () => {
   const permissions = permissionsForPlatformRoles(["Verification"]);
   const links = visiblePlatformAdminNavigation(permissions).map((item) => item.href);
-  assert.deepEqual(links, ["/admin", "/admin/businesses", "/admin/venues", "/admin/verification"]);
+  assert.deepEqual(links, [
+    "/admin",
+    "/admin/businesses",
+    "/admin/venues",
+    "/admin/verification",
+    "/admin/platform/staff",
+  ]);
   assert.equal(hasPlatformPermission(permissions, "support.view"), false);
 });
 
 test("Operations can test integrations and see audit but cannot inspect customer accounts", () => {
   const permissions = permissionsForPlatformRoles(["Operations"]);
   const links = visiblePlatformAdminNavigation(permissions).map((item) => item.href);
-  assert.deepEqual(links, ["/admin", "/admin/system/integrations", "/admin/platform/audit"]);
+  assert.deepEqual(links, [
+    "/admin",
+    "/admin/platform/staff",
+    "/admin/system/integrations",
+    "/admin/platform/audit",
+  ]);
   assert.equal(hasPlatformPermission(permissions, "users.view"), false);
 });
 
-test("customer roles do not grant any platform permissions and Finance has no unfinished links", () => {
+test("customer roles do not grant platform permissions and Finance can view staff", () => {
   assert.deepEqual(permissionsForPlatformRoles([]), []);
-  assert.deepEqual(permissionsForPlatformRoles(["Finance"]), []);
+  assert.deepEqual(permissionsForPlatformRoles(["Finance"]), ["platform_staff.view"]);
   assert.equal(platformStaffRoleFromStoredValue("Couple"), null);
   assert.equal(platformStaffRoleFromStoredValue("SuperAdmin"), "SuperAdmin");
 });

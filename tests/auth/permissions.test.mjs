@@ -20,7 +20,6 @@ test("venues receive no workspace-management access, even for legacy full-manage
     "documents",
     "bookings",
     "payments",
-    "notes",
   ]) {
     assert.equal(canUseWorkspaceModule("Venue", module, "read", "FullManager"), false);
     assert.equal(canUseWorkspaceModule("Venue", module, "create", "FullManager"), false);
@@ -59,7 +58,6 @@ test("couples and full-manager vendors have module access while limited vendors 
     "documents",
     "bookings",
     "payments",
-    "notes",
   ]) {
     for (const action of ["read", "create", "update", "delete"]) {
       assert.equal(canUseWorkspaceModule("Couple", module, action, "Owner"), true);
@@ -67,9 +65,7 @@ test("couples and full-manager vendors have module access while limited vendors 
     }
     assert.equal(
       canUseWorkspaceModule("Vendor", module, "read", "Vendor"),
-      ["tasks", "vendors", "timeline", "documents", "bookings", "payments", "notes"].includes(
-        module,
-      ),
+      ["tasks", "vendors", "timeline", "documents", "bookings", "payments"].includes(module),
     );
     assert.equal(canUseWorkspaceModule("Vendor", module, "update", "Vendor"), false);
   }

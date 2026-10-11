@@ -306,8 +306,8 @@
 }
 .request-list > div {
   min-height: 67px;
-  display: grid;
-  grid-template-columns: 40px 1fr auto;
+  display: flex;
+  justify-content: space-between;
   align-items: center;
   gap: 10px;
   border-bottom: 1px solid var(--line);
@@ -871,7 +871,7 @@
   gap: 10px;
 }
 .settings-form .settings-checkbox-row {
-  min-height: 66px;
+  min-height: 67px;
   display: flex;
   align-items: center;
   justify-content: space-between;

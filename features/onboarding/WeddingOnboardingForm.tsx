@@ -12,16 +12,7 @@ import { CharacterCount } from "@/components/forms/CharacterCount";
 import { FieldLabel } from "@/components/forms/FieldLabel";
 import { useCurrency } from "@/components/providers/CurrencyProvider";
 import { countryOptions } from "@/lib/countries";
-import {
-  budgetRanges,
-  guestRanges,
-  guestRangeLabel,
-  guestRangeValue,
-  inferGuestRange,
-  inferMoneyRange,
-  moneyRangeLabel,
-  moneyRangeValue,
-} from "@/lib/estimate-ranges";
+import { budgetRanges, guestRanges, inferGuestRange, inferMoneyRange } from "@/lib/estimate-ranges";
 
 export type WeddingOnboardingValue = {
   firstName: string;
@@ -62,8 +53,8 @@ export function WeddingOnboardingForm({
   venueOptions?: string[];
 }) {
   const router = useRouter();
-  const { language, text, t } = useLanguage();
-  const { currency, displayMoney } = useCurrency();
+  const { language, text } = useLanguage();
+  const { currency } = useCurrency();
   const [value, setValue] = useState(initialValue ?? emptyValue);
   const [saving, setSaving] = useState(false);
   const [displayNameEdited, setDisplayNameEdited] = useState(Boolean(initialValue?.displayName));
@@ -93,17 +84,15 @@ export function WeddingOnboardingForm({
       budgetRanges[0].id;
     const guestRangeKey =
       value.guestRangeKey || inferGuestRange(value.estimatedGuests) || guestRanges[0].id;
-    const budgetRange = budgetRanges.find((range) => range.id === budgetRangeKey)!;
-    const guestRange = guestRanges.find((range) => range.id === guestRangeKey)!;
     setSaving(true);
     try {
       await apiRequest("/api/v1/wedding-profile", {
         method: "PUT",
         body: JSON.stringify({
           ...value,
-          budgetMinor: moneyRangeValue(budgetRange),
+          budgetMinor: value.budgetMinor,
           budgetRangeKey,
-          estimatedGuests: guestRangeValue(guestRange),
+          estimatedGuests: value.estimatedGuests,
           guestRangeKey,
         }),
       });
@@ -190,50 +179,28 @@ export function WeddingOnboardingForm({
           <FieldLabel required>
             {text("Estimated wedding budget")} ({currency})
           </FieldLabel>
-          <YesSelect
-            ariaLabel={text("Estimated wedding budget")}
-            id="wedding-budget-range"
-            name="budgetRangeKey"
-            onChange={(rangeKey) => {
-              const range = budgetRanges.find((item) => item.id === rangeKey)!;
-              setValue((current) => ({
-                ...current,
-                budgetRangeKey: rangeKey,
-                budgetMinor: moneyRangeValue(range),
-              }));
-            }}
-            options={budgetRanges.map((range) => ({
-              value: range.id,
-              label: moneyRangeLabel(range, displayMoney, t),
-            }))}
-            placeholder={text("Select a budget range")}
+          <input
+            aria-label={text("Estimated wedding budget")}
+            id="wedding-budget"
+            min="1"
+            name="budgetMinor"
+            onChange={(event) => update("budgetMinor", Number(event.target.value))}
             required
-            value={value.budgetRangeKey || inferMoneyRange(budgetRanges, value.budgetMinor)}
+            type="number"
+            value={value.budgetMinor || ""}
           />
         </label>
         <label>
           <FieldLabel required>{text("Estimated guests")}</FieldLabel>
-          <YesSelect
-            ariaLabel={text("Estimated guests")}
-            id="wedding-guest-range"
-            name="guestRangeKey"
-            onChange={(rangeKey) => {
-              const range = guestRanges.find((item) => item.id === rangeKey)!;
-              setValue((current) => ({
-                ...current,
-                guestRangeKey: rangeKey,
-                estimatedGuests: guestRangeValue(range),
-              }));
-            }}
-            options={guestRanges.map((range) => ({
-              value: range.id,
-              label: guestRangeLabel(range, t),
-            }))}
-            placeholder={text("Select a guest range")}
+          <input
+            aria-label={text("Estimated guests")}
+            id="wedding-guests"
+            min="1"
+            name="estimatedGuests"
+            onChange={(event) => update("estimatedGuests", Number(event.target.value))}
             required
-            value={
-              value.guestRangeKey || inferGuestRange(value.estimatedGuests) || guestRanges[0].id
-            }
+            type="number"
+            value={value.estimatedGuests || ""}
           />
         </label>
       </div>

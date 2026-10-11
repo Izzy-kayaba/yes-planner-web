@@ -20,14 +20,12 @@ import { getInitials } from "@/lib/initials";
 import type { Guest } from "@/types";
 import { useConfirmation } from "@/hooks/useConfirmation";
 
-type TableOption = { id: string | number; name: string };
 type MenuOption = { id: string | number; name: string };
 
 export function GuestsSection() {
   const { text } = useLanguage();
   const { items, create, update, remove, page, setPage, pagination } =
     useWorkspaceCollection<Guest>("guests", guestSeed);
-  const { items: tables } = useWorkspaceCollection<TableOption>("seating", []);
   const { items: menus } = useWorkspaceCollection<MenuOption>("food-drinks", []);
   const params = useParams<{ weddingId?: string }>();
   const weddingPath = params.weddingId ? `/weddings/${params.weddingId}` : "/weddings";
@@ -50,31 +48,13 @@ export function GuestsSection() {
     { name: "isCouple", label: "This invitation is for a couple", type: "checkbox" },
     { name: "hasChildren", label: "They have children", type: "checkbox" },
     {
-      name: "status",
-      label: "RSVP",
-      type: "select",
-      options: ["Attending", "Pending", "Declined"],
-      required: true,
-    },
-    {
       name: "meal",
       label: "Meal preference",
       type: "select",
       options: menus.map((menu) => menu.name),
-      required: true,
       emptyMessage: "No meal options exist yet.",
       setupHref: `${weddingPath}/food-drinks`,
       setupLabel: "Set up meal options",
-    },
-    {
-      name: "table",
-      label: "Table",
-      type: "select",
-      options: tables.map((table) => table.name),
-      required: true,
-      emptyMessage: "No tables exist yet.",
-      setupHref: `${weddingPath}/seating`,
-      setupLabel: "Set up tables",
     },
   ];
   const filtered = useMemo(
@@ -90,7 +70,12 @@ export function GuestsSection() {
   );
 
   async function save(values: Record<string, EntityFormValue>) {
-    const guest = values as unknown as Omit<Guest, "id">;
+    const guest = {
+      ...(values as unknown as Omit<Guest, "id">),
+      status: editing?.status ?? "Pending",
+      table: editing?.table ?? "Unassigned",
+      meal: String(values.meal ?? "Unassigned"),
+    } as Omit<Guest, "id">;
     if (editing) await update({ ...guest, id: editing.id });
     else await create(guest);
   }
@@ -237,7 +222,7 @@ export function GuestsSection() {
         open={dialogOpen}
         title={editing ? "Edit guest" : "Add guest"}
         fields={fields}
-        description="Set up tables and meal options first so they can be selected here."
+        description="Guests start with a pending RSVP. Add a meal preference when it is known."
         initialValues={editing ?? { status: "Pending", isCouple: false, hasChildren: false }}
         onClose={() => setDialogOpen(false)}
         onSave={save}

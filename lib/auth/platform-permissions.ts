@@ -10,6 +10,7 @@ export const platformPermissions = [
   "verification.manage",
   "platform_staff.manage",
   "platform_staff.invite",
+  "platform_staff.view",
   "support.view",
   "support.manage",
   "integrations.view",
@@ -33,19 +34,33 @@ const permissionsByRole: Record<PlatformStaffRole, readonly PlatformPermission[]
     "verification.manage",
     "support.view",
     "support.manage",
+    "platform_staff.manage",
     "platform_staff.invite",
+    "platform_staff.view",
   ],
-  Support: ["admin.dashboard.view", "users.view", "support.view", "support.manage"],
+  Support: [
+    "admin.dashboard.view",
+    "users.view",
+    "support.view",
+    "support.manage",
+    "platform_staff.view",
+  ],
   Verification: [
     "admin.dashboard.view",
     "businesses.view",
     "venues.view",
     "verification.view",
     "verification.manage",
+    "platform_staff.view",
   ],
-  Operations: ["admin.dashboard.view", "integrations.view", "integrations.test", "audit.view"],
-  // Finance is recognized but has no navigation until billing features are implemented.
-  Finance: [],
+  Operations: [
+    "admin.dashboard.view",
+    "integrations.view",
+    "integrations.test",
+    "audit.view",
+    "platform_staff.view",
+  ],
+  Finance: ["platform_staff.view"],
 };
 
 // Combine roles without granting permissions that are not explicitly mapped to a role.

@@ -9,17 +9,26 @@ const fixture = JSON.parse(
 
 test("maps the Instagram profile fixture to a Better Auth identity", () => {
   assert.deepEqual(mapInstagramProfile(fixture), {
-    id: fixture.id,
+    id: fixture.user_id,
     name: fixture.username,
-    email: `${fixture.id}@instagram.yesplanner.invalid`,
+    email: `${fixture.user_id}@instagram.yesplanner.invalid`,
     emailVerified: false,
   });
 });
 
 test("uses a stable fallback name when Instagram omits the username", () => {
-  assert.equal(mapInstagramProfile({ id: fixture.id })?.name, `instagram-${fixture.id}`);
+  assert.equal(
+    mapInstagramProfile({ user_id: fixture.user_id })?.name,
+    `instagram-${fixture.user_id}`,
+  );
 });
 
 test("rejects an Instagram response without a stable account id", () => {
   assert.equal(mapInstagramProfile({ username: fixture.username }), null);
+});
+
+test("maps the user returned in Instagram's data array response", () => {
+  const identity = mapInstagramProfile({ data: [fixture] });
+  assert.equal(identity?.id, fixture.user_id);
+  assert.equal(identity?.name, fixture.username);
 });

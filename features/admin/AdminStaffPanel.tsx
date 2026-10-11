@@ -25,10 +25,12 @@ export function AdminStaffPanel({
   initialAccounts,
   initialPagination,
   canManageStaff = true,
+  canCreateSuperAdmin = false,
 }: {
   initialAccounts: StaffAccount[];
   initialPagination: PaginatedResult<StaffAccount>["pagination"];
   canManageStaff?: boolean;
+  canCreateSuperAdmin?: boolean;
 }) {
   const { text } = useLanguage();
   const [accounts, setAccounts] = useState(initialAccounts);
@@ -45,6 +47,7 @@ export function AdminStaffPanel({
   const [inviteFirstName, setInviteFirstName] = useState("");
   const [inviteLastName, setInviteLastName] = useState("");
   const [inviteEmail, setInviteEmail] = useState("");
+  const [invitePassword, setInvitePassword] = useState("");
   const [inviteRole, setInviteRole] = useState<PlatformStaffRole>("Support");
   const [pendingAction, setPendingAction] = useState<{
     account: StaffAccount;
@@ -110,24 +113,26 @@ export function AdminStaffPanel({
     setInviting(true);
     setInviteError("");
     try {
-      await apiRequest("/api/v1/admin/platform/invitations", {
+      await apiRequest("/api/v1/admin/platform/staff", {
         method: "POST",
         body: JSON.stringify({
           firstName: inviteFirstName,
           lastName: inviteLastName,
           email: inviteEmail,
+          password: invitePassword,
           role: inviteRole,
         }),
       });
-      toast.success(text("Platform invitation sent."));
+      toast.success(text("Platform user created."));
       setInviteOpen(false);
       setInviteFirstName("");
       setInviteLastName("");
       setInviteEmail("");
+      setInvitePassword("");
       setInviteRole("Support");
     } catch (error) {
       setInviteError(
-        text(error instanceof Error ? error.message : "The platform invitation could not be sent."),
+        text(error instanceof Error ? error.message : "The platform user could not be created."),
       );
     } finally {
       setInviting(false);
@@ -138,149 +143,151 @@ export function AdminStaffPanel({
     <article className="panel">
       <div className="panel-header">
         <div>
-          <p className="eyebrow">{text("Super Admin controls")}</p>
+          <p className="eyebrow">{text("Platform administration")}</p>
           <h2>{text("Platform staff")}</h2>
         </div>
-        <Button onClick={() => setInviteOpen(true)} type="button">
-          <UserPlus aria-hidden="true" size={17} />
-          {text("Invite platform user")}
-        </Button>
+        {canManageStaff && (
+          <Button onClick={() => setInviteOpen(true)} type="button">
+            <UserPlus aria-hidden="true" size={17} />
+            {text("Create platform user")}
+          </Button>
+        )}
       </div>
       <p className="mb-4 text-sm text-yes-muted">
         {text(
           canManageStaff
-            ? "Invite platform staff or assign roles to existing accounts."
-            : "Invite a new user to join the platform team. Existing staff-role changes are restricted to Super Admins.",
+            ? "Create platform staff accounts or manage their roles."
+            : "View platform users and their assigned roles.",
         )}
       </p>
-      {canManageStaff && (
-        <>
-          <AdminSearch
-            value={search}
-            onChange={setSearch}
-            onSearch={() => void loadPage(1)}
-            filters={[
-              {
-                label: "Platform role",
-                value: platformRole,
-                options: [
-                  { value: "all", label: text("All platform roles") },
-                  ...platformStaffRoles.map((value) => ({ value, label: text(value) })),
-                ],
-                onChange: (value) => {
-                  setPlatformRole(value);
-                  void loadPage(1, { platformRole: value });
-                },
-              },
-            ]}
-            sortLabel="Sort accounts"
-            sortValue={sort}
-            sortOptions={[
-              { value: "default", label: text("Created (newest first)") },
-              { value: "name", label: text("Name (A-Z)") },
-              { value: "email", label: text("Email (A-Z)") },
-            ]}
-            onSortChange={(value) => {
-              setSort(value);
-              void loadPage(1, { sort: value });
-            }}
-          />
-          <div className="grid">
-            {accounts.length ? (
-              accounts.map((account) => (
-                <div
-                  className="grid gap-3 border-b border-yes-line py-4 last:border-0 md:grid-cols-[minmax(0,1fr)_auto] md:items-center"
-                  key={account.id}
-                >
-                  <div className="grid min-w-0 gap-1">
-                    <strong className="text-sm">{account.name || account.email}</strong>
-                    <span className="break-words text-sm text-yes-muted">
-                      {account.email} · {text(account.accountType)}
-                    </span>
-                    <span className="break-words text-sm text-yes-muted">
-                      {account.platformRoles.map((role) => text(role)).join(", ") ||
-                        text("No platform roles")}
-                    </span>
-                  </div>
-                  <div className="flex flex-wrap items-center gap-2 md:justify-end">
-                    <YesSelect
-                      ariaLabel={`${text("Platform role")} ${account.email}`}
-                      className="w-36 shrink-0"
-                      options={platformStaffRoles.map((role) => ({
-                        value: role,
-                        label: text(role),
-                      }))}
-                      value={roleByUser[account.id] ?? "Support"}
-                      onChange={(role) => {
-                        if (isPlatformStaffRole(role)) {
-                          setRoleByUser((previous) => ({
-                            ...previous,
-                            [account.id]: role,
-                          }));
-                        }
-                      }}
-                    />
-                    <button
-                      className="button button-primary"
-                      disabled={saving === account.id}
-                      onClick={() =>
-                        setPendingAction({
-                          account,
-                          action: "grant",
-                          role: roleByUser[account.id] ?? "Support",
-                        })
+      <AdminSearch
+        value={search}
+        onChange={setSearch}
+        onSearch={() => void loadPage(1)}
+        filters={[
+          {
+            label: "Platform role",
+            value: platformRole,
+            options: [
+              { value: "all", label: text("All platform roles") },
+              ...platformStaffRoles.map((value) => ({ value, label: text(value) })),
+            ],
+            onChange: (value) => {
+              setPlatformRole(value);
+              void loadPage(1, { platformRole: value });
+            },
+          },
+        ]}
+        sortLabel="Sort accounts"
+        sortValue={sort}
+        sortOptions={[
+          { value: "default", label: text("Created (newest first)") },
+          { value: "name", label: text("Name (A-Z)") },
+          { value: "email", label: text("Email (A-Z)") },
+        ]}
+        onSortChange={(value) => {
+          setSort(value);
+          void loadPage(1, { sort: value });
+        }}
+      />
+      <div className="grid">
+        {accounts.length ? (
+          accounts.map((account) => (
+            <div
+              className="grid gap-3 border-b border-yes-line py-4 last:border-0 md:grid-cols-[minmax(0,1fr)_auto] md:items-center"
+              key={account.id}
+            >
+              <div className="grid min-w-0 gap-1">
+                <strong className="text-sm">{account.name || account.email}</strong>
+                <span className="break-words text-sm text-yes-muted">
+                  {account.email} · {text(account.accountType)}
+                </span>
+                <span className="break-words text-sm text-yes-muted">
+                  {account.platformRoles.map((role) => text(role)).join(", ") ||
+                    text("No platform roles")}
+                </span>
+              </div>
+              {canManageStaff && (
+                <div className="flex flex-wrap items-center gap-2 md:justify-end">
+                  <YesSelect
+                    ariaLabel={`${text("Platform role")} ${account.email}`}
+                    className="w-36 shrink-0"
+                    options={platformStaffRoles.map((role) => ({
+                      value: role,
+                      label: text(role),
+                    }))}
+                    value={roleByUser[account.id] ?? "Support"}
+                    onChange={(role) => {
+                      if (isPlatformStaffRole(role)) {
+                        setRoleByUser((previous) => ({
+                          ...previous,
+                          [account.id]: role,
+                        }));
                       }
-                      type="button"
-                    >
-                      {text("Grant")}
-                    </button>
-                    <button
-                      className="button button-secondary"
-                      disabled={
-                        saving === account.id ||
-                        !account.platformRoles.includes(roleByUser[account.id] ?? "Support")
-                      }
-                      onClick={() =>
-                        setPendingAction({
-                          account,
-                          action: "revoke",
-                          role: roleByUser[account.id] ?? "Support",
-                        })
-                      }
-                      type="button"
-                    >
-                      {text("Revoke")}
-                    </button>
-                  </div>
+                    }}
+                  />
+                  <button
+                    className="button button-primary"
+                    disabled={saving === account.id}
+                    onClick={() =>
+                      setPendingAction({
+                        account,
+                        action: "grant",
+                        role: roleByUser[account.id] ?? "Support",
+                      })
+                    }
+                    type="button"
+                  >
+                    {text("Grant")}
+                  </button>
+                  <button
+                    className="button button-secondary"
+                    disabled={
+                      saving === account.id ||
+                      !account.platformRoles.includes(roleByUser[account.id] ?? "Support")
+                    }
+                    onClick={() =>
+                      setPendingAction({
+                        account,
+                        action: "revoke",
+                        role: roleByUser[account.id] ?? "Support",
+                      })
+                    }
+                    type="button"
+                  >
+                    {text("Revoke")}
+                  </button>
                 </div>
-              ))
-            ) : (
-              <p className="py-4 text-sm text-yes-muted">
-                {text(
-                  search || platformRole !== "all"
-                    ? "No matching accounts were found."
-                    : "No platform staff accounts are available yet.",
-                )}
-              </p>
+              )}
+            </div>
+          ))
+        ) : (
+          <p className="py-4 text-sm text-yes-muted">
+            {text(
+              search || platformRole !== "all"
+                ? "No matching accounts were found."
+                : "No platform staff accounts are available yet.",
             )}
-          </div>
-          {loading && (
-            <p aria-live="polite" className="mt-3 text-sm text-yes-muted">
-              {text("Loading…")}
-            </p>
-          )}
-          <Pagination
-            page={pagination.page}
-            pageSize={pagination.pageSize}
-            total={pagination.totalItems}
-            onChange={(page) => void loadPage(page)}
-          />
-        </>
+          </p>
+        )}
+      </div>
+      {loading && (
+        <p aria-live="polite" className="mt-3 text-sm text-yes-muted">
+          {text("Loading…")}
+        </p>
       )}
+      <Pagination
+        page={pagination.page}
+        pageSize={pagination.pageSize}
+        total={pagination.totalItems}
+        onChange={(page) => void loadPage(page)}
+      />
       <Modal
         open={inviteOpen}
-        title="Invite a platform user"
-        description="Send a secure, one-time invitation link that expires after 7 days."
+        title={text("Create a platform user")}
+        description={text(
+          "Create the account with initial credentials. The user can change the password later.",
+        )}
         onClose={() => {
           if (!inviting) setInviteOpen(false);
         }}
@@ -323,12 +330,24 @@ export function AdminStaffPanel({
             />
           </label>
           <label className="grid gap-1.5 text-sm font-bold">
+            <span>{text("Initial password")}</span>
+            <input
+              autoComplete="new-password"
+              className="h-11 px-3 text-sm"
+              minLength={8}
+              required
+              type="password"
+              value={invitePassword}
+              onChange={(event) => setInvitePassword(event.target.value)}
+            />
+          </label>
+          <label className="grid gap-1.5 text-sm font-bold">
             <span>{text("Platform role")}</span>
             <YesSelect
               ariaLabel={text("Platform role")}
               className="w-full"
               options={platformStaffRoles
-                .filter((role) => canManageStaff || role !== "SuperAdmin")
+                .filter((role) => role !== "SuperAdmin" || canCreateSuperAdmin)
                 .map((role) => ({ value: role, label: text(role) }))}
               value={inviteRole === "SuperAdmin" && !canManageStaff ? "Support" : inviteRole}
               onChange={(role) => {
@@ -351,7 +370,7 @@ export function AdminStaffPanel({
               {text("Cancel")}
             </Button>
             <Button disabled={inviting} type="submit">
-              {text(inviting ? "Sending invitation…" : "Send invitation")}
+              {text(inviting ? "Creating…" : "Create platform user")}
             </Button>
           </div>
         </form>

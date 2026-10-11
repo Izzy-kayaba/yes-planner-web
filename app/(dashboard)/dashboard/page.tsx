@@ -16,9 +16,8 @@ export default async function DashboardPage() {
     return <DemoDashboardOverview />;
   }
 
-  const session = await requirePageRole(["SystemAdmin", "Couple", "Venue", "Vendor"]);
+  const session = await requirePageRole(["Couple", "Venue", "Vendor"]);
   if (session.user.role === "Vendor" || session.user.role === "Venue") redirect("/vendor");
-  if (session.user.role === "SystemAdmin") redirect("/admin");
   const data = await loadDashboardData(session);
   if (session.user.role === "Couple" && !isWeddingProfileComplete(data.wedding)) {
     redirect("/onboarding");

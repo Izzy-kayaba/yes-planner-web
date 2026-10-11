@@ -11,7 +11,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 export default async function MarketplacePage() {
   if ((process.env.NEXT_PUBLIC_DATA_SOURCE ?? "api") === "demo") return <Marketplace />;
-  await requirePageRole();
+  await requirePageRole(["Couple", "Vendor", "Venue"]);
   const profiles = await mongoDb.collection("vendorProfiles").find({ published: true }).toArray();
   const vendors: MarketplaceVendor[] = profiles.map((profile) => ({
     id: String(profile._id),
@@ -20,6 +20,8 @@ export default async function MarketplacePage() {
     serviceArea: String(profile.serviceArea ?? ""),
     countryCode: String(profile.countryCode ?? ""),
     startingPriceMinor: Number(profile.startingPriceMinor ?? 0),
+    startingPriceMinMinor: Number(profile.startingPriceMinMinor ?? profile.startingPriceMinor ?? 0),
+    startingPriceMaxMinor: Number(profile.startingPriceMaxMinor ?? profile.startingPriceMinor ?? 0),
     startingPriceRangeKey: String(profile.startingPriceRangeKey ?? ""),
     profileImage: String(profile.profileImage ?? ""),
     claimed: Boolean(profile.claimed || (profile.ownerUserId && !profile.seeded)),

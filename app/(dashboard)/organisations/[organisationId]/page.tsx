@@ -16,7 +16,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function OrganisationPage() {
   if ((process.env.NEXT_PUBLIC_DATA_SOURCE ?? "api") !== "demo") {
-    await requirePageRole(["SystemAdmin", "Venue"]);
+    await requirePageRole(["Venue"]);
     redirect("/vendor");
   }
   const text = await getTextTranslator();
