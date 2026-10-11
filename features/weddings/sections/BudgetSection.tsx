@@ -25,7 +25,7 @@ const seed = budgetCategories.map((category, index) => ({
   color: category.color,
 }));
 const fields = [
-  { name: "name", label: "Category", required: true },
+  { name: "name", label: "Budget item", required: true },
   { name: "amountUsd", label: "Committed amount (USD)", type: "number" as const, required: true },
   { name: "budgetUsd", label: "Planned budget (USD)", type: "number" as const, required: true },
   {
@@ -38,7 +38,6 @@ const fields = [
       { value: "#b99052", label: "Gold" },
       { value: "#74859d", label: "Dusty Blue" },
     ],
-    required: true,
   },
 ];
 
@@ -59,7 +58,7 @@ export function BudgetSection() {
       name: String(values.name),
       amountMinor: Math.round(Number(values.amountUsd) * 100),
       budgetMinor: Math.round(Number(values.budgetUsd) * 100),
-      color: String(values.color),
+      color: String(values.color || "#8d4656"),
     };
     if (editing) await update({ ...input, id: editing.id });
     else await create(input);
@@ -86,7 +85,7 @@ export function BudgetSection() {
       <section className="panel">
         <div className="panel-header">
           <div>
-            <p className="eyebrow">{text("Categories")}</p>
+            <p className="eyebrow">{text("Budget items")}</p>
             <h3>{text("Planned versus committed")}</h3>
           </div>
           <button
@@ -96,7 +95,7 @@ export function BudgetSection() {
               setOpen(true);
             }}
           >
-            <Plus size={15} /> {text("Add category")}
+            <Plus size={15} /> {text("Add budget item")}
           </button>
         </div>
         <div className="budget-bars">
@@ -154,7 +153,7 @@ export function BudgetSection() {
       </section>
       <EntityDialog
         open={open}
-        title={editing ? "Edit budget category" : "Add budget category"}
+        title={editing ? "Edit budget item" : "Add budget item"}
         fields={fields}
         initialValues={
           editing

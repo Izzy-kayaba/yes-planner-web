@@ -10,7 +10,6 @@ import { BudgetSection } from "@/features/weddings/sections/BudgetSection";
 import { DocumentsSection } from "@/features/weddings/sections/DocumentsSection";
 import { FoodSection } from "@/features/weddings/sections/FoodSection";
 import { GuestsSection } from "@/features/weddings/sections/GuestsSection";
-import { NotesSection } from "@/features/weddings/sections/NotesSection";
 import { PaymentsSection } from "@/features/weddings/sections/PaymentsSection";
 import { ReportsSection } from "@/features/weddings/sections/ReportsSection";
 import { SeatingSection } from "@/features/weddings/sections/SeatingSection";
@@ -29,7 +28,6 @@ const titles: Record<string, [TranslationKey, TranslationKey]> = {
   documents: ["wedding.documents", "wedding.documentsDescription"],
   bookings: ["wedding.bookings", "wedding.bookingsDescription"],
   payments: ["wedding.payments", "wedding.paymentsDescription"],
-  notes: ["wedding.notes", "wedding.notesDescription"],
   reports: ["wedding.reports", "wedding.reportsDescription"],
 };
 
@@ -44,7 +42,6 @@ const sections: Record<string, ComponentType> = {
   documents: DocumentsSection,
   bookings: BookingsSection,
   payments: PaymentsSection,
-  notes: NotesSection,
   reports: ReportsSection,
 };
 

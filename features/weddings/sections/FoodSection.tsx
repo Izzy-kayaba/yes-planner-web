@@ -10,9 +10,9 @@ import { Pagination } from "@/components/ui/Pagination";
 type Menu = { id: string | number; name: string; starter: string; main: string; dessert: string };
 const fields = [
   { name: "name", label: "Meal option name", required: true },
-  { name: "starter", label: "Starter", type: "textarea" as const, required: true },
-  { name: "main", label: "Main course", type: "textarea" as const, required: true },
-  { name: "dessert", label: "Dessert", type: "textarea" as const, required: true },
+  { name: "starter", label: "Starter", type: "textarea" as const },
+  { name: "main", label: "Main course", type: "textarea" as const },
+  { name: "dessert", label: "Dessert", type: "textarea" as const },
 ];
 
 export function FoodSection() {

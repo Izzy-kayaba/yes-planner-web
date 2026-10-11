@@ -70,7 +70,7 @@ export function PaymentsSection() {
     },
     { name: "reference", label: "Invoice reference", required: true },
     { name: "amountUsd", label: "Amount (USD)", type: "number", required: true },
-    { name: "due", label: "Due date", required: true },
+    { name: "due", label: "Due date", type: "date" as const, required: true },
     {
       name: "status",
       label: "Status",

@@ -20,7 +20,7 @@ export const platformAdminNavigation = [
   {
     labelKey: "nav.platformStaff",
     href: "/admin/platform/staff",
-    permission: "platform_staff.invite",
+    permission: "platform_staff.view",
   },
   {
     labelKey: "nav.integrations",

@@ -20,6 +20,8 @@ export type MarketplaceVendor = {
   serviceArea: string;
   countryCode: string;
   startingPriceMinor: number;
+  startingPriceMinMinor: number;
+  startingPriceMaxMinor: number;
   startingPriceRangeKey?: string;
   profileImage: string;
   claimed: boolean;
@@ -62,7 +64,12 @@ export function LiveMarketplace({ vendors }: { vendors: MarketplaceVendor[] }) {
           inferMoneyRange(vendorPriceRanges, vendor.startingPriceMinor)),
     );
     if (!range) return text("Quote required");
-    return moneyRangeLabel(range, displayMoney, t);
+    if (vendor.startingPriceMinMinor !== vendor.startingPriceMaxMinor) {
+      return `${displayMoney(vendor.startingPriceMinMinor)} – ${displayMoney(vendor.startingPriceMaxMinor)}`;
+    }
+    return range
+      ? moneyRangeLabel(range, displayMoney, t)
+      : displayMoney(vendor.startingPriceMinMinor);
   }
 
   return (

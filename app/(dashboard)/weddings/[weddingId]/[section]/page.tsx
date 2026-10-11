@@ -15,7 +15,7 @@ export default async function WeddingSectionPage({
   params: Promise<{ section: string }>;
 }) {
   if ((process.env.NEXT_PUBLIC_DATA_SOURCE ?? "api") !== "demo") {
-    const session = await requirePageRole(["SystemAdmin", "Couple", "Vendor", "Venue"]);
+    const session = await requirePageRole(["Couple", "Vendor", "Venue"]);
     if (session.user.role === "Venue") notFound();
   }
   const { section } = await params;

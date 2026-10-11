@@ -20,7 +20,7 @@ import { formatDate } from "@/lib/date-time";
 const taskFields = [
   { name: "title", label: "Task", required: true },
   { name: "category", label: "Category", required: true },
-  { name: "due", label: "Due date", required: true },
+  { name: "due", label: "Due date", type: "date" as const, required: true },
   { name: "assignee", label: "Assignee", required: true },
   {
     name: "priority",

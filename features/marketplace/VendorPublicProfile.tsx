@@ -32,6 +32,8 @@ export function VendorPublicProfile({
     services: string[];
     serviceArea: string;
     startingPriceMinor: number;
+    startingPriceMinMinor: number;
+    startingPriceMaxMinor: number;
     startingPriceRangeKey?: string;
     website: string;
     instagramHandle: string;
@@ -138,9 +140,11 @@ export function VendorPublicProfile({
           </div>
           <p className="mt-4 text-sm text-yes-muted">
             {vendor.serviceArea} ·{" "}
-            {selectedPriceRange
-              ? moneyRangeLabel(selectedPriceRange, displayMoney, t)
-              : text("Quote required")}
+            {vendor.startingPriceMinMinor !== vendor.startingPriceMaxMinor
+              ? `${displayMoney(vendor.startingPriceMinMinor)} – ${displayMoney(vendor.startingPriceMaxMinor)}`
+              : selectedPriceRange
+                ? moneyRangeLabel(selectedPriceRange, displayMoney, t)
+                : text("Quote required")}
           </p>
           <div className="mt-3 flex flex-wrap gap-4 text-sm font-bold text-yes-wine">
             {vendor.phoneNumber && (

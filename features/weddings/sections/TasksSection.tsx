@@ -14,15 +14,14 @@ import { useConfirmation } from "@/hooks/useConfirmation";
 
 const fields = [
   { name: "title", label: "Task", required: true },
-  { name: "category", label: "Category", required: true },
-  { name: "due", label: "Due date", required: true },
-  { name: "assignee", label: "Assignee", required: true },
+  { name: "category", label: "Task type", required: true },
+  { name: "due", label: "Due date", type: "date" as const, required: true },
+  { name: "assignee", label: "Assignee" },
   {
     name: "priority",
     label: "Priority",
     type: "select" as const,
     options: ["High", "Medium", "Low"],
-    required: true,
   },
 ];
 
@@ -44,6 +43,8 @@ export function TasksSection() {
   async function save(values: Record<string, EntityFormValue>) {
     const input = {
       ...(values as unknown as Omit<WeddingTask, "id" | "complete">),
+      assignee: String(values.assignee ?? ""),
+      priority: (values.priority || "Medium") as WeddingTask["priority"],
       complete: editing?.complete ?? false,
     };
     if (editing) await update({ ...input, id: editing.id });
@@ -88,7 +89,8 @@ export function TasksSection() {
             <span className="task-copy">
               <strong>{text(task.title)}</strong>
               <small>
-                {text(task.category)} · {text("Assigned to")} {task.assignee}
+                {text(task.category)}
+                {task.assignee ? ` · ${text("Assigned to")} ${task.assignee}` : ""}
               </small>
             </span>
             <StatusPill

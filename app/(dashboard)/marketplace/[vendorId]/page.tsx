@@ -9,7 +9,7 @@ export default async function VendorProfilePage({
 }: {
   params: Promise<{ vendorId: string }>;
 }) {
-  const session = await requirePageRole();
+  const session = await requirePageRole(["Couple", "Vendor", "Venue"]);
   const { vendorId } = await params;
   if (!ObjectId.isValid(vendorId)) notFound();
   const profile = await mongoDb
@@ -56,6 +56,12 @@ export default async function VendorProfilePage({
         services: Array.isArray(profile.services) ? profile.services.map(String) : [],
         serviceArea: String(profile.serviceArea ?? ""),
         startingPriceMinor: Number(profile.startingPriceMinor ?? 0),
+        startingPriceMinMinor: Number(
+          profile.startingPriceMinMinor ?? profile.startingPriceMinor ?? 0,
+        ),
+        startingPriceMaxMinor: Number(
+          profile.startingPriceMaxMinor ?? profile.startingPriceMinor ?? 0,
+        ),
         startingPriceRangeKey: String(profile.startingPriceRangeKey ?? ""),
         website: String(profile.website ?? ""),
         instagramHandle: String(profile.instagramHandle ?? ""),

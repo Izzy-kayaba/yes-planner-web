@@ -11,7 +11,7 @@ import type { ObjectId } from "mongodb";
 export const metadata: Metadata = { title: "Platform staff" };
 
 export default async function AdminStaffPage() {
-  const access = await requirePlatformPagePermission("platform_staff.invite");
+  const access = await requirePlatformPagePermission("platform_staff.view");
   const canManageStaff = hasPlatformPermission(access.permissions, "platform_staff.manage");
   const pagination = parsePagination(new URLSearchParams(), 25, 100)!;
   const users = mongoDb.collection<{
@@ -31,15 +31,18 @@ export default async function AdminStaffPage() {
     platformRoles?: unknown;
   }[] = [];
   let totalItems = 0;
-  if (canManageStaff) {
-    await ensureMongoIndexes();
-    totalItems = await users.countDocuments();
-    accounts = await users
-      .find({}, { projection: { name: 1, email: 1, role: 1, accountType: 1, platformRoles: 1 } })
-      .sort({ createdAt: -1, _id: -1 })
-      .limit(pagination.pageSize)
-      .toArray();
-  }
+  await ensureMongoIndexes();
+  const platformUserFilter = {
+    $or: [{ platformRoles: { $exists: true, $ne: [] } }, { role: "SystemAdmin" }],
+  };
+  totalItems = await users.countDocuments(platformUserFilter);
+  accounts = await users
+    .find(platformUserFilter, {
+      projection: { name: 1, email: 1, role: 1, accountType: 1, platformRoles: 1 },
+    })
+    .sort({ createdAt: -1, _id: -1 })
+    .limit(pagination.pageSize)
+    .toArray();
   const items = accounts.map((user) => ({
     id: String(user._id),
     name: String(user.name ?? ""),
@@ -61,14 +64,15 @@ export default async function AdminStaffPage() {
         title="Platform staff"
         description={
           canManageStaff
-            ? "Invite platform users and manage roles for existing accounts."
-            : "Invite a new user to join the platform team."
+            ? "Create platform users and manage their roles."
+            : "View platform users and their assigned roles."
         }
       />
       <AdminStaffPanel
         initialAccounts={items}
         initialPagination={paginatedResult(items, 1, pagination.pageSize, totalItems).pagination}
         canManageStaff={canManageStaff}
+      canCreateSuperAdmin={access.roles.includes("SuperAdmin")}
       />
     </div>
   );

@@ -98,16 +98,16 @@ const connectionPreferences: Preference[] = [
     icon: CalendarDays,
   },
   {
-    id: "apple-calendar",
-    label: "Apple Calendar",
-    description: "Keep wedding dates on your Apple devices",
-    icon: CalendarDays,
-  },
-  {
     id: "google-drive",
     label: "Google Drive",
     description: "Attach contracts and inspiration files",
     icon: Cloud,
+  },
+  {
+    id: "whatsapp",
+    label: "WhatsApp",
+    description: "Receive authorised workspace updates on WhatsApp",
+    icon: MessageSquareText,
   },
 ];
 
@@ -181,14 +181,6 @@ export function SettingsPanel() {
     setProfile((current) => ({ ...current, [field]: value }));
   }
 
-  async function connectGoogle() {
-    const result = await authClient.linkSocial({
-      provider: "google",
-      callbackURL: `${window.location.origin}/settings`,
-    });
-    if (result.error) toast.error(text(result.error.message ?? "Google could not be connected."));
-  }
-
   async function savePassword(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (newPassword.length < 8 || !/[0-9]/.test(newPassword) || !/[^A-Za-z0-9]/.test(newPassword)) {
@@ -197,22 +189,17 @@ export function SettingsPanel() {
     }
     setPasswordSaving(true);
     try {
-      const result = profile.hasPassword
-        ? await authClient.changePassword({
-            currentPassword,
-            newPassword,
-            revokeOtherSessions: true,
-          })
-        : await apiRequest<{ status: true }>("/api/v1/me/password", {
-            method: "POST",
-            body: JSON.stringify({ newPassword }),
-          });
+      const result = await authClient.changePassword({
+        currentPassword,
+        newPassword,
+        revokeOtherSessions: true,
+      });
       if ("error" in result && result.error)
         throw new Error(text(result.error.message ?? "Password could not be saved."));
       setCurrentPassword("");
       setNewPassword("");
       setProfile((current) => ({ ...current, hasPassword: true }));
-      toast.success(text(profile.hasPassword ? "Password changed." : "Password added."));
+      toast.success(text("Password changed."));
     } catch (error) {
       toast.error(text(error instanceof Error ? error.message : "Password could not be saved."));
     } finally {
@@ -230,15 +217,6 @@ export function SettingsPanel() {
       return;
     }
     toast.success(text("Verification email sent. Check your inbox."));
-  }
-
-  async function sendTestEmail() {
-    try {
-      await apiRequest("/api/v1/me/email-test", { method: "POST" });
-      toast.success(text("Test email sent. Check your inbox."));
-    } catch (error) {
-      toast.error(text(error instanceof Error ? error.message : "Test email could not be sent."));
-    }
   }
 
   return (
@@ -309,20 +287,26 @@ export function SettingsPanel() {
                   value={profile.email}
                 />
               </label>
-              <label className="settings-toggle-row">
+              <label className="settings-checkbox-row">
+                <span className="settings-row-copy">
+                  <span className="settings-row-icon" aria-hidden="true">
+                    <MessageSquareText size={17} strokeWidth={1.8} />
+                  </span>
+                  <span>
+                    <strong>{text("WhatsApp notifications")}</strong>
+                    <small>
+                      {text("Receive important workspace and vendor-request updates on WhatsApp.")}
+                    </small>
+                  </span>
+                </span>
                 <input
+                  className="settings-checkbox size-4"
                   id="settings-whatsapp-notifications"
                   name="whatsappNotifications"
                   checked={profile.whatsappNotifications}
                   onChange={(event) => updateProfile("whatsappNotifications", event.target.checked)}
                   type="checkbox"
                 />
-                <span>
-                  <strong>{text("WhatsApp notifications")}</strong>
-                  <small>
-                    {text("Receive important workspace and vendor-request updates on WhatsApp.")}
-                  </small>
-                </span>
               </label>
               <label>
                 <FieldLabel required>{t("auth.phone")}</FieldLabel>
@@ -341,9 +325,6 @@ export function SettingsPanel() {
               <section className="grid gap-2 border-t border-yes-line pt-4">
                 <h3>{text("Sign-in providers")}</h3>
                 <p className="text-sm text-yes-muted">
-                  {text("Email and password")}:{" "}
-                  {profile.hasPassword ? text("Available") : text("Not set")}
-                  {" · "}
                   {text("Social providers")}:{" "}
                   {profile.linkedProviders.length
                     ? profile.linkedProviders
@@ -364,15 +345,6 @@ export function SettingsPanel() {
                       {text("Send verification email")}
                     </button>
                   )}
-                {(process.env.NEXT_PUBLIC_DATA_SOURCE ?? "api") !== "demo" && (
-                  <button
-                    className="button button-secondary w-fit"
-                    onClick={() => void sendTestEmail()}
-                    type="button"
-                  >
-                    {text("Send test email")}
-                  </button>
-                )}
               </section>
               <div className="settings-actions">
                 {session?.user.role === "Couple" && (
@@ -410,40 +382,29 @@ export function SettingsPanel() {
                 <div>
                   <h3>{text("Sign-in methods")}</h3>
                   <p className="mt-2 text-sm text-yes-muted">
-                    {text(
-                      "Connect Google while signed in to combine it with your existing account.",
-                    )}
+                    {text("Use your connected provider or password to sign in.")}
                   </p>
                 </div>
-                <p className="text-sm">
-                  {text("Connected")}:{" "}
+                <p className="text-sm text-yes-muted">
+                  {text("Social providers")}:{" "}
                   {profile.linkedProviders.length
                     ? profile.linkedProviders
                         .map((provider) => (provider === "google" ? "Google" : provider))
                         .join(", ")
-                    : text("Email and password only")}
+                    : text("None connected")}
                 </p>
-                {!profile.linkedProviders.includes("google") && (
-                  <button
-                    className="button button-secondary w-fit"
-                    onClick={() => void connectGoogle()}
-                    type="button"
-                  >
-                    {text("Connect Google")}
-                  </button>
-                )}
                 <p className="text-sm text-yes-muted">
                   {text(profile.emailVerified ? "Email verified" : "Email not verified")}
                 </p>
               </section>
-              <form className="grid gap-4 border-t border-yes-line pt-5" onSubmit={savePassword}>
-                <div>
-                  <h3>{text(profile.hasPassword ? "Change password" : "Add a password")}</h3>
-                  <p className="mt-2 text-sm text-yes-muted">
-                    {text("Use a password as another way to sign in to this account.")}
-                  </p>
-                </div>
-                {profile.hasPassword && (
+              {profile.hasPassword && (
+                <form className="grid gap-4 border-t border-yes-line pt-5" onSubmit={savePassword}>
+                  <div>
+                    <h3>{text("Change password")}</h3>
+                    <p className="mt-2 text-sm text-yes-muted">
+                      {text("Update the password used to sign in to this account.")}
+                    </p>
+                  </div>
                   <label>
                     <FieldLabel required>{text("Current password")}</FieldLabel>
                     <input
@@ -454,35 +415,73 @@ export function SettingsPanel() {
                       value={currentPassword}
                     />
                   </label>
-                )}
-                <label>
-                  <FieldLabel required>
-                    {text(profile.hasPassword ? "New password" : "Password")}
-                  </FieldLabel>
-                  <input
-                    autoComplete="new-password"
-                    onChange={(event) => setNewPassword(event.target.value)}
-                    required
-                    type="password"
-                    value={newPassword}
-                  />
-                </label>
-                <button
-                  className="button button-primary w-fit"
-                  disabled={passwordSaving}
-                  type="submit"
-                >
-                  {text(profile.hasPassword ? "Change password" : "Add password")}
-                </button>
-              </form>
+                  <label>
+                    <FieldLabel required>{text("New password")}</FieldLabel>
+                    <input
+                      autoComplete="new-password"
+                      onChange={(event) => setNewPassword(event.target.value)}
+                      required
+                      type="password"
+                      value={newPassword}
+                    />
+                  </label>
+                  <button
+                    className="button button-primary w-fit"
+                    disabled={passwordSaving}
+                    type="submit"
+                  >
+                    {text("Change password")}
+                  </button>
+                </form>
+              )}
               <PreferenceList items={securityPreferences} storageKey="security" />
             </div>
           )}
           {active === "connections" && (
-            <PreferenceList items={connectionPreferences} storageKey="connections" />
+            <div className="grid gap-4">
+              {!profile.linkedProviders.includes("google") && (
+                <PreferenceNotice
+                  icon={Cloud}
+                  label="Google connections"
+                  description="Connect Google during sign-in to use Google Calendar and Google Drive connections."
+                />
+              )}
+              <PreferenceList
+                items={connectionPreferences.filter(
+                  (item) => profile.linkedProviders.includes("google") || item.id === "whatsapp",
+                )}
+                storageKey="whatsapp-connection"
+              />
+            </div>
           )}
         </article>
       </section>
+    </div>
+  );
+}
+
+function PreferenceNotice({
+  description,
+  icon: Icon,
+  label,
+}: {
+  description: string;
+  icon: LucideIcon;
+  label: string;
+}) {
+  const { text } = useLanguage();
+
+  return (
+    <div className="settings-checkbox-row" aria-disabled="true">
+      <span className="settings-row-copy">
+        <span className="settings-row-icon" aria-hidden="true">
+          <Icon size={17} strokeWidth={1.8} />
+        </span>
+        <span>
+          <strong>{text(label)}</strong>
+          <small>{text(description)}</small>
+        </span>
+      </span>
     </div>
   );
 }

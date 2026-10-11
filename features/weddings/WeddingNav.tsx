@@ -20,7 +20,6 @@ const sections: ReadonlyArray<[TranslationKey, string]> = [
   ["wedding.documents", "documents"],
   ["wedding.bookings", "bookings"],
   ["wedding.payments", "payments"],
-  ["wedding.notes", "notes"],
   ["wedding.reports", "reports"],
 ];
 

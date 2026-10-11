@@ -46,17 +46,18 @@ const instagramPlugin = genericOAuth({
           providerId: "instagram",
           clientId: process.env.INSTAGRAM_CLIENT_ID!,
           clientSecret: process.env.INSTAGRAM_CLIENT_SECRET!,
-          authorizationUrl: "https://api.instagram.com/oauth/authorize",
+          authorizationUrl: "https://www.instagram.com/oauth/authorize",
           tokenUrl: "https://api.instagram.com/oauth/access_token",
-          scopes: ["user_profile", "user_media"],
+          scopes: ["instagram_business_basic"],
           pkce: false,
           getUserInfo: async (tokens) => {
             if (!tokens.accessToken) return null;
             const response = await fetch(
-              `https://graph.instagram.com/me?fields=id,username&access_token=${encodeURIComponent(tokens.accessToken)}`,
+              `https://graph.instagram.com/me?fields=user_id,username&access_token=${encodeURIComponent(tokens.accessToken)}`,
             );
             if (!response.ok) return null;
-            return mapInstagramProfile((await response.json()) as InstagramProfile);
+            const profile = (await response.json()) as InstagramProfile;
+            return mapInstagramProfile(profile);
           },
         },
       ]

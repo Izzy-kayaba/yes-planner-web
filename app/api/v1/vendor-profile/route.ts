@@ -11,26 +11,33 @@ const imageSchema = z
   .max(120)
   .regex(/^\/api\/v1\/media\/[a-f0-9]{24}$/, "Invalid image reference.");
 
-const profileSchema = z.object({
-  businessName: z.string().trim().min(2).max(160),
-  contactName: z.string().trim().min(2).max(120),
-  bio: z.string().trim().min(30).max(2_000),
-  services: z.array(z.string()).min(1).max(10),
-  serviceArea: z.string().trim().min(2).max(180),
-  countryCode: z
-    .string()
-    .trim()
-    .length(2)
-    .regex(/^[A-Z]{2}$/),
-  startingPriceMinor: z.coerce.number().int().nonnegative().max(100_000_000_000),
-  startingPriceRangeKey: z
-    .string()
-    .refine((value) => vendorPriceRanges.some((range) => range.id === value)),
-  website: z.union([z.url(), z.literal("")]),
-  instagramHandle: z.string().trim().max(80),
-  profileImage: z.union([imageSchema, z.literal("")]),
-  portfolioImages: z.array(imageSchema).max(6),
-});
+const profileSchema = z
+  .object({
+    businessName: z.string().trim().min(2).max(160),
+    contactName: z.string().trim().min(2).max(120),
+    bio: z.string().trim().min(30).max(2_000),
+    services: z.array(z.string()).min(1).max(10),
+    serviceArea: z.string().trim().min(2).max(180),
+    countryCode: z
+      .string()
+      .trim()
+      .length(2)
+      .regex(/^[A-Z]{2}$/),
+    startingPriceMinMinor: z.coerce.number().int().nonnegative().max(100_000_000_000),
+    startingPriceMaxMinor: z.coerce.number().int().nonnegative().max(100_000_000_000),
+    startingPriceMinor: z.coerce.number().int().nonnegative().max(100_000_000_000),
+    startingPriceRangeKey: z
+      .string()
+      .refine((value) => vendorPriceRanges.some((range) => range.id === value)),
+    website: z.union([z.url(), z.literal("")]),
+    instagramHandle: z.string().trim().max(80),
+    profileImage: z.union([imageSchema, z.literal("")]),
+    portfolioImages: z.array(imageSchema).max(6),
+  })
+  .refine((value) => value.startingPriceMinMinor <= value.startingPriceMaxMinor, {
+    message: "Minimum price cannot be greater than maximum price.",
+    path: ["startingPriceMaxMinor"],
+  });
 
 function publicProfile(document: Record<string, unknown>) {
   return {
@@ -41,6 +48,8 @@ function publicProfile(document: Record<string, unknown>) {
     services: document.services,
     serviceArea: document.serviceArea,
     countryCode: document.countryCode,
+    startingPriceMinMinor: document.startingPriceMinMinor ?? document.startingPriceMinor,
+    startingPriceMaxMinor: document.startingPriceMaxMinor ?? document.startingPriceMinor,
     startingPriceMinor: document.startingPriceMinor,
     startingPriceRangeKey: document.startingPriceRangeKey ?? "",
     website: document.website ?? "",

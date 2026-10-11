@@ -16,7 +16,6 @@ const allModules: readonly WorkspaceModule[] = [
   "documents",
   "bookings",
   "payments",
-  "notes",
 ];
 
 const vendorModules: readonly WorkspaceModule[] = [
@@ -26,7 +25,6 @@ const vendorModules: readonly WorkspaceModule[] = [
   "documents",
   "bookings",
   "payments",
-  "notes",
 ];
 
 export function isWorkspaceModule(value: string): value is WorkspaceModule {
@@ -57,14 +55,14 @@ export function canAccessRoute(
     const requiredPermission = platformPermissionForAdminPath(pathname);
     return requiredPermission !== null && adminPermissions.includes(requiredPermission);
   }
+  if (role === "SystemAdmin") return pathname.startsWith("/settings");
   // Route checks mirror account boundaries; venues only receive the top-level wedding brief.
   if (pathname === "/planner" || pathname.startsWith("/planner/")) return role === "Vendor";
-  if (pathname.startsWith("/organisations")) return role === "SystemAdmin" || role === "Venue";
-  if (pathname.startsWith("/vendor"))
-    return role === "SystemAdmin" || role === "Vendor" || role === "Venue";
+  if (pathname.startsWith("/organisations")) return role === "Venue";
+  if (pathname.startsWith("/vendor")) return role === "Vendor" || role === "Venue";
   if (pathname.startsWith("/weddings")) {
     if (role === "Venue" && pathname.split("/").filter(Boolean).length !== 2) return false;
-    return role === "SystemAdmin" || role === "Couple" || role === "Vendor" || role === "Venue";
+    return role === "Couple" || role === "Vendor" || role === "Venue";
   }
   return role !== "Guest" || pathname.startsWith("/settings");
 }
