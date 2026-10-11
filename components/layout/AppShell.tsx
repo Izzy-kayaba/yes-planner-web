@@ -114,11 +114,22 @@ const adminIcons: Record<(typeof platformAdminNavigation)[number]["href"], Lucid
   "/admin/platform/audit": ScrollText,
 } as const;
 
-function matchesNavigation(pathname: string, href: string) {
+function matchesNavigation(pathname: string, href: string, siblings: readonly { href: string }[]) {
   if (href === "/dashboard") return pathname === href;
   if (href.startsWith("/weddings/") && href.split("/").length === 3)
     return pathname.startsWith(href);
-  return pathname.startsWith(href);
+
+  const matchingSiblings = [...siblings].filter(
+    (item) => item.href === pathname || pathname.startsWith(`${item.href}/`),
+  );
+
+  if (matchingSiblings.length === 0) return false;
+
+  const activeMatch = matchingSiblings.reduce((best, item) =>
+    item.href.length > best.href.length ? item : best,
+  );
+
+  return activeMatch.href === href;
 }
 
 export function AppShell({
@@ -244,7 +255,7 @@ export function AppShell({
             <>
               <p className="nav-label">{t("nav.adminSection")}</p>
               {resolvedAdminNavigation.map((item) => {
-                const active = matchesNavigation(pathname, item.href);
+                const active = matchesNavigation(pathname, item.href, resolvedAdminNavigation);
                 const Icon = adminIcons[item.href];
                 return (
                   <Link
@@ -267,7 +278,7 @@ export function AppShell({
             <>
               <p className="nav-label">{t("nav.workspace")}</p>
               {resolvedNavigation.map((item) => {
-                const active = matchesNavigation(pathname, item.href);
+                const active = matchesNavigation(pathname, item.href, resolvedNavigation);
                 const Icon = item.icon;
                 return (
                   <Link
