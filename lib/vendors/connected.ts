@@ -1,3 +1,4 @@
+// Purpose: implements lib/vendors/connected.ts for the Yes Planner web application.
 import type { WorkspaceModule } from "@/lib/api/contracts";
 import { mongoDb } from "@/lib/mongodb";
 

@@ -1,4 +1,5 @@
 "use client";
+// Purpose: implements components/ui/PageHeader.tsx for the Yes Planner web application.
 
 import type { ReactNode } from "react";
 import { useLanguage } from "@/components/providers/LanguageProvider";

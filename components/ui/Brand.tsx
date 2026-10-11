@@ -1,4 +1,5 @@
 "use client";
+// Purpose: implements components/ui/Brand.tsx for the Yes Planner web application.
 
 import Link from "next/link";
 import { useLanguage } from "@/components/providers/LanguageProvider";

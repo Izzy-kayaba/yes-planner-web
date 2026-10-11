@@ -1,4 +1,5 @@
 "use client";
+// Purpose: implements components/ui/Pagination.tsx for the Yes Planner web application.
 
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useLanguage } from "@/components/providers/LanguageProvider";

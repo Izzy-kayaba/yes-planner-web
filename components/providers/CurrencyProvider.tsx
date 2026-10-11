@@ -1,4 +1,5 @@
 "use client";
+// Purpose: implements components/providers/CurrencyProvider.tsx for the Yes Planner web application.
 
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 import {

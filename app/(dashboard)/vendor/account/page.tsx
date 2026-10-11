@@ -1,3 +1,4 @@
+// Purpose: implements app/(dashboard)/vendor/account/page.tsx for the Yes Planner web application.
 import { PageHeader } from "@/components/ui/PageHeader";
 import {
   VendorOnboardingForm,

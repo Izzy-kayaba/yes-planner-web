@@ -51,6 +51,7 @@ export function canAccessRoute(
   pathname: string,
   adminPermissions: readonly PlatformPermission[] = [],
 ) {
+  // Route access is checked independently from navigation so hidden links cannot be bypassed by typing a URL.
   if (pathname === "/admin" || pathname.startsWith("/admin/")) {
     const requiredPermission = platformPermissionForAdminPath(pathname);
     return requiredPermission !== null && adminPermissions.includes(requiredPermission);

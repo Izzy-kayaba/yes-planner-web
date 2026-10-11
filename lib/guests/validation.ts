@@ -1,3 +1,4 @@
+// Purpose: implements lib/guests/validation.ts for the Yes Planner web application.
 import { mongoDb } from "@/lib/mongodb";
 
 const guestGroups = new Set(["Family", "Friends", "Workmates", "Acquaintance"]);
@@ -7,6 +8,7 @@ export async function validateGuestSelections(
   weddingKey: string,
   data: Record<string, unknown>,
 ) {
+  // Validate only values that were supplied; invitations may be created before seating and menus exist.
   if (typeof data.group !== "string" || !guestGroups.has(data.group)) {
     return "Choose a valid guest group.";
   }
@@ -19,6 +21,7 @@ export async function validateGuestSelections(
   for (const selection of selections) {
     const value = data[selection.field];
     if (typeof value !== "string" || !value.trim()) continue;
+    // A selected table or meal must belong to this wedding, preventing cross-wedding references.
     const exists = await mongoDb.collection("workspaceItems").findOne({
       ownerUserId,
       weddingKey,

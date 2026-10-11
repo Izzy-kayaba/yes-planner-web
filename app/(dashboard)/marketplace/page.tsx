@@ -1,3 +1,4 @@
+// Purpose: implements app/(dashboard)/marketplace/page.tsx for the Yes Planner web application.
 import type { Metadata } from "next";
 import { Marketplace } from "@/features/marketplace/Marketplace";
 import { LiveMarketplace, type MarketplaceVendor } from "@/features/marketplace/LiveMarketplace";

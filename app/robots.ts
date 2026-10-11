@@ -1,3 +1,4 @@
+// Purpose: implements app/robots.ts for the Yes Planner web application.
 import type { MetadataRoute } from "next";
 import { siteUrl } from "@/lib/site";
 

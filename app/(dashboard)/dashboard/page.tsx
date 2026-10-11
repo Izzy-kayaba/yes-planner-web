@@ -1,3 +1,4 @@
+// Purpose: implements app/(dashboard)/dashboard/page.tsx for the Yes Planner web application.
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { AuthenticatedDashboardOverview } from "@/features/dashboard/AuthenticatedDashboardOverview";

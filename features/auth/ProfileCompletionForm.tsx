@@ -1,4 +1,5 @@
 "use client";
+// Purpose: implements features/auth/ProfileCompletionForm.tsx for the Yes Planner web application.
 
 import { getCountries, isValidPhoneNumber } from "libphonenumber-js";
 import { useRouter } from "next/navigation";

@@ -1,3 +1,4 @@
+// Purpose: implements scripts/seed-vendors.mjs for the Yes Planner web application.
 import fs from "node:fs";
 import path from "node:path";
 import { MongoClient } from "mongodb";

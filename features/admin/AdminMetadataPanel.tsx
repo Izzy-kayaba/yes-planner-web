@@ -1,4 +1,5 @@
 "use client";
+// Purpose: implements features/admin/AdminMetadataPanel.tsx for the Yes Planner web application.
 
 import { BadgeCheck, CircleDashed, CircleCheck } from "lucide-react";
 import { useState } from "react";

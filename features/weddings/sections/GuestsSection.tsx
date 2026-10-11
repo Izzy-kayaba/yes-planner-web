@@ -1,4 +1,5 @@
 "use client";
+// Purpose: implements features/weddings/sections/GuestsSection.tsx for the Yes Planner web application.
 
 import { Pencil, Plus, Trash2 } from "lucide-react";
 import { useMemo, useState } from "react";
@@ -70,11 +71,12 @@ export function GuestsSection() {
   );
 
   async function save(values: Record<string, EntityFormValue>) {
+    // Optional table and meal values stay empty until the couple creates and selects real workspace records.
     const guest = {
       ...(values as unknown as Omit<Guest, "id">),
       status: editing?.status ?? "Pending",
-      table: editing?.table ?? "Unassigned",
-      meal: String(values.meal ?? "Unassigned"),
+      table: editing?.table && editing.table !== "Unassigned" ? editing.table : "",
+      meal: String(values.meal ?? ""),
     } as Omit<Guest, "id">;
     if (editing) await update({ ...guest, id: editing.id });
     else await create(guest);
@@ -171,8 +173,8 @@ export function GuestsSection() {
                     {guest.status}
                   </StatusPill>
                 </span>
-                <span>{text(guest.meal)}</span>
-                <span>{text(guest.table)}</span>
+                <span>{text(guest.meal || "Unassigned")}</span>
+                <span>{text(guest.table || "Unassigned")}</span>
                 <span className="flex justify-end gap-2">
                   <button
                     className="icon-button"

@@ -1,3 +1,4 @@
+// Purpose: implements lib/admin/search.ts for the Yes Planner web application.
 export const adminSearchMaxLength = 100;
 
 export function escapedAdminSearch(value: string) {

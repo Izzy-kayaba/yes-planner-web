@@ -1,4 +1,5 @@
 "use client";
+// Purpose: implements components/ui/YesSelect.tsx for the Yes Planner web application.
 
 import { Check, ChevronDown } from "lucide-react";
 import { createPortal } from "react-dom";

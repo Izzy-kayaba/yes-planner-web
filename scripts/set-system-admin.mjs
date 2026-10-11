@@ -1,3 +1,4 @@
+// Purpose: implements scripts/set-system-admin.mjs for the Yes Planner web application.
 import { MongoClient } from "mongodb";
 import { databaseEnvironment, parseScriptArguments } from "./environment.mjs";
 

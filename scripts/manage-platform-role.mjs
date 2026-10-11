@@ -1,3 +1,4 @@
+// Purpose: implements scripts/manage-platform-role.mjs for the Yes Planner web application.
 import { MongoClient } from "mongodb";
 import { databaseEnvironment, parseScriptArguments } from "./environment.mjs";
 

@@ -1,3 +1,4 @@
+// Purpose: implements types/index.ts for the Yes Planner web application.
 export type WeddingAccess = "Owner" | "FullManager" | "Vendor" | "Guest";
 
 export type StatusTone = "rose" | "sage" | "gold" | "blue" | "neutral";

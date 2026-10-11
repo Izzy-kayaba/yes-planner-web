@@ -1,3 +1,4 @@
+// Purpose: implements app/api/v1/support-requests/route.ts for the Yes Planner web application.
 import { NextResponse } from "next/server";
 import { requireApiSession } from "@/lib/auth/session";
 import { resolveWeddingAccess } from "@/lib/auth/wedding-access";

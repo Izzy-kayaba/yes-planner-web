@@ -14,6 +14,7 @@ import { CharacterCount } from "@/components/forms/CharacterCount";
 import { FieldLabel } from "@/components/forms/FieldLabel";
 import { inferMoneyRange, moneyRangeLabel, vendorPriceRanges } from "@/lib/estimate-ranges";
 import { BackButton } from "@/components/navigation/BackButton";
+import { formatVendorPriceRange } from "@/lib/vendors/pricing";
 
 export function VendorPublicProfile({
   vendor,
@@ -141,7 +142,11 @@ export function VendorPublicProfile({
           <p className="mt-4 text-sm text-yes-muted">
             {vendor.serviceArea} ·{" "}
             {vendor.startingPriceMinMinor !== vendor.startingPriceMaxMinor
-              ? `${displayMoney(vendor.startingPriceMinMinor)} – ${displayMoney(vendor.startingPriceMaxMinor)}`
+              ? formatVendorPriceRange(
+                  vendor.startingPriceMinMinor,
+                  vendor.startingPriceMaxMinor,
+                  displayMoney,
+                )
               : selectedPriceRange
                 ? moneyRangeLabel(selectedPriceRange, displayMoney, t)
                 : text("Quote required")}

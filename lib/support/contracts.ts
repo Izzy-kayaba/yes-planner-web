@@ -1,3 +1,4 @@
+// Purpose: implements lib/support/contracts.ts for the Yes Planner web application.
 import { z } from "zod";
 
 export const supportCategories = [

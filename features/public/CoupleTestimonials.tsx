@@ -1,4 +1,5 @@
 "use client";
+// Purpose: implements features/public/CoupleTestimonials.tsx for the Yes Planner web application.
 
 import Image from "next/image";
 import Link from "next/link";

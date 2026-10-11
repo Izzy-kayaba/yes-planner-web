@@ -1,4 +1,5 @@
 "use client";
+// Purpose: implements features/admin/ClaimReviewPanel.tsx for the Yes Planner web application.
 import { ArrowUpRight, Building2, CalendarDays } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";

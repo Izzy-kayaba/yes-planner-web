@@ -1,3 +1,4 @@
+// Purpose: implements lib/dashboard/server.ts for the Yes Planner web application.
 import "server-only";
 
 import type { AuthorizedSession } from "@/lib/auth/session";

@@ -1,3 +1,4 @@
+// Purpose: implements app/api/v1/admin/support-requests/route.ts for the Yes Planner web application.
 import { ObjectId, type Document, type Filter } from "mongodb";
 import { NextResponse } from "next/server";
 import { recordAdminAuditEvent } from "@/lib/auth/admin-audit";

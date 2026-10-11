@@ -1,4 +1,5 @@
 "use client";
+// Purpose: implements features/admin/PlatformInvitationAcceptance.tsx for the Yes Planner web application.
 
 import { useEffect, useState, type FormEvent } from "react";
 import Link from "next/link";

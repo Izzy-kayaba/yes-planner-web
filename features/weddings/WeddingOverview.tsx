@@ -1,4 +1,5 @@
 "use client";
+// Purpose: implements features/weddings/WeddingOverview.tsx for the Yes Planner web application.
 
 import Link from "next/link";
 import { useState } from "react";

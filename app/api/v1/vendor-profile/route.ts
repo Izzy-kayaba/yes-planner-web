@@ -5,6 +5,7 @@ import { requireApiSession } from "@/lib/auth/session";
 import { ensureMongoIndexes, mongoDb } from "@/lib/mongodb";
 import { isVendorService, weddingPlanningService } from "@/lib/vendors/services";
 import { vendorPriceRanges } from "@/lib/estimate-ranges";
+import { validateVendorPriceRange } from "@/lib/vendors/pricing";
 
 const imageSchema = z
   .string()
@@ -34,11 +35,16 @@ const profileSchema = z
     profileImage: z.union([imageSchema, z.literal("")]),
     portfolioImages: z.array(imageSchema).max(6),
   })
-  .refine((value) => value.startingPriceMinMinor <= value.startingPriceMaxMinor, {
-    message: "Minimum price cannot be greater than maximum price.",
-    path: ["startingPriceMaxMinor"],
-  });
+  .refine(
+    (value) =>
+      validateVendorPriceRange(value.startingPriceMinMinor, value.startingPriceMaxMinor).valid,
+    {
+      message: "Minimum price cannot be greater than maximum price.",
+      path: ["startingPriceMaxMinor"],
+    },
+  );
 
+// Return only fields that are safe for marketplace and public-profile consumers.
 function publicProfile(document: Record<string, unknown>) {
   return {
     id: String(document.ownerUserId),
@@ -70,6 +76,7 @@ export async function GET(request: Request) {
 }
 
 export async function PUT(request: Request) {
+  // Keep server-side validation authoritative because browser validation can be bypassed.
   const authentication = await requireApiSession(request.headers);
   if (authentication.error) return authentication.error;
   if (

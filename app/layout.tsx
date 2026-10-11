@@ -1,3 +1,4 @@
+// Purpose: implements app/layout.tsx for the Yes Planner web application.
 import type { Metadata } from "next";
 import { Cardo, Nunito } from "next/font/google";
 import { getLocale } from "next-intl/server";

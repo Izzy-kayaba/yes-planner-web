@@ -1,3 +1,4 @@
+// Purpose: implements scripts/migrate-user-model.mjs for the Yes Planner web application.
 import { MongoClient } from "mongodb";
 import { databaseEnvironment, parseScriptArguments } from "./environment.mjs";
 

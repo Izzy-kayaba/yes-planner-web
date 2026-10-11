@@ -1,4 +1,5 @@
 "use client";
+// Purpose: implements features/vendors/VendorWorkspace.tsx for the Yes Planner web application.
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";

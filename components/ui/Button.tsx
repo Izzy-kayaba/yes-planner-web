@@ -1,3 +1,4 @@
+// Purpose: implements components/ui/Button.tsx for the Yes Planner web application.
 import type { ButtonHTMLAttributes } from "react";
 import { cn } from "@/lib/cn";
 

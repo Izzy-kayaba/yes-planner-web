@@ -1,3 +1,4 @@
+// Purpose: implements app/(auth)/forgot-password/page.tsx for the Yes Planner web application.
 import { ForgotPasswordForm } from "@/features/auth/ForgotPasswordForm";
 import { getTextTranslator } from "@/lib/i18n-server";
 

@@ -1,3 +1,4 @@
+// Purpose: implements lib/vendors/services.ts for the Yes Planner web application.
 export const vendorServices = [
   "Photography",
   "Videography",

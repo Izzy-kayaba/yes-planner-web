@@ -1,4 +1,5 @@
 "use client";
+// Purpose: implements features/weddings/sections/ReportsSection.tsx for the Yes Planner web application.
 
 import dynamic from "next/dynamic";
 import { useLanguage } from "@/components/providers/LanguageProvider";

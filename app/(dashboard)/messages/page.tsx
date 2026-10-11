@@ -1,3 +1,4 @@
+// Purpose: implements app/(dashboard)/messages/page.tsx for the Yes Planner web application.
 import { PageHeader } from "@/components/ui/PageHeader";
 import { MessagesWorkspace } from "@/features/messages/MessagesWorkspace";
 import { requirePageRole } from "@/lib/auth/session";

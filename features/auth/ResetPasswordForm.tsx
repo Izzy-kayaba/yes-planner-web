@@ -1,4 +1,5 @@
 "use client";
+// Purpose: implements features/auth/ResetPasswordForm.tsx for the Yes Planner web application.
 
 import { useState, type FormEvent } from "react";
 import Link from "next/link";

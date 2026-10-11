@@ -1,4 +1,5 @@
 "use client";
+// Purpose: implements features/onboarding/WeddingOnboardingForm.tsx for the Yes Planner web application.
 
 import { useRouter } from "next/navigation";
 import { useEffect, useState, type FormEvent } from "react";

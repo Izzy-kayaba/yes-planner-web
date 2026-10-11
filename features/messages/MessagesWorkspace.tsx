@@ -1,4 +1,5 @@
 "use client";
+// Purpose: implements features/messages/MessagesWorkspace.tsx for the Yes Planner web application.
 
 import { ImageIcon, Search, Send } from "lucide-react";
 import Image from "next/image";

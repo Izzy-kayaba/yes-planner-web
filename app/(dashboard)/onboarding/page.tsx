@@ -1,3 +1,4 @@
+// Purpose: implements app/(dashboard)/onboarding/page.tsx for the Yes Planner web application.
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { PageHeader } from "@/components/ui/PageHeader";

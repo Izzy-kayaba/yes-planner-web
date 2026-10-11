@@ -1,4 +1,5 @@
 "use client";
+// Purpose: implements features/admin/AdminSearch.tsx for the Yes Planner web application.
 
 import { ArrowDownWideNarrow, Search, SlidersHorizontal } from "lucide-react";
 import type { FormEvent } from "react";

@@ -1,3 +1,4 @@
+// Purpose: implements tests/auth/country.test.mjs for the Yes Planner web application.
 import assert from "node:assert/strict";
 import test from "node:test";
 import { appendZaPath, normalizeCountry } from "../../lib/country.ts";

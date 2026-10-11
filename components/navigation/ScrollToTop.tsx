@@ -1,4 +1,5 @@
 "use client";
+// Purpose: implements components/navigation/ScrollToTop.tsx for the Yes Planner web application.
 
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";

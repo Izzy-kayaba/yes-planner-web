@@ -1,3 +1,4 @@
+// Purpose: implements app/api/v1/admin/vendor-claims/route.ts for the Yes Planner web application.
 import { ObjectId } from "mongodb";
 import { NextResponse } from "next/server";
 import { requirePlatformApiPermission } from "@/lib/auth/platform-admin";

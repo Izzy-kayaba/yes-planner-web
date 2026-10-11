@@ -1,3 +1,4 @@
+// Purpose: implements lib/vendors/claims.ts for the Yes Planner web application.
 import "server-only";
 
 import { ObjectId } from "mongodb";

@@ -1,4 +1,5 @@
 "use client";
+// Purpose: implements components/providers/LanguageProvider.tsx for the Yes Planner web application.
 
 import { NextIntlClientProvider, useTranslations } from "next-intl";
 import {

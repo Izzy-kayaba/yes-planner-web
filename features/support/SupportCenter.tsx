@@ -1,4 +1,5 @@
 "use client";
+// Purpose: implements features/support/SupportCenter.tsx for the Yes Planner web application.
 
 import { useEffect, useState } from "react";
 import { toast } from "sonner";

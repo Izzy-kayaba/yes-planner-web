@@ -1,3 +1,4 @@
+// Purpose: implements app/(auth)/complete-profile/page.tsx for the Yes Planner web application.
 import { redirect } from "next/navigation";
 import { AuthHeading } from "@/features/auth/AuthHeading";
 import { ProfileCompletionForm } from "@/features/auth/ProfileCompletionForm";

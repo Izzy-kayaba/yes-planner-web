@@ -1,3 +1,4 @@
+// Purpose: implements features/weddings/MetricGrid.tsx for the Yes Planner web application.
 import { StatCard } from "@/components/ui/StatCard";
 
 export interface WeddingMetric {

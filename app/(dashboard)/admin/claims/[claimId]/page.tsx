@@ -1,3 +1,4 @@
+// Purpose: implements app/(dashboard)/admin/claims/[claimId]/page.tsx for the Yes Planner web application.
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ClaimReviewPanel } from "@/features/admin/ClaimReviewPanel";

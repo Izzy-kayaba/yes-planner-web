@@ -1,3 +1,4 @@
+// Purpose: implements app/(dashboard)/layout.tsx for the Yes Planner web application.
 import type { ReactNode } from "react";
 import { AppShell } from "@/components/layout/AppShell";
 import { requirePageRole } from "@/lib/auth/session";

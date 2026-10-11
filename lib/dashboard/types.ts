@@ -1,3 +1,4 @@
+// Purpose: implements lib/dashboard/types.ts for the Yes Planner web application.
 import type { PlatformRole } from "@/lib/auth/roles";
 
 export type WeddingProfile = {
