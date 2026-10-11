@@ -11,7 +11,7 @@ This documentation distinguishes **what the application does today** from **idea
 - [Testing](development/TESTING.md) describes the one-command checks and browser suites.
 - [API conventions](api/API_CONVENTIONS.md) explains authentication, pagination, and errors; the [endpoint reference](api/ENDPOINTS.md) documents every implemented HTTP route.
 - [Security model](security/SECURITY_MODEL.md) describes the current access boundary.
-- [Environments](operations/ENVIRONMENTS.md) explains configuration and safe database script use.
+- [Environments](operations/ENVIRONMENTS.md) explains configuration and safe database script use. [Script operations](operations/SCRIPTS.md) documents every runnable project script.
 
 ## Documentation map
 
@@ -58,7 +58,7 @@ This documentation distinguishes **what the application does today** from **idea
 - [Endpoint reference](api/ENDPOINTS.md), [API conventions](api/API_CONVENTIONS.md), [error handling](api/ERROR_HANDLING.md), [versioning](api/VERSIONING.md)
 - [Security model](security/SECURITY_MODEL.md), [permission matrix](security/PERMISSION_MATRIX.md), [data access](security/DATA_ACCESS.md), [threat model](security/THREAT_MODEL.md)
 - [Platform staff roles](security/PLATFORM_ROLES.md), [administrative access](security/ADMIN_ACCESS.md)
-- [Environments](operations/ENVIRONMENTS.md), [deployment](operations/DEPLOYMENT.md), [observability](operations/OBSERVABILITY.md), [backup and recovery](operations/BACKUP_RECOVERY.md), [incident response](operations/INCIDENT_RESPONSE.md), [media roadmap](operations/MEDIA_STORAGE_ROADMAP.md)
+- [Environments](operations/ENVIRONMENTS.md), [Script operations](operations/SCRIPTS.md), [deployment](operations/DEPLOYMENT.md), [observability](operations/OBSERVABILITY.md), [backup and recovery](operations/BACKUP_RECOVERY.md), [incident response](operations/INCIDENT_RESPONSE.md), [media roadmap](operations/MEDIA_STORAGE_ROADMAP.md)
 
 ### Development
 

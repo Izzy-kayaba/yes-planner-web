@@ -4,7 +4,7 @@
 
 Server-rendered administration pages call `requirePlatformPagePermission`. Administrative API routes call `requirePlatformApiPermission`, which returns `401` without a valid session and `403` when the session lacks the required persisted platform permission. The navigation in `AppShell` is only a user-interface filter.
 
-Permission lookup loads `platformRoles` from the Better Auth user record. The legacy `SystemAdmin` role is temporarily treated as `SuperAdmin`. Never trust permissions supplied by a request body or local storage.
+Permission lookup loads `platformRoles` from the Better Auth user record. The `SuperAdmin` permission set is granted only when that platform role is explicitly stored. Never trust permissions supplied by a request body or local storage.
 
 ## Data minimization
 

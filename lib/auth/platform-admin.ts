@@ -20,16 +20,12 @@ export type PlatformAccess = {
 export async function getPlatformAccess(session: AuthorizedSession): Promise<PlatformAccess> {
   const user = await mongoDb
     .collection("user")
-    .findOne({ email: session.user.email }, { projection: { platformRoles: 1, role: 1 } });
+    .findOne({ email: session.user.email }, { projection: { platformRoles: 1 } });
 
-  // Keep existing SystemAdmin accounts working as Super Admin during the role-model transition.
   const storedRoles = Array.isArray(user?.platformRoles)
     ? user.platformRoles.filter(isPlatformStaffRole)
     : [];
-  const roles =
-    session.user.role === "SystemAdmin" || user?.role === "SystemAdmin"
-      ? [...new Set<PlatformStaffRole>(["SuperAdmin", ...storedRoles])]
-      : [...new Set(storedRoles)];
+  const roles = [...new Set<PlatformStaffRole>(storedRoles)];
 
   return { roles, permissions: permissionsForPlatformRoles(roles) };
 }
