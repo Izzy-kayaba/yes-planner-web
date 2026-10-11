@@ -1,4 +1,5 @@
 "use client";
+// Purpose: implements features/admin/AdminSupportPanel.tsx for the Yes Planner web application.
 
 import { useState } from "react";
 import { toast } from "sonner";

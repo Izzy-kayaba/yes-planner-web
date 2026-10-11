@@ -1,3 +1,4 @@
+// Purpose: implements app/(dashboard)/admin/users/page.tsx for the Yes Planner web application.
 import type { Metadata } from "next";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { AdminUsersPanel } from "@/features/admin/AdminUsersPanel";

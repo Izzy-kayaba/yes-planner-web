@@ -1,4 +1,5 @@
 "use client";
+// Purpose: implements features/weddings/WeddingNav.tsx for the Yes Planner web application.
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";

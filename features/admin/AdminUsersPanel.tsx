@@ -1,4 +1,5 @@
 "use client";
+// Purpose: implements features/admin/AdminUsersPanel.tsx for the Yes Planner web application.
 
 import { useState } from "react";
 import { useLanguage } from "@/components/providers/LanguageProvider";

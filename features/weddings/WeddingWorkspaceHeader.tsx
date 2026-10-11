@@ -1,3 +1,4 @@
+// Purpose: implements features/weddings/WeddingWorkspaceHeader.tsx for the Yes Planner web application.
 import { currentWedding } from "@/lib/demo-data";
 import type { WeddingProfile } from "@/lib/dashboard/types";
 import { getTextTranslator } from "@/lib/i18n-server";

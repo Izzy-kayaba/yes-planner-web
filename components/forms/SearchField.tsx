@@ -1,4 +1,5 @@
 "use client";
+// Purpose: implements components/forms/SearchField.tsx for the Yes Planner web application.
 
 import { Search } from "lucide-react";
 import { useId } from "react";

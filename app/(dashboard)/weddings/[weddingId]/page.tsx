@@ -1,3 +1,4 @@
+// Purpose: implements app/(dashboard)/weddings/[weddingId]/page.tsx for the Yes Planner web application.
 import type { Metadata } from "next";
 import { AuthenticatedDashboardOverview } from "@/features/dashboard/AuthenticatedDashboardOverview";
 import { WeddingOverview } from "@/features/weddings/WeddingOverview";

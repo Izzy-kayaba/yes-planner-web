@@ -1,3 +1,4 @@
+// Purpose: implements app/(auth)/reset-password/page.tsx for the Yes Planner web application.
 import { ResetPasswordForm } from "@/features/auth/ResetPasswordForm";
 import { getTextTranslator } from "@/lib/i18n-server";
 

@@ -1,4 +1,5 @@
 "use client";
+// Purpose: implements components/layout/AppShell.tsx for the Yes Planner web application.
 
 import {
   Building2,

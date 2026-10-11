@@ -1,3 +1,4 @@
+// Purpose: implements scripts/check-file-lines.mjs for the Yes Planner web application.
 import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
 

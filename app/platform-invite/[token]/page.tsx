@@ -1,3 +1,4 @@
+// Purpose: implements app/platform-invite/[token]/page.tsx for the Yes Planner web application.
 import type { Metadata } from "next";
 import { PlatformInvitationAcceptance } from "@/features/admin/PlatformInvitationAcceptance";
 

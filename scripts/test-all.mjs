@@ -1,3 +1,4 @@
+// Purpose: implements scripts/test-all.mjs for the Yes Planner web application.
 import { spawnSync } from "node:child_process";
 
 const npm = process.platform === "win32" ? "npm.cmd" : "npm";

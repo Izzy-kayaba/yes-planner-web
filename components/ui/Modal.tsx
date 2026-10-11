@@ -1,4 +1,5 @@
 "use client";
+// Purpose: implements components/ui/Modal.tsx for the Yes Planner web application.
 
 import { X } from "lucide-react";
 import { useEffect, type ReactNode } from "react";

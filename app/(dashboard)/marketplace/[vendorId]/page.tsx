@@ -1,3 +1,4 @@
+// Purpose: implements app/(dashboard)/marketplace/[vendorId]/page.tsx for the Yes Planner web application.
 import { notFound } from "next/navigation";
 import { VendorPublicProfile } from "@/features/marketplace/VendorPublicProfile";
 import { requirePageRole } from "@/lib/auth/session";

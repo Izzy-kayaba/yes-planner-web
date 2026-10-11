@@ -1,4 +1,5 @@
 "use client";
+// Purpose: implements features/marketplace/LiveMarketplace.tsx for the Yes Planner web application.
 
 import { BadgeCheck, Search } from "lucide-react";
 import Image from "next/image";
@@ -12,6 +13,7 @@ import { YesSelect } from "@/components/ui/YesSelect";
 import { inferMoneyRange, moneyRangeLabel, vendorPriceRanges } from "@/lib/estimate-ranges";
 import { LIST_PAGE_SIZE, Pagination } from "@/components/ui/Pagination";
 import { countryOptions } from "@/lib/countries";
+import { formatVendorPriceRange } from "@/lib/vendors/pricing";
 
 export type MarketplaceVendor = {
   id: string;
@@ -57,6 +59,7 @@ export function LiveMarketplace({ vendors }: { vendors: MarketplaceVendor[] }) {
   );
 
   function priceLabel(vendor: MarketplaceVendor) {
+    // Prefer the profile's explicit range; fall back to the legacy catalogue range for older profiles.
     const range = vendorPriceRanges.find(
       (item) =>
         item.id ===
@@ -65,7 +68,11 @@ export function LiveMarketplace({ vendors }: { vendors: MarketplaceVendor[] }) {
     );
     if (!range) return text("Quote required");
     if (vendor.startingPriceMinMinor !== vendor.startingPriceMaxMinor) {
-      return `${displayMoney(vendor.startingPriceMinMinor)} – ${displayMoney(vendor.startingPriceMaxMinor)}`;
+      return formatVendorPriceRange(
+        vendor.startingPriceMinMinor,
+        vendor.startingPriceMaxMinor,
+        displayMoney,
+      );
     }
     return range
       ? moneyRangeLabel(range, displayMoney, t)

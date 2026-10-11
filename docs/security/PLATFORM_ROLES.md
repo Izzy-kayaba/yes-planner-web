@@ -17,7 +17,7 @@ The authoritative role-to-permission mapping lives in `lib/auth/platform-permiss
 
 ## Storage and compatibility
 
-Platform roles are stored in the server-side user's `platformRoles` array. They are not accepted during public registration and are never read from client-provided role fields. Legacy `SystemAdmin` accounts map to `SuperAdmin` while records are migrated.
+Platform roles are stored in the server-side user's `platformRoles` array. They are not accepted during public registration and are never read from client-provided role fields. A user must have an explicit `SuperAdmin` entry to receive Super Admin permissions.
 
 An account may retain its customer account type while also receiving internal platform access. Removing `SuperAdmin` restores the stored customer account type; it does not alter wedding ownership or organisation membership.
 

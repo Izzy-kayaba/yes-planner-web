@@ -1,3 +1,4 @@
+// Purpose: implements scripts/cleanup-orphaned-media.mjs for the Yes Planner web application.
 import { GridFSBucket, MongoClient } from "mongodb";
 import { databaseEnvironment, parseScriptArguments } from "./environment.mjs";
 

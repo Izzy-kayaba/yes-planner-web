@@ -1,3 +1,4 @@
+// Purpose: implements app/api/v1/admin/audit/route.ts for the Yes Planner web application.
 import { NextResponse } from "next/server";
 import { requirePlatformApiPermission } from "@/lib/auth/platform-admin";
 import { ensureMongoIndexes, mongoDb } from "@/lib/mongodb";

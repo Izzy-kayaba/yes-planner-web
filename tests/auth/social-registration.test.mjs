@@ -1,3 +1,4 @@
+// Purpose: implements tests/auth/social-registration.test.mjs for the Yes Planner web application.
 import assert from "node:assert/strict";
 import test from "node:test";
 import { isExistingGoogleRegistration } from "../../lib/auth/social-registration.ts";

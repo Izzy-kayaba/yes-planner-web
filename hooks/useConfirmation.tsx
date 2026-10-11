@@ -1,4 +1,5 @@
 "use client";
+// Purpose: implements hooks/useConfirmation.tsx for the Yes Planner web application.
 
 import { useCallback, useRef, useState } from "react";
 import { Button } from "@/components/ui/Button";

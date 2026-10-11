@@ -1,3 +1,4 @@
+// Purpose: implements lib/date-time.ts for the Yes Planner web application.
 import moment from "moment";
 import "moment/locale/fr";
 

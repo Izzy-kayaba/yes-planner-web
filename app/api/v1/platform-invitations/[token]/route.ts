@@ -1,3 +1,4 @@
+// Purpose: implements app/api/v1/platform-invitations/[token]/route.ts for the Yes Planner web application.
 import { createHash } from "node:crypto";
 import { ObjectId } from "mongodb";
 import { NextResponse } from "next/server";

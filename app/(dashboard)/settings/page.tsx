@@ -1,3 +1,4 @@
+// Purpose: implements app/(dashboard)/settings/page.tsx for the Yes Planner web application.
 import type { Metadata } from "next";
 import { SettingsPanel } from "@/features/settings/SettingsPanel";
 import { getTextTranslator } from "@/lib/i18n-server";

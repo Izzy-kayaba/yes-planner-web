@@ -1,3 +1,4 @@
+// Purpose: implements app/invite/[token]/page.tsx for the Yes Planner web application.
 import type { Metadata } from "next";
 import { RsvpExperience } from "@/features/guests/RsvpExperience";
 import { getTextTranslator } from "@/lib/i18n-server";

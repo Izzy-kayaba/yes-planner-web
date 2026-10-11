@@ -1,3 +1,4 @@
+// Purpose: implements app/(auth)/login/page.tsx for the Yes Planner web application.
 import type { Metadata } from "next";
 import { AuthForm } from "@/features/auth/AuthForm";
 import { AuthHeading } from "@/features/auth/AuthHeading";

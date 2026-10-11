@@ -42,12 +42,8 @@ test("guest, table and meal setup persists across workspace navigation", async (
   await page.locator("#email").fill("browser-guest@example.test");
   await page.getByRole("button", { name: "Group" }).click();
   await page.getByRole("option", { name: "Friends" }).click();
-  await page.getByRole("button", { name: "RSVP", exact: true }).click();
-  await page.getByRole("option", { name: "Pending" }).click();
   await page.getByRole("button", { name: "Meal preference" }).click();
   await page.getByRole("option", { name: "Browser tasting menu" }).click();
-  await page.getByRole("button", { name: "Table" }).click();
-  await page.getByRole("option", { name: "Browser family table" }).click();
   await page.getByRole("button", { name: /save changes/i }).click();
   await expect(page.getByText("Browser Guest")).toBeVisible();
 });

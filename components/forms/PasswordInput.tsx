@@ -1,4 +1,5 @@
 "use client";
+// Purpose: implements components/forms/PasswordInput.tsx for the Yes Planner web application.
 
 import { Eye, EyeOff } from "lucide-react";
 import { useId, useState, type InputHTMLAttributes } from "react";

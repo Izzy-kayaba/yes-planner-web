@@ -1,4 +1,5 @@
 "use client";
+// Purpose: implements features/guests/RsvpExperience.tsx for the Yes Planner web application.
 
 import { Check, Heart, X } from "lucide-react";
 import { useState } from "react";

@@ -1,3 +1,4 @@
+// Purpose: implements app/api/v1/admin/businesses/route.ts for the Yes Planner web application.
 import { NextResponse } from "next/server";
 import { requirePlatformApiPermission } from "@/lib/auth/platform-admin";
 import { listAdminBusinesses } from "@/lib/admin/directories";

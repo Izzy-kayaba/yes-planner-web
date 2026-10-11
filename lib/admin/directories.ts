@@ -1,3 +1,4 @@
+// Purpose: implements lib/admin/directories.ts for the Yes Planner web application.
 import "server-only";
 
 import type { ObjectId } from "mongodb";

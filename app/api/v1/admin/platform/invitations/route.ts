@@ -1,3 +1,4 @@
+// Purpose: implements app/api/v1/admin/platform/invitations/route.ts for the Yes Planner web application.
 import { randomBytes, createHash } from "node:crypto";
 import { NextResponse } from "next/server";
 import { z } from "zod";

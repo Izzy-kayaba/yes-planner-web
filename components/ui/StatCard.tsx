@@ -1,4 +1,5 @@
 "use client";
+// Purpose: implements components/ui/StatCard.tsx for the Yes Planner web application.
 
 import { TrendingUp } from "lucide-react";
 import { useLanguage } from "@/components/providers/LanguageProvider";

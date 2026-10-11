@@ -1,4 +1,5 @@
 "use client";
+// Purpose: implements features/settings/SettingsPanel.tsx for the Yes Planner web application.
 
 import {
   BellRing,
@@ -487,6 +488,7 @@ function PreferenceNotice({
 }
 
 function PreferenceList({ items, storageKey }: { items: Preference[]; storageKey: string }) {
+  // Store browser-only toggles separately by group so security and connection preferences cannot overwrite each other.
   const { text } = useLanguage();
   const key = `yes-planner-settings-${storageKey}`;
   const [enabled, setEnabled] = useState<Record<string, boolean>>({});
@@ -501,6 +503,7 @@ function PreferenceList({ items, storageKey }: { items: Preference[]; storageKey
   }, [key]);
 
   function updatePreference(item: Preference, value: boolean) {
+    // Persist immediately because these preferences are local presentation controls, not account permissions.
     setEnabled((current) => {
       const next = { ...current, [item.id]: value };
       window.localStorage.setItem(key, JSON.stringify(next));

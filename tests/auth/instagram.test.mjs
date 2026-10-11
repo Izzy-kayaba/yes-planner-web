@@ -1,3 +1,4 @@
+// Purpose: implements tests/auth/instagram.test.mjs for the Yes Planner web application.
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";

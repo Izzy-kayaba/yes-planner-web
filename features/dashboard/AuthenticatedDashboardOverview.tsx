@@ -1,4 +1,5 @@
 "use client";
+// Purpose: implements features/dashboard/AuthenticatedDashboardOverview.tsx for the Yes Planner web application.
 
 import Link from "next/link";
 import { useEffect, useState } from "react";

@@ -1,4 +1,5 @@
 "use client";
+// Purpose: implements components/ui/ActionButton.tsx for the Yes Planner web application.
 
 import { useState, type ButtonHTMLAttributes, type ReactNode } from "react";
 import { toast } from "sonner";

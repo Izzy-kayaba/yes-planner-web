@@ -8,7 +8,6 @@
     "admin:set": "node scripts/set-system-admin.mjs",
     "admin:role": "node scripts/manage-platform-role.mjs",
     "media:cleanup": "node scripts/cleanup-orphaned-media.mjs",
-    "migrate:user-model": "node scripts/migrate-user-model.mjs",
     "seed:vendors": "node scripts/seed-vendors.mjs",
     "check:lines": "node scripts/check-file-lines.mjs",
     "format": "prettier --write .",

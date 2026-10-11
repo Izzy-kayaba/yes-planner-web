@@ -1,4 +1,5 @@
 "use client";
+// Purpose: implements features/marketplace/Marketplace.tsx for the Yes Planner web application.
 
 import { useEffect, useMemo, useState } from "react";
 import { Heart, Search } from "lucide-react";

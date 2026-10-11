@@ -16,7 +16,7 @@ Platform administration is an internal Yes Planner workspace. It is separate fro
 
 ## Authorization boundaries
 
-`platformRoles` on the persisted user document are the source of platform staff authority. The browser receives filtered navigation for convenience, but every page and API checks permissions on the server. Better Auth's legacy `SystemAdmin` role remains mapped to `SuperAdmin` during migration.
+`platformRoles` on the persisted user document are the source of platform staff authority. The browser receives filtered navigation for convenience, but every page and API checks permissions on the server. Super Admin access requires an explicit `SuperAdmin` platform role.
 
 Platform staff permissions do not grant ownership of a couple's wedding. Administrative wedding listings deliberately minimize personal information. If future operational workflows need deeper access, add a specific permission, purpose limitation, audit event, and tests before exposing it.
 

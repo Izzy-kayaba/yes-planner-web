@@ -1,3 +1,4 @@
+// Purpose: implements lib/currency.ts for the Yes Planner web application.
 export type SupportedCurrency = "USD" | "ZAR";
 
 export const defaultCurrency: SupportedCurrency = "USD";

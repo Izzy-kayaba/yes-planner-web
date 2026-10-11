@@ -1,3 +1,4 @@
+// Purpose: implements components/forms/FieldLabel.tsx for the Yes Planner web application.
 import type { ReactNode } from "react";
 
 export function FieldLabel({

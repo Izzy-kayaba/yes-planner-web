@@ -1,3 +1,4 @@
+// Purpose: implements app/(auth)/layout.tsx for the Yes Planner web application.
 import type { ReactNode } from "react";
 import Link from "next/link";
 import { Brand } from "@/components/ui/Brand";

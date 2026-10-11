@@ -1,3 +1,4 @@
+// Purpose: implements tests/scripts/environment.test.mjs for the Yes Planner web application.
 import assert from "node:assert/strict";
 import test from "node:test";
 import { parseScriptArguments } from "../../scripts/environment.mjs";

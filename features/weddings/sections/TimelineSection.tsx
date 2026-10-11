@@ -1,4 +1,5 @@
 "use client";
+// Purpose: implements features/weddings/sections/TimelineSection.tsx for the Yes Planner web application.
 
 import moment from "moment";
 import { ChevronLeft, ChevronRight, Pencil, Plus, Trash2 } from "lucide-react";

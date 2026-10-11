@@ -1,3 +1,4 @@
+// Purpose: implements lib/country.ts for the Yes Planner web application.
 export function normalizeCountry(country: string | null | undefined) {
   const normalized = country?.trim().toUpperCase() ?? "";
   return normalized === "SA" ? "ZA" : normalized;

@@ -15,6 +15,7 @@ import { useCurrency } from "@/components/providers/CurrencyProvider";
 import { inferMoneyRange, vendorPriceRanges } from "@/lib/estimate-ranges";
 import { YesSelect } from "@/components/ui/YesSelect";
 import { countryOptions } from "@/lib/countries";
+import { validateVendorPriceRange } from "@/lib/vendors/pricing";
 
 export type VendorOnboardingValue = {
   businessName: string;
@@ -74,6 +75,7 @@ export function VendorOnboardingForm({
   accountType?: "Vendor" | "Venue";
   initialValue?: VendorOnboardingValue;
 }) {
+  // Keep venue defaults distinct from vendor defaults because venue accounts have a separate service boundary.
   const router = useRouter();
   const { language, text } = useLanguage();
   const { currency } = useCurrency();
@@ -95,6 +97,7 @@ export function VendorOnboardingForm({
   const [selectedBusinessProfileId, setSelectedBusinessProfileId] = useState("");
   const [claimsLoading, setClaimsLoading] = useState(false);
 
+  // Convert legacy range-based profiles into the new explicit minimum and maximum fields when editing.
   useEffect(() => {
     if ((process.env.NEXT_PUBLIC_DATA_SOURCE ?? "api") !== "api") return;
     const controller = new AbortController();
@@ -161,8 +164,13 @@ export function VendorOnboardingForm({
       toast.error(text("Select at least one service."));
       return;
     }
-    if (value.startingPriceMinMinor > value.startingPriceMaxMinor) {
-      toast.error(text("Minimum price cannot be greater than maximum price."));
+    // Reject an inverted range before sending it to the API so the user receives immediate feedback.
+    const priceValidation = validateVendorPriceRange(
+      value.startingPriceMinMinor,
+      value.startingPriceMaxMinor,
+    );
+    if (!priceValidation.valid) {
+      toast.error(text(priceValidation.message));
       return;
     }
     const startingPriceRangeKey =

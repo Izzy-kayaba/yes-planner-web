@@ -1,4 +1,5 @@
 "use client";
+// Purpose: implements features/weddings/sections/VendorsSection.tsx for the Yes Planner web application.
 
 import { Heart, Pencil, Plus, Trash2 } from "lucide-react";
 import { useState } from "react";

@@ -1,4 +1,5 @@
 "use client";
+// Purpose: implements components/forms/EntityDialog.tsx for the Yes Planner web application.
 
 import { useEffect, useState, type FormEvent } from "react";
 import { useLanguage } from "@/components/providers/LanguageProvider";

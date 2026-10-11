@@ -1,4 +1,5 @@
 "use client";
+// Purpose: implements components/forms/CharacterCount.tsx for the Yes Planner web application.
 
 import { useLanguage } from "@/components/providers/LanguageProvider";
 import { cn } from "@/lib/cn";

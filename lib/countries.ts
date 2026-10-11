@@ -1,3 +1,4 @@
+// Purpose: implements lib/countries.ts for the Yes Planner web application.
 import { getCountries } from "libphonenumber-js";
 
 export function countryOptions(locale: string) {

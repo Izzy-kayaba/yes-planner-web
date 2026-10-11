@@ -1,3 +1,4 @@
+// Purpose: implements app/(dashboard)/admin/platform/staff/page.tsx for the Yes Planner web application.
 import type { Metadata } from "next";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { AdminStaffPanel } from "@/features/admin/AdminStaffPanel";
@@ -33,7 +34,7 @@ export default async function AdminStaffPage() {
   let totalItems = 0;
   await ensureMongoIndexes();
   const platformUserFilter = {
-    $or: [{ platformRoles: { $exists: true, $ne: [] } }, { role: "SystemAdmin" }],
+    platformRoles: { $exists: true, $ne: [] },
   };
   totalItems = await users.countDocuments(platformUserFilter);
   accounts = await users
@@ -53,7 +54,6 @@ export default async function AdminStaffPage() {
         ...(Array.isArray(user.platformRoles)
           ? user.platformRoles.filter(isPlatformStaffRole)
           : []),
-        ...(user.role === "SystemAdmin" ? ["SuperAdmin" as const] : []),
       ]),
     ],
   }));
@@ -72,7 +72,7 @@ export default async function AdminStaffPage() {
         initialAccounts={items}
         initialPagination={paginatedResult(items, 1, pagination.pageSize, totalItems).pagination}
         canManageStaff={canManageStaff}
-      canCreateSuperAdmin={access.roles.includes("SuperAdmin")}
+        canCreateSuperAdmin={access.roles.includes("SuperAdmin")}
       />
     </div>
   );

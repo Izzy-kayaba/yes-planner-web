@@ -1,3 +1,4 @@
+// Purpose: implements app/api/v1/admin/platform/staff/route.ts for the Yes Planner web application.
 import { ObjectId, type Document, type Filter } from "mongodb";
 import { NextResponse } from "next/server";
 import { z } from "zod";
@@ -35,9 +36,7 @@ export async function GET(request: Request) {
   const filterByPlatformRole = platformRole && platformRole !== "all";
   await ensureMongoIndexes();
   const users = mongoDb.collection("user");
-  const filterClauses: Filter<Document>[] = [
-    { $or: [{ platformRoles: { $exists: true, $ne: [] } }, { role: "SystemAdmin" }] },
-  ];
+  const filterClauses: Filter<Document>[] = [{ platformRoles: { $exists: true, $ne: [] } }];
   if (search) {
     filterClauses.push({
       $or: [
@@ -50,11 +49,7 @@ export async function GET(request: Request) {
     });
   }
   if (filterByPlatformRole) {
-    filterClauses.push(
-      platformRole === "SuperAdmin"
-        ? { $or: [{ platformRoles: platformRole }, { role: "SystemAdmin" }] }
-        : { platformRoles: platformRole },
-    );
+    filterClauses.push({ platformRoles: platformRole });
   }
   const filter: Filter<Document> = filterClauses.length ? { $and: filterClauses } : {};
   const sortBy = searchParams.get("sort");
@@ -83,7 +78,6 @@ export async function GET(request: Request) {
             ...(Array.isArray(user.platformRoles)
               ? user.platformRoles.filter(isPlatformStaffRole)
               : []),
-            ...(user.role === "SystemAdmin" ? ["SuperAdmin" as const] : []),
           ]),
         ],
       })),
@@ -230,7 +224,7 @@ export async function PATCH(request: Request) {
 
   if (parsed.data.role === "SuperAdmin" && parsed.data.action === "revoke") {
     const superAdminCount = await users.countDocuments({
-      $or: [{ platformRoles: "SuperAdmin" }, { role: "SystemAdmin" }],
+      platformRoles: "SuperAdmin",
     });
     if (superAdminCount <= 1) {
       return NextResponse.json(

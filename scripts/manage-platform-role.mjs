@@ -1,3 +1,4 @@
+// Purpose: implements scripts/manage-platform-role.mjs for the Yes Planner web application.
 import { MongoClient } from "mongodb";
 import { databaseEnvironment, parseScriptArguments } from "./environment.mjs";
 
@@ -30,12 +31,12 @@ process.stdout.write(`Target environment: ${environment} (${databaseName})\n`);
 const client = new MongoClient(uri);
 try {
   const users = client.db(databaseName).collection("user");
-  const user = await users.findOne({ email }, { projection: { accountType: 1, role: 1 } });
+  const user = await users.findOne({ email }, { projection: { accountType: 1, platformRoles: 1 } });
   if (!user) throw new Error(`No Better Auth user found for ${email}.`);
 
   if (action === "revoke" && role === "SuperAdmin") {
     const activeAdmins = await users.countDocuments({
-      $or: [{ platformRoles: "SuperAdmin" }, { role: "SystemAdmin" }],
+      platformRoles: "SuperAdmin",
     });
     if (activeAdmins <= 1) throw new Error("The last Super Admin cannot be removed.");
   }

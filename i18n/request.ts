@@ -1,3 +1,4 @@
+// Purpose: implements i18n/request.ts for the Yes Planner web application.
 import { cookies } from "next/headers";
 import { getRequestConfig } from "next-intl/server";
 import { intlMessages, isSupportedLanguage, languageCookieName, type Language } from "@/lib/i18n";

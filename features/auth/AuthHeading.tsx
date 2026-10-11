@@ -1,4 +1,5 @@
 "use client";
+// Purpose: implements features/auth/AuthHeading.tsx for the Yes Planner web application.
 
 import { LanguageSwitcher } from "@/components/i18n/LanguageSwitcher";
 import { useLanguage } from "@/components/providers/LanguageProvider";

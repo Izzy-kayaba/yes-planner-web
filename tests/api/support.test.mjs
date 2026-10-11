@@ -1,3 +1,4 @@
+// Purpose: implements tests/api/support.test.mjs for the Yes Planner web application.
 import assert from "node:assert/strict";
 import test from "node:test";
 import {

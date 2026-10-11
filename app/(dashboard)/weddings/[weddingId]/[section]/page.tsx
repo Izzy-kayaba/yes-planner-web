@@ -1,3 +1,4 @@
+// Purpose: implements app/(dashboard)/weddings/[weddingId]/[section]/page.tsx for the Yes Planner web application.
 import type { Metadata } from "next";
 import { WeddingSection } from "@/features/weddings/WeddingSection";
 import { getTextTranslator } from "@/lib/i18n-server";

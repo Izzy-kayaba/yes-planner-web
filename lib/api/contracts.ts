@@ -1,3 +1,4 @@
+// Purpose: implements lib/api/contracts.ts for the Yes Planner web application.
 export type EntityId = string | number;
 
 export type WorkspaceModule =

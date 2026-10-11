@@ -1,3 +1,4 @@
+// Purpose: implements app/(dashboard)/weddings/[weddingId]/layout.tsx for the Yes Planner web application.
 import type { ReactNode } from "react";
 import { notFound } from "next/navigation";
 import { WeddingNav } from "@/features/weddings/WeddingNav";

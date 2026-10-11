@@ -1,4 +1,5 @@
 "use client";
+// Purpose: implements components/navigation/BackButton.tsx for the Yes Planner web application.
 
 import { ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";

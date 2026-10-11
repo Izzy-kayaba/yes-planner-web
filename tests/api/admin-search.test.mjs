@@ -1,3 +1,4 @@
+// Purpose: implements tests/api/admin-search.test.mjs for the Yes Planner web application.
 import assert from "node:assert/strict";
 import test from "node:test";
 import { escapedAdminSearch, parseAdminSearch } from "../../lib/admin/search.ts";

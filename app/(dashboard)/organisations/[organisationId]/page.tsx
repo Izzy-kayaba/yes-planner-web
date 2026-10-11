@@ -1,3 +1,4 @@
+// Purpose: implements app/(dashboard)/organisations/[organisationId]/page.tsx for the Yes Planner web application.
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";

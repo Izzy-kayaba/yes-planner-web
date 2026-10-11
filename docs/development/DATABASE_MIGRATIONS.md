@@ -1,6 +1,6 @@
-# Database migrations
+# Database changes
 
-Database migrations are explicit Node scripts under `scripts/`. They are not run automatically when the web application starts.
+Current database-changing commands are documented in [Script operations](../operations/SCRIPTS.md).
 
 ## Safe process
 
@@ -10,6 +10,4 @@ Database migrations are explicit Node scripts under `scripts/`. They are not run
 4. Check the printed target environment and database name before proceeding.
 5. Verify the resulting documents and application behavior.
 
-The user-model migration converts legacy Planner users to Vendor accounts with the Wedding planning service and copies profile/collaboration data. The vendor seeder upserts profile data from a JSON file. The media cleanup script deletes old unreferenced GridFS images. These scripts are not interchangeable and each has different data effects.
-
-The migration scripts do not currently provide a general automatic rollback. Restore from a verified backup if a migration produces incorrect data.
+Operational scripts are not interchangeable and each has different data effects. Follow the script-specific backup and environment guidance before changing a database.
