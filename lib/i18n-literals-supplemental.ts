@@ -200,8 +200,7 @@ export const frenchSupplementalLiterals: Record<string, string> = {
   "Wedding location": "Localisation du mariage",
   "City or area": "Ville ou quartier",
   "Wedding details saved.": "Détails du mariage enregistrés.",
-  "Wedding details could not be saved.":
-    "Les détails du mariage n'ont pas pu être enregistrés.",
+  "Wedding details could not be saved.": "Les détails du mariage n'ont pas pu être enregistrés.",
   "Save and continue": "Enregistrer et continuer",
   "Log out": "Se déconnecter",
   "About you": "À propos de vous",
@@ -465,8 +464,6 @@ export const frenchSupplementalLiterals: Record<string, string> = {
   "Verification email could not be sent.": "Impossible d’envoyer l’e-mail de vérification.",
   "Verification email sent. Check your inbox.":
     "E-mail de vérification envoyé. Consultez votre boîte de réception.",
-  "Test email sent. Check your inbox.":
-    "E-mail de test envoyé. Consultez votre boîte de réception.",
   "Sign-in providers": "Méthodes de connexion",
   "Password changed.": "Mot de passe modifié.",
   "Use your connected provider or password to sign in.":

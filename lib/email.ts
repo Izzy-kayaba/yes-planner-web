@@ -5,8 +5,20 @@ const accentColor = /^#[0-9a-fA-F]{6}$/.test(process.env.EMAIL_ACCENT_COLOR ?? "
   ? process.env.EMAIL_ACCENT_COLOR!
   : "#7a3348";
 
+// Resend accepts either a plain address or a display name followed by an address.
+const emailAddressPattern = /^[^\s<>@]+@[^\s<>@]+\.[^\s<>@]+$/;
+
+function isValidSender(value: string | undefined) {
+  if (!value?.trim()) return false;
+  const sender = value.trim();
+  const namedSender = sender.match(/^.+<([^<>]+)>$/);
+  const address = namedSender?.[1]?.trim() ?? sender;
+  if (/your(?:-verified)?-?domain\.com|yourdomain\.com/i.test(address)) return false;
+  return emailAddressPattern.test(address);
+}
+
 export function isEmailConfigured() {
-  return Boolean(process.env.RESEND_API_KEY && process.env.AUTH_EMAIL_FROM);
+  return Boolean(process.env.RESEND_API_KEY && isValidSender(process.env.AUTH_EMAIL_FROM));
 }
 
 function escapeHtml(value: string) {
@@ -26,6 +38,11 @@ async function sendEmail(to: string, subject: string, text: string, html: string
   const apiKey = process.env.RESEND_API_KEY;
   const from = process.env.AUTH_EMAIL_FROM;
   if (!apiKey || !from) throw new Error("Resend email delivery is not configured.");
+  if (!isValidSender(from)) {
+    throw new Error(
+      'AUTH_EMAIL_FROM must use a verified sender formatted as "email@example.com" or "Name <email@example.com>".',
+    );
+  }
   if (!to) throw new Error("Email delivery requires a recipient address.");
 
   const response = await fetch("https://api.resend.com/emails", {
