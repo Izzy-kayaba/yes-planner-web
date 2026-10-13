@@ -23,12 +23,12 @@ Use `--env production` only after confirming the printed database target and tak
 
 ## Administration and data operations
 
-| Command         | How to run                                                                      | Purpose and cautions                                                                                                                                  |
-| --------------- | ------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `admin:set`     | `npm.cmd run admin:set -- admin@example.com --env development`                  | Grants the explicit `SuperAdmin` platform role to an existing Better Auth user. It does not create an account.                                        |
-| `admin:role`    | `npm.cmd run admin:role -- grant Support support@example.com --env development` | Grants or revokes one platform staff role. Supported roles are `SuperAdmin`, `PlatformAdmin`, `Support`, `Verification`, `Operations`, and `Finance`. |
-| `media:cleanup` | `npm.cmd run media:cleanup -- --env development`                                | Deletes vendor GridFS image files older than 24 hours that are not referenced by a vendor profile. Back up production before use.                     |
-| `seed:vendors`  | `npm.cmd run seed:vendors -- --env development`                                 | Upserts seeded vendor profiles from `data.json`, or from a supplied JSON path. Review the input file before running it.                               |
+| Command         | How to run                                                                      | Purpose and cautions                                                                                                                                                                                                                                    |
+| --------------- | ------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `admin:set`     | `npm.cmd run admin:set -- admin@example.com --env development`                  | Grants the explicit `SuperAdmin` platform role to an existing Better Auth user. It does not create an account.                                                                                                                                          |
+| `admin:role`    | `npm.cmd run admin:role -- grant Support support@example.com --env development` | Grants or revokes one platform staff role. Supported roles are `SuperAdmin`, `PlatformAdmin`, `Support`, `Verification`, `Operations`, and `Finance`.                                                                                                   |
+| `media:cleanup` | `npm.cmd run media:cleanup -- --env development`                                | Deletes vendor GridFS image files older than 24 hours that are not referenced by a vendor profile. Back up production before use.                                                                                                                       |
+| `seed:vendors`  | `npm.cmd run seed:vendors -- --env development`                                 | Upserts seeded vendor profiles from `data.json`, or from a supplied JSON path. If a record has an explicit `logoSourceUrl`, it downloads and stores the approved JPG, PNG, WebP, or SVG logo as public profile media. Review sources before running it. |
 
 Platform authority now comes only from the stored `platformRoles` array. Do not infer platform access from an account's customer-facing role field.
 
@@ -57,3 +57,13 @@ Platform authority now comes only from the stored `platformRoles` array. Do not 
 - `scripts/check-file-lines.mjs` implements `check:lines`.
 - `scripts/build-demo.mjs` implements `build:demo`.
 - `scripts/set-system-admin.mjs`, `scripts/manage-platform-role.mjs`, `scripts/cleanup-orphaned-media.mjs`, and `scripts/seed-vendors.mjs` implement the operational commands listed above.
+
+### Seeded business logos
+
+Add an explicit HTTPS image URL to a vendor record before seeding:
+
+```json
+"logoSourceUrl": "https://example.com/path/to/approved-logo.png"
+```
+
+The seed command accepts only JPG, PNG, WebP, or SVG files up to 5 MB. It records the source URL, stores the image in the existing public vendor-media collection, and writes the resulting `/api/v1/media/...` URL into `profileImage`. Re-running the command with unchanged input leaves unchanged records alone and reports them as `Matched without changes`. It does not scrape arbitrary page HTML or use a website favicon automatically. A platform operator must review and approve each direct logo URL before running the seed command.

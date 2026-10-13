@@ -9,6 +9,29 @@ import { parsePagination } from "@/lib/api/pagination";
 import { listPendingVendorClaims } from "@/lib/vendors/claims";
 import { parseAdminSearch } from "@/lib/admin/search";
 
+// Transfer seeded public images to the verified business owner so they can later replace or remove them.
+async function transferSeededMediaOwnership(
+  seededListing: Record<string, unknown>,
+  claimantUserId: string,
+) {
+  const urls = [
+    seededListing.profileImage,
+    ...(Array.isArray(seededListing.portfolioImages) ? seededListing.portfolioImages : []),
+  ]
+    .filter((value): value is string => typeof value === "string")
+    .map((value) => value.match(/^\/api\/v1\/media\/([a-f0-9]{24})$/i)?.[1])
+    .filter((value): value is string => Boolean(value));
+  if (!urls.length) return;
+  await mongoDb.collection("vendorMedia.files").updateMany(
+    {
+      _id: { $in: urls.map((value) => new ObjectId(value)) },
+      "metadata.visibility": "public-vendor-profile",
+      "metadata.ownerUserId": null,
+    },
+    { $set: { "metadata.ownerUserId": claimantUserId } },
+  );
+}
+
 export async function GET(request: Request) {
   const authorization = await requirePlatformApiPermission(request.headers, "verification.view");
   if (authorization.error) return authorization.error;
@@ -90,7 +113,11 @@ export async function PATCH(request: Request) {
         "website",
         "instagramHandle",
         "startingPriceMinor",
+        "startingPriceMinMinor",
+        "startingPriceMaxMinor",
         "startingPriceRangeKey",
+        "profileImage",
+        "logoSourceUrl",
       ] as const;
       const missingFields = Object.fromEntries(
         profileFields.flatMap((field) => {
@@ -134,6 +161,7 @@ export async function PATCH(request: Request) {
           { message: "The claimant profile changed during review. Refresh and retry." },
           { status: 409 },
         );
+      await transferSeededMediaOwnership(seededListing, claimantUserId);
       await mongoDb.collection("vendorProfiles").deleteOne({
         _id: seededListing._id,
         seeded: true,
@@ -162,6 +190,7 @@ export async function PATCH(request: Request) {
           { message: "The listing has already been claimed." },
           { status: 409 },
         );
+      await transferSeededMediaOwnership(seededListing, claimantUserId);
     }
   }
   await mongoDb
