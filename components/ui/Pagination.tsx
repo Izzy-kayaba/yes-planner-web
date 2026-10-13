@@ -4,7 +4,7 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useLanguage } from "@/components/providers/LanguageProvider";
 
-export const LIST_PAGE_SIZE = 48;
+export const LIST_PAGE_SIZE = 24;
 
 export function Pagination({
   page,

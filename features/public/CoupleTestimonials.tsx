@@ -33,7 +33,7 @@ export function CoupleTestimonials() {
   useEffect(() => {
     const timer = window.setInterval(
       () => setActive((value) => (value + 1) % testimonials.length),
-      3_000,
+      5_000,
     );
     return () => window.clearInterval(timer);
   }, []);

@@ -17,7 +17,7 @@
     grid-template-columns: repeat(2, 1fr);
   }
   .vendor-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, 1fr);
   }
   .vendor-lineup {
     grid-template-columns: repeat(2, 1fr);
@@ -297,10 +297,12 @@
     display: none;
   }
   .vendor-lineup,
-  .vendor-grid,
   .seating-grid,
   .notes-grid {
     grid-template-columns: 1fr;
+  }
+  .vendor-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
   .table-toolbar {
     align-items: stretch;
