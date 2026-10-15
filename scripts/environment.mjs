@@ -25,12 +25,14 @@ function readEnvironment(filePath) {
 
 // Read only the files for the environment the operator selected. This prevents
 // a missing production setting from silently falling back to local credentials.
-function loadEnvironment(environment) {
+export function loadEnvironment(environment) {
   const root = process.cwd();
-  const production = environment === "production";
-  const candidates = production
-    ? [".env.production.local", ".env.production"]
-    : [".env.development.local", ".env.local", ".env.development", ".env"];
+  const candidatesByEnvironment = {
+    development: [".env.development.local", ".env.local", ".env.development", ".env"],
+    staging: [".env.staging.local", ".env.staging"],
+    production: [".env.production.local", ".env.production"],
+  };
+  const candidates = candidatesByEnvironment[environment];
   for (const fileName of candidates) {
     const values = readEnvironment(path.resolve(root, fileName));
     for (const [key, value] of Object.entries(values)) {
@@ -38,7 +40,7 @@ function loadEnvironment(environment) {
     }
   }
   return {
-    production,
+    environment,
     environmentFiles: candidates.filter((file) => fs.existsSync(path.resolve(root, file))),
   };
 }
@@ -55,7 +57,7 @@ export function parseScriptArguments(args) {
     if (argument === "--env") {
       if (environmentWasSelected || index + 1 >= args.length) {
         throw new Error(
-          "Select exactly one environment with --env development or --env production.",
+          "Select exactly one environment with --env development, --env staging, or --env production.",
         );
       }
       environment = args[index + 1];
@@ -64,7 +66,7 @@ export function parseScriptArguments(args) {
     } else if (argument.startsWith("--env=")) {
       if (environmentWasSelected) {
         throw new Error(
-          "Select exactly one environment with --env development or --env production.",
+          "Select exactly one environment with --env development, --env staging, or --env production.",
         );
       }
       environment = argument.slice("--env=".length);
@@ -75,10 +77,14 @@ export function parseScriptArguments(args) {
   }
 
   if (!environmentWasSelected) {
-    throw new Error("Choose the database target with --env development or --env production.");
+    throw new Error(
+      "Choose the database target with --env development, --env staging, or --env production.",
+    );
   }
-  if (environment !== "development" && environment !== "production") {
-    throw new Error("Choose an environment with --env development or --env production.");
+  if (!["development", "staging", "production"].includes(environment)) {
+    throw new Error(
+      "Choose an environment with --env development, --env staging, or --env production.",
+    );
   }
 
   return { environment, positional };
@@ -86,11 +92,13 @@ export function parseScriptArguments(args) {
 
 // Select the database only from the chosen environment's dedicated variables.
 export function databaseEnvironment(environment) {
-  if (environment !== "development" && environment !== "production") {
-    throw new Error("Choose an environment with --env development or --env production.");
+  if (!["development", "staging", "production"].includes(environment)) {
+    throw new Error(
+      "Choose an environment with --env development, --env staging, or --env production.",
+    );
   }
   loadEnvironment(environment);
-  const prefix = environment === "production" ? "MONGODB_PRODUCTION" : "MONGODB_DEVELOPMENT";
+  const prefix = `MONGODB_${environment.toUpperCase()}`;
   const uri = process.env[`${prefix}_URI`];
   const databaseName = process.env[`${prefix}_DATABASE`];
   if (!uri || !databaseName) {

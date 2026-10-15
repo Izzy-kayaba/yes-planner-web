@@ -8,9 +8,10 @@ Database-changing commands require an explicit environment:
 
 ```powershell
 npm.cmd run <command> -- --env development
+npm.cmd run <command> -- --env staging
 ```
 
-Use `--env production` only after confirming the printed database target and taking a verified backup. Development commands read `.env.development.local`, `.env.local`, `.env.development`, or `.env`; production commands require the dedicated production MongoDB settings. Never place credentials in this document.
+Use `--env production` only after confirming the printed database target and taking a verified backup. Staging commands read `.env.staging.local` or `.env.staging`; production commands read `.env.production.local` or `.env.production`; development commands read `.env.development.local`, `.env.local`, `.env.development`, or `.env`. Never place credentials in this document.
 
 ## Application commands
 
@@ -23,12 +24,12 @@ Use `--env production` only after confirming the printed database target and tak
 
 ## Administration and data operations
 
-| Command         | How to run                                                                      | Purpose and cautions                                                                                                                                                                                                                                    |
-| --------------- | ------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `admin:set`     | `npm.cmd run admin:set -- admin@example.com --env development`                  | Grants the explicit `SuperAdmin` platform role to an existing Better Auth user. It does not create an account.                                                                                                                                          |
-| `admin:role`    | `npm.cmd run admin:role -- grant Support support@example.com --env development` | Grants or revokes one platform staff role. Supported roles are `SuperAdmin`, `PlatformAdmin`, `Support`, `Verification`, `Operations`, and `Finance`.                                                                                                   |
-| `media:cleanup` | `npm.cmd run media:cleanup -- --env development`                                | Deletes vendor GridFS image files older than 24 hours that are not referenced by a vendor profile. Back up production before use.                                                                                                                       |
-| `seed:vendors`  | `npm.cmd run seed:vendors -- --env development`                                 | Upserts seeded vendor profiles from `data.json`, or from a supplied JSON path. If a record has an explicit `logoSourceUrl`, it downloads and stores the approved JPG, PNG, WebP, or SVG logo as public profile media. Review sources before running it. |
+| Command         | How to run                                                                      | Purpose and cautions                                                                                                                                                                                                                                                                                                                                          |
+| --------------- | ------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `admin:set`     | `npm.cmd run admin:set -- admin@example.com --env development`                  | Grants the explicit `SuperAdmin` platform role to an existing Better Auth user. It does not create an account.                                                                                                                                                                                                                                                |
+| `admin:role`    | `npm.cmd run admin:role -- grant Support support@example.com --env development` | Grants or revokes one platform staff role. Supported roles are `SuperAdmin`, `PlatformAdmin`, `Support`, `Verification`, `Operations`, and `Finance`.                                                                                                                                                                                                         |
+| `media:cleanup` | `npm.cmd run media:cleanup -- --env development`                                | Deletes vendor GridFS image files older than 24 hours that are not referenced by a vendor profile. Back up production before use.                                                                                                                                                                                                                             |
+| `seed:vendors`  | `npm.cmd run seed:vendors -- --env development`                                 | Upserts seeded vendor profiles from `data.json`, or from a supplied JSON path. Replace `development` with `staging` or `production` only after checking the printed database target. If a record has an explicit `logoSourceUrl`, it downloads and stores the approved JPG, PNG, WebP, or SVG logo as public profile media. Review sources before running it. |
 
 Platform authority now comes only from the stored `platformRoles` array. Do not infer platform access from an account's customer-facing role field.
 

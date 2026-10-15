@@ -21,7 +21,7 @@ if (
   !email
 ) {
   throw new Error(
-    "Usage: npm run admin:role -- <grant|revoke> <SuperAdmin|PlatformAdmin|Support|Verification|Operations|Finance> <email> --env <development|production>",
+    "Usage: npm run admin:role -- <grant|revoke> <SuperAdmin|PlatformAdmin|Support|Verification|Operations|Finance> <email> --env <development|staging|production>",
   );
 }
 
