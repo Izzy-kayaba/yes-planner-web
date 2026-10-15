@@ -28,6 +28,9 @@ export function CurrencyProvider({ children }: { children: ReactNode }) {
       headers: {
         "x-yes-locale": navigator.language,
         "x-yes-time-zone": timeZone,
+        ...(window.location.pathname === "/za" || window.location.pathname.startsWith("/za/")
+          ? { "x-country-code": "ZA" }
+          : {}),
       },
     })
       .then(async (response) => {
