@@ -34,7 +34,7 @@ export async function recordAdminAuditEvent(event: AuditEvent) {
     .collection("user")
     .findOne(
       { id: event.actorUserId },
-      { projection: { platformRoles: 1, role: 1, accountType: 1 } },
+      { projection: { name: 1, email: 1, platformRoles: 1, role: 1, accountType: 1 } },
     );
   const actorRole = Array.isArray(actor?.platformRoles)
     ? String(actor.platformRoles[0] ?? "platform_staff")
@@ -48,7 +48,13 @@ export async function recordAdminAuditEvent(event: AuditEvent) {
     occurred_at: occurredAt,
     recorded_at: recordedAt,
     event_type: eventType,
-    actor: { id: event.actorUserId, type: "human", role: actorRole },
+    actor: {
+      id: event.actorUserId,
+      type: "human",
+      role: actorRole,
+      name: String(actor?.name ?? ""),
+      email: String(actor?.email ?? ""),
+    },
     action,
     resource: { type: event.resourceType, id: event.resourceId ?? "" },
     changes: event.changes ?? {},

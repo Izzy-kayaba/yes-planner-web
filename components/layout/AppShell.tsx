@@ -132,6 +132,14 @@ function matchesNavigation(pathname: string, href: string, siblings: readonly { 
   return activeMatch.href === href;
 }
 
+// Sidebar definitions use the app's internal paths while South African pages expose a /za prefix.
+// Compare the internal route so regional URLs keep the same active navigation state.
+function normalizeNavigationPath(pathname: string) {
+  const normalized = pathname.replace(/\/$/, "") || "/";
+  if (normalized === "/za") return "/";
+  return normalized.startsWith("/za/") ? normalized.slice("/za".length) : normalized;
+}
+
 export function AppShell({
   children,
   shellData,
@@ -144,6 +152,7 @@ export function AppShell({
   platformPermissions?: readonly PlatformPermission[];
 }) {
   const pathname = usePathname();
+  const navigationPathname = normalizeNavigationPath(pathname);
   const router = useRouter();
   const { language, t, text } = useLanguage();
   const { resolvedTheme, setTheme } = useTheme();
@@ -256,7 +265,11 @@ export function AppShell({
             <>
               <p className="nav-label">{t("nav.adminSection")}</p>
               {resolvedAdminNavigation.map((item) => {
-                const active = matchesNavigation(pathname, item.href, resolvedAdminNavigation);
+                const active = matchesNavigation(
+                  navigationPathname,
+                  item.href,
+                  resolvedAdminNavigation,
+                );
                 const Icon = adminIcons[item.href];
                 return (
                   <Link
@@ -279,7 +292,7 @@ export function AppShell({
             <>
               <p className="nav-label">{t("nav.workspace")}</p>
               {resolvedNavigation.map((item) => {
-                const active = matchesNavigation(pathname, item.href, resolvedNavigation);
+                const active = matchesNavigation(navigationPathname, item.href, resolvedNavigation);
                 const Icon = item.icon;
                 return (
                   <Link

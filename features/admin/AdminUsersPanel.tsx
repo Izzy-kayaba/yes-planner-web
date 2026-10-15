@@ -195,19 +195,19 @@ export function AdminUsersPanel({
       <div className="request-list">
         {users.length ? (
           users.map((user) => (
-            <div key={user.id} className="py-2">
+            <div className="admin-user-row py-2" key={user.id}>
               <span className="avatar">{getInitials(user.name)}</span>
               <p>
-                <strong>{user.name}</strong>
+                <strong className="text-base">{user.name}</strong>
                 <small>{user.email}</small>
               </p>
               <StatusPill tone={user.role === "SystemAdmin" ? "rose" : "neutral"}>
                 {user.role}
               </StatusPill>
               {canManage && (
-                <div className="ml-auto flex gap-2 max-sm:col-span-full max-sm:ml-12 max-sm:pb-3">
+                <div className="admin-user-actions ml-auto flex gap-2">
                   <Button
-                    className="px-3"
+                    className="size-9 min-h-9 px-0"
                     type="button"
                     variant="secondary"
                     onClick={() => void openEditor(user)}
@@ -215,7 +215,7 @@ export function AdminUsersPanel({
                     <Pencil size={15} />
                   </Button>
                   <Button
-                    className="px-3"
+                    className="size-9 min-h-9 px-0"
                     type="button"
                     aria-label={text("Delete")}
                     variant="blush"
