@@ -27,6 +27,7 @@ export function businessMetadataRow(document: {
   businessName?: unknown;
   services?: unknown;
   serviceArea?: unknown;
+  countryCode?: unknown;
   published?: unknown;
   claimed?: unknown;
   ownerUserId?: unknown;
@@ -41,6 +42,7 @@ export function businessMetadataRow(document: {
       String(document.businessName ?? ""),
       services.join(", "),
       String(document.serviceArea ?? ""),
+      String(document.countryCode ?? ""),
       document.published === true ? "Published" : "Draft",
       document.claimed === true || (Boolean(document.ownerUserId) && document.seeded !== true)
         ? "Claimed"

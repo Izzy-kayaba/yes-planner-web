@@ -1,14 +1,22 @@
 "use client";
 // Purpose: implements features/admin/AdminMetadataPanel.tsx for the Yes Planner web application.
 
-import { BadgeCheck, CircleDashed, CircleCheck } from "lucide-react";
+import { BadgeCheck, CircleDashed, CircleCheck, Pencil, Plus, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { AdminSearch } from "@/features/admin/AdminSearch";
 import { toast } from "sonner";
 import { useLanguage } from "@/components/providers/LanguageProvider";
 import { Pagination } from "@/components/ui/Pagination";
+import { Button } from "@/components/ui/Button";
+import {
+  EntityDialog,
+  type EntityField,
+  type EntityFormValue,
+} from "@/components/forms/EntityDialog";
 import { StatusPill } from "@/components/ui/StatusPill";
 import { apiRequest } from "@/lib/api/client";
+import { useConfirmation } from "@/hooks/useConfirmation";
+import { countryOptions } from "@/lib/countries";
 import type { PaginatedResult, Pagination as PaginationMetadata } from "@/lib/api/contracts";
 import type { AdminMetadataRow } from "@/lib/admin/metadata";
 
@@ -18,14 +26,19 @@ export function AdminMetadataPanel({
   initialPagination,
   columns,
   emptyMessage,
+  resource,
+  canManage,
 }: {
   endpoint: string;
   initialItems: AdminMetadataRow[];
   initialPagination: PaginationMetadata;
   columns: string[];
   emptyMessage: string;
+  resource: "weddings" | "businesses" | "venues";
+  canManage: boolean;
 }) {
-  const { text } = useLanguage();
+  const { language, text } = useLanguage();
+  const confirmation = useConfirmation();
   const [items, setItems] = useState(initialItems);
   const [pagination, setPagination] = useState(initialPagination);
   const isBusinessDirectory = columns.includes("Claim status");
@@ -34,6 +47,8 @@ export function AdminMetadataPanel({
   const [claim, setClaim] = useState("all");
   const [sort, setSort] = useState("default");
   const [loading, setLoading] = useState(false);
+  const [editor, setEditor] = useState<"create" | "edit" | null>(null);
+  const [selected, setSelected] = useState<AdminMetadataRow | null>(null);
 
   async function loadPage(
     page: number,
@@ -64,8 +79,75 @@ export function AdminMetadataPanel({
     }
   }
 
+  function openEditor(mode: "create" | "edit", item?: AdminMetadataRow) {
+    setEditor(mode);
+    setSelected(item ?? null);
+  }
+
+  async function submitEditor(values: Record<string, EntityFormValue>) {
+    try {
+      const payload =
+        resource === "weddings"
+          ? { ...(editor === "edit" ? { weddingId: selected?.id } : {}), ...values }
+          : {
+              ...(editor === "edit" ? { businessId: selected?.id } : {}),
+              ...values,
+              services: String(values.services ?? "")
+                .split(",")
+                .map((value) => value.trim())
+                .filter(Boolean),
+              published: values.published === true,
+            };
+      await apiRequest(endpoint, {
+        method: editor === "create" ? "POST" : "PATCH",
+        body: JSON.stringify(payload),
+      });
+      toast.success(text(editor === "create" ? "Record created." : "Record updated."));
+      setEditor(null);
+      await loadPage(pagination.page);
+    } catch (error) {
+      toast.error(text(error instanceof Error ? error.message : "The record could not be saved."));
+    }
+  }
+
+  async function deleteItem(item: AdminMetadataRow) {
+    const confirmed = await confirmation.confirm({
+      title: "Delete record",
+      description: "Delete this record? This cannot be undone.",
+      confirmLabel: "Delete",
+    });
+    if (!confirmed) return;
+    try {
+      await apiRequest(endpoint, {
+        method: "DELETE",
+        body: JSON.stringify(
+          resource === "weddings" ? { weddingId: item.id } : { businessId: item.id },
+        ),
+      });
+      toast.success(text("Record deleted."));
+      await loadPage(
+        Math.min(
+          pagination.page,
+          Math.max(1, Math.ceil((pagination.totalItems - 1) / pagination.pageSize)),
+        ),
+      );
+    } catch (error) {
+      toast.error(
+        text(error instanceof Error ? error.message : "The record could not be deleted."),
+      );
+    }
+  }
+
   return (
     <article className="panel overflow-hidden">
+      {canManage && (
+        <div className="mb-4 flex justify-end">
+          <Button className="w-full sm:w-auto" type="button" onClick={() => openEditor("create")}>
+            <Plus size={16} />
+            {text("Add record")}
+          </Button>
+        </div>
+      )}
       <AdminSearch
         value={search}
         onChange={setSearch}
@@ -133,6 +215,11 @@ export function AdminMetadataPanel({
                     {text(column)}
                   </th>
                 ))}
+                {canManage && (
+                  <th className="border-b border-yes-line px-4 py-3 font-bold">
+                    {text("Actions")}
+                  </th>
+                )}
               </tr>
             </thead>
             <tbody>
@@ -163,6 +250,30 @@ export function AdminMetadataPanel({
                       )}
                     </td>
                   ))}
+                  {canManage && (
+                    <td className="px-4 py-3">
+                      <div className="flex gap-2">
+                        <Button
+                          aria-label={text("Edit record")}
+                          className="px-3"
+                          type="button"
+                          variant="secondary"
+                          onClick={() => openEditor("edit", item)}
+                        >
+                          <Pencil size={15} />
+                        </Button>
+                        <Button
+                          aria-label={text("Delete record")}
+                          className="px-3"
+                          type="button"
+                          variant="blush"
+                          onClick={() => void deleteItem(item)}
+                        >
+                          <Trash2 size={15} />
+                        </Button>
+                      </div>
+                    </td>
+                  )}
                 </tr>
               ))}
             </tbody>
@@ -188,8 +299,77 @@ export function AdminMetadataPanel({
         total={pagination.totalItems}
         onChange={(page) => void loadPage(page)}
       />
+      <EntityDialog
+        open={editor !== null}
+        title={editor === "create" ? "Add record" : "Edit record"}
+        fields={metadataEditorFields(resource, language)}
+        initialValues={metadataInitialValues(resource, selected)}
+        onClose={() => setEditor(null)}
+        onSave={submitEditor}
+      />
+      {confirmation.dialog}
     </article>
   );
+}
+
+function metadataEditorFields(
+  resource: "weddings" | "businesses" | "venues",
+  language: string,
+): EntityField[] {
+  if (resource === "weddings") {
+    return [
+      { name: "displayName", label: "Wedding name", required: true },
+      { name: "weddingDate", label: "Wedding date", type: "date", required: true },
+      { name: "venue", label: "Venue" },
+      {
+        name: "location",
+        label: "Country",
+        type: "select",
+        options: countryOptions(language),
+        placeholder: "Select a country",
+        required: true,
+      },
+    ];
+  }
+  return [
+    {
+      name: "businessName",
+      label: resource === "venues" ? "Venue name" : "Business name",
+      required: true,
+    },
+    { name: "services", label: "Services (comma-separated)", required: true },
+    { name: "serviceArea", label: "Service area" },
+    {
+      name: "countryCode",
+      label: "Country",
+      type: "select",
+      options: countryOptions(language),
+      placeholder: "Select a country",
+      required: true,
+    },
+    { name: "published", label: "Published", type: "checkbox" },
+  ];
+}
+
+function metadataInitialValues(
+  resource: "weddings" | "businesses" | "venues",
+  item: AdminMetadataRow | null,
+) {
+  const values = item?.values ?? [];
+  return resource === "weddings"
+    ? {
+        displayName: values[0] ?? "",
+        weddingDate: values[1] ?? "",
+        venue: values[2] ?? "",
+        location: values[3] ?? "",
+      }
+    : {
+        businessName: values[0] ?? "",
+        services: values[1] ?? "",
+        serviceArea: values[2] ?? "",
+        countryCode: values[3] ?? "",
+        published: values[4] === "Published",
+      };
 }
 
 function columnIsClaimStatus(column: string | undefined) {

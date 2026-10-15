@@ -3,7 +3,7 @@
 
 import { useState } from "react";
 import { toast } from "sonner";
-import { UserPlus } from "lucide-react";
+import { Trash2, UserPlus } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Modal } from "@/components/ui/Modal";
 import { useLanguage } from "@/components/providers/LanguageProvider";
@@ -49,10 +49,10 @@ export function AdminStaffPanel({
   const [inviteLastName, setInviteLastName] = useState("");
   const [inviteEmail, setInviteEmail] = useState("");
   const [invitePassword, setInvitePassword] = useState("");
-  const [inviteRole, setInviteRole] = useState<PlatformStaffRole>("Support");
+  const [inviteRole, setInviteRole] = useState<PlatformStaffRole>("PlatformAdmin");
   const [pendingAction, setPendingAction] = useState<{
     account: StaffAccount;
-    action: "grant" | "revoke";
+    action: "grant" | "revoke" | "delete";
     role: PlatformStaffRole;
   } | null>(null);
 
@@ -88,17 +88,27 @@ export function AdminStaffPanel({
 
   async function changeRole(
     account: StaffAccount,
-    action: "grant" | "revoke",
+    action: "grant" | "revoke" | "delete",
     role: PlatformStaffRole,
   ) {
     setSaving(account.id);
     try {
       await apiRequest("/api/v1/admin/platform/staff", {
-        method: "PATCH",
-        body: JSON.stringify({ userId: account.id, role, action }),
+        method: action === "delete" ? "DELETE" : "PATCH",
+        body: JSON.stringify(
+          action === "delete" ? { userId: account.id } : { userId: account.id, role, action },
+        ),
       });
       await loadPage(pagination.page);
-      toast.success(text(action === "grant" ? "Platform role granted." : "Platform role revoked."));
+      toast.success(
+        text(
+          action === "grant"
+            ? "Platform role granted."
+            : action === "revoke"
+              ? "Platform role revoked."
+              : "Platform user deleted.",
+        ),
+      );
       setPendingAction(null);
     } catch (error) {
       toast.error(
@@ -130,7 +140,7 @@ export function AdminStaffPanel({
       setInviteLastName("");
       setInviteEmail("");
       setInvitePassword("");
-      setInviteRole("Support");
+      setInviteRole("PlatformAdmin");
     } catch (error) {
       setInviteError(
         text(error instanceof Error ? error.message : "The platform user could not be created."),
@@ -171,7 +181,9 @@ export function AdminStaffPanel({
             value: platformRole,
             options: [
               { value: "all", label: text("All platform roles") },
-              ...platformStaffRoles.map((value) => ({ value, label: text(value) })),
+              ...platformStaffRoles
+                .filter((role) => role !== "SuperAdmin")
+                .map((value) => ({ value, label: text(value) })),
             ],
             onChange: (value) => {
               setPlatformRole(value);
@@ -213,11 +225,13 @@ export function AdminStaffPanel({
                   <YesSelect
                     ariaLabel={`${text("Platform role")} ${account.email}`}
                     className="w-36 shrink-0"
-                    options={platformStaffRoles.map((role) => ({
-                      value: role,
-                      label: text(role),
-                    }))}
-                    value={roleByUser[account.id] ?? "Support"}
+                    options={platformStaffRoles
+                      .filter((role) => role !== "SuperAdmin")
+                      .map((role) => ({
+                        value: role,
+                        label: text(role),
+                      }))}
+                    value={roleByUser[account.id] ?? "PlatformAdmin"}
                     onChange={(role) => {
                       if (isPlatformStaffRole(role)) {
                         setRoleByUser((previous) => ({
@@ -234,7 +248,7 @@ export function AdminStaffPanel({
                       setPendingAction({
                         account,
                         action: "grant",
-                        role: roleByUser[account.id] ?? "Support",
+                        role: roleByUser[account.id] ?? "PlatformAdmin",
                       })
                     }
                     type="button"
@@ -245,18 +259,33 @@ export function AdminStaffPanel({
                     className="button button-secondary"
                     disabled={
                       saving === account.id ||
-                      !account.platformRoles.includes(roleByUser[account.id] ?? "Support")
+                      !account.platformRoles.includes(roleByUser[account.id] ?? "PlatformAdmin")
                     }
                     onClick={() =>
                       setPendingAction({
                         account,
                         action: "revoke",
-                        role: roleByUser[account.id] ?? "Support",
+                        role: roleByUser[account.id] ?? "PlatformAdmin",
                       })
                     }
                     type="button"
                   >
                     {text("Revoke")}
+                  </button>
+                  <button
+                    className="button button-blush"
+                    disabled={saving === account.id}
+                    onClick={() =>
+                      setPendingAction({
+                        account,
+                        action: "delete",
+                        role: roleByUser[account.id] ?? "PlatformAdmin",
+                      })
+                    }
+                    type="button"
+                  >
+                    <Trash2 size={15} />
+                    {text("Delete")}
                   </button>
                 </div>
               )}
@@ -348,9 +377,9 @@ export function AdminStaffPanel({
               ariaLabel={text("Platform role")}
               className="w-full"
               options={platformStaffRoles
-                .filter((role) => role !== "SuperAdmin" || canCreateSuperAdmin)
+                .filter((role) => role !== "SuperAdmin")
                 .map((role) => ({ value: role, label: text(role) }))}
-              value={inviteRole === "SuperAdmin" && !canManageStaff ? "Support" : inviteRole}
+              value={inviteRole === "SuperAdmin" ? "PlatformAdmin" : inviteRole}
               onChange={(role) => {
                 if (isPlatformStaffRole(role)) setInviteRole(role);
               }}
@@ -378,12 +407,20 @@ export function AdminStaffPanel({
       </Modal>
       <Modal
         open={Boolean(pendingAction)}
-        title={pendingAction?.action === "grant" ? "Confirm platform role" : "Remove platform role"}
+        title={
+          pendingAction?.action === "grant"
+            ? "Confirm platform role"
+            : pendingAction?.action === "delete"
+              ? "Delete platform user"
+              : "Remove platform role"
+        }
         description={
           pendingAction
             ? pendingAction.action === "grant"
               ? `Grant ${text(pendingAction.role)} access to ${pendingAction.account.name || pendingAction.account.email}?`
-              : `Remove ${text(pendingAction.role)} access from ${pendingAction.account.name || pendingAction.account.email}?`
+              : pendingAction.action === "delete"
+                ? `Delete ${pendingAction.account.name || pendingAction.account.email}? This cannot be undone.`
+                : `Remove ${text(pendingAction.role)} access from ${pendingAction.account.name || pendingAction.account.email}?`
             : undefined
         }
         onClose={() => {
@@ -407,14 +444,22 @@ export function AdminStaffPanel({
               }
             }}
             type="button"
-            variant={pendingAction?.action === "revoke" ? "secondary" : "primary"}
+            variant={
+              pendingAction?.action === "grant"
+                ? "primary"
+                : pendingAction?.action === "delete"
+                  ? "blush"
+                  : "secondary"
+            }
           >
             {text(
               saving && pendingAction && saving === pendingAction.account.id
                 ? "Saving…"
                 : pendingAction?.action === "grant"
                   ? "Grant role"
-                  : "Remove role",
+                  : pendingAction?.action === "delete"
+                    ? "Delete platform user"
+                    : "Remove role",
             )}
           </Button>
         </div>

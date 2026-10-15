@@ -8,7 +8,7 @@ import { requirePlatformPagePermission } from "@/lib/auth/platform-admin";
 export const metadata: Metadata = { title: "Venues" };
 
 export default async function AdminVenuesPage() {
-  await requirePlatformPagePermission("venues.view");
+  const access = await requirePlatformPagePermission("venues.view");
   const result = await listAdminBusinesses(new URLSearchParams(), true);
   if (!result) throw new Error("Could not load venue metadata.");
   return (
@@ -22,8 +22,10 @@ export default async function AdminVenuesPage() {
         endpoint="/api/v1/admin/venues"
         initialItems={result.items}
         initialPagination={result.pagination}
-        columns={["Business", "Services", "Service area", "Publication", "Claim status"]}
+        columns={["Business", "Services", "Service area", "Country", "Publication", "Claim status"]}
         emptyMessage="No venue profiles are available yet."
+        resource="venues"
+        canManage={access.permissions.includes("venues.manage")}
       />
     </div>
   );

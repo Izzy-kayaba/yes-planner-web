@@ -22,7 +22,17 @@ type ApiSessionResult =
 export async function getAuthorizedSession(requestHeaders?: Headers) {
   const session = await auth.api.getSession({ headers: requestHeaders ?? (await headers()) });
   if (!session) return null;
-  const storedUser = session.user as AuthSession["user"] & { accountType?: unknown };
+  // Re-read the account status so platform suspension takes effect immediately, even when a session was already issued.
+  const storedRecord = await mongoDb
+    .collection("user")
+    .findOne({ email: session.user.email }, { projection: { banned: 1, role: 1, accountType: 1 } });
+  if (storedRecord?.banned === true) return null;
+  const storedUser = {
+    ...session.user,
+    role: storedRecord?.role ?? session.user.role,
+    accountType:
+      storedRecord?.accountType ?? (session.user as { accountType?: unknown }).accountType,
+  } as AuthSession["user"] & { accountType?: unknown };
   // System Admin is a platform role, not a business account type, so preserve it separately.
   if (storedUser.role === "SystemAdmin") {
     return {

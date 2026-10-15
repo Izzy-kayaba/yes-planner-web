@@ -173,6 +173,7 @@ export function AppShell({
     .filter(
       (item) =>
         !item.href.startsWith("/weddings/wedding-not-configured") &&
+        (item.href !== "/support" || platformPermissions.length === 0) &&
         (!item.plannerOnly || (!demoMode && plannerEligible)) &&
         (!item.requiredPermission || platformPermissions.includes(item.requiredPermission)) &&
         (demoMode || !item.roles || (role && item.roles.includes(role))),

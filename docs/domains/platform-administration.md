@@ -13,6 +13,8 @@ Platform administration is an internal Yes Planner workspace. It is separate fro
 - Email integration tests call the configured Resend service server-side. Recipient addresses, email content, and provider credentials are not copied into audit events.
 - Audit screens contain actor, permission, action, resource metadata, outcome, and timestamp. Do not add personal content or secrets to audit records.
 - Super Admins can grant and revoke platform roles for existing accounts. Public account registration cannot create platform staff.
+- New platform staff accounts default to `PlatformAdmin` in the staff interface. `SuperAdmin` is not offered in the normal role selector.
+- Super Admins can manage staff except they cannot delete another Super Admin. Platform Admins can manage lower staff roles but cannot manage another Platform Admin or any Super Admin.
 
 ## Authorization boundaries
 

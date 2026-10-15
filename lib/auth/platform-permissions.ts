@@ -3,9 +3,13 @@ import type { PlatformStaffRole } from "@/lib/auth/roles";
 export const platformPermissions = [
   "admin.dashboard.view",
   "users.view",
+  "users.manage",
   "weddings.view",
+  "weddings.manage",
   "businesses.view",
+  "businesses.manage",
   "venues.view",
+  "venues.manage",
   "verification.view",
   "verification.manage",
   "platform_staff.manage",
@@ -27,9 +31,13 @@ const permissionsByRole: Record<PlatformStaffRole, readonly PlatformPermission[]
   PlatformAdmin: [
     "admin.dashboard.view",
     "users.view",
+    "users.manage",
     "weddings.view",
+    "weddings.manage",
     "businesses.view",
+    "businesses.manage",
     "venues.view",
+    "venues.manage",
     "verification.view",
     "verification.manage",
     "support.view",
@@ -63,6 +71,9 @@ const permissionsByRole: Record<PlatformStaffRole, readonly PlatformPermission[]
   Finance: ["platform_staff.view"],
 };
 
+// Expose the policy for the platform access page without duplicating role rules in the UI.
+export const platformPermissionsByRole = permissionsByRole;
+
 // Combine roles without granting permissions that are not explicitly mapped to a role.
 export function permissionsForPlatformRoles(
   roles: readonly PlatformStaffRole[],
@@ -90,4 +101,21 @@ export function canInvitePlatformStaffRole(
 ) {
   if (inviterRoles.includes("SuperAdmin")) return true;
   return inviterRoles.includes("PlatformAdmin") && invitedRole !== "SuperAdmin";
+}
+
+// Higher platform roles cannot be changed or removed by an equal or lower role.
+export function canManagePlatformStaffTarget(
+  actorRoles: readonly PlatformStaffRole[],
+  targetRoles: readonly PlatformStaffRole[],
+  action: "update" | "delete",
+) {
+  const targetIsSuperAdmin = targetRoles.includes("SuperAdmin");
+  const targetIsPlatformAdmin = targetRoles.includes("PlatformAdmin");
+  const actorIsSuperAdmin = actorRoles.includes("SuperAdmin");
+  const actorIsPlatformAdmin = actorRoles.includes("PlatformAdmin");
+
+  if (action === "delete" && targetIsSuperAdmin) return false;
+  if (targetIsSuperAdmin) return actorIsSuperAdmin;
+  if (targetIsPlatformAdmin) return actorIsSuperAdmin;
+  return actorIsSuperAdmin || actorIsPlatformAdmin;
 }

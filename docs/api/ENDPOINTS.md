@@ -21,12 +21,11 @@ The server is authoritative for identity, role, ownership, and collaborator acce
 
 ## Signed-in account
 
-| Method and path              | Authentication                             | Purpose                                                                                                                                                                                                                 |
-| ---------------------------- | ------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `GET /api/v1/me`             | Authenticated; incomplete profiles allowed | Returns the signed-in user's profile, normalized account type, linked sign-in providers, and whether a credential password exists.                                                                                      |
-| `PATCH /api/v1/me`           | Authenticated; incomplete profiles allowed | Updates first name, last name, phone number, and WhatsApp notification preference. Validates phone format and rejects a phone number already used by another account.                                                   |
-| `POST /api/v1/me/password`   | Authenticated                              | Adds a password only if the account has no credential password. JSON field: `newPassword`; requires at least eight characters, one number, and one symbol. Existing password holders must use the password-change flow. |
-| `POST /api/v1/me/email-test` | Authenticated                              | Sends a test email to the current account's email address using the configured email provider. Returns `502` with an explicit delivery error if sending fails.                                                          |
+| Method and path            | Authentication                             | Purpose                                                                                                                                                                                                                 |
+| -------------------------- | ------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `GET /api/v1/me`           | Authenticated; incomplete profiles allowed | Returns the signed-in user's profile, normalized account type, linked sign-in providers, and whether a credential password exists.                                                                                      |
+| `PATCH /api/v1/me`         | Authenticated; incomplete profiles allowed | Updates first name, last name, phone number, and WhatsApp notification preference. Validates phone format and rejects a phone number already used by another account.                                                   |
+| `POST /api/v1/me/password` | Authenticated                              | Adds a password only if the account has no credential password. JSON field: `newPassword`; requires at least eight characters, one number, and one symbol. Existing password holders must use the password-change flow. |
 
 ## Wedding profile and workspace
 

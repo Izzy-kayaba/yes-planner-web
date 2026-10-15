@@ -14,6 +14,6 @@ Vendor profile image bytes currently live in MongoDB GridFS. This design is inte
 
 ## Currency
 
-The base currency is USD. Amounts use integer US cents and field names such as `amountMinor` or `startingPriceMinor`; no converted ZAR amount is stored. The server can use trusted country headers to detect South Africa and obtain a cached USD/ZAR rate for display. If the visitor is not known to be in South Africa or the rate service is unavailable, display USD. A local-only `DEVELOPMENT_COUNTRY=ZA` override is available for testing.
+The base currency is USD. Amounts use integer US cents and field names such as `amountMinor` or `startingPriceMinor`; no converted ZAR amount is stored. South African traffic uses the visible `/za` regional route, and the server can use trusted country headers to detect South Africa and obtain a cached USD/ZAR rate for display. If the visitor is not known to be in South Africa or the rate service is unavailable, display USD. A local-only `DEVELOPMENT_COUNTRY=ZA` override is available for testing.
 
 Do not automatically convert legacy records unless their source currency is known. Conversion is display-only and must never rewrite the stored USD amount. See the [subscriptions and currency note](../domains/subscriptions.md#currency-display-note) and migration guidance in [database migrations](../development/DATABASE_MIGRATIONS.md).

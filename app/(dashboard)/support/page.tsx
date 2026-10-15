@@ -4,6 +4,8 @@ import { PageHeader } from "@/components/ui/PageHeader";
 import { SupportCenter } from "@/features/support/SupportCenter";
 import { getTextTranslator } from "@/lib/i18n-server";
 import { requirePageRole } from "@/lib/auth/session";
+import { getPlatformAccess } from "@/lib/auth/platform-admin";
+import { redirect } from "next/navigation";
 
 export async function generateMetadata(): Promise<Metadata> {
   const text = await getTextTranslator();
@@ -16,7 +18,12 @@ export default async function SupportPage({
   searchParams: Promise<{ weddingKey?: string }>;
 }) {
   const demoMode = (process.env.NEXT_PUBLIC_DATA_SOURCE ?? "api") === "demo";
-  if (!demoMode) await requirePageRole();
+  if (!demoMode) {
+    const session = await requirePageRole();
+    if ((await getPlatformAccess(session)).permissions.length > 0) {
+      redirect("/admin/platform/staff");
+    }
+  }
   const text = await getTextTranslator();
   const { weddingKey } = await searchParams;
   return (

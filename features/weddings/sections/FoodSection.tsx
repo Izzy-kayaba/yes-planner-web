@@ -70,7 +70,7 @@ export function FoodSection() {
                   <Pencil size={14} /> {text("Edit")}
                 </button>
                 <button
-                  className="icon-button"
+                  className="icon-button icon-button-blush"
                   aria-label={`${text("Delete")} ${menu.name}`}
                   onClick={() => void remove(menu.id)}
                 >

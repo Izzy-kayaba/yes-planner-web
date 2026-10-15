@@ -8,7 +8,7 @@ import { requirePlatformPagePermission } from "@/lib/auth/platform-admin";
 export const metadata: Metadata = { title: "Weddings" };
 
 export default async function AdminWeddingsPage() {
-  await requirePlatformPagePermission("weddings.view");
+  const access = await requirePlatformPagePermission("weddings.view");
   const result = await listAdminWeddings(new URLSearchParams());
   if (!result) throw new Error("Could not load wedding metadata.");
   return (
@@ -24,6 +24,8 @@ export default async function AdminWeddingsPage() {
         initialPagination={result.pagination}
         columns={["Wedding", "Date", "Venue", "Country"]}
         emptyMessage="No wedding profiles are available yet."
+        resource="weddings"
+        canManage={access.permissions.includes("weddings.manage")}
       />
     </div>
   );

@@ -4,6 +4,7 @@ import test from "node:test";
 import {
   hasPlatformPermission,
   canInvitePlatformStaffRole,
+  canManagePlatformStaffTarget,
   permissionsForPlatformRoles,
   platformStaffRoleFromStoredValue,
 } from "../../lib/auth/platform-permissions.ts";
@@ -76,4 +77,12 @@ test("customer roles do not grant platform permissions and Finance can view staf
   assert.deepEqual(permissionsForPlatformRoles(["Finance"]), ["platform_staff.view"]);
   assert.equal(platformStaffRoleFromStoredValue("Couple"), null);
   assert.equal(platformStaffRoleFromStoredValue("SuperAdmin"), "SuperAdmin");
+});
+
+test("staff management protects equal and higher platform roles", () => {
+  assert.equal(canManagePlatformStaffTarget(["SuperAdmin"], ["PlatformAdmin"], "update"), true);
+  assert.equal(canManagePlatformStaffTarget(["SuperAdmin"], ["SuperAdmin"], "delete"), false);
+  assert.equal(canManagePlatformStaffTarget(["PlatformAdmin"], ["PlatformAdmin"], "update"), false);
+  assert.equal(canManagePlatformStaffTarget(["PlatformAdmin"], ["SuperAdmin"], "update"), false);
+  assert.equal(canManagePlatformStaffTarget(["PlatformAdmin"], ["Support"], "update"), true);
 });

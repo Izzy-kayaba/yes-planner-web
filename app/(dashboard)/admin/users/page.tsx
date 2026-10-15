@@ -13,7 +13,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function AdminUsersPage() {
-  await requirePlatformPagePermission("users.view");
+  const access = await requirePlatformPagePermission("users.view");
   await ensureMongoIndexes();
   const text = await getTextTranslator();
   const pagination = parsePagination(new URLSearchParams(), 25, 100)!;
@@ -42,6 +42,7 @@ export default async function AdminUsersPage() {
       <AdminUsersPanel
         initialUsers={items}
         initialPagination={paginatedResult(items, 1, pagination.pageSize, totalItems).pagination}
+        canManage={access.permissions.includes("users.manage")}
       />
       <p className="text-sm text-yes-muted">
         {text("Private wedding content is not included in user administration.")}

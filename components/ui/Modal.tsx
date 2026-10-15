@@ -39,7 +39,7 @@ export function Modal({
       }}
     >
       <section
-        className="yes-modal-scroll max-h-[90vh] w-full max-w-xl overflow-y-auto rounded-2xl border border-yes-line bg-yes-surface p-6 shadow-yes"
+        className="yes-modal-scroll max-h-[90vh] w-full max-w-xl overflow-y-auto rounded-2xl border border-yes-line bg-yes-surface p-6 shadow-yes max-sm:max-h-[calc(100vh-1.5rem)] max-sm:rounded-xl max-sm:p-4"
         role="dialog"
         aria-modal="true"
         aria-labelledby="modal-title"

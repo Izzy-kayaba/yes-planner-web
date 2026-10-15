@@ -187,7 +187,7 @@ export function GuestsSection() {
                     <Pencil size={14} />
                   </button>
                   <button
-                    className="icon-button"
+                    className="icon-button icon-button-blush"
                     aria-label={`${text("Delete")} ${guest.name}`}
                     onClick={() =>
                       void confirmation

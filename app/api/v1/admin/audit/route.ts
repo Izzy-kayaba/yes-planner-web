@@ -26,27 +26,40 @@ export async function GET(request: Request) {
   const filter = expression
     ? {
         $or: [
+          { event_type: expression },
           { action: expression },
+          { reason_code: expression },
           { resourceType: expression },
           { resourceId: expression },
+          { "resource.type": expression },
+          { "resource.id": expression },
           { actorUserId: expression },
+          { "actor.id": expression },
           { outcome: expression },
         ],
       }
     : {};
   const outcome = searchParams.get("outcome");
   const appliedFilter =
-    outcome === "success" || outcome === "failure" ? { ...filter, outcome } : filter;
+    outcome === "success" || outcome === "failure"
+      ? { ...filter, outcome: { $in: [outcome, outcome.toUpperCase()] } }
+      : filter;
   const totalItems = await collection.countDocuments(appliedFilter);
   const sortBy = searchParams.get("sort");
   const events = await collection
     .find(appliedFilter)
     .project({
+      event_id: 1,
+      event_type: 1,
+      actor: 1,
       actorUserId: 1,
       action: 1,
+      resource: 1,
       resourceType: 1,
       resourceId: 1,
       outcome: 1,
+      reason_code: 1,
+      recorded_at: 1,
       createdAt: 1,
     })
     .sort(
@@ -63,12 +76,16 @@ export async function GET(request: Request) {
     paginatedResult(
       events.map((event) => ({
         id: String(event._id),
-        actorUserId: String(event.actorUserId ?? ""),
+        eventId: String(event.event_id ?? event._id),
+        eventType: String(event.event_type ?? "legacy.audit_event"),
+        actorUserId: String(event.actor?.id ?? event.actorUserId ?? ""),
+        actorRole: String(event.actor?.role ?? ""),
         action: String(event.action ?? ""),
-        resourceType: String(event.resourceType ?? ""),
-        resourceId: String(event.resourceId ?? ""),
-        outcome: String(event.outcome ?? ""),
-        createdAt: event.createdAt,
+        resourceType: String(event.resource?.type ?? event.resourceType ?? ""),
+        resourceId: String(event.resource?.id ?? event.resourceId ?? ""),
+        outcome: String(event.outcome ?? "").toLowerCase(),
+        reasonCode: String(event.reason_code ?? ""),
+        createdAt: event.recorded_at ?? event.createdAt,
       })),
       pagination.page,
       pagination.pageSize,

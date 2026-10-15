@@ -1,4 +1,45 @@
 export const frenchSupplementalLiterals: Record<string, string> = {
+  Platform: "Plateforme",
+  "Roles and permissions": "Rôles et permissions",
+  "This table is the current platform access policy. A role only receives the permissions listed for it here.":
+    "Ce tableau présente la politique actuelle d’accès à la plateforme. Un rôle reçoit uniquement les permissions qui y sont indiquées.",
+  Role: "Rôle",
+  Permissions: "Permissions",
+  Actions: "Actions",
+  "Add record": "Ajouter un enregistrement",
+  "Edit record": "Modifier l’enregistrement",
+  "Delete record": "Supprimer l’enregistrement",
+  "Record created.": "Enregistrement créé.",
+  "Record updated.": "Enregistrement mis à jour.",
+  "Record deleted.": "Enregistrement supprimé.",
+  "Delete this record? This cannot be undone.":
+    "Supprimer cet enregistrement ? Cette action est irréversible.",
+  "Edit user": "Modifier l’utilisateur",
+  "User updated.": "Utilisateur mis à jour.",
+  "User deleted.": "Utilisateur supprimé.",
+  "Delete this user? This cannot be undone.":
+    "Supprimer cet utilisateur ? Cette action est irréversible.",
+  "Manage user": "Gérer l’utilisateur",
+  "Review and update this account without exposing credentials.":
+    "Consultez et mettez à jour ce compte sans exposer les identifiants.",
+  "Loading user details…": "Chargement des détails de l’utilisateur…",
+  Profile: "Profil",
+  "Account status": "Statut du compte",
+  Active: "Actif",
+  Suspended: "Suspendu",
+  Authentication: "Authentification",
+  "Email address verified": "Adresse e-mail vérifiée",
+  "Revoke all active sessions on save":
+    "Révoquer toutes les sessions actives lors de l’enregistrement",
+  "Active sessions": "Sessions actives",
+  Roles: "Rôles",
+  "Customer account type": "Type de compte client",
+  "Platform staff roles": "Rôles du personnel de la plateforme",
+  "No platform staff role": "Aucun rôle du personnel de la plateforme",
+  "Platform staff roles are managed from the Platform staff page.":
+    "Les rôles du personnel de la plateforme sont gérés depuis la page du personnel de la plateforme.",
+  "Ownership relationships": "Relations de propriété",
+  None: "Aucun",
   // Forms, metrics and status copy
   "Search bookings": "Rechercher des réservations",
   "Search documents": "Rechercher des documents",
@@ -200,8 +241,7 @@ export const frenchSupplementalLiterals: Record<string, string> = {
   "Wedding location": "Localisation du mariage",
   "City or area": "Ville ou quartier",
   "Wedding details saved.": "Détails du mariage enregistrés.",
-  "Wedding details could not be saved.":
-    "Les détails du mariage n'ont pas pu être enregistrés.",
+  "Wedding details could not be saved.": "Les détails du mariage n'ont pas pu être enregistrés.",
   "Save and continue": "Enregistrer et continuer",
   "Log out": "Se déconnecter",
   "About you": "À propos de vous",
@@ -465,8 +505,6 @@ export const frenchSupplementalLiterals: Record<string, string> = {
   "Verification email could not be sent.": "Impossible d’envoyer l’e-mail de vérification.",
   "Verification email sent. Check your inbox.":
     "E-mail de vérification envoyé. Consultez votre boîte de réception.",
-  "Test email sent. Check your inbox.":
-    "E-mail de test envoyé. Consultez votre boîte de réception.",
   "Sign-in providers": "Méthodes de connexion",
   "Password changed.": "Mot de passe modifié.",
   "Use your connected provider or password to sign in.":

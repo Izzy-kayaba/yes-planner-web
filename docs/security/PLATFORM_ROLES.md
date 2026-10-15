@@ -2,6 +2,8 @@
 
 Platform roles grant narrowly defined access to internal administration features. They are distinct from customer account type (`Couple`, `Vendor`, `Venue`) and wedding collaboration access.
 
+The Platform staff screen defaults new staff to `PlatformAdmin` and does not expose `SuperAdmin` as a selectable role. Super Admin assignment remains a protected server-side operation. A Super Admin may manage ordinary staff but cannot delete another Super Admin; a Platform Admin cannot manage another Platform Admin or any Super Admin.
+
 ## Role capabilities
 
 | Platform role   | Current permissions                                                           |

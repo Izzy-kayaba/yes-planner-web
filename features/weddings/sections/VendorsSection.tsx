@@ -172,7 +172,7 @@ export function VendorsSection() {
                   <Pencil size={14} /> {text("Edit")}
                 </button>
                 <button
-                  className="icon-button shrink-0"
+                  className="icon-button icon-button-blush shrink-0"
                   onClick={() =>
                     void confirmation
                       .confirm({
