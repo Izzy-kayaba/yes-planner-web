@@ -124,7 +124,11 @@ export default async function AdminPage({
           />
         )}
         {canSeeUsersPanel && (
-          <AdminUsersPanel initialUsers={users.items} initialPagination={users.pagination} />
+          <AdminUsersPanel
+            initialUsers={users.items}
+            initialPagination={users.pagination}
+            canManage={false}
+          />
         )}
         {permissions.includes("integrations.view") && (
           <article className="panel">

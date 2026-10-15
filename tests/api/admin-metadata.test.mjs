@@ -38,7 +38,7 @@ test("business directory metadata contains public fields without credentials or 
 
   assert.deepEqual(row, {
     id: "64a000000000000000000002",
-    values: ["The Garden Estate", "Venue, Catering", "Western Cape", "Published", "Claimed"],
+    values: ["The Garden Estate", "Venue, Catering", "Western Cape", "", "Published", "Claimed"],
   });
   assert.equal(JSON.stringify(row).includes("private-user-id"), false);
   assert.equal(JSON.stringify(row).includes("not-included"), false);

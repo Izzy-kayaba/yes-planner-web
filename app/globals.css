@@ -197,6 +197,9 @@
 .button-light {
   @apply bg-white text-yes-wine-deep hover:bg-yes-blush;
 }
+.button-blush {
+  @apply border-yes-blush bg-yes-blush text-yes-wine-deep shadow-yes-soft hover:border-yes-wine hover:bg-yes-blush/70;
+}
 .button-large {
   @apply min-h-13 px-6 text-sm flex items-center justify-center;
 }
@@ -205,6 +208,9 @@
 }
 .icon-button {
   @apply inline-grid size-11 shrink-0 place-items-center rounded-xl border border-yes-line bg-yes-surface p-0 text-inherit leading-none;
+}
+.icon-button-blush {
+  @apply border-yes-blush bg-yes-blush text-yes-wine-deep hover:border-yes-wine;
 }
 .yes-select {
   min-width: 0;

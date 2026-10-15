@@ -114,7 +114,7 @@ export function TasksSection() {
                 <Pencil size={14} />
               </button>
               <button
-                className="icon-button"
+                className="icon-button icon-button-blush"
                 onClick={() =>
                   void confirmation
                     .confirm({

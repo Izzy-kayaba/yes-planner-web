@@ -17,11 +17,17 @@ export default async function AdminAuditPage() {
   const events = await collection
     .find({})
     .project({
+      event_id: 1,
+      event_type: 1,
+      actor: 1,
       actorUserId: 1,
       action: 1,
+      resource: 1,
       resourceType: 1,
       resourceId: 1,
       outcome: 1,
+      reason_code: 1,
+      recorded_at: 1,
       createdAt: 1,
     })
     .sort({ createdAt: -1, _id: -1 })
@@ -29,12 +35,16 @@ export default async function AdminAuditPage() {
     .toArray();
   const items = events.map((event) => ({
     id: String(event._id),
-    actorUserId: String(event.actorUserId ?? ""),
+    eventId: String(event.event_id ?? event._id),
+    eventType: String(event.event_type ?? "legacy.audit_event"),
+    actorUserId: String(event.actor?.id ?? event.actorUserId ?? ""),
+    actorRole: String(event.actor?.role ?? ""),
     action: String(event.action ?? ""),
-    resourceType: String(event.resourceType ?? ""),
-    resourceId: String(event.resourceId ?? ""),
-    outcome: String(event.outcome ?? ""),
-    createdAt: event.createdAt,
+    resourceType: String(event.resource?.type ?? event.resourceType ?? ""),
+    resourceId: String(event.resource?.id ?? event.resourceId ?? ""),
+    outcome: String(event.outcome ?? "").toLowerCase(),
+    reasonCode: String(event.reason_code ?? ""),
+    createdAt: event.recorded_at ?? event.createdAt,
   }));
   return (
     <div className="section-stack">

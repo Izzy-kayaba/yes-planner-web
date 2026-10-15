@@ -12,11 +12,15 @@ import type { PaginatedResult } from "@/lib/api/contracts";
 
 type AuditItem = {
   id: string;
+  eventId: string;
+  eventType: string;
   actorUserId: string;
+  actorRole: string;
   action: string;
   resourceType: string;
   resourceId: string;
   outcome: string;
+  reasonCode: string;
   createdAt: string;
 };
 

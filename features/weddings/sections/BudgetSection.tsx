@@ -116,7 +116,7 @@ export function BudgetSection() {
                     <Pencil size={12} />
                   </button>
                   <button
-                    className="ml-1"
+                    className="button button-blush min-h-9 px-3"
                     aria-label={`${text("Delete")} ${text(item.name)}`}
                     onClick={() =>
                       void confirmation

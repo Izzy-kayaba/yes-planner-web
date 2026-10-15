@@ -39,6 +39,14 @@ function getAuthBaseUrl() {
   return "http://localhost:3000";
 }
 
+// Keep the deployment URL canonical while allowing browser requests from the live and staging hosts.
+function getTrustedAuthOrigins() {
+  return (process.env.BETTER_AUTH_TRUSTED_ORIGINS ?? "")
+    .split(",")
+    .map((origin) => origin.trim())
+    .filter(Boolean);
+}
+
 const instagramPlugin = genericOAuth({
   config: instagramConfigured
     ? [
@@ -67,6 +75,7 @@ const instagramPlugin = genericOAuth({
 export const auth = betterAuth({
   appName: "Yes Planner",
   baseURL: getAuthBaseUrl(),
+  trustedOrigins: getTrustedAuthOrigins(),
   secret: getAuthSecret(),
   rateLimit: {
     enabled: true,

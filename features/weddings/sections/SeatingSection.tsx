@@ -108,7 +108,7 @@ export function SeatingSection() {
                   <Pencil size={13} /> {text("Arrange")}
                 </button>
                 <button
-                  className="text-link inline-flex items-center"
+                  className="button button-blush min-h-9 px-3"
                   onClick={() => void remove(table.id)}
                   aria-label={`${text("Delete")} ${text(table.name)}`}
                 >

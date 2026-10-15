@@ -28,4 +28,6 @@ Internal staff access uses separate persisted `platformRoles`; it does not grant
 | Test configured integrations   | Yes        | No            | No      | No           | Yes        | No      |
 | View audit events              | Yes        | No            | No      | No           | Yes        | No      |
 
+Platform staff access is also documented in the staff administration screen. The screen is available to staff with `platform_staff.view`; it replaces the customer support page for platform staff and shows the same permission mapping enforced by the server.
+
 `Finance` is reserved for future billing administration and intentionally has no current permissions.

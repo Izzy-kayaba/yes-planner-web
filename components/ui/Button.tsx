@@ -2,7 +2,7 @@
 import type { ButtonHTMLAttributes } from "react";
 import { cn } from "@/lib/cn";
 
-type ButtonVariant = "primary" | "secondary" | "ghost" | "light";
+type ButtonVariant = "primary" | "secondary" | "ghost" | "light" | "blush";
 type ButtonSize = "default" | "large";
 
 const variantClasses: Record<ButtonVariant, string> = {
@@ -11,6 +11,8 @@ const variantClasses: Record<ButtonVariant, string> = {
   secondary: "border-yes-line bg-yes-surface text-yes-ink shadow-yes-soft hover:border-yes-wine",
   ghost: "border-transparent bg-transparent text-yes-ink hover:bg-yes-soft",
   light: "border-white bg-white text-yes-wine-deep hover:bg-yes-blush",
+  blush:
+    "border-yes-blush bg-yes-blush text-yes-wine-deep shadow-yes-soft hover:border-yes-wine hover:bg-yes-blush/70",
 };
 
 export function buttonStyles({

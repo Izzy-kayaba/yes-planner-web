@@ -20,10 +20,12 @@ For API mode, configure at least:
 
 ```dotenv
 NEXT_PUBLIC_DATA_SOURCE=api
+NEXT_PUBLIC_API_URL=
 MONGODB_DEVELOPMENT_URI=mongodb://127.0.0.1:27017
 MONGODB_DEVELOPMENT_DATABASE=yes_planner_development
 MONGODB_USE_TRANSACTIONS=false
 BETTER_AUTH_URL=http://localhost:3000
+BETTER_AUTH_TRUSTED_ORIGINS=http://localhost:3000,https://yes-planner.com,https://www.yes-planner.com,https://yes-planner-staging.vercel.app
 BETTER_AUTH_SECRET=<a unique random value of at least 32 characters>
 ```
 

@@ -2,6 +2,7 @@
 import type { Metadata } from "next";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { AdminStaffPanel } from "@/features/admin/AdminStaffPanel";
+import { PlatformPermissionMatrix } from "@/features/admin/PlatformPermissionMatrix";
 import { requirePlatformPagePermission } from "@/lib/auth/platform-admin";
 import { hasPlatformPermission } from "@/lib/auth/platform-permissions";
 import { isPlatformStaffRole } from "@/lib/auth/roles";
@@ -74,6 +75,7 @@ export default async function AdminStaffPage() {
         canManageStaff={canManageStaff}
         canCreateSuperAdmin={access.roles.includes("SuperAdmin")}
       />
+      <PlatformPermissionMatrix />
     </div>
   );
 }

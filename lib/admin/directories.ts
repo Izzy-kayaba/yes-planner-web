@@ -101,6 +101,7 @@ export async function listAdminBusinesses(searchParams: URLSearchParams, venuesO
       businessName?: unknown;
       services?: unknown;
       serviceArea?: unknown;
+      countryCode?: unknown;
       published?: unknown;
       claimed?: unknown;
       ownerUserId?: unknown;
@@ -109,6 +110,7 @@ export async function listAdminBusinesses(searchParams: URLSearchParams, venuesO
       businessName: 1,
       services: 1,
       serviceArea: 1,
+      countryCode: 1,
       published: 1,
       claimed: 1,
       ownerUserId: 1,

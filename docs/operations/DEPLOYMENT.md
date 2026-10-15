@@ -4,7 +4,8 @@ The application is a Next.js service. A production deployment needs:
 
 - `NEXT_PUBLIC_DATA_SOURCE=api`.
 - Production MongoDB URI and database name configured in the hosting platform.
-- A unique `BETTER_AUTH_SECRET` and the exact public `BETTER_AUTH_URL`.
+- A unique `BETTER_AUTH_SECRET`, the deployment's `BETTER_AUTH_URL`, and matching `NEXT_PUBLIC_SITE_URL`.
+- `BETTER_AUTH_TRUSTED_ORIGINS` containing the live, staging, and any required local origins as a comma-separated list. Set each deployment's `NEXT_PUBLIC_SITE_URL` to its own host so generated links stay on that deployment.
 - Verified email sender credentials if email flows are enabled.
 - OAuth and WhatsApp credentials only when those integrations are enabled.
 - Correct production callback URLs at each OAuth provider.

@@ -8,6 +8,7 @@ import { canInvitePlatformStaffRole } from "@/lib/auth/platform-permissions";
 import { platformStaffRoles } from "@/lib/auth/roles";
 import { sendPlatformStaffInvitationEmail } from "@/lib/email";
 import { ensureMongoIndexes, mongoDb } from "@/lib/mongodb";
+import { siteUrl } from "@/lib/site";
 
 const invitationSchema = z.object({
   firstName: z.string().trim().min(2).max(80),
@@ -76,8 +77,7 @@ export async function POST(request: Request) {
     expiresAt: new Date(now.getTime() + invitationLifetimeMs),
   });
 
-  const baseUrl = process.env.BETTER_AUTH_URL ?? new URL(request.url).origin;
-  const invitationUrl = new URL(`/platform-invite/${token}`, baseUrl).toString();
+  const invitationUrl = new URL(`/platform-invite/${token}`, siteUrl).toString();
   try {
     await sendPlatformStaffInvitationEmail(
       email,

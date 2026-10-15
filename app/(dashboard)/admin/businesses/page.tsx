@@ -8,7 +8,7 @@ import { requirePlatformPagePermission } from "@/lib/auth/platform-admin";
 export const metadata: Metadata = { title: "Businesses" };
 
 export default async function AdminBusinessesPage() {
-  await requirePlatformPagePermission("businesses.view");
+  const access = await requirePlatformPagePermission("businesses.view");
   const result = await listAdminBusinesses(new URLSearchParams());
   if (!result) throw new Error("Could not load business metadata.");
   return (
@@ -22,8 +22,10 @@ export default async function AdminBusinessesPage() {
         endpoint="/api/v1/admin/businesses"
         initialItems={result.items}
         initialPagination={result.pagination}
-        columns={["Business", "Services", "Service area", "Publication", "Claim status"]}
+        columns={["Business", "Services", "Service area", "Country", "Publication", "Claim status"]}
         emptyMessage="No business profiles are available yet."
+        resource="businesses"
+        canManage={access.permissions.includes("businesses.manage")}
       />
     </div>
   );
