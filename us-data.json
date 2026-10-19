@@ -1,0 +1,112 @@
+[
+  {
+    "businessName": "Event Crush",
+    "email": "becky@eventcrush.com",
+    "contactName": "Becky Hart",
+    "bio": "Oregon wedding and destination event planning company specializing in full-service planning, month-of coordination, and vendor management based in Eugene, Oregon.",
+    "serviceArea": "Eugene, Oregon",
+    "countryCode": "US",
+    "services": [
+      "Wedding planning"
+    ],
+    "startingPriceMinor": null,
+    "startingPriceMinMinor": null,
+    "startingPriceMaxMinor": null,
+    "startingPriceRangeKey": "",
+    "website": "https://www.eventcrush.com/",
+    "instagramHandle": null,
+    "profileImage": null,
+    "portfolioImages": [],
+    "published": true,
+    "claimed": false,
+    "seeded": true,
+    "ownerUserId": null,
+    "source": {
+      "name": "Official website",
+      "url": "https://www.eventcrush.com/"
+    }
+  },
+  {
+    "businessName": "Event By E",
+    "contactName": "Erica",
+    "bio": "Oregon wedding and event planning service offering full-service wedding design, day-of coordination, corporate events, and special celebrations.",
+    "serviceArea": "Oregon",
+    "countryCode": "US",
+    "services": [
+      "Wedding planning"
+    ],
+    "startingPriceMinor": null,
+    "startingPriceMinMinor": null,
+    "startingPriceMaxMinor": null,
+    "startingPriceRangeKey": "",
+    "website": "https://events-by-e.org/",
+    "instagramHandle": null,
+    "profileImage": null,
+    "portfolioImages": [],
+    "published": true,
+    "claimed": false,
+    "seeded": true,
+    "ownerUserId": null,
+    "source": {
+      "name": "Official website",
+      "url": "https://events-by-e.org/"
+    },
+    "email": null
+  },
+  {
+    "businessName": "Power of Love Rentals",
+    "email": "hello@powerofloverentals.com",
+    "contactName": null,
+    "bio": "Family-run wedding and event rental business in Portland specializing in unique decor, event styling, and custom personalization.",
+    "serviceArea": "Portland, Oregon",
+    "countryCode": "US",
+    "services": [
+      "Rentals",
+      "Decor"
+    ],
+    "startingPriceMinor": null,
+    "startingPriceMinMinor": null,
+    "startingPriceMaxMinor": null,
+    "startingPriceRangeKey": "",
+    "website": "https://www.powerofloverentals.com/",
+    "instagramHandle": null,
+    "profileImage": null,
+    "portfolioImages": [],
+    "published": true,
+    "claimed": false,
+    "seeded": true,
+    "ownerUserId": null,
+    "source": {
+      "name": "Official website",
+      "url": "https://www.powerofloverentals.com/"
+    }
+  },
+  {
+    "businessName": "Event Elegance",
+    "email": "info@eventelegancerentals.com",
+    "contactName": "Dave and Bobbie",
+    "bio": "Central Oregon event rental service providing tables, chairs, linens, beverage bars, decor, and lighting, along with delivery, setup, and pickup services.",
+    "serviceArea": "Central Oregon",
+    "countryCode": "US",
+    "services": [
+      "Rentals",
+      "Decor"
+    ],
+    "startingPriceMinor": null,
+    "startingPriceMinMinor": null,
+    "startingPriceMaxMinor": null,
+    "startingPriceRangeKey": "",
+    "website": "https://www.eventeleganceoregon.com/",
+    "instagramHandle": null,
+    "profileImage": null,
+    "portfolioImages": [],
+    "published": true,
+    "claimed": false,
+    "seeded": true,
+    "ownerUserId": null,
+    "source": {
+      "name": "Official website",
+      "url": "https://www.eventeleganceoregon.com/"
+    }
+  }
+]

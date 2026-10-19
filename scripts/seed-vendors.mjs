@@ -9,6 +9,7 @@ const projectRoot = process.cwd();
 const { environment, positional } = parseScriptArguments(process.argv.slice(2));
 if (positional.length > 1) throw new Error("Pass at most one vendor data-file path.");
 const dataFile = positional[0] ?? "data.json";
+const countryFileCode = path.basename(dataFile).match(/^([a-z]{2})-data\.json$/i)?.[1]?.toUpperCase();
 const { uri, databaseName } = databaseEnvironment(environment);
 process.stdout.write(`Target environment: ${environment} (${databaseName})\n`);
 
@@ -51,6 +52,17 @@ function changedFields(existing, next) {
 for (const vendor of vendors) {
   if (!vendor?.businessName || typeof vendor.businessName !== "string") {
     throw new Error("Every vendor must have a businessName.");
+  }
+  if (!/^[A-Z]{2}$/.test(vendor.countryCode ?? "")) {
+    throw new Error(
+      `Every vendor must have a two-letter uppercase countryCode: ${vendor.businessName}.`,
+    );
+  }
+  const expectedCountryCode = countryFileCode;
+  if (expectedCountryCode && vendor.countryCode !== expectedCountryCode) {
+    throw new Error(
+      `${dataFile} must contain only ${expectedCountryCode} profiles; ${vendor.businessName} has ${vendor.countryCode}.`,
+    );
   }
   normalizeLogoSourceUrl(vendor.logoSourceUrl);
 }

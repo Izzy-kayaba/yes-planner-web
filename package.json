@@ -9,6 +9,7 @@
     "admin:role": "node scripts/manage-platform-role.mjs",
     "media:cleanup": "node scripts/cleanup-orphaned-media.mjs",
     "seed:vendors": "node scripts/seed-vendors.mjs",
+    "generate:country-data": "node scripts/generate-country-data.mjs",
     "check:lines": "node scripts/check-file-lines.mjs",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
