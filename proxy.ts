@@ -3,6 +3,15 @@ import { detectCountry, normalizeCountry } from "@/lib/country";
 
 // Keep the regional country code in the visible URL while the existing app routes serve the page.
 export function proxy(request: NextRequest) {
+  if (
+    request.nextUrl.hostname === "yes-planner.com" &&
+    (request.method === "GET" || request.method === "HEAD")
+  ) {
+    const canonicalUrl = request.nextUrl.clone();
+    canonicalUrl.hostname = "www.yes-planner.com";
+    return NextResponse.redirect(canonicalUrl, 308);
+  }
+
   const pathname = request.nextUrl.pathname;
   if (shouldSkipRegionalRouting(pathname)) return NextResponse.next();
 

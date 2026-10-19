@@ -1,6 +1,7 @@
 [
   {
     "businessName": "Events By Nicci-H",
+    "email": "eventsbynicci.h@gmail.com",
     "contactName": "Nicole",
     "bio": "Johannesburg-based events planning company specialising in contemporary decor styling, catering, bar services, audiovisual production and event extras.",
     "serviceArea": "Johannesburg",
@@ -34,6 +35,7 @@
   },
   {
     "businessName": "JoyJams Studio",
+    "email": "joyjamsevents@gmail.com",
     "contactName": null,
     "bio": "Johannesburg event styling studio offering event planning, premium balloon styling, custom decor and florals, catering and treats, with photography add-ons.",
     "serviceArea": "Sandton, Johannesburg",
@@ -65,6 +67,7 @@
   },
   {
     "businessName": "Tapestry Event Group",
+    "email": "info@tapestryevents.co.za",
     "contactName": null,
     "bio": "Johannesburg-based full-service event curation and design studio providing creative direction, decor, vendor coordination, catering and bar services.",
     "serviceArea": "Johannesburg",
@@ -96,6 +99,7 @@
   },
   {
     "businessName": "Signature Setup & Co",
+    "email": "info@signaturesetup.co.za",
     "contactName": null,
     "bio": "Wedding specialist providing stationery and signage, floral and decor styling, planning and coordination, and custom wedding websites.",
     "serviceArea": "Johannesburg",
@@ -154,6 +158,7 @@
   },
   {
     "businessName": "Mary's Inn",
+    "email": "info@marrysinn.co.za",
     "contactName": null,
     "bio": "Johannesburg event supplier offering wedding decor, catering, cakes and confectionery, bar services, photography and videography.",
     "serviceArea": "Johannesburg",
@@ -216,6 +221,7 @@
   },
   {
     "businessName": "Memories in Motion",
+    "email": "admin@memoriesmotion.com",
     "contactName": null,
     "bio": "Johannesburg wedding planning service providing full-service planning and coordination, wedding decor, styling, florals, furniture hire, AV, sound, lighting, staging and supplier coordination.",
     "serviceArea": "Johannesburg",
@@ -280,6 +286,7 @@
   },
   {
     "businessName": "Duck & Dine",
+    "email": "info@duckdine.com",
     "contactName": null,
     "bio": "Garden and self-catering venue for weddings and private events in Pretoria.",
     "serviceArea": "Pretoria, Gauteng",
@@ -308,6 +315,7 @@
   },
   {
     "businessName": "Lethabo Estate",
+    "email": "info@lethaboestate.com",
     "contactName": null,
     "bio": "Riverside country estate offering a scenic setting for weddings and private functions in the Lanseria and Muldersdrift area.",
     "serviceArea": "Lanseria / Muldersdrift, Gauteng",
@@ -337,6 +345,7 @@
   },
   {
     "businessName": "The Garden Venue",
+    "email": "info@thegardenvenue.co.za",
     "contactName": null,
     "bio": "Garden pavilion and function venue in Randburg, Johannesburg.",
     "serviceArea": "Randburg, Johannesburg, Gauteng",
@@ -366,6 +375,7 @@
   },
   {
     "businessName": "Valverde Eco Hotel",
+    "email": "hotel@valverde.co.za",
     "contactName": null,
     "bio": "Country hotel and events venue in Muldersdrift.",
     "serviceArea": "Muldersdrift, Gauteng",
@@ -395,6 +405,7 @@
   },
   {
     "businessName": "Oxbow Country Estate",
+    "email": "info@oxbowestate.co.za",
     "contactName": null,
     "bio": "Country estate in Bronkhorstspruit offering a countryside setting for weddings and functions.",
     "serviceArea": "Bronkhorstspruit, Gauteng",
@@ -424,6 +435,7 @@
   },
   {
     "businessName": "Forest Walk Venue",
+    "email": "theforestwalkvenue@gmail.com",
     "contactName": null,
     "bio": "Garden chapel and thatch lapa venue in Midrand.",
     "serviceArea": "Midrand, Gauteng",
@@ -453,6 +465,7 @@
   },
   {
     "businessName": "Monte Vista Wedding Venue",
+    "email": "info@montevistavenue.co.za",
     "contactName": null,
     "bio": "All-inclusive wedding and function venue in Muldersdrift.",
     "serviceArea": "Muldersdrift, Gauteng",
@@ -482,6 +495,7 @@
   },
   {
     "businessName": "Riverside Country Estate",
+    "email": "info@riverside4me.co.za",
     "contactName": null,
     "bio": "Riverside venue offering a hall and lapa setting for weddings and private functions.",
     "serviceArea": "Springs, Gauteng",
@@ -540,6 +554,7 @@
   },
   {
     "businessName": "Kleinkaap Boutique Hotel",
+    "email": "info@kleinkaap.co.za",
     "contactName": null,
     "bio": "Cape Dutch-inspired boutique hotel and wedding venue in Centurion.",
     "serviceArea": "Centurion, Gauteng",
@@ -598,6 +613,7 @@
   },
   {
     "businessName": "Avianto",
+    "email": "info@avianto.co.za",
     "contactName": null,
     "bio": "European village-style estate and function venue in Muldersdrift.",
     "serviceArea": "Muldersdrift, Gauteng",
@@ -685,6 +701,7 @@
   },
   {
     "businessName": "Leopard Lodge",
+    "email": "info@leopardlodge.co.za",
     "contactName": null,
     "bio": "Mountain and valley view venue near Hartbeespoort.",
     "serviceArea": "Hartbeespoort, North West",
@@ -714,6 +731,7 @@
   },
   {
     "businessName": "Green Leaves Country Lodge",
+    "email": "info@greenleaves.co.za",
     "contactName": null,
     "bio": "Country lodge and wedding venue in Hartbeespoort.",
     "serviceArea": "Hartbeespoort, North West",
@@ -743,6 +761,7 @@
   },
   {
     "businessName": "Thaba Eco Hotel",
+    "email": "reservations@thabahotel.co.za",
     "contactName": null,
     "bio": "Eco-luxury hotel and function venue in Johannesburg South.",
     "serviceArea": "Johannesburg South, Gauteng",
@@ -772,6 +791,7 @@
   },
   {
     "businessName": "Zebra Country Lodge",
+    "email": "reception@zebralodge.com",
     "contactName": null,
     "bio": "Bushveld lodge and wedding venue near Cullinan.",
     "serviceArea": "Cullinan, Gauteng",
@@ -801,6 +821,7 @@
   },
   {
     "businessName": "Cradle Moon Lakeside Game Lodge",
+    "email": "reservations@cradlemoon.co.za",
     "contactName": null,
     "bio": "Lakeside game lodge and events venue in Muldersdrift.",
     "serviceArea": "Muldersdrift, Gauteng",
@@ -830,6 +851,7 @@
   },
   {
     "businessName": "Blandford Manor",
+    "email": "tihan@blandfordmanor.com",
     "contactName": null,
     "bio": "Country manor and garden venue in North Riding, Randburg.",
     "serviceArea": "North Riding, Randburg, Gauteng",
@@ -888,6 +910,7 @@
   },
   {
     "businessName": "Pretoria National Botanical Garden",
+    "email": "pretoriagarden@sanbi.org.za",
     "contactName": null,
     "bio": "National botanical garden setting in Pretoria with spaces suitable for functions and events.",
     "serviceArea": "Pretoria, Gauteng",
@@ -915,6 +938,7 @@
   },
   {
     "businessName": "The Blades",
+    "email": "info@theblades.co.za",
     "contactName": null,
     "bio": "Waterfront boutique hotel and events venue near Roodeplaat, Pretoria.",
     "serviceArea": "Roodeplaat, Pretoria, Gauteng",
@@ -973,6 +997,7 @@
   },
   {
     "businessName": "Oakfield Farm",
+    "email": "info@oakfield.co.za",
     "contactName": null,
     "bio": "Historic farm estate in Muldersdrift offering a countryside setting for weddings and functions.",
     "serviceArea": "Muldersdrift, Gauteng",
@@ -1002,6 +1027,7 @@
   },
   {
     "businessName": "Black Eagle Hotel & Conference Centre",
+    "email": "info@blackeaglehotel.co.za",
     "contactName": null,
     "bio": "Hotel, gardens and function venue in Roodepoort.",
     "serviceArea": "Roodepoort, Gauteng",
@@ -1031,6 +1057,7 @@
   },
   {
     "businessName": "Rosemary Hill",
+    "email": "info@rosemaryhill.co.za",
     "contactName": null,
     "bio": "Working farm and wedding venue in Pretoria East.",
     "serviceArea": "Pretoria East, Gauteng",
@@ -1089,6 +1116,7 @@
   },
   {
     "businessName": "Stone Cradle",
+    "email": "mulderdriftbookings@stonecradle.com",
     "contactName": null,
     "bio": "Stone and thatch wedding and function venue in the Centurion area.",
     "serviceArea": "Irene, Centurion, Gauteng",
@@ -1147,6 +1175,7 @@
   },
   {
     "businessName": "The Nutcracker Country Venue",
+    "email": "samantha@thenutcracker.co.za",
     "contactName": null,
     "bio": "Country venue near the Vaal River in Parys.",
     "serviceArea": "Parys, Free State",
@@ -1205,6 +1234,7 @@
   },
   {
     "businessName": "Casa Toscana Lodge",
+    "email": "anette@casatoscana.co.za",
     "contactName": null,
     "bio": "Italian-inspired Tuscan-style lodge and function venue in Pretoria.",
     "serviceArea": "Lynnwood Manor, Pretoria, Gauteng",
@@ -1694,6 +1724,7 @@
   },
   {
     "businessName": "Event Crush",
+    "email": "becky@eventcrush.com",
     "contactName": "Becky Hart",
     "bio": "Oregon wedding and destination event planning company specializing in full-service planning, month-of coordination, and vendor management based in Eugene, Oregon.",
     "serviceArea": "Eugene, Oregon",
@@ -1746,6 +1777,7 @@
   },
   {
     "businessName": "Power of Love Rentals",
+    "email": "hello@powerofloverentals.com",
     "contactName": null,
     "bio": "Family-run wedding and event rental business in Portland specializing in unique decor, event styling, and custom personalization.",
     "serviceArea": "Portland, Oregon",
@@ -1773,6 +1805,7 @@
   },
   {
     "businessName": "Event Elegance",
+    "email": "info@eventelegancerentals.com",
     "contactName": "Dave and Bobbie",
     "bio": "Central Oregon event rental service providing tables, chairs, linens, beverage bars, decor, and lighting, along with delivery, setup, and pickup services.",
     "serviceArea": "Central Oregon",
