@@ -1,9 +1,13 @@
 // Purpose: implements tests/scripts/environment.test.mjs for the Yes Planner web application.
 import assert from "node:assert/strict";
 import test from "node:test";
-import { parseScriptArguments } from "../../scripts/environment.mjs";
+import { loadEnvironment, parseScriptArguments } from "../../scripts/environment.mjs";
 
-test("requires an explicit development or production database target", () => {
+test("loads the selected staging environment without referencing another environment", () => {
+  assert.equal(loadEnvironment("staging").environment, "staging");
+});
+
+test("requires an explicit database target", () => {
   assert.throws(() => parseScriptArguments([]), /Choose the database target/);
   assert.deepEqual(parseScriptArguments(["--env", "development"]), {
     environment: "development",
@@ -12,6 +16,10 @@ test("requires an explicit development or production database target", () => {
   assert.deepEqual(parseScriptArguments(["admin@example.com", "--env=production"]), {
     environment: "production",
     positional: ["admin@example.com"],
+  });
+  assert.deepEqual(parseScriptArguments(["--env", "staging"]), {
+    environment: "staging",
+    positional: [],
   });
 });
 

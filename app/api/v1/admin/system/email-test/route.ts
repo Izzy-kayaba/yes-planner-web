@@ -7,6 +7,25 @@ import { mongoDb } from "@/lib/mongodb";
 
 const testSchema = z.object({ recipient: z.string().trim().email().max(254) });
 
+// Email delivery should not be reported as failed only because the separate audit write is unavailable.
+async function recordEmailTestAudit(actorUserId: string, outcome: "success" | "failure") {
+  try {
+    await recordAdminAuditEvent({
+      actorUserId,
+      permission: "integrations.test",
+      action: "integration.email_test",
+      resourceType: "integration",
+      resourceId: "email",
+      outcome,
+    });
+  } catch (error) {
+    console.error("Admin email integration audit failed", {
+      name: error instanceof Error ? error.name : "UnknownError",
+      message: error instanceof Error ? error.message : "Unknown audit error",
+    });
+  }
+}
+
 export async function GET(request: Request) {
   const authorization = await requirePlatformApiPermission(request.headers, "integrations.view");
   if (authorization.error) return authorization.error;
@@ -49,31 +68,18 @@ export async function POST(request: Request) {
       "This is a test message sent from the Yes Planner administration system.",
     );
   } catch (error) {
-    // Keep provider responses and configuration details in server logs, not the admin response.
+    // Keep provider details in server logs, not the browser response or audit metadata.
     console.error("Admin email integration test failed", {
       name: error instanceof Error ? error.name : "UnknownError",
+      message: error instanceof Error ? error.message : "Unknown email delivery error",
     });
-    await recordAdminAuditEvent({
-      actorUserId: authorization.session.user.id,
-      permission: "integrations.test",
-      action: "integration.email_test",
-      resourceType: "integration",
-      resourceId: "email",
-      outcome: "failure",
-    });
+    await recordEmailTestAudit(authorization.session.user.id, "failure");
     return NextResponse.json(
       { message: "Email test failed. Check the server logs for a safe operational summary." },
       { status: 502 },
     );
   }
 
-  await recordAdminAuditEvent({
-    actorUserId: authorization.session.user.id,
-    permission: "integrations.test",
-    action: "integration.email_test",
-    resourceType: "integration",
-    resourceId: "email",
-    outcome: "success",
-  });
+  await recordEmailTestAudit(authorization.session.user.id, "success");
   return NextResponse.json({ status: "sent" });
 }

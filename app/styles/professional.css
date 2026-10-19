@@ -315,6 +315,60 @@
   gap: 10px;
   border-bottom: 1px solid var(--line);
 }
+.admin-user-row {
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  min-width: 0;
+  gap: 12px;
+  padding-inline: 4px;
+}
+.admin-user-row p {
+  min-width: 0;
+}
+.admin-user-row p strong {
+  overflow: hidden;
+  font-size: 15px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.admin-user-row p small {
+  overflow: hidden;
+  font-size: 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.admin-user-actions {
+  margin-left: 0;
+}
+.admin-user-actions .button {
+  min-height: 36px;
+  width: 36px;
+  padding-inline: 0;
+}
+.admin-staff-row > div:first-child > strong {
+  font-size: 15px;
+}
+@media (max-width: 520px) {
+  .admin-user-row {
+    grid-template-columns: 34px minmax(0, 1fr) auto auto;
+    gap: 7px;
+  }
+  .admin-user-row .avatar {
+    height: 34px;
+    width: 34px;
+  }
+  .admin-user-row .status-pill {
+    padding-inline: 7px;
+    font-size: 10px;
+  }
+  .admin-user-row .admin-user-actions {
+    gap: 4px;
+  }
+  .admin-user-row .admin-user-actions .button {
+    height: 34px;
+    min-height: 34px;
+    width: 34px;
+  }
+}
 .claim-review-list > div {
   grid-template-columns: minmax(0, 1fr) auto;
   padding-block: 12px;

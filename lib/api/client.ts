@@ -1,5 +1,19 @@
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "";
 
+// Keep requests same-origin when a deployment has both apex and www aliases.
+// A redirect between those aliases cannot be followed during a browser CORS preflight.
+function requestUrl(path: string) {
+  if (!API_URL || typeof window === "undefined") return `${API_URL}${path}`;
+
+  const configuredUrl = new URL(API_URL, window.location.origin);
+  const currentHost = window.location.hostname.replace(/^www\./, "");
+  const configuredHost = configuredUrl.hostname.replace(/^www\./, "");
+  const isFirstPartyAlias =
+    currentHost === configuredHost && configuredUrl.protocol === window.location.protocol;
+
+  return isFirstPartyAlias ? path : `${API_URL}${path}`;
+}
+
 export class ApiError extends Error {
   constructor(
     message: string,
@@ -19,7 +33,7 @@ export async function apiRequest<T>(path: string, options: ApiOptions = {}): Pro
   const { token, headers, ...requestOptions } = options;
   const isFormData = requestOptions.body instanceof FormData;
   // Let the browser set the multipart boundary; JSON requests need an explicit content type.
-  const response = await fetch(`${API_URL}${path}`, {
+  const response = await fetch(requestUrl(path), {
     ...requestOptions,
     // The app uses cookie-backed sessions; credentials must accompany API requests.
     credentials: "include",

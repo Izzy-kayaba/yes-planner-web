@@ -3,7 +3,6 @@
 import { Building2, Camera, Heart, Store, type LucideIcon } from "lucide-react";
 import { getCountries, isValidPhoneNumber, parsePhoneNumber } from "libphonenumber-js";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import PhoneInput from "react-phone-number-input";
@@ -67,7 +66,6 @@ export function AuthForm({
   mode: "login" | "register";
   initialNotice?: "account-exists";
 }) {
-  const router = useRouter();
   const { t, text } = useLanguage();
   const isRegister = mode === "register";
   const [defaultCountry, setDefaultCountry] = useState<Country>("ZA");
@@ -128,9 +126,14 @@ export function AuthForm({
           ...registration,
           phoneNumber: parsePhoneNumber(registration.phoneNumber).number,
         });
-      } else await getBackend().login(result.data);
+      } else {
+        await getBackend().login(result.data);
+        // Confirm the cookie-backed session before loading a server-protected dashboard.
+        await waitForAuthenticatedSession();
+      }
       toast.success(text(isRegister ? "Your workspace is ready." : "Welcome back."));
-      router.push("/dashboard");
+      // A full navigation prevents the dashboard from rendering with a stale RSC session.
+      window.location.replace(getDashboardPath());
     } catch (error) {
       toast.error(text(error instanceof Error ? error.message : "Authentication failed."));
     }
@@ -310,4 +313,17 @@ export function AuthForm({
       </p>
     </form>
   );
+}
+
+async function waitForAuthenticatedSession() {
+  for (let attempt = 0; attempt < 3; attempt += 1) {
+    const session = await authClient.getSession();
+    if (session.data?.user) return;
+    await new Promise((resolve) => window.setTimeout(resolve, 150 * (attempt + 1)));
+  }
+  throw new Error("Sign-in completed, but the session could not be confirmed. Please try again.");
+}
+
+function getDashboardPath() {
+  return window.location.pathname === "/za/login" ? "/za/dashboard" : "/dashboard";
 }

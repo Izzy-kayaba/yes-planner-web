@@ -45,12 +45,30 @@ export default async function HomePage() {
   const text = await getTextTranslator();
   const structuredData = {
     "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    name: "Yes Planner",
-    applicationCategory: "LifestyleApplication",
-    operatingSystem: "Web",
-    url: siteUrl.toString(),
-    description: siteDescription,
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": `${siteUrl}#organization`,
+        name: "Yes Planner",
+        url: siteUrl.toString(),
+        logo: new URL("/favicon/android-chrome-512x512.png", siteUrl).toString(),
+      },
+      {
+        "@type": "WebSite",
+        "@id": `${siteUrl}#website`,
+        name: "Yes Planner",
+        url: siteUrl.toString(),
+        publisher: { "@id": `${siteUrl}#organization` },
+      },
+      {
+        "@type": "SoftwareApplication",
+        name: "Yes Planner",
+        applicationCategory: "LifestyleApplication",
+        operatingSystem: "Web",
+        url: siteUrl.toString(),
+        description: siteDescription,
+      },
+    ],
   };
 
   return (

@@ -4,7 +4,7 @@ Better Auth runs inside the Next.js server and uses MongoDB for users, sessions,
 
 ## Account and provider setup
 
-Supported sign-in methods in the code include email/password and optional Google and Instagram OAuth. Provider credentials and callback URLs must be configured separately in each environment. Local callbacks use `http://localhost:3000/api/auth/callback/google` and `/api/auth/callback/instagram`; production callbacks must use the exact HTTPS application domain.
+Supported sign-in methods in the code include email/password and optional Google and Instagram OAuth. Provider credentials and callback URLs must be configured separately in each environment. Local callbacks use `http://localhost:3000/api/auth/callback/google` and `/api/auth/callback/instagram`. Staging uses `https://yes-planner-staging.vercel.app/api/auth/callback/google` and `/api/auth/callback/instagram`; production must use the exact configured production domain. `NEXT_PUBLIC_SITE_URL` is the preferred callback host and must match `BETTER_AUTH_URL`. Regional paths such as `/za` do not prefix OAuth callback URLs because API routes bypass regional rewriting.
 
 Account linking follows Better Auth verification rules; do not merge accounts based only on an unverified email address. Instagram may not return an email address, so the application uses a non-routable `.invalid` placeholder for the authentication record and keeps real contact information separate.
 

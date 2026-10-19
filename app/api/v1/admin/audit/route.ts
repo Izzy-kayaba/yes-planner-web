@@ -50,15 +50,22 @@ export async function GET(request: Request) {
     .find(appliedFilter)
     .project({
       event_id: 1,
+      schema_version: 1,
+      occurred_at: 1,
+      changes: 1,
       event_type: 1,
       actor: 1,
       actorUserId: 1,
+      permission: 1,
       action: 1,
       resource: 1,
       resourceType: 1,
       resourceId: 1,
       outcome: 1,
       reason_code: 1,
+      request_id: 1,
+      source_ip: 1,
+      service: 1,
       recorded_at: 1,
       createdAt: 1,
     })
@@ -72,20 +79,53 @@ export async function GET(request: Request) {
     .skip(pagination.skip)
     .limit(pagination.pageSize)
     .toArray();
+  const actorIds = events
+    .map((event) => String(event.actor?.id ?? event.actorUserId ?? ""))
+    .filter(Boolean);
+  const actorRecords = actorIds.length
+    ? await mongoDb
+        .collection("user")
+        .find({ id: { $in: actorIds } }, { projection: { id: 1, name: 1, email: 1 } })
+        .toArray()
+    : [];
+  const actors = new Map(
+    actorRecords.map((actor) => [
+      String(actor.id),
+      { name: String(actor.name ?? ""), email: String(actor.email ?? "") },
+    ]),
+  );
   return NextResponse.json(
     paginatedResult(
       events.map((event) => ({
         id: String(event._id),
         eventId: String(event.event_id ?? event._id),
+        schemaVersion: String(event.schema_version ?? "1.0"),
+        occurredAt: String(event.occurred_at ?? event.recorded_at ?? event.createdAt ?? ""),
+        recordedAt: String(event.recorded_at ?? event.createdAt ?? ""),
         eventType: String(event.event_type ?? "legacy.audit_event"),
         actorUserId: String(event.actor?.id ?? event.actorUserId ?? ""),
+        actorType: String(event.actor?.type ?? "human"),
         actorRole: String(event.actor?.role ?? ""),
+        actorName: String(
+          event.actor?.name ??
+            actors.get(String(event.actor?.id ?? event.actorUserId ?? ""))?.name ??
+            "",
+        ),
+        actorEmail: String(
+          event.actor?.email ??
+            actors.get(String(event.actor?.id ?? event.actorUserId ?? ""))?.email ??
+            "",
+        ),
+        permission: String(event.permission ?? ""),
         action: String(event.action ?? ""),
         resourceType: String(event.resource?.type ?? event.resourceType ?? ""),
         resourceId: String(event.resource?.id ?? event.resourceId ?? ""),
+        changes: (event.changes ?? {}) as Record<string, { before: unknown; after: unknown }>,
         outcome: String(event.outcome ?? "").toLowerCase(),
         reasonCode: String(event.reason_code ?? ""),
-        createdAt: event.recorded_at ?? event.createdAt,
+        requestId: String(event.request_id ?? ""),
+        sourceIp: String(event.source_ip ?? ""),
+        service: String(event.service ?? ""),
       })),
       pagination.page,
       pagination.pageSize,

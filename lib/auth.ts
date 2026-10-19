@@ -3,7 +3,6 @@ import "server-only";
 import { betterAuth } from "better-auth";
 import { mongodbAdapter } from "better-auth/adapters/mongodb";
 import { genericOAuth } from "better-auth/plugins";
-import { after } from "next/server";
 import { mongoClient, mongoDb } from "@/lib/mongodb";
 import { sendPasswordResetEmail, sendVerificationEmail } from "@/lib/email";
 import { mapInstagramProfile, type InstagramProfile } from "@/lib/auth/instagram";
@@ -29,6 +28,8 @@ function getAuthSecret() {
 }
 
 function getAuthBaseUrl() {
+  // Use the deployment's public host first so OAuth callbacks cannot inherit a stale URL.
+  if (process.env.NEXT_PUBLIC_SITE_URL) return process.env.NEXT_PUBLIC_SITE_URL;
   if (process.env.BETTER_AUTH_URL) return process.env.BETTER_AUTH_URL;
   if (
     process.env.NODE_ENV === "production" &&
@@ -94,34 +95,16 @@ export const auth = betterAuth({
     resetPasswordTokenExpiresIn: 3_600,
     revokeSessionsOnPasswordReset: true,
     sendResetPassword: async ({ user, url }) => {
-      after(async () => {
-        try {
-          await sendPasswordResetEmail(user.email, url);
-        } catch (error) {
-          console.error("Password reset email delivery failed", {
-            name: error instanceof Error ? error.name : "UnknownError",
-            message: error instanceof Error ? error.message : "Unknown email delivery error",
-          });
-          throw error;
-        }
-      });
+      // Wait for Resend before reporting success so password-reset failures are not hidden.
+      await sendPasswordResetEmail(user.email, url);
     },
   },
   emailVerification: {
     sendOnSignUp: true,
     autoSignInAfterVerification: true,
     sendVerificationEmail: async ({ user, url }) => {
-      after(async () => {
-        try {
-          await sendVerificationEmail(user.email, url);
-        } catch (error) {
-          console.error("Verification email delivery failed", {
-            name: error instanceof Error ? error.name : "UnknownError",
-            message: error instanceof Error ? error.message : "Unknown email delivery error",
-          });
-          throw error;
-        }
-      });
+      // Use the same awaited delivery path as password reset and admin test email.
+      await sendVerificationEmail(user.email, url);
     },
   },
   account: {

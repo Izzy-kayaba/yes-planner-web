@@ -207,11 +207,11 @@ export function AdminStaffPanel({
         {accounts.length ? (
           accounts.map((account) => (
             <div
-              className="grid gap-3 border-b border-yes-line py-4 last:border-0 md:grid-cols-[minmax(0,1fr)_auto] md:items-center"
+              className="admin-staff-row grid gap-3 border-b border-yes-line py-4 last:border-0 md:grid-cols-[minmax(0,1fr)_auto] md:items-center"
               key={account.id}
             >
               <div className="grid min-w-0 gap-1">
-                <strong className="text-sm">{account.name || account.email}</strong>
+                <strong className="text-base">{account.name || account.email}</strong>
                 <span className="break-words text-sm text-yes-muted">
                   {account.email} · {text(account.accountType)}
                 </span>
