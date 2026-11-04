@@ -1,7 +1,7 @@
 // Purpose: implements tests/auth/country.test.mjs for the Yes Planner web application.
 import assert from "node:assert/strict";
 import test from "node:test";
-import { appendZaPath, normalizeCountry } from "../../lib/country.ts";
+import { appendCountryPath, appendZaPath, normalizeCountry } from "../../lib/country.ts";
 
 test("normalizes SA to the ISO country code ZA", () => {
   assert.equal(normalizeCountry("sa"), "ZA");
@@ -12,6 +12,12 @@ test("adds the ZA prefix once for South African paths", () => {
   assert.equal(appendZaPath("/za/marketplace", "ZA"), "/za/marketplace");
 });
 
-test("leaves non-South-African paths unchanged", () => {
-  assert.equal(appendZaPath("/marketplace", "US"), "/marketplace");
+test("adds a dynamic two-letter country prefix for other detected countries", () => {
+  assert.equal(appendCountryPath("/marketplace", "FR"), "/fr/marketplace");
+  assert.equal(appendCountryPath("/fr/marketplace", "FR"), "/fr/marketplace");
+  assert.equal(appendCountryPath("/marketplace", ""), "/marketplace");
+});
+
+test("uses the detected country for non-South-African paths", () => {
+  assert.equal(appendCountryPath("/marketplace", "US"), "/us/marketplace");
 });

@@ -19,8 +19,12 @@ export function detectCountry(request: Request) {
   return locale.endsWith("-ZA") || timeZone === "Africa/Johannesburg" ? "ZA" : "";
 }
 
-export function appendZaPath(pathname: string, country: string | null | undefined) {
+export function appendCountryPath(pathname: string, country: string | null | undefined) {
   const path = pathname.startsWith("/") ? pathname : `/${pathname}`;
-  if (normalizeCountry(country) !== "ZA" || path === "/za" || path.startsWith("/za/")) return path;
-  return path === "/" ? "/za" : `/za${path}`;
+  const code = normalizeCountry(country).toLowerCase();
+  if (!/^[a-z]{2}$/.test(code)) return path;
+  if (path === `/${code}` || path.startsWith(`/${code}/`)) return path;
+  return path === "/" ? `/${code}` : `/${code}${path}`;
 }
+
+export const appendZaPath = appendCountryPath;

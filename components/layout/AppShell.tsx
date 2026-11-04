@@ -132,12 +132,12 @@ function matchesNavigation(pathname: string, href: string, siblings: readonly { 
   return activeMatch.href === href;
 }
 
-// Sidebar definitions use the app's internal paths while South African pages expose a /za prefix.
-// Compare the internal route so regional URLs keep the same active navigation state.
+// Sidebar definitions use internal paths while regional URLs expose a two-letter prefix.
+// Compare the internal route so every country keeps the same active navigation state.
 function normalizeNavigationPath(pathname: string) {
   const normalized = pathname.replace(/\/$/, "") || "/";
-  if (normalized === "/za") return "/";
-  return normalized.startsWith("/za/") ? normalized.slice("/za".length) : normalized;
+  if (/^\/[a-z]{2}$/.test(normalized)) return "/";
+  return normalized.replace(/^\/[a-z]{2}(?=\/)/, "");
 }
 
 export function AppShell({
