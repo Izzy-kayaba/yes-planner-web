@@ -5,7 +5,6 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { useLanguage } from "@/components/providers/LanguageProvider";
 import { Pagination } from "@/components/ui/Pagination";
-import { StatusPill } from "@/components/ui/StatusPill";
 import { AdminSearch } from "@/features/admin/AdminSearch";
 import { apiRequest } from "@/lib/api/client";
 import type { PaginatedResult } from "@/lib/api/contracts";
@@ -118,9 +117,6 @@ export function AdminAuditPanel({
                     {event.resourceId ? ` · ${event.resourceId}` : ""}
                   </span>
                 </div>
-                <StatusPill tone={event.outcome === "success" ? "sage" : "rose"}>
-                  {text(event.outcome)}
-                </StatusPill>
               </div>
               <dl className="grid gap-x-6 gap-y-3 text-sm sm:grid-cols-2 lg:grid-cols-3">
                 <AuditField label="Event ID" value={event.eventId} />
