@@ -21,7 +21,7 @@ export async function GET(request: Request) {
     .collection("user")
     .findOne(
       { email: authentication.session.user.email.toLowerCase() },
-      { projection: { createdAt: 1 } },
+      { projection: { createdAt: 1, role: 1, platformRoles: 1 } },
     );
   const existingGoogleAccount = isExistingGoogleRegistration(authIntent, user?.createdAt);
 
@@ -59,9 +59,15 @@ export async function GET(request: Request) {
     }
   }
 
-  const response = NextResponse.redirect(
-    new URL(claimSubmissionFailed ? "/vendor?claimSubmission=failed" : "/dashboard", request.url),
-  );
+  const isPlatformUser =
+    user?.role === "SystemAdmin" ||
+    (Array.isArray(user?.platformRoles) && user.platformRoles.length > 0);
+  const destination = isPlatformUser
+    ? "/admin"
+    : claimSubmissionFailed
+      ? "/vendor?claimSubmission=failed"
+      : "/dashboard";
+  const response = NextResponse.redirect(new URL(destination, request.url));
   response.cookies.delete("yes-pending-account-type");
   response.cookies.delete("yes-pending-role");
   response.cookies.delete("yes-pending-profile-claim");

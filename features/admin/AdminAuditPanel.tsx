@@ -18,7 +18,6 @@ type AuditItem = {
   recordedAt: string;
   eventType: string;
   actorUserId: string;
-  actorType: string;
   actorRole: string;
   actorName: string;
   actorEmail: string;
@@ -27,11 +26,7 @@ type AuditItem = {
   resourceType: string;
   resourceId: string;
   changes: Record<string, { before: unknown; after: unknown }>;
-  outcome: string;
-  reasonCode: string;
-  requestId: string;
   sourceIp: string;
-  service: string;
 };
 
 export function AdminAuditPanel({
@@ -134,7 +129,6 @@ export function AdminAuditPanel({
                 <AuditField label="Occurred at" value={formatAuditDate(event.occurredAt)} />
                 <AuditField label="Recorded at" value={formatAuditDate(event.recordedAt)} />
                 <AuditField label="Actor ID" value={event.actorUserId} />
-                <AuditField label="Actor type" value={event.actorType} />
                 <AuditField label="Actor role" value={event.actorRole} />
                 <AuditField label="Actor name" value={event.actorName} />
                 <AuditField label="Actor email" value={event.actorEmail} />
@@ -142,20 +136,7 @@ export function AdminAuditPanel({
                 <AuditField label="Action" value={event.action} />
                 <AuditField label="Resource type" value={event.resourceType} />
                 <AuditField label="Resource ID" value={event.resourceId} />
-                <AuditField label="Outcome" value={event.outcome} />
-                <AuditField label="Reason code" value={event.reasonCode} />
-                <AuditField label="Request ID" value={event.requestId} />
                 <AuditField label="Source IP" value={event.sourceIp} />
-                <AuditField label="Service" value={event.service} />
-                <AuditField
-                  className="sm:col-span-2 lg:col-span-3"
-                  label="Changes"
-                  value={
-                    Object.keys(event.changes).length
-                      ? JSON.stringify(event.changes)
-                      : text("No changes recorded.")
-                  }
-                />
               </dl>
             </div>
           ))
@@ -179,6 +160,7 @@ export function AdminAuditPanel({
         pageSize={pagination.pageSize}
         total={pagination.totalItems}
         onChange={(page) => void loadPage(page)}
+        alwaysShow
       />
     </article>
   );

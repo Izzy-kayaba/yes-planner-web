@@ -1,7 +1,7 @@
 "use client";
 // Purpose: implements features/admin/AdminSearch.tsx for the Yes Planner web application.
 
-import { ArrowDownWideNarrow, Search, SlidersHorizontal } from "lucide-react";
+import { Search } from "lucide-react";
 import type { FormEvent } from "react";
 import { useLanguage } from "@/components/providers/LanguageProvider";
 import { YesSelect, type YesSelectOption } from "@/components/ui/YesSelect";
@@ -57,14 +57,6 @@ export function AdminSearch({
       <div className="admin-table-management">
         {filters.length > 0 && (
           <div aria-label={text("Filter")} className="admin-table-filter-group" role="group">
-            <span
-              aria-label={text("Filter")}
-              className="admin-table-group-label admin-table-group-icon"
-              title={text("Filter")}
-            >
-              <SlidersHorizontal aria-hidden="true" size={14} />
-              <span className="sr-only">{text("Filter")}</span>
-            </span>
             <div className="admin-table-filter-options">
               {filters.map((filter) => (
                 <div className="admin-table-filter-control" key={filter.label}>
@@ -84,14 +76,6 @@ export function AdminSearch({
         )}
         {sortLabel && sortValue !== undefined && onSortChange && sortOptions.length > 0 && (
           <div className="admin-table-sort-group">
-            <span
-              aria-label={text("Sort")}
-              className="admin-table-group-label admin-table-group-icon"
-              title={text("Sort")}
-            >
-              <ArrowDownWideNarrow aria-hidden="true" size={15} />
-              <span className="sr-only">{text("Sort")}</span>
-            </span>
             <YesSelect
               ariaLabel={text(sortLabel)}
               className={`admin-table-select ${

@@ -8,7 +8,6 @@
   max-height: min(70vh, 42rem);
   overflow-x: auto;
   overflow-y: auto;
-  border-radius: 0.9rem;
   scrollbar-color: color-mix(in srgb, var(--wine) 42%, var(--line)) transparent;
   scrollbar-width: thin;
 }
@@ -51,27 +50,95 @@
   gap: 8px;
 }
 .table-search {
-  height: 40px;
-  display: flex;
+  width: min(100%, 420px);
+  min-height: 44px;
+  display: grid;
+  grid-template-columns: 18px minmax(0, 1fr) 38px;
   align-items: center;
-  gap: 8px;
-  padding: 0 12px;
+  gap: 9px;
+  padding: 4px 5px 4px 14px;
   border: 1px solid var(--line);
-  border-radius: 10px;
+  border-radius: 12px;
   color: var(--muted);
   background: var(--surface);
+  transition: border-color 150ms ease, background-color 150ms ease;
+}
+.table-search:focus-within {
+  border-color: var(--wine);
+  background: color-mix(in srgb, var(--wine) 4%, var(--surface));
 }
 .table-search input {
-  min-width: 200px;
-  height: 100%;
+  width: 100%;
+  min-width: 0;
+  height: 34px;
   padding: 0;
   border: 0;
+  border-radius: 0;
   background: transparent;
   box-shadow: none;
   font-size: 13px;
 }
+.table-search input:focus {
+  border: 0;
+  outline: 0;
+  box-shadow: none;
+}
+.table-search-button {
+  width: 38px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: var(--surface-soft);
+  color: var(--wine);
+}
+.table-search-button:hover {
+  border-color: color-mix(in srgb, var(--wine) 32%, var(--line));
+  background: color-mix(in srgb, var(--wine) 7%, var(--surface));
+}
 .data-table {
+  max-width: 100%;
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  scrollbar-color: color-mix(in srgb, var(--wine) 42%, var(--line)) transparent;
+  scrollbar-width: thin;
+}
+.listing-table-shell {
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  scrollbar-color: color-mix(in srgb, var(--wine) 42%, var(--line)) transparent;
+  scrollbar-width: thin;
+}
+.listing-table {
+  width: 100%;
+  border-collapse: collapse;
+  color: var(--ink);
+  text-align: left;
+  font-size: 13px;
+}
+.listing-table thead tr {
+  background: var(--surface-soft);
+}
+.listing-table th {
+  color: var(--ink);
+  font-weight: 800;
+  white-space: nowrap;
+}
+.listing-table tbody tr {
+  border-top: 1px solid var(--line);
+}
+.listing-table tbody tr:hover {
+  background: color-mix(in srgb, var(--wine) 3%, var(--surface));
+}
+.listing-table td {
+  color: var(--muted);
+  vertical-align: middle;
 }
 .table-head,
 .table-row {
@@ -96,6 +163,14 @@
   border-bottom: 1px solid var(--line);
   color: var(--muted);
   font-size: 12px;
+}
+.table-row:hover {
+  background: color-mix(in srgb, var(--wine) 3%, var(--surface));
+}
+.task-list .task-table-head {
+  min-width: 0;
+  grid-template-columns: 40px repeat(4, minmax(0, 1fr));
+  padding-inline: 20px;
 }
 .table-row:last-child {
   border: 0;
@@ -378,6 +453,54 @@
   margin: 13px 0;
   font-size: 12px;
 }
+/* Keep vendor records row-based like the other workspace tables. */
+.vendor-grid {
+  display: block;
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface);
+}
+.vendor-card {
+  min-width: 680px;
+  display: grid;
+  grid-template-columns: 96px minmax(0, 1fr);
+  overflow: visible;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+  box-shadow: none;
+}
+.vendor-card:last-child {
+  border-bottom: 0;
+}
+.vendor-card:hover {
+  background: color-mix(in srgb, var(--wine) 3%, var(--surface));
+}
+.vendor-cover {
+  height: 100%;
+  min-height: 82px;
+}
+.vendor-card-copy {
+  display: grid;
+  grid-template-columns: minmax(150px, 1.2fr) minmax(130px, 0.8fr) auto;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 20px;
+}
+.vendor-card-copy > div:first-child,
+.vendor-card-copy > h3,
+.vendor-card-copy > p,
+.vendor-card-copy > strong,
+.vendor-card-copy > div:last-child {
+  margin: 0;
+}
+.vendor-card-copy > div:first-child {
+  display: block;
+}
+.vendor-card-copy > div:last-child {
+  justify-content: flex-end;
+}
 .rating {
   color: var(--gold);
   font-weight: 800;
@@ -567,6 +690,20 @@
   background: transparent;
   font-size: 11px;
 }
+.table-card .seating-action {
+  width: 40px;
+  height: 40px;
+  min-height: 40px;
+  border-radius: 11px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--ink);
+}
+.table-card .seating-action.icon-button-blush {
+  border-color: var(--blush);
+  background: var(--blush);
+  color: var(--wine-deep);
+}
 .meal-list {
   display: grid;
 }
@@ -645,11 +782,28 @@
 .file-list > div {
   min-height: 68px;
   display: grid;
-  grid-template-columns: 42px 1fr 70px 70px 25px;
+  grid-template-columns: 42px minmax(220px, 1.3fr) minmax(110px, 1fr) minmax(110px, 1fr) minmax(150px, 1.3fr);
   align-items: center;
   gap: 10px;
   padding: 0 20px;
   border-bottom: 1px solid var(--line);
+}
+.file-list .file-table-head {
+  min-width: 0;
+  grid-template-columns: 42px minmax(220px, 1.3fr) minmax(110px, 1fr) minmax(110px, 1fr) minmax(150px, 1.3fr);
+  min-height: 42px;
+  padding-inline: 20px;
+}
+.file-list .file-table-head span {
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 850;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.file-list .file-table-head span:nth-child(n + 3) {
+  justify-self: center;
+  text-align: center;
 }
 .file-icon {
   width: 35px;
@@ -677,6 +831,29 @@
   border: 0;
   background: transparent;
   color: var(--muted);
+}
+.file-list > div > span:last-child {
+  justify-content: center;
+}
+.file-list > div > span:nth-child(3),
+.file-list > div > span:nth-child(4) {
+  text-align: center;
+}
+.file-list > div > .status-pill {
+  justify-self: center;
+}
+.file-list > div > span:last-child .icon-button {
+  width: 36px;
+  height: 36px;
+  min-height: 36px;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface);
+}
+.file-list > div > span:last-child .icon-button-blush {
+  border-color: color-mix(in srgb, var(--wine) 12%, var(--line));
+  background: var(--blush);
 }
 .booking-board {
   display: grid;

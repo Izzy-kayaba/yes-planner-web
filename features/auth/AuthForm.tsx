@@ -87,6 +87,7 @@ export function AuthForm({
       password: "",
     },
   });
+
   const selectedAccountType = watch("accountType");
 
   useEffect(() => {
@@ -127,6 +128,9 @@ export function AuthForm({
           ...registration,
           phoneNumber: parsePhoneNumber(registration.phoneNumber).number,
         });
+        const authenticatedUser = await waitForAuthenticatedSession();
+        const platformRoles = await getPlatformRoles();
+        authenticatedRole = platformRoles.length ? "PlatformAdmin" : authenticatedUser?.role;
       } else {
         await getBackend().login(result.data);
         // Confirm the cookie-backed session before loading a server-protected dashboard.

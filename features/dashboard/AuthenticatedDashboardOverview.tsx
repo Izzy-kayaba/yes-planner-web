@@ -9,7 +9,7 @@ import { PageHeader } from "@/components/ui/PageHeader";
 import { StatCard } from "@/components/ui/StatCard";
 import { StatusPill } from "@/components/ui/StatusPill";
 import type { DashboardData } from "@/lib/dashboard/types";
-import { daysUntil, formatDate, greetingForNow } from "@/lib/date-time";
+import { daysUntil, formatDate, formatDisplayDate, greetingForNow } from "@/lib/date-time";
 import { budgetRanges, guestRanges, inferGuestRange, inferMoneyRange } from "@/lib/estimate-ranges";
 
 export function AuthenticatedDashboardOverview({ data }: { data: DashboardData }) {
@@ -139,7 +139,7 @@ export function AuthenticatedDashboardOverview({ data }: { data: DashboardData }
                     <strong>{task.title}</strong>
                     <small>{[task.category, task.assignee].filter(Boolean).join(" · ")}</small>
                   </span>
-                  <span>{task.due}</span>
+                  <span>{formatDisplayDate(task.due, language)}</span>
                 </div>
               ))}
             </div>

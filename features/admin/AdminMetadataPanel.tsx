@@ -206,8 +206,8 @@ export function AdminMetadataPanel({
         }}
       />
       {items.length ? (
-        <div className="overflow-x-auto">
-          <table className="w-full border-collapse text-left text-sm">
+        <div className="listing-table-shell">
+          <table className="listing-table min-w-[680px]">
             <thead>
               <tr>
                 {columns.map((column) => (

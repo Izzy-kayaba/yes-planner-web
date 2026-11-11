@@ -11,7 +11,8 @@ export const metadata: Metadata = { title: "Platform audit log" };
 export default async function AdminAuditPage() {
   await requirePlatformPagePermission("audit.view");
   await ensureMongoIndexes();
-  const pagination = parsePagination(new URLSearchParams(), 25, 100)!;
+  // Keep audit entries compact so the page navigation remains useful as the log grows.
+  const pagination = parsePagination(new URLSearchParams(), 10, 100)!;
   const collection = mongoDb.collection("adminAuditLog");
   const totalItems = await collection.countDocuments();
   const events = await collection
@@ -38,6 +39,7 @@ export default async function AdminAuditPage() {
       createdAt: 1,
     })
     .sort({ createdAt: -1, _id: -1 })
+    .skip(pagination.skip)
     .limit(pagination.pageSize)
     .toArray();
   const actorIds = events

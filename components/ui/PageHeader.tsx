@@ -25,7 +25,7 @@ export function PageHeader({
             {text(eyebrow)}
           </p>
         )}
-        <h1 className="mb-2 font-display text-[clamp(2.125rem,4vw,2.875rem)] leading-none tracking-[-.04em]">
+        <h1 className="mb-2 font-display text-[clamp(2.3rem,4.2vw,3.2rem)] leading-none tracking-[-.04em]">
           {text(title)}
         </h1>
         {description && (

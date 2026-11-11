@@ -36,6 +36,8 @@ export function WeddingNav({
   const pathname = usePathname();
   const { t, text } = useLanguage();
   const base = `/weddings/${weddingId}`;
+  // The browser may show a country-prefixed URL while the navigation links use internal paths.
+  const navigationPathname = normalizeWeddingPath(pathname);
 
   return (
     <nav
@@ -51,7 +53,7 @@ export function WeddingNav({
         })
         .map(([label, slug]) => {
           const href = slug ? `${base}/${slug}` : base;
-          const active = pathname === href;
+          const active = navigationPathname === href;
           return (
             <Link
               aria-current={active ? "page" : undefined}
@@ -70,4 +72,10 @@ export function WeddingNav({
         })}
     </nav>
   );
+}
+
+function normalizeWeddingPath(pathname: string) {
+  const normalized = pathname.replace(/\/$/, "") || "/";
+  if (/^\/[a-z]{2}$/.test(normalized)) return "/";
+  return normalized.replace(/^\/[a-z]{2}(?=\/)/, "");
 }

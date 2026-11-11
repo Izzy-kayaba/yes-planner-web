@@ -151,7 +151,13 @@ export async function POST(request: Request, context: RouteContext) {
       Promise.allSettled([
         sendWhatsAppToPhone(String(data.phoneNumber), invitationMessage),
         typeof data.email === "string" && data.email
-          ? sendEventEmail(data.email, "Wedding invitation", invitationMessage)
+          ? sendEventEmail(
+              data.email,
+              "Wedding invitation",
+              "You have been invited through Yes Planner. Use the button below to RSVP.",
+              invitationUrl,
+              "Open invitation",
+            )
           : Promise.resolve(),
       ]),
     );

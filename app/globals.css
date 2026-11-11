@@ -134,12 +134,14 @@
   select:focus,
   textarea:focus {
     border-color: var(--wine);
-    box-shadow: 0 0 0 3px color-mix(in srgb, var(--wine) 12%, transparent);
+    background-color: color-mix(in srgb, var(--wine) 4%, var(--surface));
+    box-shadow: none;
   }
   button:focus-visible,
   a:focus-visible {
-    outline: 3px solid color-mix(in srgb, var(--wine) 30%, transparent);
-    outline-offset: 3px;
+    outline: none;
+    border-color: var(--wine);
+    box-shadow: none;
   }
 }
 .page-width {

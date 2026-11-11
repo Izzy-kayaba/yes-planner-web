@@ -99,16 +99,17 @@ export function SeatingSection() {
               </p>
               <div className="flex items-center justify-center gap-3">
                 <button
-                  className="text-link inline-flex items-center gap-1"
+                  className="icon-button seating-action"
+                  aria-label={`${text("Arrange")} ${text(table.name)}`}
                   onClick={() => {
                     setEditing(table);
                     setOpen(true);
                   }}
                 >
-                  <Pencil size={13} /> {text("Arrange")}
+                  <Pencil size={13} />
                 </button>
                 <button
-                  className="button button-blush min-h-9 px-3"
+                  className="icon-button icon-button-blush seating-action"
                   onClick={() => void remove(table.id)}
                   aria-label={`${text("Delete")} ${text(table.name)}`}
                 >

@@ -27,6 +27,9 @@ export function SearchField({
         placeholder={text(placeholder)}
         type="search"
       />
+      <button aria-label={text("Search")} className="table-search-button" type="button">
+        <Search size={15} aria-hidden="true" />
+      </button>
     </label>
   );
 }

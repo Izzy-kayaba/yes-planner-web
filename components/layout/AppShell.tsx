@@ -64,7 +64,8 @@ const navigation: NavigationItem[] = [
     labelKey: "nav.dashboard",
     href: "/dashboard",
     icon: LayoutDashboard,
-    roles: ["Couple", "Vendor", "Venue"],
+    // Business accounts are redirected to their business workspace instead of this page.
+    roles: ["Couple"],
   },
   {
     labelKey: "nav.wedding",

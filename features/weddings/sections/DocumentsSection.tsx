@@ -19,6 +19,7 @@ type DocumentItem = {
   owner: string;
   date: string;
   access: string;
+  url?: string;
 };
 const seed: DocumentItem[] = [
   {
@@ -26,7 +27,7 @@ const seed: DocumentItem[] = [
     name: "Venue agreement.pdf",
     type: "Contract",
     owner: "Ruth",
-    date: "10 Sep",
+    date: "10 Sep 2026",
     access: "Private",
   },
   {
@@ -34,7 +35,7 @@ const seed: DocumentItem[] = [
     name: "Photography schedule.pdf",
     type: "Timeline",
     owner: "Lumen & Lace",
-    date: "08 Sep",
+    date: "08 Sep 2026",
     access: "Team",
   },
   {
@@ -42,7 +43,7 @@ const seed: DocumentItem[] = [
     name: "Catering invoice 003.pdf",
     type: "Invoice",
     owner: "Izzy",
-    date: "04 Sep",
+    date: "04 Sep 2026",
     access: "Team",
   },
 ];
@@ -79,8 +80,9 @@ export function DocumentsSection() {
       name: file.name,
       type: file.type || "File",
       owner: text("Me"),
-      date: formatDate(new Date(), "DD MMM", language),
+      date: formatDate(new Date(), "DD MMM YYYY", language),
       access: "Team",
+      url: URL.createObjectURL(file),
     });
   }
   const shown = items.filter((item) =>
@@ -114,6 +116,13 @@ export function DocumentsSection() {
         </div>
       </div>
       <div className="file-list">
+        <div className="table-head file-table-head">
+          <span aria-hidden="true" />
+          <span>{text("Document")}</span>
+          <span>{text("Added")}</span>
+          <span>{text("Access")}</span>
+          <span>{text("Actions")}</span>
+        </div>
         {shown.map((doc) => (
           <div key={doc.id}>
             <span className="file-icon">
@@ -125,9 +134,19 @@ export function DocumentsSection() {
                 {text(doc.type)} · {text("Added by")} {doc.owner}
               </small>
             </p>
-            <span>{text(doc.date)}</span>
+            <span>{formatDocumentDate(doc.date)}</span>
             <StatusPill tone={doc.access === "Private" ? "rose" : "sage"}>{doc.access}</StatusPill>
-            <span className="flex gap-1">
+            <span className="flex justify-end gap-1">
+              {doc.url ? (
+                <a
+                  className="button button-secondary min-h-9 px-3"
+                  href={doc.url}
+                  rel="noreferrer"
+                  target="_blank"
+                >
+                  {text("Open")}
+                </a>
+              ) : null}
               <button
                 className="icon-button"
                 onClick={() => {
@@ -175,4 +194,10 @@ export function DocumentsSection() {
       {confirmation.dialog}
     </section>
   );
+}
+
+function formatDocumentDate(value: string) {
+  return /^\d{1,2}\s+[A-Za-z]{3}$/.test(value)
+    ? `${value} ${new Date().getFullYear()}`
+    : value;
 }

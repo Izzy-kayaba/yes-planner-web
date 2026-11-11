@@ -192,9 +192,9 @@ export function AdminUsersPanel({
           void loadPage(1, { sort: value });
         }}
       />
-      <div className="overflow-x-auto rounded-xl border border-yes-line">
+      <div className="listing-table-shell">
         {users.length ? (
-          <table className="w-full min-w-[700px] border-collapse text-left text-sm">
+          <table className="listing-table min-w-[700px]">
             <thead>
               <tr className="border-b border-yes-line bg-yes-soft">
                 <th className="px-4 py-3 font-bold">{text("User")}</th>

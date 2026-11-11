@@ -12,6 +12,13 @@ export function formatDate(value: moment.MomentInput, format: string, language: 
   return localized(value, language).format(format);
 }
 
+// Convert stored ISO calendar dates into the platform's user-facing date format.
+export function formatDisplayDate(value: string, language: DateLanguage) {
+  return /^\d{4}-\d{2}-\d{2}$/.test(value)
+    ? formatDate(value, "D MMM YYYY", language)
+    : value;
+}
+
 export function formatDateTime(
   date: string,
   time: string,

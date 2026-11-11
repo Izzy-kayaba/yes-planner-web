@@ -18,13 +18,16 @@ export async function PlatformPermissionMatrix() {
           "This table is the current platform access policy. A role only receives the permissions listed for it here.",
         )}
       </p>
-      <table className="w-full min-w-[1280px] text-left text-sm">
+      <div className="listing-table-shell">
+        <table className="listing-table min-w-[1280px]">
         <thead>
           <tr className="border-b border-yes-line">
             <th className="px-3 py-3 font-semibold">{text("Role")}</th>
             {platformPermissions.map((permission) => (
               <th className="max-w-24 px-3 py-3 text-center font-semibold" key={permission}>
-                <span className="block -rotate-45 whitespace-nowrap text-xs">{permission}</span>
+                <span className="block whitespace-normal break-words text-xs leading-tight">
+                  {permission}
+                </span>
               </th>
             ))}
           </tr>
@@ -53,7 +56,8 @@ export async function PlatformPermissionMatrix() {
             </tr>
           ))}
         </tbody>
-      </table>
+        </table>
+      </div>
     </article>
   );
 }
