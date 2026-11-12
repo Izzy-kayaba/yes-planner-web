@@ -12,6 +12,8 @@ import {
 type CurrencyContextValue = {
   currency: SupportedCurrency;
   displayMoney: (usdAmountMinor: number) => string;
+  inputMoneyToUsdMinor: (amount: number) => number;
+  usdMinorToInputMoney: (usdAmountMinor: number) => number;
 };
 
 const CurrencyContext = createContext<CurrencyContextValue | null>(null);
@@ -58,8 +60,26 @@ export function CurrencyProvider({ children }: { children: ReactNode }) {
     return formatMoney(amount, currency);
   }
 
+  // Form fields accept whole currency units; convert them to the USD-cent storage format.
+  function inputMoneyToUsdMinor(amount: number) {
+    if (currency === "ZAR" && usdToZarRate) {
+      return Math.round((amount * 100) / usdToZarRate);
+    }
+    return Math.round(amount * 100);
+  }
+
+  // Convert stored USD cents back into the currency shown in an editable field.
+  function usdMinorToInputMoney(usdAmountMinor: number) {
+    if (currency === "ZAR" && usdToZarRate) {
+      return usdAmountMinor * usdToZarRate / 100;
+    }
+    return usdAmountMinor / 100;
+  }
+
   return (
-    <CurrencyContext.Provider value={{ currency, displayMoney }}>
+    <CurrencyContext.Provider
+      value={{ currency, displayMoney, inputMoneyToUsdMinor, usdMinorToInputMoney }}
+    >
       {children}
     </CurrencyContext.Provider>
   );

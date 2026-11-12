@@ -24,6 +24,8 @@ export type WeddingOnboardingValue = {
   venue: string;
   location: string;
   budgetMinor: number;
+  budgetEnteredMinor?: number;
+  budgetCurrency?: "USD" | "ZAR";
   budgetRangeKey?: string;
   estimatedGuests: number;
   guestRangeKey?: string;
@@ -55,7 +57,7 @@ export function WeddingOnboardingForm({
 }) {
   const router = useRouter();
   const { language, text } = useLanguage();
-  const { currency } = useCurrency();
+  const { currency, inputMoneyToUsdMinor, usdMinorToInputMoney } = useCurrency();
   const [value, setValue] = useState(initialValue ?? emptyValue);
   const [saving, setSaving] = useState(false);
   const [displayNameEdited, setDisplayNameEdited] = useState(Boolean(initialValue?.displayName));
@@ -92,6 +94,8 @@ export function WeddingOnboardingForm({
         body: JSON.stringify({
           ...value,
           budgetMinor: value.budgetMinor,
+          budgetEnteredMinor: Math.round(usdMinorToInputMoney(value.budgetMinor) * 100),
+          budgetCurrency: currency,
           budgetRangeKey,
           estimatedGuests: value.estimatedGuests,
           guestRangeKey,
@@ -185,10 +189,12 @@ export function WeddingOnboardingForm({
             id="wedding-budget"
             min="1"
             name="budgetMinor"
-            onChange={(event) => update("budgetMinor", Number(event.target.value))}
+            onChange={(event) =>
+              update("budgetMinor", inputMoneyToUsdMinor(Number(event.target.value)))
+            }
             required
             type="number"
-            value={value.budgetMinor || ""}
+            value={value.budgetMinor ? usdMinorToInputMoney(value.budgetMinor) : ""}
           />
         </label>
         <label>

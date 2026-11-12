@@ -17,6 +17,7 @@ import { SeatingSection } from "@/features/weddings/sections/SeatingSection";
 import { TasksSection } from "@/features/weddings/sections/TasksSection";
 import { TimelineSection } from "@/features/weddings/sections/TimelineSection";
 import { VendorsSection } from "@/features/weddings/sections/VendorsSection";
+import { WorkspaceExportActions } from "@/components/weddings/WorkspaceExportActions";
 
 const titles: Record<string, [TranslationKey, TranslationKey]> = {
   guests: ["wedding.guests", "wedding.guestsDescription"],
@@ -57,6 +58,11 @@ export function WeddingSection({ section }: { section: string }) {
         eyebrow={text("Wedding workspace")}
         title={heading ? t(heading[0]) : t("nav.workspace")}
         description={heading ? t(heading[1]) : t("dashboard.intro")}
+        action={
+          ["guests", "budget", "tasks", "vendors", "timeline", "seating", "food-drinks", "documents", "bookings"].includes(section) ? (
+            <WorkspaceExportActions section={section} />
+          ) : undefined
+        }
       />
       {Section ? (
         <Section />
