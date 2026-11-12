@@ -10,7 +10,6 @@ import { StatCard } from "@/components/ui/StatCard";
 import { StatusPill } from "@/components/ui/StatusPill";
 import type { DashboardData } from "@/lib/dashboard/types";
 import { daysUntil, formatDate, formatDisplayDate, greetingForNow } from "@/lib/date-time";
-import { budgetRanges, guestRanges, inferGuestRange, inferMoneyRange } from "@/lib/estimate-ranges";
 
 export function AuthenticatedDashboardOverview({ data }: { data: DashboardData }) {
   const { language, text } = useLanguage();
@@ -36,23 +35,9 @@ export function AuthenticatedDashboardOverview({ data }: { data: DashboardData }
 
   const wedding = data.wedding;
   const daysRemaining = daysUntil(wedding.weddingDate);
-  const budgetRange = budgetRanges.find(
-    (range) =>
-      range.id === (wedding.budgetRangeKey || inferMoneyRange(budgetRanges, wedding.budgetMinor)),
-  );
-  const guestRange = guestRanges.find(
-    (range) => range.id === (wedding.guestRangeKey || inferGuestRange(wedding.estimatedGuests)),
-  );
-  const budgetLabel = budgetRange
-    ? budgetRange.maxMinor === null
-      ? `${displayMoney(budgetRange.minMinor)}+`
-      : `${displayMoney(budgetRange.minMinor)} – ${displayMoney(budgetRange.maxMinor)}`
-    : displayMoney(wedding.budgetMinor);
-  const guestLabel = guestRange
-    ? guestRange.max === null
-      ? `${guestRange.min}+`
-      : `${guestRange.min} – ${guestRange.max}`
-    : String(wedding.estimatedGuests);
+  // The profile stores exact values; range keys are only onboarding compatibility data.
+  const budgetLabel = displayMoney(wedding.budgetMinor);
+  const guestLabel = String(wedding.estimatedGuests);
 
   return (
     <div className="dashboard-stack">
