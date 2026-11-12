@@ -15,7 +15,7 @@ import {
 import { useLanguage } from "@/components/providers/LanguageProvider";
 import { useWorkspaceCollection } from "@/hooks/useWorkspaceCollection";
 import type { WeddingTask } from "@/types";
-import { formatDate } from "@/lib/date-time";
+import { formatDate, formatDisplayDate } from "@/lib/date-time";
 
 const taskFields = [
   { name: "title", label: "Task", required: true },
@@ -122,7 +122,7 @@ export function DemoDashboardOverview() {
                   </small>
                 </span>
                 <span className={`priority priority-${task.priority.toLowerCase()}`}>
-                  {task.due}
+                  {formatDisplayDate(task.due, language)}
                 </span>
               </button>
             ))}

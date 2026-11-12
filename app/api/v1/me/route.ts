@@ -23,6 +23,7 @@ function profile(document: Record<string, unknown>) {
     whatsappNotifications: document.whatsappNotifications === true,
     role: document.role,
     accountType: document.accountType ?? (document.role === "Planner" ? "Vendor" : document.role),
+    platformRoles: Array.isArray(document.platformRoles) ? document.platformRoles : [],
     image: document.image ?? null,
   };
 }

@@ -11,15 +11,17 @@ export function Pagination({
   pageSize = LIST_PAGE_SIZE,
   total,
   onChange,
+  alwaysShow = false,
 }: {
   page: number;
   pageSize?: number;
   total: number;
   onChange(page: number): void;
+  alwaysShow?: boolean;
 }) {
   const { text } = useLanguage();
   const pages = Math.ceil(total / pageSize);
-  if (pages <= 1) return null;
+  if (pages <= 1 && !alwaysShow) return null;
   function changePage(nextPage: number) {
     onChange(nextPage);
     window.scrollTo({ top: 0, behavior: "smooth" });

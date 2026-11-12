@@ -1,4 +1,4 @@
-import { ObjectId } from "mongodb";
+import { GridFSBucket, ObjectId } from "mongodb";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { recordAdminAuditEvent } from "@/lib/auth/admin-audit";
@@ -104,14 +104,6 @@ const userUpdateSchema = z.object({
 const userDeleteSchema = z.object({
   userId: z.string().regex(/^[a-f\d]{24}$/i),
 });
-
-async function customerDataExists(userIds: string[]) {
-  const [wedding, business] = await Promise.all([
-    mongoDb.collection("weddingProfiles").findOne({ ownerUserId: { $in: userIds } }),
-    mongoDb.collection("vendorProfiles").findOne({ ownerUserId: { $in: userIds } }),
-  ]);
-  return Boolean(wedding || business);
-}
 
 async function userAdministrationDetails(user: Record<string, unknown>) {
   const userIds = [...new Set([String(user._id), String(user.id ?? "")].filter(Boolean))];
@@ -286,17 +278,51 @@ export async function DELETE(request: Request) {
       { status: 409 },
     );
   }
-  if (await customerDataExists(userIds)) {
-    return NextResponse.json(
-      { message: "This user owns customer data and cannot be deleted." },
-      { status: 409 },
-    );
-  }
+  const ownedWeddings = await mongoDb
+    .collection("weddingProfiles")
+    .find({ ownerUserId: { $in: userIds } }, { projection: { weddingKey: 1 } })
+    .toArray();
+  const weddingKeys = ownedWeddings
+    .map((wedding) => String(wedding.weddingKey ?? ""))
+    .filter(Boolean);
+  const userFilter = { $in: userIds };
+  const weddingFilter = { $in: weddingKeys };
+  const ownedMedia = await mongoDb
+    .collection("vendorMedia.files")
+    .find({ "metadata.ownerUserId": userFilter }, { projection: { _id: 1 } })
+    .toArray();
   await Promise.all([
+    mongoDb
+      .collection("workspaceItems")
+      .deleteMany({ $or: [{ ownerUserId: userFilter }, { weddingKey: weddingFilter }] }),
+    mongoDb
+      .collection("weddingCollaborators")
+      .deleteMany({ $or: [{ userId: userFilter }, { weddingKey: weddingFilter }] }),
+    mongoDb.collection("weddingProfiles").deleteMany({ ownerUserId: userFilter }),
+    mongoDb.collection("vendorProfiles").deleteMany({ ownerUserId: userFilter }),
+    mongoDb.collection("plannerProfiles").deleteMany({ ownerUserId: userFilter }),
+    mongoDb.collection("vendorRequests").deleteMany({
+      $or: [
+        { coupleUserId: userFilter },
+        { vendorUserId: userFilter },
+        { weddingKey: weddingFilter },
+      ],
+    }),
+    mongoDb.collection("vendorClaims").deleteMany({ claimantUserId: userFilter }),
+    mongoDb
+      .collection("messages")
+      .deleteMany({ $or: [{ senderUserId: userFilter }, { recipientUserId: userFilter }] }),
+    mongoDb.collection("supportRequests").deleteMany({ requesterUserId: userFilter }),
+    mongoDb.collection("platformStaffInvitations").deleteMany({ invitedBy: userFilter }),
     users.deleteOne({ _id: userId }),
     mongoDb.collection("session").deleteMany({ userId: { $in: userIds } }),
     mongoDb.collection("account").deleteMany({ userId: { $in: userIds } }),
   ]);
+  await Promise.all(
+    ownedMedia.map((file) =>
+      new GridFSBucket(mongoDb, { bucketName: "vendorMedia" }).delete(file._id),
+    ),
+  );
   await recordAdminAuditEvent({
     actorUserId: authorization.session.user.id,
     permission: "users.manage",

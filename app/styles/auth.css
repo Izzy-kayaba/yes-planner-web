@@ -133,7 +133,7 @@
 .auth-form input[aria-invalid="true"],
 .auth-form .phone-input:has(input[aria-invalid="true"]) {
   border-color: #b42318;
-  box-shadow: 0 0 0 3px rgba(180, 35, 24, 0.1);
+  box-shadow: none;
 }
 .form-error {
   color: #b42318;
@@ -201,7 +201,8 @@
 }
 .phone-input:focus-within {
   border-color: var(--wine);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--wine) 12%, transparent);
+  background: color-mix(in srgb, var(--wine) 4%, var(--surface));
+  box-shadow: none;
 }
 .phone-input .PhoneInputCountry {
   margin-right: 10px;
@@ -307,10 +308,17 @@
   color: var(--wine);
   font-size: 17px;
 }
+.role-picker button:not(.selected):hover {
+  border-color: var(--wine);
+  background: color-mix(in srgb, var(--wine) 14%, var(--surface));
+}
 .role-picker button.selected {
   border-color: var(--wine);
-  background: color-mix(in srgb, var(--wine) 7%, var(--surface));
-  box-shadow: 0 0 0 2px color-mix(in srgb, var(--wine) 10%, transparent);
+  background: var(--wine);
+  color: #fff;
+}
+.role-picker button.selected span {
+  color: #fff;
 }
 
 .onboarding-form {
@@ -349,7 +357,8 @@
 .onboarding-form select:focus,
 .onboarding-form textarea:focus {
   border-color: var(--wine);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--wine) 12%, transparent);
+  background: color-mix(in srgb, var(--wine) 4%, var(--surface));
+  box-shadow: none;
 }
 .onboarding-section-heading {
   display: flex;

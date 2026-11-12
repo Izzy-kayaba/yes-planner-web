@@ -100,38 +100,38 @@ export function BudgetSection() {
         </div>
         <div className="budget-bars">
           {items.map((item) => (
-            <div key={item.id}>
-              <span>
-                <b>{text(item.name)}</b>
-                <small>
-                  {displayMoney(item.amountMinor)} / {displayMoney(item.budgetMinor)}{" "}
-                  <button
-                    className="ml-2"
-                    aria-label={`${text("Edit")} ${text(item.name)}`}
-                    onClick={() => {
-                      setEditing(item);
-                      setOpen(true);
-                    }}
-                  >
-                    <Pencil size={12} />
-                  </button>
-                  <button
-                    className="button button-blush min-h-9 px-3"
-                    aria-label={`${text("Delete")} ${text(item.name)}`}
-                    onClick={() =>
-                      void confirmation
-                        .confirm({
-                          description: `${text("Delete")} ${text(item.name)}?`,
-                          confirmLabel: "Delete",
-                        })
-                        .then((confirmed) => {
-                          if (confirmed) void remove(item.id);
-                        })
-                    }
-                  >
-                    <Trash2 size={12} />
-                  </button>
-                </small>
+            <div className="budget-row" key={item.id}>
+              <b>{text(item.name)}</b>
+              <small>
+                {displayMoney(item.amountMinor)} / {displayMoney(item.budgetMinor)}
+              </small>
+              <span className="budget-row-actions">
+                <button
+                  className="icon-button"
+                  aria-label={`${text("Edit")} ${text(item.name)}`}
+                  onClick={() => {
+                    setEditing(item);
+                    setOpen(true);
+                  }}
+                >
+                  <Pencil size={12} />
+                </button>
+                <button
+                  className="icon-button icon-button-blush"
+                  aria-label={`${text("Delete")} ${text(item.name)}`}
+                  onClick={() =>
+                    void confirmation
+                      .confirm({
+                        description: `${text("Delete")} ${text(item.name)}?`,
+                        confirmLabel: "Delete",
+                      })
+                      .then((confirmed) => {
+                        if (confirmed) void remove(item.id);
+                      })
+                  }
+                >
+                  <Trash2 size={12} />
+                </button>
               </span>
               <div>
                 <i

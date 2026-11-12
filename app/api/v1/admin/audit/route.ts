@@ -9,7 +9,7 @@ export async function GET(request: Request) {
   const authorization = await requirePlatformApiPermission(request.headers, "audit.view");
   if (authorization.error) return authorization.error;
   const searchParams = new URL(request.url).searchParams;
-  const pagination = parsePagination(searchParams, 25, 100);
+  const pagination = parsePagination(searchParams, 10, 100);
   if (!pagination) {
     return NextResponse.json({ message: "Invalid pagination parameters." }, { status: 400 });
   }

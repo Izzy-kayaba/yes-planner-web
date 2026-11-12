@@ -5,6 +5,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { apiRequest } from "@/lib/api/client";
 import { useLanguage } from "@/components/providers/LanguageProvider";
+import { formatDate } from "@/lib/date-time";
 
 type EmailTestStatus = {
   configured: boolean;
@@ -12,7 +13,7 @@ type EmailTestStatus = {
 };
 
 export function EmailIntegrationTest({ initialStatus }: { initialStatus: EmailTestStatus }) {
-  const { text } = useLanguage();
+  const { language, text } = useLanguage();
   const [status, setStatus] = useState(initialStatus);
   const [recipient, setRecipient] = useState("");
   const [sending, setSending] = useState(false);
@@ -57,7 +58,7 @@ export function EmailIntegrationTest({ initialStatus }: { initialStatus: EmailTe
       {status.lastTest && (
         <p className="text-sm text-yes-muted">
           {text("Last test")}: {text(status.lastTest.status === "success" ? "Healthy" : "Failed")} ·{" "}
-          {new Date(status.lastTest.createdAt).toLocaleString()}
+          {formatDate(status.lastTest.createdAt, "D MMM YYYY · HH:mm", language)}
         </p>
       )}
       <div className="settings-form mt-4 max-w-xl">

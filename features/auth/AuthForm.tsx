@@ -87,6 +87,7 @@ export function AuthForm({
       password: "",
     },
   });
+
   const selectedAccountType = watch("accountType");
 
   useEffect(() => {
@@ -120,20 +121,26 @@ export function AuthForm({
     }
 
     try {
+      let authenticatedRole: string | undefined;
       if (isRegister) {
         const registration = result.data as RegisterInput;
         await getBackend().register({
           ...registration,
           phoneNumber: parsePhoneNumber(registration.phoneNumber).number,
         });
+        const authenticatedUser = await waitForAuthenticatedSession();
+        const platformRoles = await getPlatformRoles();
+        authenticatedRole = platformRoles.length ? "PlatformAdmin" : authenticatedUser?.role;
       } else {
         await getBackend().login(result.data);
         // Confirm the cookie-backed session before loading a server-protected dashboard.
-        await waitForAuthenticatedSession();
+        const authenticatedUser = await waitForAuthenticatedSession();
+        const platformRoles = await getPlatformRoles();
+        authenticatedRole = platformRoles.length ? "PlatformAdmin" : authenticatedUser?.role;
       }
       toast.success(text(isRegister ? "Your workspace is ready." : "Welcome back."));
       // A full navigation prevents the dashboard from rendering with a stale RSC session.
-      window.location.replace(getDashboardPath());
+      window.location.replace(getPostAuthPath(authenticatedRole));
     } catch (error) {
       toast.error(text(error instanceof Error ? error.message : "Authentication failed."));
     }
@@ -318,12 +325,28 @@ export function AuthForm({
 async function waitForAuthenticatedSession() {
   for (let attempt = 0; attempt < 3; attempt += 1) {
     const session = await authClient.getSession();
-    if (session.data?.user) return;
+    if (session.data?.user) return session.data.user;
     await new Promise((resolve) => window.setTimeout(resolve, 150 * (attempt + 1)));
   }
   throw new Error("Sign-in completed, but the session could not be confirmed. Please try again.");
 }
 
-function getDashboardPath() {
-  return window.location.pathname === "/za/login" ? "/za/dashboard" : "/dashboard";
+async function getPlatformRoles() {
+  const response = await fetch("/api/v1/me", { cache: "no-store" });
+  if (!response.ok) return [] as string[];
+  const profile = (await response.json()) as { platformRoles?: unknown };
+  return Array.isArray(profile.platformRoles)
+    ? profile.platformRoles.filter((role): role is string => typeof role === "string")
+    : [];
+}
+
+function getPostAuthPath(role?: string) {
+  const regionalPrefix = window.location.pathname.match(/^\/[a-z]{2}(?=\/|$)/)?.[0] ?? "";
+  const destination =
+    role === "SystemAdmin" || role === "SuperAdmin" || role === "PlatformAdmin"
+      ? "/admin"
+      : role === "Vendor" || role === "Venue"
+        ? "/vendor"
+        : "/dashboard";
+  return `${regionalPrefix}${destination}`;
 }

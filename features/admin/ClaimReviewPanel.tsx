@@ -9,6 +9,7 @@ import type { PaginatedResult } from "@/lib/api/contracts";
 import { Pagination as PaginationControls } from "@/components/ui/Pagination";
 import { StatusPill } from "@/components/ui/StatusPill";
 import { useLanguage } from "@/components/providers/LanguageProvider";
+import { formatDate } from "@/lib/date-time";
 import { AdminSearch } from "@/features/admin/AdminSearch";
 type Claim = {
   id: string;
@@ -128,7 +129,7 @@ export function ClaimReviewPanel({
                       <small className="claim-review-date">
                         <CalendarDays aria-hidden="true" size={13} />
                         {text("Submitted")} ·{" "}
-                        {new Date(claim.createdAt).toLocaleDateString(language)}
+                        {formatDate(claim.createdAt, "D MMM YYYY", language)}
                       </small>
                     </span>
                     <StatusPill tone="gold">Pending</StatusPill>
@@ -154,7 +155,7 @@ export function ClaimReviewPanel({
                       <small className="claim-review-date">
                         <CalendarDays aria-hidden="true" size={13} />
                         {text("Submitted")} ·{" "}
-                        {new Date(claim.createdAt).toLocaleDateString(language)}
+                        {formatDate(claim.createdAt, "D MMM YYYY", language)}
                       </small>
                     </span>
                     <StatusPill tone="gold">Pending</StatusPill>

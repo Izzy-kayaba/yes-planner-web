@@ -16,10 +16,10 @@ export function proxy(request: NextRequest) {
   if (shouldSkipRegionalRouting(pathname)) return NextResponse.next();
 
   const country = normalizeCountry(detectCountry(request));
-  const regionalPrefix = country === "ZA" ? "/za" : null;
-  const hasRegionalPrefix = pathname === "/za" || pathname.startsWith("/za/");
+  const regionalPrefix = /^[A-Z]{2}$/.test(country) ? `/${country.toLowerCase()}` : null;
+  const hasRegionalPrefix = /^\/[a-z]{2}(?:\/|$)/.test(pathname);
 
-  // A detected South African visitor gets a stable regional URL for public and authenticated pages.
+  // A detected visitor gets a stable country URL for public and authenticated pages.
   if (
     regionalPrefix &&
     !hasRegionalPrefix &&
@@ -32,11 +32,12 @@ export function proxy(request: NextRequest) {
 
   if (!hasRegionalPrefix) return NextResponse.next();
 
-  // Rewrite internally so /za/dashboard resolves to the existing /dashboard page without duplicating routes.
+  // Rewrite internally so /<country>/dashboard resolves to the existing /dashboard page.
   const url = request.nextUrl.clone();
-  url.pathname = pathname === "/za" ? "/" : pathname.slice("/za".length);
+  const regionalCode = pathname.slice(1, 3);
+  url.pathname = pathname.length === 3 ? "/" : pathname.slice(3);
   const requestHeaders = new Headers(request.headers);
-  requestHeaders.set("x-country-code", "ZA");
+  requestHeaders.set("x-country-code", regionalCode.toUpperCase());
   return NextResponse.rewrite(url, { request: { headers: requestHeaders } });
 }
 

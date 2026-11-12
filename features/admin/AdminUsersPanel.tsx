@@ -192,41 +192,60 @@ export function AdminUsersPanel({
           void loadPage(1, { sort: value });
         }}
       />
-      <div className="request-list">
+      <div className="listing-table-shell">
         {users.length ? (
-          users.map((user) => (
-            <div className="admin-user-row py-2" key={user.id}>
-              <span className="avatar">{getInitials(user.name)}</span>
-              <p>
-                <strong className="text-base">{user.name}</strong>
-                <small>{user.email}</small>
-              </p>
-              <StatusPill tone={user.role === "SystemAdmin" ? "rose" : "neutral"}>
-                {user.role}
-              </StatusPill>
-              {canManage && (
-                <div className="admin-user-actions ml-auto flex gap-2">
-                  <Button
-                    className="size-9 min-h-9 px-0"
-                    type="button"
-                    variant="secondary"
-                    onClick={() => void openEditor(user)}
-                  >
-                    <Pencil size={15} />
-                  </Button>
-                  <Button
-                    className="size-9 min-h-9 px-0"
-                    type="button"
-                    aria-label={text("Delete")}
-                    variant="blush"
-                    onClick={() => void deleteUser(user)}
-                  >
-                    <Trash2 size={15} />
-                  </Button>
-                </div>
-              )}
-            </div>
-          ))
+          <table className="listing-table min-w-[700px]">
+            <thead>
+              <tr className="border-b border-yes-line bg-yes-soft">
+                <th className="px-4 py-3 font-bold">{text("User")}</th>
+                <th className="px-4 py-3 font-bold">{text("Email address")}</th>
+                <th className="px-4 py-3 font-bold">{text("Account type")}</th>
+                {canManage && <th className="px-4 py-3 text-right font-bold">{text("Actions")}</th>}
+              </tr>
+            </thead>
+            <tbody>
+              {users.map((user) => (
+                <tr className="border-b border-yes-line last:border-0" key={user.id}>
+                  <td className="px-4 py-4">
+                    <div className="flex items-center gap-3">
+                      <span className="avatar">{getInitials(user.name)}</span>
+                      <strong>{user.name}</strong>
+                    </div>
+                  </td>
+                  <td className="px-4 py-4 text-yes-muted">{user.email}</td>
+                  <td className="px-4 py-4">
+                    <StatusPill tone={user.role === "SystemAdmin" ? "rose" : "neutral"}>
+                      {user.role}
+                    </StatusPill>
+                  </td>
+                  {canManage && (
+                    <td className="px-4 py-4">
+                      <div className="flex justify-end gap-2">
+                        <Button
+                          aria-label={text("Edit")}
+                          className="size-9 min-h-9 px-0"
+                          type="button"
+                          variant="secondary"
+                          onClick={() => void openEditor(user)}
+                        >
+                          <Pencil size={15} />
+                        </Button>
+                        <Button
+                          aria-label={text("Delete")}
+                          className="size-9 min-h-9 px-0"
+                          type="button"
+                          variant="blush"
+                          onClick={() => void deleteUser(user)}
+                        >
+                          <Trash2 size={15} />
+                        </Button>
+                      </div>
+                    </td>
+                  )}
+                </tr>
+              ))}
+            </tbody>
+          </table>
         ) : (
           <p className="text-sm text-yes-muted">
             {text(

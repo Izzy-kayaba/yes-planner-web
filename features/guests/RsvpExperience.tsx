@@ -122,7 +122,7 @@ export function RsvpExperience({
     <main className="invite-layout">
       <div className="invite-art">
         <div className="invite-monogram">{getInitials(coupleName)}</div>
-        <div className="invite-date">{formatDate(weddingDate, "DD · MM · YYYY", language)}</div>
+        <div className="invite-date">{formatDate(weddingDate, "D MMM YYYY", language)}</div>
         <div className="invite-botanical">✦</div>
       </div>
       <section className="invite-card">

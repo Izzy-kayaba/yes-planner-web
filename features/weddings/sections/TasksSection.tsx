@@ -12,6 +12,8 @@ import { useWorkspaceCollection } from "@/hooks/useWorkspaceCollection";
 import { tasks as taskSeed } from "@/lib/demo-data";
 import type { WeddingTask } from "@/types";
 import { useConfirmation } from "@/hooks/useConfirmation";
+import { YesSelect } from "@/components/ui/YesSelect";
+import { formatDisplayDate } from "@/lib/date-time";
 
 const fields = [
   { name: "title", label: "Task", required: true },
@@ -27,7 +29,7 @@ const fields = [
 ];
 
 export function TasksSection() {
-  const { text } = useLanguage();
+  const { language, text } = useLanguage();
   const { items, create, update, remove, page, setPage, pagination } =
     useWorkspaceCollection<WeddingTask>("tasks", taskSeed);
   const [filter, setFilter] = useState("All");
@@ -37,7 +39,7 @@ export function TasksSection() {
   const confirmation = useConfirmation();
   const shown = items.filter(
     (task) =>
-      (filter === "All" || (filter === "Completed" ? task.complete : !task.complete)) &&
+      (filter === "All" || task.priority === filter) &&
       `${task.title} ${task.category} ${task.assignee}`.toLowerCase().includes(query.toLowerCase()),
   );
 
@@ -53,31 +55,39 @@ export function TasksSection() {
   }
 
   return (
-    <section className="panel">
+    <section className="panel table-panel">
       <div className="table-toolbar">
         <SearchField value={query} onChange={setQuery} placeholder="Search tasks" />
-        <div className="filter-tabs">
-          {["All", "Open", "Completed"].map((item) => (
-            <button
-              className={filter === item ? "active" : ""}
-              onClick={() => setFilter(item)}
-              key={item}
-            >
-              {text(item)}
-            </button>
-          ))}
+        <div>
+          <YesSelect
+            ariaLabel={text("Filter tasks by priority")}
+            className="guest-status-filter"
+            options={["All", "High", "Medium", "Low"].map((item) => ({
+              value: item,
+              label: text(item),
+            }))}
+            value={filter}
+            onChange={setFilter}
+          />
+          <button
+            className="button button-primary"
+            onClick={() => {
+              setEditing(null);
+              setOpen(true);
+            }}
+          >
+            <Plus size={15} /> {text("Add task")}
+          </button>
         </div>
-        <button
-          className="button button-primary"
-          onClick={() => {
-            setEditing(null);
-            setOpen(true);
-          }}
-        >
-          <Plus size={15} /> {text("Add task")}
-        </button>
       </div>
       <div className="task-list">
+        <div className="table-head task-table-head">
+          <span aria-hidden="true" />
+          <span>{text("Task")}</span>
+          <span>{text("Priority")}</span>
+          <span>{text("Due date")}</span>
+          <span>{text("Actions")}</span>
+        </div>
         {shown.map((task) => (
           <div className={`task-row ${task.complete ? "complete" : ""}`} key={task.id}>
             <button
@@ -101,7 +111,7 @@ export function TasksSection() {
             >
               {task.priority}
             </StatusPill>
-            <span className="task-due">{text(task.due)}</span>
+            <span className="task-due">{text(formatDisplayDate(task.due, language))}</span>
             <span className="flex gap-1">
               <button
                 className="icon-button"
@@ -132,6 +142,11 @@ export function TasksSection() {
             </span>
           </div>
         ))}
+      </div>
+      <div className="table-footer">
+        <span>
+          {text("Showing")} {shown.length} {text("of")} {pagination.totalItems} {text("tasks")}
+        </span>
       </div>
       <Pagination
         page={page}

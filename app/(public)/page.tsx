@@ -10,19 +10,16 @@ import { siteDescription, siteUrl } from "@/lib/site";
 
 const features = [
   {
-    number: "01",
     title: "One calm command centre",
     body: "Budget, guests, tasks, vendors and your wedding-day timeline stay beautifully in sync.",
     image: "/assets/home-carrd-1.jpeg",
   },
   {
-    number: "02",
     title: "Plan with your people",
     body: "Couples and assigned planners work from the same live plan, with ownership safely protected.",
     image: "/assets/home-card-2.jpeg",
   },
   {
-    number: "03",
     title: "Find exceptional vendors",
     body: "Discover trusted creative partners, compare packages and manage every booking in context.",
     image: "/assets/home-card-3.jpeg",
@@ -87,7 +84,7 @@ export default async function HomePage() {
           <a href="#stories">{text("Stories")}</a>
         </div>
         <div className="landing-actions">
-          <Link className="text-link" href="/register">
+          <Link className="button button-ghost button-medium" href="/register">
             {text("Start planning")}
           </Link>
           <Link className="button button-primary text-center" href="/login">
@@ -108,10 +105,10 @@ export default async function HomePage() {
             )}
           </p>
           <div className="hero-actions">
-            <Link className="button button-primary button-large" href="/register">
+            <Link className="button button-primary button-large" href="/login">
               {text("Plan your wedding")} <span>→</span>
             </Link>
-            <Link className="button button-ghost button-large" href="/dashboard">
+            <Link className="button button-ghost button-large" href="/register">
               <span className="play">▶</span> {text("Explore the workspace")}
             </Link>
           </div>
@@ -202,8 +199,7 @@ export default async function HomePage() {
         </div>
         <div className="feature-grid">
           {features.map((feature) => (
-            <article className="feature-card" key={feature.number}>
-              <span>{feature.number}</span>
+            <article className="feature-card" key={feature.title}>
               <div className="feature-art">
                 <Image fill sizes="(max-width: 760px) 100vw, 33vw" src={feature.image} alt="" />
               </div>

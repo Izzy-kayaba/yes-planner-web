@@ -177,6 +177,9 @@ export function MessagesWorkspace() {
             onChange={(event) => setQuery(event.target.value)}
             placeholder={text("Search conversations")}
           />
+          <button aria-label={text("Search")} className="table-search-button" type="button">
+            <Search aria-hidden="true" size={15} />
+          </button>
         </label>
         {filtered.map((conversation) => (
           <button

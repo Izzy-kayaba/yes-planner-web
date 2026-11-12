@@ -330,18 +330,43 @@
     display: none;
   }
   .task-row {
-    grid-template-columns: 25px 1fr auto;
+    grid-template-columns: 25px minmax(0, 1fr) auto auto;
+  }
+  .task-list .task-table-head {
+    display: none;
+  }
+  .task-list {
+    width: 100%;
+    margin-inline: 0;
+  }
+  .task-list .task-table-head,
+  .task-list .task-row {
+    grid-template-columns: 30px minmax(0, 1fr) auto auto;
+    padding-inline: 12px;
+  }
+  .task-table-head {
+    grid-template-columns: 25px minmax(0, 1fr) auto auto;
+  }
+  .task-table-head span:nth-child(4) {
+    display: none;
   }
   .task-due {
     display: none;
   }
+  .file-list .file-table-head {
+    display: none;
+  }
   .file-list > div {
-    grid-template-columns: 38px 1fr auto;
+    grid-template-columns: 38px minmax(0, 1fr) 80px 92px;
+    min-width: 0;
     padding: 8px 15px;
   }
-  .file-list > div > span:not(.file-icon),
-  .file-list .status-pill {
+  .file-list > div > span:nth-child(3) {
     display: none;
+  }
+  .file-list > div > .status-pill,
+  .file-list > div > span:last-child {
+    display: flex;
   }
   .messages-panel {
     min-height: 650px;
@@ -474,6 +499,46 @@
   }
 }
 
+@media (min-width: 526px) and (max-width: 768px) {
+  .table-toolbar {
+    align-items: center;
+    flex-direction: row;
+    padding: 14px 0;
+  }
+  .table-toolbar > div {
+    display: flex;
+    grid-auto-flow: initial;
+    grid-auto-columns: initial;
+  }
+  .task-list .task-table-head,
+  .task-list .task-row {
+    grid-template-columns: 40px repeat(4, minmax(0, 1fr));
+    padding-inline: 20px;
+  }
+  .task-list .task-table-head {
+    display: grid;
+  }
+  .task-list .task-table-head span:nth-child(4) {
+    display: block;
+  }
+  .task-due {
+    display: block;
+  }
+  .file-list .file-table-head {
+    display: grid;
+  }
+  .file-list > div {
+    grid-template-columns: 38px minmax(150px, 1.2fr) 80px 80px 100px;
+    min-width: 0;
+    padding-inline: 20px;
+  }
+  .file-list > div > span:nth-child(3),
+  .file-list > div > .status-pill,
+  .file-list > div > span:last-child {
+    display: flex;
+  }
+}
+
 @media (max-width: 325px) {
   .stats-grid {
     grid-template-columns: 1fr;
@@ -502,6 +567,50 @@
   }
   .language-switcher-compact .yes-select-compact {
     width: 78px;
+  }
+}
+
+@media (max-width: 768px) {
+  .file-list .file-table-head {
+    display: grid;
+    grid-template-columns: 38px minmax(0, 1fr) 70px 90px;
+    min-width: 0;
+    padding-inline: 12px;
+  }
+  .file-list .file-table-head span:nth-child(3) {
+    display: none;
+  }
+  .file-list > div {
+    min-width: 0;
+    grid-template-columns: 38px minmax(0, 1fr) 70px 90px;
+    padding: 8px 12px;
+  }
+  .file-list > div > span:nth-child(3) {
+    display: none;
+  }
+  .file-list > div > .status-pill,
+  .file-list > div > span:last-child {
+    display: flex;
+  }
+}
+
+@media (max-width: 570px) {
+  .file-list .file-table-head span:nth-child(3),
+  .file-list > div > span:nth-child(3) {
+    display: none;
+  }
+}
+
+@media (min-width: 621px) and (max-width: 768px) {
+  .file-list .file-table-head {
+    grid-template-columns: 38px minmax(0, 1fr) 80px 80px 100px;
+  }
+  .file-list .file-table-head span:nth-child(3),
+  .file-list > div > span:nth-child(3) {
+    display: block;
+  }
+  .file-list > div {
+    grid-template-columns: 38px minmax(0, 1fr) 80px 80px 100px;
   }
 }
 
