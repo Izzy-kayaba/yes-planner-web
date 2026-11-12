@@ -86,7 +86,9 @@ export function WeddingOnboardingForm({
     event.preventDefault();
     const budgetMinor = Math.round(Number(budgetInput) * 100);
     const budgetRangeKey =
-      value.budgetRangeKey || inferMoneyRange(budgetRanges, budgetMinor) || budgetRanges[0].id;
+      value.budgetRangeKey ||
+      inferMoneyRange(budgetRanges, value.budgetMinor) ||
+      budgetRanges[0].id;
     const guestRangeKey =
       value.guestRangeKey || inferGuestRange(value.estimatedGuests) || guestRanges[0].id;
     setSaving(true);
@@ -191,10 +193,12 @@ export function WeddingOnboardingForm({
             id="wedding-budget"
             min="1"
             name="budgetMinor"
-            onChange={(event) => setBudgetInput(event.target.value)}
+            onChange={(event) =>
+              update("budgetMinor", inputMoneyToUsdMinor(Number(event.target.value)))
+            }
             required
             type="number"
-            value={budgetInput}
+            value={value.budgetMinor ? usdMinorToInputMoney(value.budgetMinor) : ""}
           />
         </label>
         <label>
