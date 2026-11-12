@@ -61,6 +61,13 @@ export const frenchSupplementalLiterals: Record<string, string> = {
   // Forms, metrics and status copy
   "Search bookings": "Rechercher des réservations",
   "Search documents": "Rechercher des documents",
+  "Save as PDF": "Enregistrer au format PDF",
+  "Download CSV": "Télécharger le CSV",
+  User: "Utilisateur",
+  Document: "Document",
+  Added: "Ajouté le",
+  "Filter tasks by priority": "Filtrer les tâches par priorité",
+  tasks: "tâches",
   "Search guests": "Rechercher des invités",
   "Edit booking": "Modifier la réservation",
   "Add booking request": "Ajouter une demande de réservation",

@@ -61,7 +61,9 @@
   border-radius: 12px;
   color: var(--muted);
   background: var(--surface);
-  transition: border-color 150ms ease, background-color 150ms ease;
+  transition:
+    border-color 150ms ease,
+    background-color 150ms ease;
 }
 .table-search:focus-within {
   border-color: var(--wine);
@@ -782,7 +784,10 @@
 .file-list > div {
   min-height: 68px;
   display: grid;
-  grid-template-columns: 42px minmax(220px, 1.3fr) minmax(110px, 1fr) minmax(110px, 1fr) minmax(150px, 1.3fr);
+  grid-template-columns: 42px minmax(220px, 1.3fr) minmax(110px, 1fr) minmax(110px, 1fr) minmax(
+      150px,
+      1.3fr
+    );
   align-items: center;
   gap: 10px;
   padding: 0 20px;
@@ -790,9 +795,28 @@
 }
 .file-list .file-table-head {
   min-width: 0;
-  grid-template-columns: 42px minmax(220px, 1.3fr) minmax(110px, 1fr) minmax(110px, 1fr) minmax(150px, 1.3fr);
+  grid-template-columns: 42px minmax(220px, 1.3fr) minmax(110px, 1fr) minmax(110px, 1fr) minmax(
+      150px,
+      1.3fr
+    );
   min-height: 42px;
   padding-inline: 20px;
+  justify-items: start;
+  text-align: left;
+}
+.file-list .file-table-head .document-column-heading {
+  grid-column: 1 / span 2;
+  justify-self: stretch;
+  text-align: left;
+}
+.file-list .file-table-head .added-column-heading {
+  grid-column: 3;
+}
+.file-list .file-table-head .access-column-heading {
+  grid-column: 4;
+}
+.file-list .file-table-head .actions-column-heading {
+  grid-column: 5;
 }
 .file-list .file-table-head span {
   color: var(--muted);
@@ -801,7 +825,9 @@
   letter-spacing: 0.1em;
   text-transform: uppercase;
 }
-.file-list .file-table-head span:nth-child(n + 3) {
+.file-list .file-table-head .added-column-heading,
+.file-list .file-table-head .access-column-heading,
+.file-list .file-table-head .actions-column-heading {
   justify-self: center;
   text-align: center;
 }
