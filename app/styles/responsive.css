@@ -573,29 +573,37 @@
 @media (max-width: 768px) {
   .file-list .file-table-head {
     display: grid;
-    grid-template-columns: 38px minmax(0, 1fr) 70px 90px;
+    grid-template-columns: 38px minmax(0, 1fr) 90px;
     min-width: 0;
     padding-inline: 12px;
   }
-  .file-list .file-table-head span:nth-child(3) {
+  .file-list .file-table-head .added-column-heading {
     display: none;
+  }
+  .file-list .file-table-head .access-column-heading {
+    display: none;
+  }
+  .file-list .file-table-head .actions-column-heading {
+    grid-column: 3;
   }
   .file-list > div {
     min-width: 0;
-    grid-template-columns: 38px minmax(0, 1fr) 70px 90px;
+    grid-template-columns: 38px minmax(0, 1fr) 90px;
     padding: 8px 12px;
   }
   .file-list > div > span:nth-child(3) {
     display: none;
   }
-  .file-list > div > .status-pill,
+  .file-list > div > .status-pill {
+    display: none;
+  }
   .file-list > div > span:last-child {
     display: flex;
   }
 }
 
 @media (max-width: 570px) {
-  .file-list .file-table-head span:nth-child(3),
+  .file-list .file-table-head .added-column-heading,
   .file-list > div > span:nth-child(3) {
     display: none;
   }
@@ -603,14 +611,17 @@
 
 @media (min-width: 621px) and (max-width: 768px) {
   .file-list .file-table-head {
-    grid-template-columns: 38px minmax(0, 1fr) 80px 80px 100px;
+    grid-template-columns: 38px minmax(0, 1fr) 80px 100px;
   }
-  .file-list .file-table-head span:nth-child(3),
+  .file-list .file-table-head .added-column-heading,
   .file-list > div > span:nth-child(3) {
     display: block;
   }
+  .file-list .file-table-head .actions-column-heading {
+    grid-column: 4;
+  }
   .file-list > div {
-    grid-template-columns: 38px minmax(0, 1fr) 80px 80px 100px;
+    grid-template-columns: 38px minmax(0, 1fr) 80px 100px;
   }
 }
 
