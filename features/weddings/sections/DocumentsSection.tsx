@@ -117,11 +117,10 @@ export function DocumentsSection() {
       </div>
       <div className="file-list">
         <div className="table-head file-table-head">
-          <span aria-hidden="true" />
-          <span>{text("Document")}</span>
-          <span>{text("Added")}</span>
-          <span>{text("Access")}</span>
-          <span>{text("Actions")}</span>
+          <span className="document-column-heading">{text("Document")}</span>
+          <span className="added-column-heading">{text("Added")}</span>
+          <span className="access-column-heading">{text("Access")}</span>
+          <span className="actions-column-heading">{text("Actions")}</span>
         </div>
         {shown.map((doc) => (
           <div key={doc.id}>
@@ -197,7 +196,5 @@ export function DocumentsSection() {
 }
 
 function formatDocumentDate(value: string) {
-  return /^\d{1,2}\s+[A-Za-z]{3}$/.test(value)
-    ? `${value} ${new Date().getFullYear()}`
-    : value;
+  return /^\d{1,2}\s+[A-Za-z]{3}$/.test(value) ? `${value} ${new Date().getFullYear()}` : value;
 }
