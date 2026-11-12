@@ -59,9 +59,6 @@ export function WeddingOnboardingForm({
   const { language, text } = useLanguage();
   const { currency, inputMoneyToUsdMinor, usdMinorToInputMoney } = useCurrency();
   const [value, setValue] = useState(initialValue ?? emptyValue);
-  const [budgetInput, setBudgetInput] = useState(
-    initialValue?.budgetMinor ? String(usdMinorToInputMoney(initialValue.budgetMinor)) : "",
-  );
   const [saving, setSaving] = useState(false);
   const [displayNameEdited, setDisplayNameEdited] = useState(Boolean(initialValue?.displayName));
 
@@ -84,9 +81,10 @@ export function WeddingOnboardingForm({
 
   async function save(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const budgetMinor = inputMoneyToUsdMinor(Number(budgetInput));
     const budgetRangeKey =
-      value.budgetRangeKey || inferMoneyRange(budgetRanges, budgetMinor) || budgetRanges[0].id;
+      value.budgetRangeKey ||
+      inferMoneyRange(budgetRanges, value.budgetMinor) ||
+      budgetRanges[0].id;
     const guestRangeKey =
       value.guestRangeKey || inferGuestRange(value.estimatedGuests) || guestRanges[0].id;
     setSaving(true);
@@ -95,8 +93,8 @@ export function WeddingOnboardingForm({
         method: "PUT",
         body: JSON.stringify({
           ...value,
-          budgetMinor,
-          budgetEnteredMinor: Math.round(Number(budgetInput) * 100),
+          budgetMinor: value.budgetMinor,
+          budgetEnteredMinor: Math.round(usdMinorToInputMoney(value.budgetMinor) * 100),
           budgetCurrency: currency,
           budgetRangeKey,
           estimatedGuests: value.estimatedGuests,
@@ -191,10 +189,12 @@ export function WeddingOnboardingForm({
             id="wedding-budget"
             min="1"
             name="budgetMinor"
-            onChange={(event) => setBudgetInput(event.target.value)}
+            onChange={(event) =>
+              update("budgetMinor", inputMoneyToUsdMinor(Number(event.target.value)))
+            }
             required
             type="number"
-            value={budgetInput}
+            value={value.budgetMinor ? usdMinorToInputMoney(value.budgetMinor) : ""}
           />
         </label>
         <label>
