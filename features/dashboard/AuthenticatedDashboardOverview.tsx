@@ -10,6 +10,7 @@ import { StatCard } from "@/components/ui/StatCard";
 import { StatusPill } from "@/components/ui/StatusPill";
 import type { DashboardData } from "@/lib/dashboard/types";
 import { daysUntil, formatDate, formatDisplayDate, greetingForNow } from "@/lib/date-time";
+import { formatMoney, type SupportedCurrency } from "@/lib/currency";
 
 export function AuthenticatedDashboardOverview({ data }: { data: DashboardData }) {
   const { language, text } = useLanguage();
@@ -36,7 +37,12 @@ export function AuthenticatedDashboardOverview({ data }: { data: DashboardData }
   const wedding = data.wedding;
   const daysRemaining = daysUntil(wedding.weddingDate);
   // The profile stores exact values; range keys are only onboarding compatibility data.
-  const budgetLabel = displayMoney(wedding.budgetMinor);
+  const budgetLabel = wedding.budgetEnteredMinor
+    ? formatMoney(
+        wedding.budgetEnteredMinor,
+        (wedding.budgetCurrency ?? "USD") as SupportedCurrency,
+      )
+    : displayMoney(wedding.budgetMinor);
   const guestLabel = String(wedding.estimatedGuests);
 
   return (
@@ -56,12 +62,12 @@ export function AuthenticatedDashboardOverview({ data }: { data: DashboardData }
         <div className="banner-copy">
           <StatusPill tone="rose">{text("Your wedding")}</StatusPill>
           <h2>{wedding.displayName}</h2>
-          <p>
+          <p className="banner-meta">
             {formatDate(wedding.weddingDate, "D MMMM YYYY", language)}
             <span> · </span>
             {wedding.venue}, {wedding.location}
           </p>
-          <p className="text-sm">
+          <p className="banner-budget">
             {text("Planned budget")}: {budgetLabel} · {guestLabel} {text("estimated guests")}
           </p>
           {data.user.role === "Couple" && (

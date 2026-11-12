@@ -83,6 +83,8 @@ export default async function OnboardingPage() {
     venue: String(wedding?.venue ?? ""),
     location: String(wedding?.location ?? ""),
     budgetMinor: Number(wedding?.budgetMinor ?? 0),
+    budgetEnteredMinor: Number(wedding?.budgetEnteredMinor ?? wedding?.budgetMinor ?? 0),
+    budgetCurrency: wedding?.budgetCurrency === "ZAR" ? "ZAR" : "USD",
     estimatedGuests: Number(wedding?.estimatedGuests ?? 0),
     weddingStyle: String(wedding?.weddingStyle ?? ""),
     planningNotes: String(wedding?.planningNotes ?? ""),
