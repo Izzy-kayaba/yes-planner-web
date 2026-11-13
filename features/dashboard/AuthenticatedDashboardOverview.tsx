@@ -4,15 +4,16 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useLanguage } from "@/components/providers/LanguageProvider";
+import { useCurrency } from "@/components/providers/CurrencyProvider";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { StatCard } from "@/components/ui/StatCard";
 import { StatusPill } from "@/components/ui/StatusPill";
 import type { DashboardData } from "@/lib/dashboard/types";
 import { daysUntil, formatDate, formatDisplayDate, greetingForNow } from "@/lib/date-time";
-import { formatMoney } from "@/lib/currency";
 
 export function AuthenticatedDashboardOverview({ data }: { data: DashboardData }) {
   const { language, text } = useLanguage();
+  const { displayMoney } = useCurrency();
   const [greeting, setGreeting] = useState("Welcome");
 
   useEffect(() => setGreeting(greetingForNow(language)), [language]);
@@ -35,9 +36,7 @@ export function AuthenticatedDashboardOverview({ data }: { data: DashboardData }
   const wedding = data.wedding;
   const daysRemaining = daysUntil(wedding.weddingDate);
   // The profile stores exact values; range keys are only onboarding compatibility data.
-  const budgetLabel = wedding.budgetMinor
-    ? formatMoney(wedding.budgetMinor, wedding.budgetCurrency === "ZAR" ? "ZAR" : "USD")
-    : "—";
+  const budgetLabel = wedding.budgetMinor ? displayMoney(wedding.budgetMinor) : "—";
   const guestLabel = String(wedding.estimatedGuests);
 
   return (
