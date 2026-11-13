@@ -18,8 +18,8 @@ export function PageHeader({
   const { text } = useLanguage();
 
   return (
-    <header className="flex items-end justify-between gap-6 max-sm:flex-col max-sm:items-start">
-      <div>
+    <header className="flex min-w-0 max-w-full items-end justify-between gap-6 max-sm:flex-col max-sm:items-start">
+      <div className="min-w-0 max-w-full">
         {eyebrow && (
           <p className="mb-2.5 text-[14px] font-extrabold uppercase tracking-[.18em] text-yes-wine">
             {text(eyebrow)}
@@ -29,7 +29,7 @@ export function PageHeader({
           {text(title)}
         </h1>
         {description && (
-          <p className="m-0 max-w-2xl text-[14px] leading-relaxed text-yes-muted">
+          <p className="m-0 max-w-2xl break-words text-[14px] leading-relaxed text-yes-muted">
             {text(description)}
           </p>
         )}

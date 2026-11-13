@@ -9,6 +9,7 @@ const profileSchema = z.object({
   lastName: z.string().trim().min(2).max(80),
   phoneNumber: z.string().trim(),
   whatsappNotifications: z.boolean().default(false),
+  currency: z.enum(["USD", "ZAR"]).default("USD"),
 });
 
 function profile(document: Record<string, unknown>) {
@@ -21,6 +22,8 @@ function profile(document: Record<string, unknown>) {
     emailVerified: document.emailVerified === true,
     phoneNumber: document.phoneNumber ?? "",
     whatsappNotifications: document.whatsappNotifications === true,
+    currency: document.currency === "ZAR" ? "ZAR" : "USD",
+    currencyPreferenceSet: document.currencyPreferenceSet === true,
     role: document.role,
     accountType: document.accountType ?? (document.role === "Planner" ? "Vendor" : document.role),
     platformRoles: Array.isArray(document.platformRoles) ? document.platformRoles : [],
@@ -75,6 +78,8 @@ export async function PATCH(request: Request) {
     name: `${parsed.data.firstName} ${parsed.data.lastName}`,
     phoneNumber: phone.number,
     whatsappNotifications: parsed.data.whatsappNotifications,
+    currency: parsed.data.currency,
+    currencyPreferenceSet: true,
     updatedAt: new Date(),
   };
   let user;

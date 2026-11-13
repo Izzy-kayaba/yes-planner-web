@@ -21,6 +21,7 @@ type Booking = {
   vendor: string;
   service: string;
   amountMinor: number;
+  currency?: "USD" | "ZAR";
   status: string;
   next: string;
 };
@@ -52,7 +53,7 @@ const seed: Booking[] = [
 ];
 export function BookingsSection() {
   const { text } = useLanguage();
-  const { displayMoney } = useCurrency();
+  const { currency, displayMoney, displayStoredMoney } = useCurrency();
   const { items, create, update, remove, page, setPage, pagination } =
     useWorkspaceCollection<Booking>("bookings", seed);
   const connectedVendors = useConnectedVendors();
@@ -69,7 +70,7 @@ export function BookingsSection() {
       required: true,
     },
     { name: "service", label: "Service", required: true },
-    { name: "amountUsd", label: "Amount (USD)", type: "number", required: true },
+    { name: "amount", label: `Amount (${currency})`, type: "number", required: true },
     {
       name: "status",
       label: "Status",
@@ -83,7 +84,8 @@ export function BookingsSection() {
     const input = {
       vendor: String(values.vendor),
       service: String(values.service),
-      amountMinor: Math.round(Number(values.amountUsd) * 100),
+      amountMinor: Math.round(Number(values.amount) * 100),
+      currency,
       status: String(values.status),
       next: String(values.next),
     };
@@ -120,7 +122,9 @@ export function BookingsSection() {
                 <article className="booking-card" key={booking.id}>
                   <p>{text(booking.service)}</p>
                   <h4>{booking.vendor}</h4>
-                  <strong>{displayMoney(booking.amountMinor)}</strong>
+                  <strong>
+                    {displayStoredMoney(booking.amountMinor, booking.currency ?? "USD")}
+                  </strong>
                   <span>{text(booking.next)}</span>
                   <div className="flex gap-2">
                     <button
@@ -165,8 +169,8 @@ export function BookingsSection() {
         fields={fields}
         initialValues={
           editing
-            ? { ...editing, amountUsd: editing.amountMinor / 100 }
-            : { status: "Pending", amountUsd: 0 }
+            ? { ...editing, amount: editing.amountMinor / 100 }
+            : { status: "Pending", amount: 0 }
         }
         onClose={() => setOpen(false)}
         onSave={save}

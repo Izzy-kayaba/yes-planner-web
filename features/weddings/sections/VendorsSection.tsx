@@ -26,6 +26,7 @@ type Vendor = {
   category: string;
   rating: string;
   priceMinor: number;
+  currency?: "USD" | "ZAR";
   status: string;
   initials: string;
   tone: string;
@@ -39,7 +40,7 @@ const seed: Vendor[] = vendors.map((vendor, index) => ({
 }));
 export function VendorsSection() {
   const { text } = useLanguage();
-  const { displayMoney } = useCurrency();
+  const { currency, displayMoney, displayStoredMoney } = useCurrency();
   const { items, create, update, remove, page, setPage, pagination } =
     useWorkspaceCollection<Vendor>("vendors", seed);
   const connectedVendors = useConnectedVendors();
@@ -57,7 +58,7 @@ export function VendorsSection() {
     },
     { name: "category", label: "Category", required: true },
     { name: "rating", label: "Rating", type: "number", required: true },
-    { name: "priceUsd", label: "Price (USD)", type: "number", required: true },
+    { name: "price", label: `Price (${currency})`, type: "number", required: true },
     {
       name: "status",
       label: "Status",
@@ -72,14 +73,15 @@ export function VendorsSection() {
 
   async function save(values: Record<string, EntityFormValue>) {
     const base = values as unknown as Pick<Vendor, "name" | "category" | "rating" | "status"> & {
-      priceUsd: number;
+      price: number;
     };
     const input = {
       name: base.name,
       category: base.category,
       rating: base.rating,
       status: base.status,
-      priceMinor: Math.round(Number(base.priceUsd) * 100),
+      priceMinor: Math.round(Number(base.price) * 100),
+      currency,
       initials: getInitials(base.name),
       tone: editing?.tone ?? "rose",
       saved: editing?.saved ?? false,
@@ -159,7 +161,9 @@ export function VendorsSection() {
                 <span className="rating">★ {vendor.rating}</span> {text("· Johannesburg")}
               </p>
               <strong>
-                {vendor.priceMinor ? displayMoney(vendor.priceMinor) : text("Quote required")}
+                {vendor.priceMinor
+                  ? displayStoredMoney(vendor.priceMinor, vendor.currency ?? "USD")
+                  : text("Quote required")}
               </strong>
               <div className="flex gap-2">
                 <button
@@ -204,8 +208,8 @@ export function VendorsSection() {
         fields={fields}
         initialValues={
           editing
-            ? { ...editing, priceUsd: editing.priceMinor / 100 }
-            : { status: "Shortlisted", rating: 5, priceUsd: 0 }
+            ? { ...editing, price: editing.priceMinor / 100 }
+            : { status: "Shortlisted", rating: 5, price: 0 }
         }
         onClose={() => setOpen(false)}
         onSave={save}

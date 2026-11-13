@@ -15,6 +15,7 @@ type BudgetCategory = {
   name: string;
   amountMinor: number;
   budgetMinor: number;
+  currency?: "USD" | "ZAR";
   color: string;
 };
 const seed = budgetCategories.map((category, index) => ({
@@ -24,26 +25,9 @@ const seed = budgetCategories.map((category, index) => ({
   budgetMinor: category.budget * 100,
   color: category.color,
 }));
-const fields = [
-  { name: "name", label: "Budget item", required: true },
-  { name: "amountUsd", label: "Committed amount (USD)", type: "number" as const, required: true },
-  { name: "budgetUsd", label: "Planned budget (USD)", type: "number" as const, required: true },
-  {
-    name: "color",
-    label: "Colour",
-    type: "select" as const,
-    options: [
-      { value: "#8d4656", label: "Burgundy" },
-      { value: "#71826b", label: "Sage Green" },
-      { value: "#b99052", label: "Gold" },
-      { value: "#74859d", label: "Dusty Blue" },
-    ],
-  },
-];
-
 export function BudgetSection() {
   const { text } = useLanguage();
-  const { displayMoney } = useCurrency();
+  const { currency, displayMoney, displayStoredMoney } = useCurrency();
   const { items, create, update, remove, page, setPage, pagination } =
     useWorkspaceCollection<BudgetCategory>("budget", seed);
   const confirmation = useConfirmation();
@@ -52,12 +36,39 @@ export function BudgetSection() {
   const total = items.reduce((sum, item) => sum + item.budgetMinor, 0);
   const committed = items.reduce((sum, item) => sum + item.amountMinor, 0);
   const allocated = total ? Math.round((committed / total) * 100) : 0;
+  const fields = [
+    { name: "name", label: "Budget item", required: true },
+    {
+      name: "amount",
+      label: `Committed amount (${currency})`,
+      type: "number" as const,
+      required: true,
+    },
+    {
+      name: "budget",
+      label: `Planned budget (${currency})`,
+      type: "number" as const,
+      required: true,
+    },
+    {
+      name: "color",
+      label: "Colour",
+      type: "select" as const,
+      options: [
+        { value: "#8d4656", label: "Burgundy" },
+        { value: "#71826b", label: "Sage Green" },
+        { value: "#b99052", label: "Gold" },
+        { value: "#74859d", label: "Dusty Blue" },
+      ],
+    },
+  ];
 
   async function save(values: Record<string, EntityFormValue>) {
     const input = {
       name: String(values.name),
-      amountMinor: Math.round(Number(values.amountUsd) * 100),
-      budgetMinor: Math.round(Number(values.budgetUsd) * 100),
+      amountMinor: Math.round(Number(values.amount) * 100),
+      budgetMinor: Math.round(Number(values.budget) * 100),
+      currency,
       color: String(values.color || "#8d4656"),
     };
     if (editing) await update({ ...input, id: editing.id });
@@ -103,7 +114,8 @@ export function BudgetSection() {
             <div className="budget-row" key={item.id}>
               <b>{text(item.name)}</b>
               <small>
-                {displayMoney(item.amountMinor)} / {displayMoney(item.budgetMinor)}
+                {displayStoredMoney(item.amountMinor, item.currency ?? "USD")} /{" "}
+                {displayStoredMoney(item.budgetMinor, item.currency ?? "USD")}
               </small>
               <span className="budget-row-actions">
                 <button
@@ -159,10 +171,10 @@ export function BudgetSection() {
           editing
             ? {
                 ...editing,
-                amountUsd: editing.amountMinor / 100,
-                budgetUsd: editing.budgetMinor / 100,
+                amount: editing.amountMinor / 100,
+                budget: editing.budgetMinor / 100,
               }
-            : { color: "#8d4656", amountUsd: 0, budgetUsd: 0 }
+            : { color: "#8d4656", amount: 0, budget: 0 }
         }
         onClose={() => setOpen(false)}
         onSave={save}
