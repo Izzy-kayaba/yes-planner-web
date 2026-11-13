@@ -70,7 +70,13 @@ export function CurrencyProvider({ children }: { children: ReactNode }) {
   }
 
   function displayStoredMoney(amountMinor: number, storedCurrency: SupportedCurrency) {
-    return formatMoney(amountMinor, storedCurrency);
+    if (storedCurrency === currency) return formatMoney(amountMinor, currency);
+    if (!usdToZarRate) return formatMoney(amountMinor, currency);
+    const convertedMinor =
+      storedCurrency === "USD"
+        ? convertUsdToZar(amountMinor, usdToZarRate)
+        : Math.round(amountMinor / usdToZarRate);
+    return formatMoney(convertedMinor, currency);
   }
 
   // Form fields accept whole currency units; convert them to the USD-cent storage format.
