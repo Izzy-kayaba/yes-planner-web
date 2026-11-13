@@ -6,6 +6,7 @@ import {
   CalendarDays,
   Cloud,
   CreditCard,
+  Coins,
   KeyRound,
   Mail,
   MessageSquareText,
@@ -22,11 +23,13 @@ import { useEffect, useState, type FormEvent } from "react";
 import { toast } from "sonner";
 import { LanguageSwitcher } from "@/components/i18n/LanguageSwitcher";
 import { useLanguage } from "@/components/providers/LanguageProvider";
+import { useCurrency } from "@/components/providers/CurrencyProvider";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { apiRequest } from "@/lib/api/client";
 import { authClient } from "@/lib/auth-client";
 import { cn } from "@/lib/cn";
 import { FieldLabel } from "@/components/forms/FieldLabel";
+import { YesSelect } from "@/components/ui/YesSelect";
 
 const tabs = [
   ["profile", "settings.profile"],
@@ -115,6 +118,7 @@ const connectionPreferences: Preference[] = [
 export function SettingsPanel() {
   const router = useRouter();
   const { t, text } = useLanguage();
+  const { setCurrency } = useCurrency();
   const { data: session } = authClient.useSession();
   const [active, setActive] = useState<(typeof tabs)[number][0]>("profile");
   const [profile, setProfile] = useState({
@@ -122,6 +126,8 @@ export function SettingsPanel() {
     lastName: "",
     email: "",
     phoneNumber: "",
+    currency: "USD" as "USD" | "ZAR",
+    currencyPreferenceSet: false,
     whatsappNotifications: false,
     emailVerified: false,
     linkedProviders: [] as string[],
@@ -142,6 +148,7 @@ export function SettingsPanel() {
             ...saved,
             phoneNumber: saved.phoneNumber ?? saved.phone ?? "",
           }));
+          if (saved.currency === "USD" || saved.currency === "ZAR") setCurrency(saved.currency);
         }
       } catch {
         toast.error(text("Saved profile settings could not be loaded."));
@@ -149,7 +156,10 @@ export function SettingsPanel() {
       return;
     }
     apiRequest<typeof profile>("/api/v1/me")
-      .then(setProfile)
+      .then((saved) => {
+        setProfile(saved);
+        if (saved.currency === "USD" || saved.currency === "ZAR") setCurrency(saved.currency);
+      })
       .catch((error: Error) => toast.error(text(error.message)));
   }, []);
 
@@ -161,7 +171,9 @@ export function SettingsPanel() {
     }
     try {
       if ((process.env.NEXT_PUBLIC_DATA_SOURCE ?? "api") === "demo") {
-        window.localStorage.setItem("yes-planner-profile", JSON.stringify(profile));
+        const savedProfile = { ...profile, currencyPreferenceSet: true };
+        window.localStorage.setItem("yes-planner-profile", JSON.stringify(savedProfile));
+        setProfile(savedProfile);
       } else {
         const saved = await apiRequest<typeof profile>("/api/v1/me", {
           method: "PATCH",
@@ -323,7 +335,8 @@ export function SettingsPanel() {
                   required
                 />
               </label>
-              <section className="grid gap-2 border-t border-yes-line pt-4">
+              {/* Sign-in status is shown in Security. */}
+              {/*
                 <h3>{text("Sign-in providers")}</h3>
                 <p className="text-sm text-yes-muted">
                   {text("Social providers")}:{" "}
@@ -346,7 +359,7 @@ export function SettingsPanel() {
                       {text("Send verification email")}
                     </button>
                   )}
-              </section>
+              </section> */}
               <div className="settings-actions">
                 {session?.user.role === "Couple" && (
                   <Link className="button button-secondary" href="/onboarding">
@@ -365,11 +378,37 @@ export function SettingsPanel() {
               <div>
                 <h3>{t("settings.language")}</h3>
                 <p className="mt-2 text-sm text-yes-muted">
-                  {text(
-                    "Your choice updates the shared navigation and dashboard language and is remembered on this device.",
-                  )}
+                  {text("Choose your language and currency.")}
                 </p>
               </div>
+              <section className="grid gap-3 border-t border-yes-line pt-5">
+                <div>
+                  <FieldLabel required>{text("Display currency")}</FieldLabel>
+                  <YesSelect
+                    className="settings-currency-select"
+                    disabled={profile.currencyPreferenceSet}
+                    id="settings-currency"
+                    name="currency"
+                    value={profile.currency}
+                    ariaLabel={text("Display currency")}
+                    leadingIcon={<Coins size={15} aria-hidden="true" />}
+                    options={[
+                      { value: "USD", label: text("USD") },
+                      { value: "ZAR", label: text("ZAR") },
+                    ]}
+                    onChange={(value) => {
+                      const next = value as "USD" | "ZAR";
+                      updateProfile("currency", next);
+                      setCurrency(next);
+                    }}
+                  />
+                  <small className="form-hint">
+                    {profile.currencyPreferenceSet
+                      ? text("This currency is locked for this account.")
+                      : text("Choose once; it applies across the app.")}
+                  </small>
+                </div>
+              </section>
               <LanguageSwitcher />
             </div>
           )}
@@ -397,6 +436,16 @@ export function SettingsPanel() {
                 <p className="text-sm text-yes-muted">
                   {text(profile.emailVerified ? "Email verified" : "Email not verified")}
                 </p>
+                {!profile.emailVerified &&
+                  (process.env.NEXT_PUBLIC_DATA_SOURCE ?? "api") !== "demo" && (
+                    <button
+                      className="button button-secondary w-fit"
+                      onClick={() => void sendVerificationEmail()}
+                      type="button"
+                    >
+                      {text("Send verification email")}
+                    </button>
+                  )}
               </section>
               {profile.hasPassword && (
                 <form className="grid gap-4 border-t border-yes-line pt-5" onSubmit={savePassword}>

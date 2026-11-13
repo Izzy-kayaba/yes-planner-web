@@ -11,7 +11,9 @@ import {
 
 type CurrencyContextValue = {
   currency: SupportedCurrency;
+  setCurrency: (currency: SupportedCurrency) => void;
   displayMoney: (usdAmountMinor: number) => string;
+  displayStoredMoney: (amountMinor: number, storedCurrency: SupportedCurrency) => string;
   inputMoneyToUsdMinor: (amount: number) => number;
   usdMinorToInputMoney: (usdAmountMinor: number) => number;
 };
@@ -22,30 +24,37 @@ export function CurrencyProvider({ children }: { children: ReactNode }) {
   const [currency, setSelectedCurrency] = useState<SupportedCurrency>(defaultCurrency);
   const [usdToZarRate, setUsdToZarRate] = useState<number | null>(null);
 
+  function setCurrency(nextCurrency: SupportedCurrency) {
+    setSelectedCurrency(nextCurrency);
+    window.localStorage.setItem("yes-planner-currency", nextCurrency);
+  }
+
   useEffect(() => {
     let active = true;
-    const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    fetch("/api/v1/currency", {
-      cache: "no-store",
-      headers: {
-        "x-yes-locale": navigator.language,
-        "x-yes-time-zone": timeZone,
-        ...(window.location.pathname === "/za" || window.location.pathname.startsWith("/za/")
-          ? { "x-country-code": "ZA" }
-          : {}),
-      },
-    })
+    const storedCurrency = window.localStorage.getItem("yes-planner-currency");
+    if (storedCurrency === "USD" || storedCurrency === "ZAR") setSelectedCurrency(storedCurrency);
+    fetch("/api/v1/me", { cache: "no-store" })
+      .then(async (response) => {
+        if (!response.ok) return null;
+        return response.json() as Promise<{ currency?: SupportedCurrency }>;
+      })
+      .then((profile) => {
+        if (!active || !profile?.currency) return;
+        setSelectedCurrency(profile.currency);
+        window.localStorage.setItem("yes-planner-currency", profile.currency);
+      })
+      .catch(() => undefined);
+
+    fetch("/api/v1/currency", { cache: "no-store" })
       .then(async (response) => {
         if (!response.ok) throw new Error("Currency availability could not be loaded.");
-        return response.json() as Promise<{ southAfrican: boolean; usdToZarRate: number | null }>;
+        return response.json() as Promise<{ usdToZarRate: number | null }>;
       })
       .then((result) => {
-        if (!active) return;
-        setUsdToZarRate(result.usdToZarRate);
-        setSelectedCurrency(result.southAfrican && result.usdToZarRate ? "ZAR" : "USD");
+        if (active) setUsdToZarRate(result.usdToZarRate);
       })
       .catch(() => {
-        if (active) setSelectedCurrency(defaultCurrency);
+        if (active) setUsdToZarRate(null);
       });
     return () => {
       active = false;
@@ -60,6 +69,10 @@ export function CurrencyProvider({ children }: { children: ReactNode }) {
     return formatMoney(amount, currency);
   }
 
+  function displayStoredMoney(amountMinor: number, storedCurrency: SupportedCurrency) {
+    return formatMoney(amountMinor, storedCurrency);
+  }
+
   // Form fields accept whole currency units; convert them to the USD-cent storage format.
   function inputMoneyToUsdMinor(amount: number) {
     if (currency === "ZAR" && usdToZarRate) {
@@ -71,14 +84,21 @@ export function CurrencyProvider({ children }: { children: ReactNode }) {
   // Convert stored USD cents back into the currency shown in an editable field.
   function usdMinorToInputMoney(usdAmountMinor: number) {
     if (currency === "ZAR" && usdToZarRate) {
-      return usdAmountMinor * usdToZarRate / 100;
+      return (usdAmountMinor * usdToZarRate) / 100;
     }
     return usdAmountMinor / 100;
   }
 
   return (
     <CurrencyContext.Provider
-      value={{ currency, displayMoney, inputMoneyToUsdMinor, usdMinorToInputMoney }}
+      value={{
+        currency,
+        setCurrency,
+        displayMoney,
+        displayStoredMoney,
+        inputMoneyToUsdMinor,
+        usdMinorToInputMoney,
+      }}
     >
       {children}
     </CurrencyContext.Provider>

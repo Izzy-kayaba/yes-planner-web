@@ -24,6 +24,7 @@ const profileSchema = z
       .trim()
       .length(2)
       .regex(/^[A-Z]{2}$/),
+    priceCurrency: z.enum(["USD", "ZAR"]).default("USD"),
     startingPriceMinMinor: z.coerce.number().int().nonnegative().max(100_000_000_000),
     startingPriceMaxMinor: z.coerce.number().int().nonnegative().max(100_000_000_000),
     startingPriceMinor: z.coerce.number().int().nonnegative().max(100_000_000_000),
@@ -54,6 +55,7 @@ function publicProfile(document: Record<string, unknown>) {
     services: document.services,
     serviceArea: document.serviceArea,
     countryCode: document.countryCode,
+    priceCurrency: document.priceCurrency === "ZAR" ? "ZAR" : "USD",
     startingPriceMinMinor: document.startingPriceMinMinor ?? document.startingPriceMinor,
     startingPriceMaxMinor: document.startingPriceMaxMinor ?? document.startingPriceMinor,
     startingPriceMinor: document.startingPriceMinor,

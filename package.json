@@ -8,6 +8,7 @@
     "admin:set": "node scripts/set-system-admin.mjs",
     "admin:role": "node scripts/manage-platform-role.mjs",
     "media:cleanup": "node scripts/cleanup-orphaned-media.mjs",
+    "migrate:currency": "node scripts/migrate-currency-preferences.mjs",
     "seed:vendors": "node scripts/seed-vendors.mjs",
     "generate:country-data": "node scripts/generate-country-data.mjs",
     "check:lines": "node scripts/check-file-lines.mjs",

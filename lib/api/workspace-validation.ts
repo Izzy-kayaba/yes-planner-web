@@ -2,7 +2,6 @@ import type { WorkspaceModule } from "@/lib/api/contracts";
 import { parsePhoneNumberFromString } from "libphonenumber-js";
 
 const forbiddenMoneyFields = new Set([
-  "currency",
   "price",
   "amount",
   "budget",
@@ -21,12 +20,19 @@ const requiredMoneyFields: Partial<Record<WorkspaceModule, string[]>> = {
 export function validateWorkspaceMoney(module: WorkspaceModule, data: Record<string, unknown>) {
   // Reject ambiguous major-unit field names; the app stores monetary values as minor units.
   const invalidField = Object.keys(data).find((field) => forbiddenMoneyFields.has(field));
-  if (invalidField) return `${invalidField} cannot be stored. Store USD minor units only.`;
+  if (invalidField) return `${invalidField} cannot be stored. Store minor units only.`;
+  if (
+    (requiredMoneyFields[module] ?? []).length &&
+    data.currency !== "USD" &&
+    data.currency !== "ZAR"
+  ) {
+    return "currency must be USD or ZAR.";
+  }
   // Each money-bearing module has a specific set of fields that must be safe non-negative integers.
   for (const field of requiredMoneyFields[module] ?? []) {
     const value = data[field];
     if (typeof value !== "number" || !Number.isSafeInteger(value) || value < 0) {
-      return `${field} must be a non-negative USD minor-unit integer.`;
+      return `${field} must be a non-negative currency minor-unit integer.`;
     }
   }
   return null;
