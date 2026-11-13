@@ -65,6 +65,7 @@ export const frenchSupplementalLiterals: Record<string, string> = {
   "Download CSV": "Télécharger CSV",
   User: "Utilisateur",
   Document: "Document",
+  documents: "documents",
   Added: "Ajouté le",
   "Filter tasks by priority": "Filtrer les tâches par priorité",
   tasks: "tâches",

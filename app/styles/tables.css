@@ -1,0 +1,49 @@
+/* Shared wedding table layout. Individual tables only define their columns. */
+.workspace-table-scroll {
+  max-width: 100%;
+  max-height: min(70vh, 42rem);
+  overflow-x: auto;
+  overflow-y: auto;
+  scrollbar-color: color-mix(in srgb, var(--wine) 42%, var(--line)) transparent;
+  scrollbar-width: thin;
+}
+
+.workspace-table-head,
+.workspace-table-row {
+  min-width: 790px;
+  display: grid;
+  align-items: center;
+  gap: 12px;
+  padding-inline: 20px;
+}
+
+.workspace-table-head {
+  min-height: 42px;
+  background: var(--surface-soft);
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 850;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.workspace-table-row {
+  min-height: 68px;
+  border-bottom: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.workspace-table-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  min-width: 120px;
+}
+
+@media (max-width: 768px) {
+  .workspace-table-head,
+  .workspace-table-row {
+    min-width: 790px;
+  }
+}

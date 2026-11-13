@@ -156,6 +156,40 @@
   color: inherit;
   text-decoration: none;
 }
+.marketplace-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  overflow: visible;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+.marketplace-grid .vendor-card {
+  min-width: 0;
+  display: block;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 15px;
+  background: var(--surface);
+  box-shadow: var(--shadow-soft);
+}
+.marketplace-grid .vendor-card:last-child {
+  border-bottom: 1px solid var(--line);
+}
+.marketplace-grid .vendor-card:hover {
+  background: var(--surface);
+}
+.marketplace-grid .vendor-card-copy {
+  display: block;
+  padding: 1rem 0.75rem;
+}
+.marketplace-grid .vendor-card-copy > div:first-child,
+.marketplace-grid .vendor-card-copy > h3,
+.marketplace-grid .vendor-card-copy > p,
+.marketplace-grid .vendor-card-copy > strong {
+  margin-bottom: revert;
+}
 .marketplace-vendor-card-link:focus-visible {
   outline: 3px solid color-mix(in srgb, var(--wine) 48%, transparent);
   outline-offset: -3px;

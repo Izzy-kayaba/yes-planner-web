@@ -80,70 +80,78 @@ export function TasksSection() {
           </button>
         </div>
       </div>
-      <div className="task-list">
-        <div className="table-head task-table-head">
-          <span aria-hidden="true" />
-          <span>{text("Task")}</span>
-          <span>{text("Priority")}</span>
-          <span>{text("Due date")}</span>
-          <span>{text("Actions")}</span>
-        </div>
-        {shown.map((task) => (
-          <div className={`task-row ${task.complete ? "complete" : ""}`} key={task.id}>
-            <button
-              className="check-box"
-              aria-label={`${text("Mark")} ${text(task.title)} ${text(task.complete ? "open" : "complete")}`}
-              onClick={() => void update({ ...task, complete: !task.complete })}
-            >
-              {task.complete ? "✓" : ""}
-            </button>
-            <span className="task-copy">
-              <strong>{text(task.title)}</strong>
-              <small>
-                {text(task.category)}
-                {task.assignee ? ` · ${text("Assigned to")} ${task.assignee}` : ""}
-              </small>
-            </span>
-            <StatusPill
-              tone={
-                task.priority === "High" ? "rose" : task.priority === "Medium" ? "gold" : "neutral"
-              }
-            >
-              {task.priority}
-            </StatusPill>
-            <span className="task-due">{text(formatDisplayDate(task.due, language))}</span>
-            <span className="flex gap-1">
-              <button
-                className="icon-button"
-                onClick={() => {
-                  setEditing(task);
-                  setOpen(true);
-                }}
-                aria-label={`${text("Edit")} ${text(task.title)}`}
-              >
-                <Pencil size={14} />
-              </button>
-              <button
-                className="icon-button icon-button-blush"
-                onClick={() =>
-                  void confirmation
-                    .confirm({
-                      description: `${text("Delete")} ${text(task.title)}?`,
-                      confirmLabel: "Delete",
-                    })
-                    .then((confirmed) => {
-                      if (confirmed) void remove(task.id);
-                    })
-                }
-                aria-label={`${text("Delete")} ${text(task.title)}`}
-              >
-                <Trash2 size={14} />
-              </button>
-            </span>
+      <div className="table-scroll workspace-table-scroll">
+        <div className="task-list">
+          <div className="table-head task-table-head workspace-table-head">
+            <span className="task-column-heading">{text("Task")}</span>
+            <span>{text("Priority")}</span>
+            <span>{text("Due date")}</span>
+            <span>{text("Actions")}</span>
           </div>
-        ))}
+          {shown.map((task) => (
+            <div
+              className={`task-row workspace-table-row ${task.complete ? "complete" : ""}`}
+              key={task.id}
+            >
+              <button
+                className="check-box"
+                aria-label={`${text("Mark")} ${text(task.title)} ${text(task.complete ? "open" : "complete")}`}
+                onClick={() => void update({ ...task, complete: !task.complete })}
+              >
+                {task.complete ? "✓" : ""}
+              </button>
+              <span className="task-copy">
+                <strong>{text(task.title)}</strong>
+                <small>
+                  {text(task.category)}
+                  {task.assignee ? ` · ${text("Assigned to")} ${task.assignee}` : ""}
+                </small>
+              </span>
+              <StatusPill
+                tone={
+                  task.priority === "High"
+                    ? "rose"
+                    : task.priority === "Medium"
+                      ? "gold"
+                      : "neutral"
+                }
+              >
+                {task.priority}
+              </StatusPill>
+              <span className="task-due">{text(formatDisplayDate(task.due, language))}</span>
+              <span className="flex gap-1">
+                <button
+                  className="icon-button"
+                  onClick={() => {
+                    setEditing(task);
+                    setOpen(true);
+                  }}
+                  aria-label={`${text("Edit")} ${text(task.title)}`}
+                >
+                  <Pencil size={14} />
+                </button>
+                <button
+                  className="icon-button icon-button-blush"
+                  onClick={() =>
+                    void confirmation
+                      .confirm({
+                        description: `${text("Delete")} ${text(task.title)}?`,
+                        confirmLabel: "Delete",
+                      })
+                      .then((confirmed) => {
+                        if (confirmed) void remove(task.id);
+                      })
+                  }
+                  aria-label={`${text("Delete")} ${text(task.title)}`}
+                >
+                  <Trash2 size={14} />
+                </button>
+              </span>
+            </div>
+          ))}
+        </div>
       </div>
-      <div className="table-footer">
+      <div className="table-footer task-table-footer">
         <span>
           {text("Showing")} {shown.length} {text("of")} {pagination.totalItems} {text("tasks")}
         </span>
