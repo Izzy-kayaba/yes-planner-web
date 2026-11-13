@@ -1,22 +1,9 @@
-import "dotenv/config";
 import { MongoClient } from "mongodb";
+import { databaseEnvironment, parseScriptArguments } from "./environment.mjs";
 
-const args = new Set(process.argv.slice(2));
-const environment = process.argv[process.argv.indexOf("--env") + 1] || "development";
-const apply = args.has("--apply");
-const uri =
-  environment === "production"
-    ? process.env.MONGODB_PRODUCTION_URI
-    : process.env.MONGODB_DEVELOPMENT_URI;
-const database =
-  environment === "production"
-    ? process.env.MONGODB_PRODUCTION_DATABASE
-    : process.env.MONGODB_DEVELOPMENT_DATABASE;
-
-if (!uri || !database) throw new Error(`Missing MongoDB settings for ${environment}.`);
-if (environment === "production" && !apply) {
-  throw new Error("Production migration is dry-run only unless --apply is supplied.");
-}
+const { environment, positional } = parseScriptArguments(process.argv.slice(2));
+const { uri, databaseName: database } = databaseEnvironment(environment);
+const apply = positional.includes("--apply");
 
 const client = new MongoClient(uri);
 await client.connect();
