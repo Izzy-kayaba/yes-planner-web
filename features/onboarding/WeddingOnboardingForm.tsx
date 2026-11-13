@@ -57,10 +57,10 @@ export function WeddingOnboardingForm({
 }) {
   const router = useRouter();
   const { language, text } = useLanguage();
-  const { currency, inputMoneyToUsdMinor, usdMinorToInputMoney } = useCurrency();
+  const { currency } = useCurrency();
   const [value, setValue] = useState(initialValue ?? emptyValue);
   const [budgetInput, setBudgetInput] = useState(
-    initialValue?.budgetMinor ? String(usdMinorToInputMoney(initialValue.budgetMinor)) : "",
+    initialValue?.budgetMinor ? String(initialValue.budgetMinor / 100) : "",
   );
   const [saving, setSaving] = useState(false);
   const [displayNameEdited, setDisplayNameEdited] = useState(Boolean(initialValue?.displayName));
@@ -84,7 +84,7 @@ export function WeddingOnboardingForm({
 
   async function save(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const budgetMinor = inputMoneyToUsdMinor(Number(budgetInput));
+    const budgetMinor = Math.round(Number(budgetInput) * 100);
     const budgetRangeKey =
       value.budgetRangeKey || inferMoneyRange(budgetRanges, budgetMinor) || budgetRanges[0].id;
     const guestRangeKey =
@@ -96,7 +96,7 @@ export function WeddingOnboardingForm({
         body: JSON.stringify({
           ...value,
           budgetMinor,
-          budgetEnteredMinor: Math.round(Number(budgetInput) * 100),
+          budgetEnteredMinor: budgetMinor,
           budgetCurrency: currency,
           budgetRangeKey,
           estimatedGuests: value.estimatedGuests,

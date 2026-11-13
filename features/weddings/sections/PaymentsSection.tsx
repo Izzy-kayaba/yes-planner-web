@@ -23,6 +23,7 @@ type Payment = {
   vendor: string;
   reference: string;
   amountMinor: number;
+  currency?: "USD" | "ZAR";
   due: string;
   status: string;
 };
@@ -54,7 +55,7 @@ const seed: Payment[] = [
 ];
 export function PaymentsSection() {
   const { text } = useLanguage();
-  const { displayMoney } = useCurrency();
+  const { currency, displayMoney, displayStoredMoney } = useCurrency();
   const { items, create, update, remove, page, setPage, pagination } =
     useWorkspaceCollection<Payment>("payments", seed);
   const connectedVendors = useConnectedVendors();
@@ -70,7 +71,7 @@ export function PaymentsSection() {
       required: true,
     },
     { name: "reference", label: "Invoice reference", required: true },
-    { name: "amountUsd", label: "Amount (USD)", type: "number", required: true },
+    { name: "amount", label: `Amount (${currency})`, type: "number", required: true },
     { name: "due", label: "Due date", type: "date" as const, required: true },
     {
       name: "status",
@@ -84,7 +85,8 @@ export function PaymentsSection() {
     const input = {
       vendor: String(values.vendor),
       reference: String(values.reference),
-      amountMinor: Math.round(Number(values.amountUsd) * 100),
+      amountMinor: Math.round(Number(values.amount) * 100),
+      currency,
       due: String(values.due),
       status: String(values.status),
     };
@@ -93,7 +95,7 @@ export function PaymentsSection() {
   }
   function exportCsv() {
     const rows = [
-      ["Vendor", "Reference", "Amount USD minor units", "Due", "Status"],
+      ["Vendor", "Reference", `Amount ${currency}`, "Due", "Status"],
       ...items.map((item) => [
         item.vendor,
         item.reference,
@@ -180,7 +182,7 @@ export function PaymentsSection() {
                 <small>{payment.reference}</small>
               </p>
               <b>
-                {displayMoney(payment.amountMinor)}
+                {displayStoredMoney(payment.amountMinor, payment.currency ?? "USD")}
                 <small>
                   {text("Due")} {text(payment.due)}
                 </small>
@@ -240,8 +242,8 @@ export function PaymentsSection() {
         fields={fields}
         initialValues={
           editing
-            ? { ...editing, amountUsd: editing.amountMinor / 100 }
-            : { status: "Scheduled", amountUsd: 0 }
+            ? { ...editing, amount: editing.amountMinor / 100 }
+            : { status: "Scheduled", amount: 0 }
         }
         onClose={() => setOpen(false)}
         onSave={save}

@@ -24,6 +24,7 @@ export type VendorOnboardingValue = {
   services: string[];
   serviceArea: string;
   countryCode: string;
+  priceCurrency?: "USD" | "ZAR";
   startingPriceMinMinor: number;
   startingPriceMaxMinor: number;
   startingPriceMinor: number;
@@ -41,6 +42,7 @@ const emptyValue: VendorOnboardingValue = {
   services: [],
   serviceArea: "",
   countryCode: "",
+  priceCurrency: "USD",
   startingPriceMinMinor: 0,
   startingPriceMaxMinor: 0,
   startingPriceMinor: 0,
@@ -84,6 +86,7 @@ export function VendorOnboardingForm({
     if (accountType !== "Venue") {
       return {
         ...startingValue,
+        priceCurrency: startingValue.priceCurrency ?? currency,
         services: startingValue.services.filter((service) => service !== "Venue"),
       };
     }
@@ -183,6 +186,7 @@ export function VendorOnboardingForm({
         body: JSON.stringify({
           ...value,
           startingPriceMinor: value.startingPriceMinMinor,
+          priceCurrency: value.priceCurrency ?? currency,
           startingPriceMinMinor: value.startingPriceMinMinor,
           startingPriceMaxMinor: value.startingPriceMaxMinor,
           startingPriceRangeKey,
