@@ -115,66 +115,75 @@ export function DocumentsSection() {
           </button>
         </div>
       </div>
-      <div className="file-list">
-        <div className="table-head file-table-head">
-          <span className="document-column-heading">{text("Document")}</span>
-          <span className="added-column-heading">{text("Added")}</span>
-          <span className="access-column-heading">{text("Access")}</span>
-          <span className="actions-column-heading">{text("Actions")}</span>
-        </div>
-        {shown.map((doc) => (
-          <div key={doc.id}>
-            <span className="file-icon">
-              <FileText size={17} />
-            </span>
-            <p>
-              <strong>{doc.name}</strong>
-              <small>
-                {text(doc.type)} · {text("Added by")} {doc.owner}
-              </small>
-            </p>
-            <span>{formatDocumentDate(doc.date)}</span>
-            <StatusPill tone={doc.access === "Private" ? "rose" : "sage"}>{doc.access}</StatusPill>
-            <span className="flex justify-end gap-1">
-              {doc.url ? (
-                <a
-                  className="button button-secondary min-h-9 px-3"
-                  href={doc.url}
-                  rel="noreferrer"
-                  target="_blank"
-                >
-                  {text("Open")}
-                </a>
-              ) : null}
-              <button
-                className="icon-button"
-                onClick={() => {
-                  setEditing(doc);
-                  setOpen(true);
-                }}
-                aria-label={`${text("Edit")} ${doc.name}`}
-              >
-                <Pencil size={13} />
-              </button>
-              <button
-                className="icon-button icon-button-blush"
-                onClick={() =>
-                  void confirmation
-                    .confirm({
-                      description: `${text("Delete")} ${doc.name}?`,
-                      confirmLabel: "Delete",
-                    })
-                    .then((confirmed) => {
-                      if (confirmed) void remove(doc.id);
-                    })
-                }
-                aria-label={`${text("Delete")} ${doc.name}`}
-              >
-                <Trash2 size={13} />
-              </button>
-            </span>
+      <div className="table-scroll workspace-table-scroll">
+        <div className="file-list">
+          <div className="table-head file-table-head workspace-table-head">
+            <span className="document-column-heading">{text("Document")}</span>
+            <span className="added-column-heading">{text("Added")}</span>
+            <span className="access-column-heading">{text("Access")}</span>
+            <span className="actions-column-heading">{text("Actions")}</span>
           </div>
-        ))}
+          {shown.map((doc) => (
+            <div className="workspace-table-row" key={doc.id}>
+              <span className="file-icon">
+                <FileText size={17} />
+              </span>
+              <p>
+                <strong>{doc.name}</strong>
+                <small>
+                  {text(doc.type)} · {text("Added by")} {doc.owner}
+                </small>
+              </p>
+              <span>{formatDocumentDate(doc.date)}</span>
+              <StatusPill tone={doc.access === "Private" ? "rose" : "sage"}>
+                {doc.access}
+              </StatusPill>
+              <span className="flex justify-end gap-1">
+                {doc.url ? (
+                  <a
+                    className="button button-secondary min-h-9 px-3"
+                    href={doc.url}
+                    rel="noreferrer"
+                    target="_blank"
+                  >
+                    {text("Open")}
+                  </a>
+                ) : null}
+                <button
+                  className="icon-button"
+                  onClick={() => {
+                    setEditing(doc);
+                    setOpen(true);
+                  }}
+                  aria-label={`${text("Edit")} ${doc.name}`}
+                >
+                  <Pencil size={13} />
+                </button>
+                <button
+                  className="icon-button icon-button-blush"
+                  onClick={() =>
+                    void confirmation
+                      .confirm({
+                        description: `${text("Delete")} ${doc.name}?`,
+                        confirmLabel: "Delete",
+                      })
+                      .then((confirmed) => {
+                        if (confirmed) void remove(doc.id);
+                      })
+                  }
+                  aria-label={`${text("Delete")} ${doc.name}`}
+                >
+                  <Trash2 size={13} />
+                </button>
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div className="table-footer document-table-footer">
+        <span>
+          {text("Showing")} {shown.length} {text("of")} {pagination.totalItems} {text("documents")}
+        </span>
       </div>
       <Pagination
         page={page}

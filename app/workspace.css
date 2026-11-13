@@ -342,17 +342,18 @@
 }
 .task-table-head {
   min-width: 0;
-  grid-template-columns: 40px repeat(4, minmax(0, 1fr));
+  grid-template-columns: 40px minmax(220px, 1.5fr) minmax(100px, 0.75fr) minmax(110px, 0.8fr) 120px;
   padding-inline: 20px;
 }
 .task-list .task-row {
-  grid-template-columns: 40px repeat(4, minmax(0, 1fr));
+  grid-template-columns: 40px minmax(220px, 1.5fr) minmax(100px, 0.75fr) minmax(110px, 0.8fr) 120px;
   padding-inline: 20px;
 }
 .task-table-head span:not(:first-child) {
   text-align: center;
 }
-.task-table-head span:nth-child(2) {
+.task-table-head .task-column-heading {
+  grid-column: 1 / span 2;
   text-align: left;
 }
 .task-row > .status-pill,
@@ -365,7 +366,7 @@
 .task-row {
   width: 100%;
   display: grid;
-  grid-template-columns: 40px repeat(4, minmax(0, 1fr));
+  grid-template-columns: 40px minmax(220px, 1.5fr) minmax(100px, 0.75fr) minmax(110px, 0.8fr) 120px;
   align-items: center;
   gap: 12px;
   padding: 14px 4px;

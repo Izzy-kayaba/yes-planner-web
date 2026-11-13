@@ -1,5 +1,6 @@
 /* Purpose: shared styles for app/modules.css */
 @import "./styles/wedding-core.css";
+@import "./styles/tables.css";
 @import "./styles/wedding-collaboration.css";
 @import "./styles/professional.css";
 @import "./styles/invitation.css";

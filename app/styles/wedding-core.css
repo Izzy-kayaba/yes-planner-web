@@ -3,7 +3,7 @@
   overflow: hidden;
   padding: 0;
 }
-.guest-table-scroll {
+.table-scroll {
   max-width: 100%;
   max-height: min(70vh, 42rem);
   overflow-x: auto;
@@ -11,18 +11,25 @@
   scrollbar-color: color-mix(in srgb, var(--wine) 42%, var(--line)) transparent;
   scrollbar-width: thin;
 }
+.guest-table-panel .table-head,
+.guest-table-panel .table-row {
+  grid-template-columns: 1.5fr 1fr 0.75fr 0.8fr 0.7fr 120px;
+}
+.guest-table-panel .table-head span:last-child {
+  text-align: center;
+}
 
-.guest-table-scroll::-webkit-scrollbar {
+.table-scroll::-webkit-scrollbar {
   width: 0.45rem;
   height: 0.45rem;
 }
 
-.guest-table-scroll::-webkit-scrollbar-track {
+.table-scroll::-webkit-scrollbar-track {
   background: var(--surface-soft);
   border-radius: 999px;
 }
 
-.guest-table-scroll::-webkit-scrollbar-thumb {
+.table-scroll::-webkit-scrollbar-thumb {
   background: color-mix(in srgb, var(--wine) 42%, var(--line));
   border-radius: 999px;
 }
@@ -171,8 +178,12 @@
 }
 .task-list .task-table-head {
   min-width: 0;
-  grid-template-columns: 40px repeat(4, minmax(0, 1fr));
+  grid-template-columns: 40px minmax(220px, 1.5fr) minmax(100px, 0.75fr) minmax(110px, 0.8fr) 120px;
   padding-inline: 20px;
+}
+.task-list .task-table-head,
+.task-list .task-row {
+  min-width: 790px;
 }
 .table-row:last-child {
   border: 0;
@@ -781,12 +792,16 @@
 .file-list {
   display: grid;
 }
+.file-list .file-table-head,
+.file-list > div {
+  min-width: 790px;
+}
 .file-list > div {
   min-height: 68px;
   display: grid;
   grid-template-columns: 42px minmax(220px, 1.3fr) minmax(110px, 1fr) minmax(110px, 1fr) minmax(
-      150px,
-      1.3fr
+      120px,
+      1.1fr
     );
   align-items: center;
   gap: 10px;
@@ -796,8 +811,8 @@
 .file-list .file-table-head {
   min-width: 0;
   grid-template-columns: 42px minmax(220px, 1.3fr) minmax(110px, 1fr) minmax(110px, 1fr) minmax(
-      150px,
-      1.3fr
+      120px,
+      1.1fr
     );
   min-height: 42px;
   padding-inline: 20px;

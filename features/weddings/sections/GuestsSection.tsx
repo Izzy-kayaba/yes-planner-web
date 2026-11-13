@@ -139,18 +139,18 @@ export function GuestsSection() {
             </button>
           </div>
         </div>
-        <div className="guest-table-scroll">
+        <div className="table-scroll workspace-table-scroll">
           <div className="data-table">
-            <div className="table-head">
+            <div className="table-head workspace-table-head">
               <span>{text("Guest")}</span>
               <span>{text("Group")}</span>
               <span>{text("RSVP")}</span>
               <span>{text("Meal")}</span>
               <span>{text("Table")}</span>
-              <span />
+              <span>{text("Actions")}</span>
             </div>
             {filtered.map((guest) => (
-              <div className="table-row" key={guest.id}>
+              <div className="table-row workspace-table-row" key={guest.id}>
                 <span className="person-cell">
                   <i>{getInitials(guest.name)}</i>
                   <b>
