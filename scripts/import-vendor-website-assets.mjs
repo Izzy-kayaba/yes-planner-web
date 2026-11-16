@@ -48,7 +48,14 @@ function extractWebsiteImageUrls(html, pageUrl) {
 }
 
 function isLikelyWorkImage(url) {
-  return !/(?:logo|favicon|icon|badge|award|certificate|sponsor|partner|avatar|placeholder|pattern|background|sprite|qr[-_]?code)/i.test(url);
+  return (
+    !/(?:logo|favicon|icon|badge|award|certificate|sponsor|partner|avatar|profile|portrait|headshot|team|staff|person|founder|owner|placeholder|pattern|background|sprite|qr[-_]?code|dummy|guest\.png)/i.test(
+      url,
+    ) &&
+    !/(?:fill\/w_(?:[0-9]|[1-9][0-9]|1[0-4][0-9]|150)(?:,|\/)|width=(?:[0-9]|[1-9][0-9]|1[0-4][0-9]|150))/i.test(
+      url,
+    )
+  );
 }
 
 async function fetchWithLimit(url, options = {}) {
