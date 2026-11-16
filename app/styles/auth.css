@@ -465,6 +465,16 @@
 .vendor-public-gallery img {
   object-fit: cover;
 }
+.vendor-profile-photo {
+  background: #f8f4ef;
+}
+.vendor-profile-photo .vendor-profile-image {
+  object-fit: contain;
+  padding: 18px;
+}
+.vendor-public-gallery .vendor-work-image {
+  object-fit: cover;
+}
 .portfolio-upload-preview button {
   position: absolute;
   z-index: 2;
@@ -564,8 +574,51 @@
   .vendor-public-gallery {
     grid-template-columns: repeat(2, 1fr);
   }
-  .profile-upload,
+  .vendor-public-profile {
+    gap: 12px;
+  }
+  .vendor-profile-hero {
+    gap: 18px;
+    padding: 18px;
+    align-items: start;
+  }
   .vendor-profile-photo {
+    width: 116px;
+    height: 116px;
+    border-radius: 18px;
+  }
+  .vendor-profile-photo .vendor-profile-image {
+    padding: 10px;
+  }
+  .vendor-profile-copy h1 {
+    gap: 8px;
+    font-size: clamp(30px, 10vw, 42px);
+    overflow-wrap: anywhere;
+  }
+  .vendor-profile-copy > p {
+    line-height: 1.55;
+  }
+  .vendor-service-list {
+    gap: 6px;
+    margin-top: 12px;
+  }
+  .vendor-service-chip {
+    min-height: 30px;
+    padding: 6px 9px;
+    font-size: 11px;
+  }
+  .vendor-public-gallery {
+    gap: 8px;
+    margin-top: 14px;
+  }
+  .vendor-public-gallery > div:first-child {
+    grid-column: 1 / -1;
+    aspect-ratio: 16 / 9;
+  }
+  .vendor-public-gallery > div {
+    border-radius: 12px;
+  }
+  .profile-upload {
     width: 150px;
   }
 }

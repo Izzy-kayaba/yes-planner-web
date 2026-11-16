@@ -47,6 +47,10 @@ function extractWebsiteImageUrls(html, pageUrl) {
   return candidates.slice(0, 24);
 }
 
+function isLikelyWorkImage(url) {
+  return !/(?:logo|favicon|icon|badge|award|certificate|sponsor|partner|avatar|placeholder|pattern|background|sprite|qr[-_]?code)/i.test(url);
+}
+
 async function fetchWithLimit(url, options = {}) {
   const response = await fetch(url, { ...options, redirect: "follow", signal: AbortSignal.timeout(15_000) });
   if (!response.ok) throw new Error(`HTTP ${response.status}`);
@@ -62,18 +66,21 @@ async function fetchWebsiteImages(website) {
   const page = await fetchWithLimit(pageUrl, { headers: { Accept: "text/html,application/xhtml+xml" } });
   const candidates = extractWebsiteImageUrls(page.buffer.toString("utf8"), pageUrl);
   const images = [];
+  let profileImage;
   for (const sourceUrl of candidates) {
-    if (images.length >= maximumPortfolioImages + 1) break;
+    if (images.length >= maximumPortfolioImages) break;
     try {
       const result = await fetchWithLimit(sourceUrl, { image: true, headers: { Accept: "image/jpeg,image/png,image/webp" } });
       const contentType = detectLogoContentType(result.buffer, result.response.headers.get("content-type") ?? "");
       if (!contentType || !imageMimeTypes.has(contentType)) continue;
-      images.push({ buffer: result.buffer, contentType, sourceUrl });
+      const image = { buffer: result.buffer, contentType, sourceUrl };
+      if (!profileImage && /logo|brand|identity/i.test(sourceUrl)) profileImage = image;
+      else if (isLikelyWorkImage(sourceUrl)) images.push(image);
     } catch {
       // One broken gallery image must not prevent the other website images from importing.
     }
   }
-  return images;
+  return profileImage ? [profileImage, ...images].slice(0, maximumPortfolioImages + 1) : images.slice(0, maximumPortfolioImages);
 }
 
 async function storeImage(database, vendor, image, index) {

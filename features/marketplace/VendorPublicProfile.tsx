@@ -107,6 +107,7 @@ export function VendorPublicProfile({
           {vendor.profileImage ? (
             <Image
               alt={vendor.businessName}
+              className="vendor-profile-image"
               fill
               priority
               sizes="220px"
@@ -226,9 +227,11 @@ export function VendorPublicProfile({
               <div key={`${image.slice(-20)}-${index}`}>
                 <Image
                   alt={`${vendor.businessName} work ${index + 1}`}
+                  className="vendor-work-image"
                   fill
                   sizes="(max-width: 640px) 100vw, 33vw"
                   src={image}
+                  loading={index === 0 ? "eager" : "lazy"}
                   unoptimized
                 />
               </div>
