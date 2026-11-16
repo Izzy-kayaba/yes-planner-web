@@ -8,6 +8,7 @@
 # local configuration
 .env*
 !.env.example
+/.local-mongo/
 
 # logs and editor files
 *.log
