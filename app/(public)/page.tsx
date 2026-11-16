@@ -201,7 +201,14 @@ export default async function HomePage() {
           {features.map((feature) => (
             <article className="feature-card" key={feature.title}>
               <div className="feature-art">
-                <Image fill sizes="(max-width: 760px) 100vw, 33vw" src={feature.image} alt="" />
+                <Image
+                  fill
+                  sizes="(max-width: 760px) 100vw, 33vw"
+                  src={feature.image}
+                  alt=""
+                  loading="lazy"
+                  quality={78}
+                />
               </div>
               <h3>{text(feature.title)}</h3>
               <p>{text(feature.body)}</p>
