@@ -4,7 +4,7 @@ This document records the implementation and the configuration that still needs 
 
 ## Authentication design
 
-Yes Planner keeps email/password, Google, and Instagram authentication in Better Auth. Facebook is an additional provider in the same server-side OAuth callback route:
+Yes Planner keeps email/password, Google, and Facebook authentication in Better Auth. Facebook is an additional provider in the same server-side OAuth callback route:
 
 `/api/auth/callback/facebook`
 
@@ -12,7 +12,7 @@ The browser starts OAuth through `authClient.signIn.social`. Facebook redirects 
 
 Facebook uses only `public_profile` and `email`. The profile mapper requires Facebook's stable user id. If email is missing, an internal non-deliverable placeholder is used so the identity cannot be mistaken for an email account. Facebook email is not treated as verified unless the provider explicitly returns `email_verified: true`; therefore an unverified matching email is not implicitly linked to an existing account. This preserves the existing user id, roles, subscriptions, and records. Account linking should be performed only from an authenticated security flow after the local email has been verified.
 
-Instagram remains separate and continues to use Instagram Login at `instagram.com/oauth/authorize`, the `api.instagram.com` token endpoint, and `instagram_business_basic`. It is intended for Instagram Business or Creator accounts and does not provide an email address. A missing or unusable Instagram profile id is rejected.
+Instagram Login has been removed from the authentication experience and server configuration. Instagram profile fields used for vendor marketing remain ordinary marketplace data and are not authentication providers.
 
 ## Environment separation
 
@@ -33,6 +33,12 @@ BETTER_AUTH_URL=             # same public origin as the deployment
 NEXT_PUBLIC_SITE_URL=        # same canonical public origin
 BETTER_AUTH_SECRET=          # unique high-entropy value per environment
 ```
+
+### Where to get the Facebook secret
+
+In Meta for Developers, open **My Apps → Yes Planner Production → App settings → Basic**. In the **App secret** row, choose **Show** and complete Meta's security check. Copy the value directly into the protected production environment variable named `FACEBOOK_CLIENT_SECRET`; do not paste it into chat, source files, or this document. Retrieve the UAT secret the same way from **Yes Planner UAT**, and keep the two values separate.
+
+In Vercel, set the production value under **Project → Settings → Environment Variables → Production**, alongside production App ID `1138624932197256` and the production callback. Set the UAT value under the matching staging environment, alongside UAT App ID `3700173263470271`. Redeploy after changing either secret.
 
 The committed `.env.example` contains names only. `.env.staging.local` and `.env.production.local` use placeholders in this checkout; real values belong in the deployment secret manager. The application does not fall back from production to staging or local Facebook credentials.
 
@@ -72,12 +78,20 @@ npm.cmd run typecheck
 npm.cmd run build
 ```
 
-The mapper tests cover stable identity ids, missing email, and unverified email. A real Meta test still requires a configured App ID/secret, a permitted tester, and the corresponding environment callback. Verify a new Facebook registration, repeat login, cancellation, declined email permission, invalid state, invalid callback, logout, and expired/revoked token handling. Also verify an existing email or Instagram account is not silently merged from an unverified matching email.
+The mapper tests cover stable identity ids, missing email, and unverified email. A real Meta test still requires a configured App ID/secret, a permitted tester, and the corresponding environment callback. Verify a new Facebook registration, repeat login, cancellation, declined email permission, invalid state, invalid callback, logout, and expired/revoked token handling. Also verify an existing email account is not silently merged from an unverified matching email.
 
 ## Rollback
 
-Remove the Facebook variables from the affected deployment secret store and redeploy, or set them empty so the provider is not registered. Existing email/password, Google, and Instagram records remain untouched. Do not delete provider account records as a first rollback step.
+Remove the Facebook variables from the affected deployment secret store and redeploy, or set them empty so the provider is not registered. Existing email/password and Google records remain untouched. Do not delete provider account records as a first rollback step.
 
 ## Current status
 
-The repository implementation is prepared. The two independent Meta apps have been created and their Facebook Login use cases, minimum permissions, domains, and exact callbacks have been saved. App secrets are intentionally not written here; copy each masked secret into its matching deployment secret store. Meta still reports both apps as ineligible for submission until an app icon, privacy policy URL, and user-data deletion instructions are supplied. Business verification, App Review, Live mode, and real OAuth testing remain pending. Production deployment and live database changes are intentionally not performed by this task.
+The repository implementation is prepared. The two independent Meta apps have been created and their Facebook Login use cases, minimum permissions, domains, and exact callbacks have been saved. App secrets are intentionally not written here; copy each masked secret into its matching deployment secret store.
+
+#### Live deployment verification (16 November 2026)
+
+The deployed login pages were checked in a browser. Both staging and production render the Facebook option. Staging currently returns `Provider not found` after the Facebook button is selected, which proves that the deployed runtime does not have the Facebook provider credentials enabled. Production remains on the login page after selection and has not completed an OAuth redirect. Instagram is no longer exposed as a login option or configured as an authentication provider.
+
+The staging privacy-policy page is live and readable. The same three legal routes are present in the repository for both environments, but each deployment must be redeployed after its environment variables are added or corrected. Add the separate UAT and production values listed above for `FACEBOOK_CLIENT_ID`, `FACEBOOK_CLIENT_SECRET`, and `FACEBOOK_REDIRECT_URI`. Do not copy UAT values into production. After redeployment, repeat the Facebook redirect test and complete a staging sign-in with a Meta test user before enabling production use.
+
+The repository auth tests pass (27 tests), TypeScript checking passes, and the diff has no whitespace errors. These checks do not prove a real Meta sign-in; the deployed environment-variable correction and live OAuth test remain outstanding. Meta's app-icon, data-deletion, App Review, business-verification, and Live-mode requirements also remain dependent on the Meta account and cannot be completed by repository changes alone.
