@@ -35,7 +35,7 @@ export async function WeddingWorkspaceHeader({
           </small>
         </p>
       </div>
-      <span className="rounded-full border border-yes-line px-2.5 py-1.5 text-[11px] font-extrabold text-yes-muted max-sm:hidden">
+      <span className="rounded-full border border-yes-line px-2.5 py-1.5 text-[11px] font-extrabold text-yes-muted max-md:hidden">
         {text(
           role === "Venue"
             ? "Venue viewer"
