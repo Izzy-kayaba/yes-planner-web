@@ -7,6 +7,7 @@ import type { Language } from "@/lib/i18n";
 import { CurrencyProvider } from "@/components/providers/CurrencyProvider";
 import { ScrollToTop } from "@/components/navigation/ScrollToTop";
 import { ThemeProvider, useTheme } from "@/components/providers/ThemeProvider";
+import { NavigationFeedback } from "@/components/navigation/NavigationFeedback";
 
 /** Client-only providers shared by every public and authenticated page. */
 export function AppProviders({
@@ -21,6 +22,7 @@ export function AppProviders({
       <LanguageProvider initialLanguage={initialLanguage}>
         <CurrencyProvider>
           <ScrollToTop />
+          <NavigationFeedback />
           {children}
           <ThemeAwareToaster />
         </CurrencyProvider>

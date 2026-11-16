@@ -1,8 +1,17 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { detectCountry, normalizeCountry } from "@/lib/country";
+import { rateLimit, rateLimitResponse, sameOriginMutation } from "@/lib/security/request";
 
 // Keep the regional country code in the visible URL while the existing app routes serve the page.
 export function proxy(request: NextRequest) {
+  if (request.nextUrl.pathname.startsWith("/api/")) {
+    if (!sameOriginMutation(request)) {
+      return NextResponse.json({ message: "Cross-origin request rejected." }, { status: 403 });
+    }
+    const limit = rateLimit(request, "api", { limit: 240, windowMs: 60_000 });
+    if (!limit.allowed) return rateLimitResponse(limit.retryAfterSeconds);
+  }
+
   if (
     request.nextUrl.hostname === "yes-planner.com" &&
     (request.method === "GET" || request.method === "HEAD")
@@ -52,5 +61,5 @@ function shouldSkipRegionalRouting(pathname: string) {
 }
 
 export const config = {
-  matcher: ["/((?!api|_next|assets).*)"],
+  matcher: ["/((?!_next|assets).*)"],
 };
