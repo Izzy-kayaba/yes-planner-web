@@ -41,6 +41,33 @@
   }
 }
 
+/* The sidebar consumes 246px, so the content area needs to stack before the browser viewport reaches phone size. */
+@media (max-width: 1450px) and (min-width: 916px) {
+  .dashboard-stack > header {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .dashboard-stack > header > div:last-child {
+    width: 100%;
+  }
+  .dashboard-grid,
+  .lower-grid {
+    grid-template-columns: 1fr;
+  }
+  .stats-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .wedding-banner {
+    grid-template-columns: minmax(0, 1fr) 160px;
+    padding: 30px;
+  }
+  .overview-hero {
+    grid-template-columns: minmax(0, 1fr) 160px;
+    padding: 30px;
+  }
+}
+
 @media (max-width: 915px) {
   .landing-links {
     display: none;
