@@ -146,7 +146,7 @@ export function AuthForm({
     }
   }
 
-  async function socialSignIn(provider: "google" | "instagram") {
+  async function socialSignIn(provider: "google" | "instagram" | "facebook") {
     if (isRegister) {
       document.cookie = `yes-pending-account-type=${selectedAccountType}; Path=/; Max-Age=600; SameSite=Lax`;
       document.cookie = `yes-auth-intent=register:${provider}:${Date.now()}; Path=/; Max-Age=600; SameSite=Lax`;
@@ -309,6 +309,12 @@ export function AuthForm({
         <Button type="button" variant="secondary" onClick={() => void socialSignIn("instagram")}>
           <Camera className="text-[#C13584]" size={17} aria-hidden="true" />
           Instagram
+        </Button>
+        <Button type="button" variant="secondary" onClick={() => void socialSignIn("facebook")}>
+          <span className="font-bold text-[#1877F2]" aria-hidden="true">
+            f
+          </span>
+          Facebook
         </Button>
       </div>
 
