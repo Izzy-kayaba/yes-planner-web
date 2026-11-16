@@ -289,6 +289,12 @@
   .panel {
     padding: 0 18px;
   }
+  .panel.vendor-profile-hero {
+    padding: 20px 16px 24px;
+  }
+  .panel.vendor-portfolio-panel {
+    padding: 18px 16px 24px;
+  }
   .overview-hero {
     grid-template-columns: 1fr;
     padding: 26px;
