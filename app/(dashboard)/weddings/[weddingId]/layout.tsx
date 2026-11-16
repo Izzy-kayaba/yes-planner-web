@@ -50,7 +50,7 @@ export default async function WeddingLayout({
         }
       : null);
   return (
-    <div className="grid gap-5">
+    <div className="wedding-workspace grid gap-5">
       <WeddingWorkspaceHeader
         access={weddingAccess?.access}
         role={session?.user.role}

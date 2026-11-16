@@ -43,6 +43,26 @@
 
 /* The sidebar consumes 246px, so the content area needs to stack before the browser viewport reaches phone size. */
 @media (max-width: 1450px) and (min-width: 916px) {
+  .app-shell {
+    grid-template-columns: 215px minmax(0, 1fr);
+  }
+  .topbar {
+    padding-inline: 24px;
+  }
+  .main-content {
+    padding-inline: 24px;
+  }
+  .wedding-workspace {
+    min-width: 0;
+  }
+  .wedding-workspace > * {
+    min-width: 0;
+  }
+  .wedding-workspace-header {
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
   .dashboard-stack > header {
     align-items: flex-start;
     flex-direction: column;
