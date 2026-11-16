@@ -585,7 +585,7 @@
   .vendor-profile-photo {
     width: 100%;
     height: auto;
-    aspect-ratio: 16 / 7;
+    aspect-ratio: 1;
     border-radius: 18px;
   }
   .vendor-profile-photo .vendor-profile-image {
@@ -620,7 +620,7 @@
     border-radius: 12px;
   }
   .vendor-portfolio-panel {
-    padding: 16px !important;
+    padding: 18px 16px 24px !important;
   }
   .profile-upload {
     width: 150px;
