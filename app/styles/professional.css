@@ -205,6 +205,11 @@
   object-position: center;
   transition: transform 240ms ease;
 }
+.marketplace-grid .vendor-cover.has-image > .vendor-card-profile-image {
+  object-fit: contain;
+  padding: 14px;
+  background: #f8f4ef;
+}
 .marketplace-grid .vendor-cover:not(.has-image)::before,
 .marketplace-grid .vendor-cover:not(.has-image)::after,
 .marketplace-grid .vendor-cover:not(.has-image) > span {

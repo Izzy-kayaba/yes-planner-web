@@ -153,6 +153,7 @@ export function LiveMarketplace({ vendors }: { vendors: MarketplaceVendor[] }) {
                   {vendor.profileImage ? (
                     <Image
                       alt=""
+                      className="vendor-card-profile-image"
                       fill
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                       src={vendor.profileImage}
