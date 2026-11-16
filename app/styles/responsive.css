@@ -171,15 +171,29 @@
     grid-template-columns: 1fr;
   }
   .wedding-banner {
-    grid-template-columns: 1fr 150px;
-    padding: 30px;
+    grid-template-columns: 1fr;
+    padding: 27px;
+  }
+  .countdown-block {
+    display: none;
+  }
+  .overview-hero {
+    grid-template-columns: 1fr;
+    padding: 27px;
+  }
+  .overview-ring {
+    display: none;
+  }
+  .wedding-workspace-header {
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .wedding-workspace-header > span:last-child {
+    display: none;
   }
   .countdown-block strong {
     font-size: 65px;
-  }
-  .overview-hero {
-    grid-template-columns: 1fr 160px;
-    padding: 30px;
   }
   .seating-grid {
     grid-template-columns: repeat(2, 1fr);
