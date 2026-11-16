@@ -148,6 +148,32 @@
   width: min(1180px, calc(100% - 48px));
   margin-inline: auto;
 }
+
+.navigation-progress {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 9999;
+  height: 3px;
+  overflow: hidden;
+  background: linear-gradient(90deg, transparent, var(--wine), var(--gold), transparent);
+  background-size: 200% 100%;
+  animation: navigation-progress 1s linear infinite;
+}
+
+@keyframes navigation-progress {
+  from {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -200% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .navigation-progress {
+    animation: none;
+  }
+}
 .eyebrow {
   margin-bottom: 10px;
   color: var(--wine);
