@@ -1,6 +1,6 @@
 "use client";
 
-import { Building2, Camera, Heart, Store, type LucideIcon } from "lucide-react";
+import { Building2, Heart, Store, type LucideIcon } from "lucide-react";
 import { getCountries, isValidPhoneNumber, parsePhoneNumber } from "libphonenumber-js";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -146,7 +146,7 @@ export function AuthForm({
     }
   }
 
-  async function socialSignIn(provider: "google" | "instagram" | "facebook") {
+  async function socialSignIn(provider: "google" | "facebook") {
     if (isRegister) {
       document.cookie = `yes-pending-account-type=${selectedAccountType}; Path=/; Max-Age=600; SameSite=Lax`;
       document.cookie = `yes-auth-intent=register:${provider}:${Date.now()}; Path=/; Max-Age=600; SameSite=Lax`;
@@ -305,10 +305,6 @@ export function AuthForm({
             G
           </span>
           Google
-        </Button>
-        <Button type="button" variant="secondary" onClick={() => void socialSignIn("instagram")}>
-          <Camera className="text-[#C13584]" size={17} aria-hidden="true" />
-          Instagram
         </Button>
         <Button type="button" variant="secondary" onClick={() => void socialSignIn("facebook")}>
           <span className="font-bold text-[#1877F2]" aria-hidden="true">

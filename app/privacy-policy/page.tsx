@@ -15,7 +15,7 @@ export default function PrivacyPolicyPage() {
         </p>
         <h2 className="pt-4 text-2xl font-bold">Social sign-in</h2>
         <p>
-          If you choose Facebook or Instagram sign-in, we receive the provider identity needed to
+          If you choose Google or Facebook sign-in, we receive the provider identity needed to
           authenticate you and, where available, your name and email address. We use this only to
           create or access your Yes Planner account. We do not sell this information.
         </p>
