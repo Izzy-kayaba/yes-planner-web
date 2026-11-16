@@ -218,7 +218,7 @@ export function VendorPublicProfile({
           </Button>
         </section>
       )}
-      <section className="panel">
+      <section className="panel vendor-portfolio-panel">
         <p className="eyebrow">{text("Portfolio")}</p>
         <h2>{text("Selected work")}</h2>
         {vendor.portfolioImages.length ? (
