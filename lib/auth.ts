@@ -5,13 +5,9 @@ import { mongodbAdapter } from "better-auth/adapters/mongodb";
 import { genericOAuth } from "better-auth/plugins";
 import { mongoClient, mongoDb } from "@/lib/mongodb";
 import { sendPasswordResetEmail, sendVerificationEmail } from "@/lib/email";
-import { mapInstagramProfile, type InstagramProfile } from "@/lib/auth/instagram";
 import { mapFacebookProfile, type FacebookProfile } from "@/lib/auth/facebook";
 
 const googleConfigured = Boolean(process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET);
-const instagramConfigured = Boolean(
-  process.env.INSTAGRAM_CLIENT_ID && process.env.INSTAGRAM_CLIENT_SECRET,
-);
 const facebookConfigured = Boolean(
   process.env.FACEBOOK_CLIENT_ID && process.env.FACEBOOK_CLIENT_SECRET,
 );
@@ -52,7 +48,7 @@ function getTrustedAuthOrigins() {
     .filter(Boolean);
 }
 
-const instagramPlugin = genericOAuth({
+const socialOAuthPlugin = genericOAuth({
   config: [
     ...(facebookConfigured
       ? [
@@ -72,28 +68,6 @@ const instagramPlugin = genericOAuth({
               );
               if (!response.ok) return null;
               return mapFacebookProfile((await response.json()) as FacebookProfile);
-            },
-          },
-        ]
-      : []),
-    ...(instagramConfigured
-      ? [
-          {
-            providerId: "instagram",
-            clientId: process.env.INSTAGRAM_CLIENT_ID!,
-            clientSecret: process.env.INSTAGRAM_CLIENT_SECRET!,
-            authorizationUrl: "https://www.instagram.com/oauth/authorize",
-            tokenUrl: "https://api.instagram.com/oauth/access_token",
-            scopes: ["instagram_business_basic"],
-            pkce: false,
-            getUserInfo: async (tokens: { accessToken?: string }) => {
-              if (!tokens.accessToken) return null;
-              const response = await fetch(
-                `https://graph.instagram.com/me?fields=user_id,username&access_token=${encodeURIComponent(tokens.accessToken)}`,
-              );
-              if (!response.ok) return null;
-              const profile = (await response.json()) as InstagramProfile;
-              return mapInstagramProfile(profile);
             },
           },
         ]
@@ -169,7 +143,7 @@ export const auth = betterAuth({
     },
   },
   advanced: { database: { joins: true } },
-  plugins: [instagramPlugin],
+  plugins: [socialOAuthPlugin],
 });
 
 export type AuthSession = typeof auth.$Infer.Session;
