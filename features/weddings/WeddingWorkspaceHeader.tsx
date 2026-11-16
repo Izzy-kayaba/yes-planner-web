@@ -20,7 +20,7 @@ export async function WeddingWorkspaceHeader({
   const date = demoMode ? currentWedding.date : (wedding?.weddingDate ?? "");
 
   return (
-    <div className="flex items-center justify-between">
+    <div className="wedding-workspace-header flex min-w-0 items-center justify-between">
       <div className="flex items-center gap-2.5">
         <span className="grid size-11 place-items-center rounded-full bg-yes-blush font-display text-sm text-yes-wine">
           <span className="inline-flex items-baseline gap-0.5 leading-none">
