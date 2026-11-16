@@ -175,6 +175,10 @@
   .org-grid {
     grid-template-columns: 1fr;
   }
+  .dashboard-grid > .panel:last-child {
+    grid-column: 1 / -1;
+    width: 100%;
+  }
   .wedding-banner {
     grid-template-columns: 1fr;
     padding: 27px;
@@ -240,6 +244,34 @@
 }
 
 @media (max-width: 768px) {
+  .app-main,
+  .main-content,
+  .dashboard-stack,
+  .dashboard-stack > *,
+  .wedding-workspace,
+  .wedding-workspace > * {
+    min-width: 0;
+    max-width: 100%;
+  }
+  .dashboard-stack > header {
+    width: 100%;
+  }
+  .dashboard-stack > header > div:first-child,
+  .dashboard-stack > header > div:last-child,
+  .dashboard-stack > header > div:last-child .button {
+    min-width: 0;
+    width: 100%;
+    max-width: 100%;
+  }
+  .wedding-banner,
+  .banner-copy {
+    min-width: 0;
+    max-width: 100%;
+  }
+  .banner-copy .banner-budget {
+    overflow-wrap: anywhere;
+    white-space: normal;
+  }
   .dashboard-vendor-actions {
     flex-direction: column;
     align-items: stretch;
@@ -361,7 +393,7 @@
     gap: 9px;
   }
   .panel {
-    padding: 0 18px;
+    padding: 18px;
   }
   .panel.vendor-profile-hero {
     padding: 20px 16px 24px;
@@ -583,6 +615,49 @@
   .report-donut {
     grid-template-columns: 1fr;
     justify-items: center;
+  }
+}
+
+/* Compact tablet: navigation is collapsed and dashboard panels become full-width rows. */
+@media (min-width: 769px) and (max-width: 915px) {
+  .topbar {
+    padding-inline: 16px;
+  }
+  .quick-search {
+    display: none;
+  }
+  .topbar-actions {
+    gap: 8px;
+  }
+  .main-content {
+    padding: 28px 24px 52px;
+  }
+  .dashboard-vendor-actions {
+    flex-wrap: wrap;
+  }
+}
+
+/* The dashboard task preview is not a data table: it must never inherit the table's 790px minimum width. */
+@media (max-width: 915px) {
+  .focus-panel .task-list,
+  .focus-panel .task-list .task-row {
+    min-width: 0;
+    width: 100%;
+  }
+  .focus-panel .task-list {
+    overflow: hidden;
+  }
+  .focus-panel .task-list .task-row {
+    grid-template-columns: 30px minmax(0, 1fr) minmax(0, auto);
+    gap: 10px;
+    padding-inline: 0;
+  }
+  .focus-panel .task-list .task-row > span:last-child {
+    justify-self: end;
+    max-width: 90px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 }
 
