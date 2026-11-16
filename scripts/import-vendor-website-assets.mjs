@@ -48,13 +48,10 @@ function extractWebsiteImageUrls(html, pageUrl) {
 }
 
 function isLikelyWorkImage(url) {
-  return (
-    !/(?:logo|favicon|icon|badge|award|certificate|sponsor|partner|avatar|profile|portrait|headshot|team|staff|person|founder|owner|placeholder|pattern|background|sprite|qr[-_]?code|dummy|guest\.png)/i.test(
-      url,
-    ) &&
-    !/(?:fill\/w_(?:[0-9]|[1-9][0-9]|1[0-4][0-9]|150)(?:,|\/)|width=(?:[0-9]|[1-9][0-9]|1[0-4][0-9]|150))/i.test(
-      url,
-    )
+  // Portfolio selection is based on what an image represents, not its pixel dimensions.
+  // A small but relevant venue or wedding-work image is still better than an unrelated large asset.
+  return !/(?:logo|favicon|icon|badge|award|certificate|sponsor|partner|avatar|profile|portrait|headshot|team|staff|person|founder|owner|placeholder|pattern|background|sprite|qr[-_]?code|dummy|guest\.png)/i.test(
+    url,
   );
 }
 
