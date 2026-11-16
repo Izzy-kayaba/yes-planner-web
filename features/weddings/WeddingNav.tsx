@@ -41,7 +41,7 @@ export function WeddingNav({
 
   return (
     <nav
-      className="flex gap-1 overflow-x-auto rounded-xl border border-yes-line bg-yes-surface p-1.5 [scrollbar-width:none]"
+      className="flex w-full min-w-0 max-w-full gap-1 overflow-x-auto rounded-xl border border-yes-line bg-yes-surface p-1.5 [scrollbar-width:none]"
       aria-label={text("Wedding workspace")}
     >
       {sections
