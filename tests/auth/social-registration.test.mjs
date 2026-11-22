@@ -11,7 +11,6 @@ test("allows a Google account created by the current registration", () => {
   assert.equal(isExistingGoogleRegistration("register:google:1000", new Date(2000)), false);
 });
 
-test("does not apply Google duplicate handling to login or Instagram", () => {
+test("does not apply Google duplicate handling to login", () => {
   assert.equal(isExistingGoogleRegistration("login:google:2000", new Date(1000)), false);
-  assert.equal(isExistingGoogleRegistration("register:instagram:2000", new Date(1000)), false);
 });

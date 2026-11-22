@@ -6,6 +6,7 @@ import { ensureMongoIndexes, mongoDb } from "@/lib/mongodb";
 import { isVendorService, weddingPlanningService } from "@/lib/vendors/services";
 import { vendorPriceRanges } from "@/lib/estimate-ranges";
 import { validateVendorPriceRange } from "@/lib/vendors/pricing";
+import { lockCurrencyPreference } from "@/lib/currency-preference";
 
 const imageSchema = z
   .string()
@@ -25,6 +26,7 @@ const profileSchema = z
       .length(2)
       .regex(/^[A-Z]{2}$/),
     priceCurrency: z.enum(["USD", "ZAR"]).default("USD"),
+    currency: z.enum(["USD", "ZAR"]).optional(),
     startingPriceMinMinor: z.coerce.number().int().nonnegative().max(100_000_000_000),
     startingPriceMaxMinor: z.coerce.number().int().nonnegative().max(100_000_000_000),
     startingPriceMinor: z.coerce.number().int().nonnegative().max(100_000_000_000),
@@ -143,11 +145,22 @@ export async function PUT(request: Request) {
     return NextResponse.json({ message: "One or more images are not available." }, { status: 400 });
   }
   await ensureMongoIndexes();
+  const { currency: selectedCurrency, ...profileData } = parsed.data;
+  if (selectedCurrency) {
+    try {
+      await lockCurrencyPreference(authentication.session.user.email, selectedCurrency);
+    } catch (error) {
+      return NextResponse.json(
+        { message: error instanceof Error ? error.message : "Currency could not be saved." },
+        { status: 409 },
+      );
+    }
+  }
   const now = new Date();
   const profile = await mongoDb.collection("vendorProfiles").findOneAndUpdate(
     { ownerUserId: authentication.session.user.id },
     {
-      $set: { ...parsed.data, published: true, updatedAt: now },
+      $set: { ...profileData, published: true, updatedAt: now },
       $setOnInsert: { ownerUserId: authentication.session.user.id, createdAt: now },
     },
     { upsert: true, returnDocument: "after" },

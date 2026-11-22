@@ -12,17 +12,17 @@ const features = [
   {
     title: "One calm command centre",
     body: "Budget, guests, tasks, vendors and your wedding-day timeline stay beautifully in sync.",
-    image: "/assets/home-carrd-1.jpeg",
+    image: "/assets/home-carrd-1.png",
   },
   {
     title: "Plan with your people",
     body: "Couples and assigned planners work from the same live plan, with ownership safely protected.",
-    image: "/assets/home-card-2.jpeg",
+    image: "/assets/home-card-2.jpg",
   },
   {
     title: "Find exceptional vendors",
     body: "Discover trusted creative partners, compare packages and manage every booking in context.",
-    image: "/assets/home-card-3.jpeg",
+    image: "/assets/home-card-3.jpg",
   },
 ];
 
@@ -137,8 +137,8 @@ export default async function HomePage() {
               className="hero-img"
               src="/assets/hero-image.jpeg"
               alt={text("Engaged couple celebrating together")}
-              width={600}
-              height={900}
+              fill
+              sizes="(max-width: 900px) 72vw, 420px"
               priority
             />
           </div>

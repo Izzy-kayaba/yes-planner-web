@@ -3,6 +3,7 @@ import { z } from "zod";
 import { requireApiSession } from "@/lib/auth/session";
 import { ensureMongoIndexes, mongoDb } from "@/lib/mongodb";
 import { weddingPlanningService } from "@/lib/vendors/services";
+import { lockCurrencyPreference } from "@/lib/currency-preference";
 
 const schema = z.object({
   organisationName: z.string().trim().min(2).max(160),
@@ -12,6 +13,7 @@ const schema = z.object({
   teamSize: z.coerce.number().int().positive().max(10_000),
   yearsExperience: z.coerce.number().int().nonnegative().max(100),
   website: z.union([z.url(), z.literal("")]),
+  currency: z.enum(["USD", "ZAR"]).optional(),
 });
 
 // Compatibility endpoint: save legacy planner fields into the Vendor profile model.
@@ -29,6 +31,16 @@ export async function PUT(request: Request) {
     );
   }
   await ensureMongoIndexes();
+  if (parsed.data.currency) {
+    try {
+      await lockCurrencyPreference(authentication.session.user.email, parsed.data.currency);
+    } catch (error) {
+      return NextResponse.json(
+        { message: error instanceof Error ? error.message : "Currency could not be saved." },
+        { status: 409 },
+      );
+    }
+  }
   const now = new Date();
   const profile = await mongoDb.collection("vendorProfiles").findOneAndUpdate(
     { ownerUserId: authentication.session.user.id },

@@ -1,6 +1,7 @@
 // Purpose: implements app/(dashboard)/onboarding/page.tsx for the Yes Planner web application.
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
+import { headers } from "next/headers";
 import { PageHeader } from "@/components/ui/PageHeader";
 import {
   WeddingOnboardingForm,
@@ -13,6 +14,8 @@ import {
 import { requirePageRole } from "@/lib/auth/session";
 import { mongoDb } from "@/lib/mongodb";
 import { vendorPriceRanges } from "@/lib/estimate-ranges";
+import { currencyForCountry, type SupportedCurrency } from "@/lib/currency";
+import { detectCountry } from "@/lib/country";
 
 export const metadata: Metadata = { title: "Wedding details" };
 
@@ -30,6 +33,13 @@ export default async function OnboardingPage() {
       .sort({ businessName: 1 })
       .toArray(),
   ]);
+  const requestHeaders = await headers();
+  const accountCurrency: SupportedCurrency =
+    user?.currency === "ZAR" || user?.currency === "USD"
+      ? user.currency
+      : currencyForCountry(
+          detectCountry(new Request("http://localhost", { headers: requestHeaders })),
+        );
   if (session.user.role === "Vendor" || session.user.role === "Venue") {
     const initialVendor: VendorOnboardingValue = {
       businessName: String(vendor?.businessName ?? ""),
@@ -61,6 +71,8 @@ export default async function OnboardingPage() {
       portfolioImages: Array.isArray(vendor?.portfolioImages)
         ? vendor.portfolioImages.map(String)
         : [],
+      currency: accountCurrency,
+      currencyPreferenceSet: user?.currencyPreferenceSet === true,
     };
     return (
       <div className="section-stack mx-auto w-full max-w-4xl">
@@ -85,6 +97,8 @@ export default async function OnboardingPage() {
     budgetMinor: Number(wedding?.budgetMinor ?? 0),
     budgetEnteredMinor: Number(wedding?.budgetEnteredMinor ?? wedding?.budgetMinor ?? 0),
     budgetCurrency: wedding?.budgetCurrency === "ZAR" ? "ZAR" : "USD",
+    currency: accountCurrency,
+    currencyPreferenceSet: user?.currencyPreferenceSet === true,
     estimatedGuests: Number(wedding?.estimatedGuests ?? 0),
     weddingStyle: String(wedding?.weddingStyle ?? ""),
     planningNotes: String(wedding?.planningNotes ?? ""),

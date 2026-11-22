@@ -120,6 +120,23 @@
   padding: 45px 30px;
   overflow-y: auto;
 }
+.auth-utility-controls {
+  position: absolute;
+  top: 22px;
+  right: 30px;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.auth-utility-controls .language-switcher {
+  width: 78px;
+}
+.auth-utility-controls .yes-select-trigger,
+.auth-utility-controls .icon-button {
+  border-color: var(--line);
+  background: color-mix(in srgb, var(--surface) 86%, transparent);
+}
 .auth-card .language-switcher {
   width: 100%;
 }

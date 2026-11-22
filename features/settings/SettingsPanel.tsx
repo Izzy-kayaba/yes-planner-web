@@ -4,9 +4,9 @@
 import {
   BellRing,
   CalendarDays,
+  Check,
   Cloud,
   CreditCard,
-  Coins,
   KeyRound,
   Mail,
   MessageSquareText,
@@ -23,13 +23,12 @@ import { useEffect, useState, type FormEvent } from "react";
 import { toast } from "sonner";
 import { LanguageSwitcher } from "@/components/i18n/LanguageSwitcher";
 import { useLanguage } from "@/components/providers/LanguageProvider";
-import { useCurrency } from "@/components/providers/CurrencyProvider";
+import { currencyLabel, type SupportedCurrency } from "@/lib/currency";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { apiRequest } from "@/lib/api/client";
 import { authClient } from "@/lib/auth-client";
 import { cn } from "@/lib/cn";
 import { FieldLabel } from "@/components/forms/FieldLabel";
-import { YesSelect } from "@/components/ui/YesSelect";
 
 const tabs = [
   ["profile", "settings.profile"],
@@ -118,7 +117,6 @@ const connectionPreferences: Preference[] = [
 export function SettingsPanel() {
   const router = useRouter();
   const { t, text } = useLanguage();
-  const { setCurrency } = useCurrency();
   const { data: session } = authClient.useSession();
   const [active, setActive] = useState<(typeof tabs)[number][0]>("profile");
   const [profile, setProfile] = useState({
@@ -148,7 +146,6 @@ export function SettingsPanel() {
             ...saved,
             phoneNumber: saved.phoneNumber ?? saved.phone ?? "",
           }));
-          if (saved.currency === "USD" || saved.currency === "ZAR") setCurrency(saved.currency);
         }
       } catch {
         toast.error(text("Saved profile settings could not be loaded."));
@@ -158,7 +155,6 @@ export function SettingsPanel() {
     apiRequest<typeof profile>("/api/v1/me")
       .then((saved) => {
         setProfile(saved);
-        if (saved.currency === "USD" || saved.currency === "ZAR") setCurrency(saved.currency);
       })
       .catch((error: Error) => toast.error(text(error.message)));
   }, []);
@@ -171,7 +167,7 @@ export function SettingsPanel() {
     }
     try {
       if ((process.env.NEXT_PUBLIC_DATA_SOURCE ?? "api") === "demo") {
-        const savedProfile = { ...profile, currencyPreferenceSet: true };
+        const savedProfile = { ...profile };
         window.localStorage.setItem("yes-planner-profile", JSON.stringify(savedProfile));
         setProfile(savedProfile);
       } else {
@@ -384,28 +380,17 @@ export function SettingsPanel() {
               <section className="grid gap-3 border-t border-yes-line pt-5">
                 <div>
                   <FieldLabel required>{text("Display currency")}</FieldLabel>
-                  <YesSelect
-                    className="settings-currency-select"
-                    disabled={profile.currencyPreferenceSet}
+                  <div
+                    aria-disabled="true"
+                    className="settings-readonly-select"
                     id="settings-currency"
-                    name="currency"
-                    value={profile.currency}
-                    ariaLabel={text("Display currency")}
-                    leadingIcon={<Coins size={15} aria-hidden="true" />}
-                    options={[
-                      { value: "USD", label: text("USD") },
-                      { value: "ZAR", label: text("ZAR") },
-                    ]}
-                    onChange={(value) => {
-                      const next = value as "USD" | "ZAR";
-                      updateProfile("currency", next);
-                      setCurrency(next);
-                    }}
-                  />
+                    role="status"
+                  >
+                    <span>{text(currencyLabel(profile.currency as SupportedCurrency))}</span>
+                    <Check aria-hidden="true" size={15} />
+                  </div>
                   <small className="form-hint">
-                    {profile.currencyPreferenceSet
-                      ? text("This currency is locked for this account.")
-                      : text("Choose once; it applies across the app.")}
+                    {text("This currency is locked for this account.")}
                   </small>
                 </div>
               </section>

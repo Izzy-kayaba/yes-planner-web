@@ -4,7 +4,9 @@ import test from "node:test";
 import { loadEnvironment, parseScriptArguments } from "../../scripts/environment.mjs";
 
 test("loads the selected staging environment without referencing another environment", () => {
-  assert.equal(loadEnvironment("staging").environment, "staging");
+  const result = loadEnvironment("staging");
+  assert.equal(result.environment, "staging");
+  assert.deepEqual(result.environmentFiles, [".env.staging"]);
 });
 
 test("requires an explicit database target", () => {
