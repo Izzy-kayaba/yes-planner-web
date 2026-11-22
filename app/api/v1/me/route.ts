@@ -9,7 +9,6 @@ const profileSchema = z.object({
   lastName: z.string().trim().min(2).max(80),
   phoneNumber: z.string().trim(),
   whatsappNotifications: z.boolean().default(false),
-  currency: z.enum(["USD", "ZAR"]).default("USD"),
 });
 
 function profile(document: Record<string, unknown>) {
@@ -78,8 +77,6 @@ export async function PATCH(request: Request) {
     name: `${parsed.data.firstName} ${parsed.data.lastName}`,
     phoneNumber: phone.number,
     whatsappNotifications: parsed.data.whatsappNotifications,
-    currency: parsed.data.currency,
-    currencyPreferenceSet: true,
     updatedAt: new Date(),
   };
   let user;

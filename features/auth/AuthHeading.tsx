@@ -1,7 +1,6 @@
 "use client";
 // Purpose: implements features/auth/AuthHeading.tsx for the Yes Planner web application.
 
-import { LanguageSwitcher } from "@/components/i18n/LanguageSwitcher";
 import { useLanguage } from "@/components/providers/LanguageProvider";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
@@ -13,7 +12,7 @@ export function AuthHeading({ mode }: { mode: "login" | "register" }) {
   return (
     <>
       <div className="mb-4 flex items-center justify-between gap-4">
-        <div className="flex-[3]">
+        <div>
           <span className="min-[915px]:hidden">
             <Link
               className="auth-home-button auth-home-mobile-static"
@@ -26,9 +25,6 @@ export function AuthHeading({ mode }: { mode: "login" | "register" }) {
           <span className="hidden min-[915px]:block">
             <p className="eyebrow mb-0">{t(register ? "auth.registerEyebrow" : "auth.welcome")}</p>
           </span>
-        </div>
-        <div className="flex-[1]">
-          <LanguageSwitcher compact />
         </div>
       </div>
 

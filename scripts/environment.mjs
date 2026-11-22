@@ -28,9 +28,9 @@ function readEnvironment(filePath) {
 export function loadEnvironment(environment) {
   const root = process.cwd();
   const candidatesByEnvironment = {
-    development: [".env.development.local", ".env.local", ".env.development", ".env"],
-    staging: [".env.staging.local", ".env.staging"],
-    production: [".env.production.local", ".env.production"],
+    development: [".env.local"],
+    staging: [".env.staging"],
+    production: [".env.production"],
   };
   const candidates = candidatesByEnvironment[environment];
   for (const fileName of candidates) {

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Brand } from "@/components/ui/Brand";
 import { getTextTranslator } from "@/lib/i18n-server";
 import { ArrowLeft } from "lucide-react";
+import { AuthUtilityControls } from "@/components/auth/AuthUtilityControls";
 
 export default async function AuthLayout({ children }: { children: ReactNode }) {
   const text = await getTextTranslator();
@@ -40,7 +41,10 @@ export default async function AuthLayout({ children }: { children: ReactNode }) 
         <div className="auth-orbit orbit-one" />
         <div className="auth-orbit orbit-two" />
       </section>
-      <section className="auth-panel">{children}</section>
+      <section className="auth-panel">
+        <AuthUtilityControls />
+        {children}
+      </section>
     </main>
   );
 }

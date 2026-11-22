@@ -11,7 +11,8 @@ import moment from "moment";
 import { YesSelect } from "@/components/ui/YesSelect";
 import { CharacterCount } from "@/components/forms/CharacterCount";
 import { FieldLabel } from "@/components/forms/FieldLabel";
-import { useCurrency } from "@/components/providers/CurrencyProvider";
+import { CurrencyChoice } from "@/components/currency/CurrencyChoice";
+import type { SupportedCurrency } from "@/lib/currency";
 import { countryOptions } from "@/lib/countries";
 import { budgetRanges, guestRanges, inferGuestRange, inferMoneyRange } from "@/lib/estimate-ranges";
 
@@ -26,6 +27,8 @@ export type WeddingOnboardingValue = {
   budgetMinor: number;
   budgetEnteredMinor?: number;
   budgetCurrency?: "USD" | "ZAR";
+  currency?: SupportedCurrency;
+  currencyPreferenceSet?: boolean;
   budgetRangeKey?: string;
   estimatedGuests: number;
   guestRangeKey?: string;
@@ -46,6 +49,7 @@ const emptyValue: WeddingOnboardingValue = {
   estimatedGuests: 0,
   weddingStyle: "",
   planningNotes: "",
+  currency: "USD",
 };
 
 export function WeddingOnboardingForm({
@@ -57,8 +61,8 @@ export function WeddingOnboardingForm({
 }) {
   const router = useRouter();
   const { language, text } = useLanguage();
-  const { currency } = useCurrency();
   const [value, setValue] = useState(initialValue ?? emptyValue);
+  const currency = value.currency ?? "USD";
   const [budgetInput, setBudgetInput] = useState(
     initialValue?.budgetMinor ? String(initialValue.budgetMinor / 100) : "",
   );
@@ -98,6 +102,7 @@ export function WeddingOnboardingForm({
           budgetMinor,
           budgetEnteredMinor: budgetMinor,
           budgetCurrency: currency,
+          currency,
           budgetRangeKey,
           estimatedGuests: value.estimatedGuests,
           guestRangeKey,
@@ -210,27 +215,49 @@ export function WeddingOnboardingForm({
             value={value.estimatedGuests || ""}
           />
         </label>
+        {!value.currencyPreferenceSet && (
+          <CurrencyChoice
+            value={currency}
+            onChange={(next) => update("currency", next)}
+            text={text}
+          />
+        )}
       </div>
-      <label>
-        {text("Wedding style")}
-        <YesSelect
-          ariaLabel={text("Wedding style")}
-          id="wedding-style"
-          name="weddingStyle"
-          onChange={(nextValue) => update("weddingStyle", nextValue)}
-          options={[
-            "Classic",
-            "Modern",
-            "Romantic",
-            "Minimal",
-            "Traditional",
-            "Destination",
-            "Other",
-          ].map((item) => ({ value: item, label: text(item) }))}
-          placeholder={text("Select a style")}
-          value={value.weddingStyle}
-        />
-      </label>
+      <div className="form-row">
+        <label>
+          {text("Wedding style")}
+          <YesSelect
+            ariaLabel={text("Wedding style")}
+            id="wedding-style"
+            name="weddingStyle"
+            onChange={(nextValue) => update("weddingStyle", nextValue)}
+            options={[
+              "Classic",
+              "Modern",
+              "Romantic",
+              "Minimal",
+              "Traditional",
+              "Destination",
+              "Other",
+            ].map((item) => ({ value: item, label: text(item) }))}
+            placeholder={text("Select a style")}
+            value={value.weddingStyle}
+          />
+        </label>
+        <label>
+          <FieldLabel required>{text("Wedding date")}</FieldLabel>
+          <input
+            id="wedding-date"
+            min={moment().format("YYYY-MM-DD")}
+            name="weddingDate"
+            onChange={(event) => update("weddingDate", event.target.value)}
+            required
+            type="date"
+            value={value.weddingDate}
+          />
+        </label>
+      </div>
+
       <label>
         {text("Planning notes")}
         <textarea
@@ -246,18 +273,7 @@ export function WeddingOnboardingForm({
         />
         <CharacterCount value={value.planningNotes} max={2000} />
       </label>
-      <label>
-        <FieldLabel required>{text("Wedding date")}</FieldLabel>
-        <input
-          id="wedding-date"
-          min={moment().format("YYYY-MM-DD")}
-          name="weddingDate"
-          onChange={(event) => update("weddingDate", event.target.value)}
-          required
-          type="date"
-          value={value.weddingDate}
-        />
-      </label>
+
       <div className="form-row">
         <label>
           <FieldLabel required>{text("Wedding venue")}</FieldLabel>

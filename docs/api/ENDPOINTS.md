@@ -9,7 +9,7 @@ The server is authoritative for identity, role, ownership, and collaborator acce
 | Method and path        | Authentication | Purpose                                                                                                                                                                     |
 | ---------------------- | -------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `GET /api/health`      | Public         | Pings MongoDB. Returns `200 { "status": "healthy" }` or `503 { "status": "unavailable" }`. The failure details are written to server logs with connection strings redacted. |
-| `GET /api/v1/currency` | Public         | Returns the detected country and whether the visitor is in South Africa. For ZA, it attempts to return a cached USD-to-ZAR rate; unavailable rates are returned as `null`.  |
+| `GET /api/v1/currency` | Public         | Returns the detected country and the onboarding default (`ZAR` for South Africa, `USD` elsewhere). It never fetches exchange rates or converts amounts.                     |
 
 ## Better Auth
 

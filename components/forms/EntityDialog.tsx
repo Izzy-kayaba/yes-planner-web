@@ -1,6 +1,7 @@
 "use client";
 // Purpose: implements components/forms/EntityDialog.tsx for the Yes Planner web application.
 
+import { Check } from "lucide-react";
 import { useEffect, useState, type FormEvent } from "react";
 import { useLanguage } from "@/components/providers/LanguageProvider";
 import { Button } from "@/components/ui/Button";
@@ -17,7 +18,17 @@ export type EntityField = {
   label: string;
   placeholder?: string;
   required?: boolean;
-  type?: "text" | "email" | "tel" | "number" | "date" | "time" | "textarea" | "select" | "checkbox";
+  type?:
+    | "text"
+    | "email"
+    | "tel"
+    | "number"
+    | "date"
+    | "time"
+    | "textarea"
+    | "select"
+    | "color"
+    | "checkbox";
   options?: Array<string | { value: string; label: string }>;
   emptyMessage?: string;
   setupHref?: string;
@@ -120,7 +131,13 @@ export function EntityDialog({
             ) : (
               <>
                 <FieldLabel required={field.required}>{text(field.label)}</FieldLabel>
-                {field.type === "tel" ? (
+                {field.type === "color" ? (
+                  <ColorSwatches
+                    field={field}
+                    initialValue={String(defaults[field.name] ?? "")}
+                    text={text}
+                  />
+                ) : field.type === "tel" ? (
                   <TelephoneField
                     field={field}
                     initialValue={String(defaults[field.name] ?? "")}
@@ -185,5 +202,40 @@ export function EntityDialog({
         </div>
       </form>
     </Modal>
+  );
+}
+
+function ColorSwatches({
+  field,
+  initialValue,
+  text,
+}: {
+  field: EntityField;
+  initialValue: string;
+  text: (value: string) => string;
+}) {
+  const options = (field.options ?? []).map((option) =>
+    typeof option === "string" ? { value: option, label: option } : option,
+  );
+  const [selected, setSelected] = useState(initialValue || options[0]?.value || "");
+
+  return (
+    <div className="color-swatch-grid" role="radiogroup" aria-label={text(field.label)}>
+      <input name={field.name} type="hidden" value={selected} />
+      {options.map((option) => (
+        <button
+          aria-label={text(option.label)}
+          aria-checked={selected === option.value}
+          className={`color-swatch${selected === option.value ? " selected" : ""}`}
+          key={option.value}
+          onClick={() => setSelected(option.value)}
+          role="radio"
+          style={{ backgroundColor: option.value }}
+          type="button"
+        >
+          {selected === option.value && <Check aria-hidden="true" size={15} />}
+        </button>
+      ))}
+    </div>
   );
 }

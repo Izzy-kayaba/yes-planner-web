@@ -3,8 +3,10 @@ export type SupportedCurrency = "USD" | "ZAR";
 
 export const defaultCurrency: SupportedCurrency = "USD";
 
-export function convertUsdToZar(amountMinor: number, exchangeRate: number) {
-  return Math.round(amountMinor * exchangeRate);
+export function currencyForCountry(country: string | null | undefined): SupportedCurrency {
+  return country?.trim().toUpperCase() === "ZA" || country?.trim().toUpperCase() === "SA"
+    ? "ZAR"
+    : defaultCurrency;
 }
 
 export function formatMoney(amountMinor: number, currency: SupportedCurrency) {
@@ -12,5 +14,9 @@ export function formatMoney(amountMinor: number, currency: SupportedCurrency) {
     maximumFractionDigits: 0,
     minimumFractionDigits: 0,
   });
-  return currency === "ZAR" ? `R ${amount}` : `${amount}$`;
+  return currency === "ZAR" ? `R${amount}` : `${amount}$`;
+}
+
+export function currencyLabel(currency: SupportedCurrency) {
+  return currency === "ZAR" ? "South African Rand (ZAR)" : "US Dollar (USD)";
 }

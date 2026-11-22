@@ -6,6 +6,7 @@ import { z } from "zod";
 import { requireApiSession } from "@/lib/auth/session";
 import { ensureMongoIndexes, mongoDb } from "@/lib/mongodb";
 import { budgetRanges, guestRanges } from "@/lib/estimate-ranges";
+import { lockCurrencyPreference } from "@/lib/currency-preference";
 
 const weddingProfileSchema = z.object({
   firstName: z.string().trim().min(2).max(80),
@@ -22,6 +23,7 @@ const weddingProfileSchema = z.object({
   budgetMinor: z.coerce.number().int().positive().max(100_000_000_000),
   budgetEnteredMinor: z.coerce.number().int().positive().max(100_000_000_000),
   budgetCurrency: z.enum(["USD", "ZAR"]),
+  currency: z.enum(["USD", "ZAR"]).optional(),
   budgetRangeKey: z.string().refine((value) => budgetRanges.some((range) => range.id === value)),
   estimatedGuests: z.coerce.number().int().positive().max(100_000),
   guestRangeKey: z.string().refine((value) => guestRanges.some((range) => range.id === value)),
@@ -107,6 +109,9 @@ export async function PUT(request: Request) {
   if (phone) userUpdate.phoneNumber = phone.number;
 
   try {
+    if (parsed.data.currency) {
+      await lockCurrencyPreference(authentication.session.user.email, parsed.data.currency);
+    }
     await mongoDb
       .collection("user")
       .updateOne({ email: authentication.session.user.email }, { $set: userUpdate });
