@@ -40,7 +40,7 @@ In Meta for Developers, open **My Apps → Yes Planner Production → App settin
 
 In Vercel, set the production value under **Project → Settings → Environment Variables → Production**, alongside production App ID `1138624932197256` and the production callback. Set the UAT value under the matching staging environment, alongside UAT App ID `3700173263470271`. Redeploy after changing either secret.
 
-The committed `.env.example` contains names only. `.env.staging.local` and `.env.production.local` use placeholders in this checkout; real values belong in the deployment secret manager. The application does not fall back from production to staging or local Facebook credentials.
+The committed `.env.example` contains names only. `.env.staging` and `.env.production` use placeholders in this checkout; real values belong in the deployment secret manager. The application does not fall back from production to staging or local Facebook credentials.
 
 ## Meta applications
 

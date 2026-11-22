@@ -5,7 +5,7 @@ MongoDB is the persistence layer used by the current API. Better Auth owns its a
 ## Data rules
 
 - Keep ownership IDs on persisted records and scope every read/write query with them.
-- Store money in integer minor units using the documented USD base; format it for display without rewriting stored values.
+- Store money in integer minor units; keep the numerical amount unchanged and format it using the user's permanent currency preference.
 - Paginated lists use stable sort keys, including `_id` when timestamps or names can tie.
 - Add indexes for actual ownership, lookup, and sort patterns; ensure index creation is safe when repeated.
 - Use explicit migrations for persisted schema changes and back up before running them.
@@ -14,6 +14,6 @@ Vendor profile image bytes currently live in MongoDB GridFS. This design is inte
 
 ## Currency
 
-The base currency is USD. Amounts use integer US cents and field names such as `amountMinor` or `startingPriceMinor`; no converted ZAR amount is stored. South African traffic uses the visible `/za` regional route, and the server can use trusted country headers to detect South Africa and obtain a cached USD/ZAR rate for display. If the visitor is not known to be in South Africa or the rate service is unavailable, display USD. A local-only `DEVELOPMENT_COUNTRY=ZA` override is available for testing.
+Amounts use integer minor units and field names such as `amountMinor` or `startingPriceMinor`. Each user selects ZAR or USD during onboarding; that choice is stored on the user and controls display formatting. South African traffic defaults to ZAR and other locations default to USD, but the user must confirm the choice. A local-only `DEVELOPMENT_COUNTRY=ZA` override is available for testing.
 
-Do not automatically convert legacy records unless their source currency is known. Conversion is display-only and must never rewrite the stored USD amount. See the [subscriptions and currency note](../domains/subscriptions.md#currency-display-note) and migration guidance in [database migrations](../development/DATABASE_MIGRATIONS.md).
+Do not convert records, fetch exchange rates, or rewrite stored amounts. Existing records retain their numerical values and are displayed using the signed-in user's currency preference. See migration guidance in [database migrations](../development/DATABASE_MIGRATIONS.md).

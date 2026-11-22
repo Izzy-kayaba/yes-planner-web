@@ -53,7 +53,7 @@ Guests use invitation links to submit attendance, party, meal, and related respo
 
 ### Authentication and settings
 
-The code supports email/password authentication, optional Google OAuth, optional Instagram OAuth, Better Auth sessions backed by MongoDB, email verification, password reset through Resend, linked-provider visibility, password/session settings, and profile completion. OAuth, email, WhatsApp, and exchange-rate behavior depend on deployment configuration.
+The code supports email/password authentication, optional Google and Facebook OAuth, Better Auth sessions backed by MongoDB, email verification, password reset through Resend, linked-provider visibility, password/session settings, and profile completion. OAuth and WhatsApp behavior depend on deployment configuration. Currency is selected once during onboarding and is used only for display.
 
 ### Platform administration
 
@@ -61,7 +61,7 @@ Current staff tools cover platform staff and roles, user metadata, wedding metad
 
 ### Languages and regional display
 
-The interface supports English and French, responsive navigation, and light/dark/system themes. Fixed UI copy is checked against the French catalog; user-created content is not translated. USD is the stored marketplace base currency. South African traffic can use visible /za routing and display a USD-to-ZAR conversion without rewriting stored values.
+The interface supports English and French, responsive navigation, and light/dark/system themes. Fixed UI copy is checked against the French catalog; user-created content is not translated. Users select ZAR or USD once during onboarding, and the selected currency controls display formatting without conversions.
 
 ## 3. User roles and permissions
 
@@ -86,10 +86,10 @@ Platform staff roles are stored separately from customer account types. Current 
 - Vendor/Venue profile management, marketplace discovery, and claim review.
 - Read-only Venue brief.
 - Guest invitations and RSVP.
-- Better Auth sessions, email/password authentication, linked providers, and optional Google/Instagram OAuth.
+- Better Auth sessions, email/password authentication, linked providers, and optional Google/Facebook OAuth.
 - Resend verification, reset-password, and email-test flows when configured.
 - Platform staff roles, permission-scoped navigation, protected administration, and audit events.
-- English/French catalogs, responsive navigation, themes, /za routing, and display-only currency conversion.
+- English/French catalogs, responsive navigation, themes, /za routing, and permanent user-level currency display preferences.
 - Public Vendor/Venue profile media in MongoDB GridFS.
 
 ### Partial or configuration-dependent
@@ -151,8 +151,8 @@ Future opportunities could include a Couple plan, paid organisation plans, staff
          Better Auth, profiles, claims, requests, messages,
          workspace items, audit records, and GridFS media
 
-    Optional external services: Resend, Google OAuth, Instagram OAuth,
-    WhatsApp Business, and exchange-rate service.
+    Optional external services: Resend, Google OAuth, Facebook OAuth,
+    and WhatsApp Business.
 
 | Layer          | Current implementation                                                                                                                           |
 | -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -165,7 +165,7 @@ Future opportunities could include a Couple plan, paid organisation plans, staff
 | Data access    | lib/api/client.ts sends browser requests; lib/api/backend.ts selects HTTP API or demo adapter.                                                   |
 | Preview        | NEXT_PUBLIC_DATA_SOURCE=demo is browser-only preview; api is persisted mode.                                                                     |
 | Validation     | Zod and shared pagination/API error conventions.                                                                                                 |
-| Integrations   | Resend, Google/Instagram OAuth, WhatsApp Business, and exchange-rate fetching are optional.                                                      |
+| Integrations   | Resend, Google/Facebook OAuth, and WhatsApp Business are optional.                                                                               |
 
 References: SYSTEM_OVERVIEW.md, FRONTEND_ARCHITECTURE.md, API_ARCHITECTURE.md, DATA_ARCHITECTURE.md, INTEGRATION_ARCHITECTURE.md, and ENDPOINTS.md.
 
@@ -179,7 +179,7 @@ References: SYSTEM_OVERVIEW.md, FRONTEND_ARCHITECTURE.md, API_ARCHITECTURE.md, D
 6. Add request correlation and safe operational context to audit events.
 7. Define private document storage and production media handling before accepting sensitive files.
 8. Test live, staging, apex, www, and /za routing after origin changes.
-9. Add integration tests for Resend, OAuth, WhatsApp, and exchange-rate failures.
+9. Add integration tests for Resend, OAuth, and WhatsApp failures.
 10. Establish backups, restore evidence, index monitoring, rate-limit review, and incident ownership.
 11. Keep staging and production databases separate and use dedicated browser-test accounts.
 

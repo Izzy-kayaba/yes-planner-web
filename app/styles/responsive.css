@@ -648,15 +648,12 @@
     overflow: hidden;
   }
   .focus-panel .task-list .task-row {
-    grid-template-columns: 30px minmax(0, 1fr) minmax(0, auto);
+    grid-template-columns: 30px minmax(0, 1fr) minmax(110px, auto);
     gap: 10px;
     padding-inline: 0;
   }
   .focus-panel .task-list .task-row > span:last-child {
     justify-self: end;
-    max-width: 90px;
-    overflow: hidden;
-    text-overflow: ellipsis;
     white-space: nowrap;
   }
 }

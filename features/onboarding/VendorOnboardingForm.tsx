@@ -11,7 +11,8 @@ import { apiRequest } from "@/lib/api/client";
 import { vendorServices, weddingPlanningService } from "@/lib/vendors/services";
 import { CharacterCount } from "@/components/forms/CharacterCount";
 import { FieldLabel } from "@/components/forms/FieldLabel";
-import { useCurrency } from "@/components/providers/CurrencyProvider";
+import { CurrencyChoice } from "@/components/currency/CurrencyChoice";
+import type { SupportedCurrency } from "@/lib/currency";
 import { inferMoneyRange, vendorPriceRanges } from "@/lib/estimate-ranges";
 import { YesSelect } from "@/components/ui/YesSelect";
 import { countryOptions } from "@/lib/countries";
@@ -25,6 +26,8 @@ export type VendorOnboardingValue = {
   serviceArea: string;
   countryCode: string;
   priceCurrency?: "USD" | "ZAR";
+  currency?: SupportedCurrency;
+  currencyPreferenceSet?: boolean;
   startingPriceMinMinor: number;
   startingPriceMaxMinor: number;
   startingPriceMinor: number;
@@ -50,6 +53,7 @@ const emptyValue: VendorOnboardingValue = {
   instagramHandle: "",
   profileImage: "",
   portfolioImages: [],
+  currency: "USD",
 };
 
 type ClaimableProfile = {
@@ -80,13 +84,12 @@ export function VendorOnboardingForm({
   // Keep venue defaults distinct from vendor defaults because venue accounts have a separate service boundary.
   const router = useRouter();
   const { language, text } = useLanguage();
-  const { currency } = useCurrency();
   const [value, setValue] = useState(() => {
     const startingValue = initialValue ?? emptyValue;
     if (accountType !== "Venue") {
       return {
         ...startingValue,
-        priceCurrency: startingValue.priceCurrency ?? currency,
+        priceCurrency: startingValue.priceCurrency ?? startingValue.currency ?? "USD",
         services: startingValue.services.filter((service) => service !== "Venue"),
       };
     }
@@ -186,7 +189,8 @@ export function VendorOnboardingForm({
         body: JSON.stringify({
           ...value,
           startingPriceMinor: value.startingPriceMinMinor,
-          priceCurrency: value.priceCurrency ?? currency,
+          priceCurrency: value.priceCurrency ?? value.currency ?? "USD",
+          currency: value.currency,
           startingPriceMinMinor: value.startingPriceMinMinor,
           startingPriceMaxMinor: value.startingPriceMaxMinor,
           startingPriceRangeKey,
@@ -242,6 +246,13 @@ export function VendorOnboardingForm({
             value={value.contactName}
           />
         </label>
+        {!value.currencyPreferenceSet && (
+          <CurrencyChoice
+            value={value.currency ?? "USD"}
+            onChange={(next) => update("currency", next)}
+            text={text}
+          />
+        )}
       </div>
       <label>
         <FieldLabel required>{text("Business description")}</FieldLabel>
@@ -290,7 +301,7 @@ export function VendorOnboardingForm({
       <div className="form-row">
         <label>
           <FieldLabel required>
-            {text("Minimum price")} ({currency})
+            {text("Minimum price")} ({value.currency ?? "USD"})
           </FieldLabel>
           <input
             id="vendor-minimum-price"
@@ -307,7 +318,7 @@ export function VendorOnboardingForm({
         </label>
         <label>
           <FieldLabel required>
-            {text("Maximum price")} ({currency})
+            {text("Maximum price")} ({value.currency ?? "USD"})
           </FieldLabel>
           <input
             id="vendor-maximum-price"

@@ -53,7 +53,7 @@ export function BudgetSection() {
     {
       name: "color",
       label: "Colour",
-      type: "select" as const,
+      type: "color" as const,
       options: [
         { value: "#8d4656", label: "Burgundy" },
         { value: "#71826b", label: "Sage Green" },

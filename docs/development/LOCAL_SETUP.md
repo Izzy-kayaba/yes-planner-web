@@ -29,7 +29,7 @@ BETTER_AUTH_TRUSTED_ORIGINS=http://localhost:3000,https://yes-planner.com,https:
 BETTER_AUTH_SECRET=<a unique random value of at least 32 characters>
 ```
 
-Add Google/Instagram provider values only when testing those providers. For email delivery, configure a Resend key and verified sender; platform administrators can test delivery from the system integrations page. The email HTML is generated in `lib/email.ts`.
+Add Google/Facebook provider values only when testing those providers. For email delivery, configure a Resend key and verified sender; platform administrators can test delivery from the system integrations page. The email HTML is generated in `lib/email.ts`.
 
 Useful preview routes include `/`, `/register`, `/login`, `/dashboard`, `/marketplace`, `/vendor`, `/admin`, and `/invite/ruth-and-izzy`. Preview records are stored in browser storage, not MongoDB.
 

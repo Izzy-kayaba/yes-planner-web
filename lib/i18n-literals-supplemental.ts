@@ -103,7 +103,6 @@ export const frenchSupplementalLiterals: Record<string, string> = {
   Price: "Prix",
   "Display currency": "Devise d’affichage",
   "Choose your language and currency.": "Choisissez votre langue et votre devise.",
-  "Choose once; it applies across the app.": "Choisissez une fois ; elle s’applique partout.",
   "Language and region": "Langue et région",
   "Choose your currency once. It cannot be changed later from the app.":
     "Choisissez votre devise une seule fois. Elle ne pourra plus être modifiée dans l’application.",
