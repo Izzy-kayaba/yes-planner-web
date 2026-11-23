@@ -76,6 +76,18 @@ export async function ensureMongoIndexes() {
     mongoDb
       .collection("weddingProfiles")
       .createIndex({ weddingKey: 1 }, { name: "wedding_profile_key", unique: true }),
+    mongoDb
+      .collection("weddingProfiles")
+      .createIndex(
+        { publicSlug: 1 },
+        { name: "wedding_profile_public_slug", unique: true, sparse: true },
+      ),
+    mongoDb
+      .collection("weddingMedia.files")
+      .createIndex(
+        { "metadata.ownerUserId": 1, "metadata.weddingKey": 1, uploadDate: -1 },
+        { name: "wedding_media_owner_wedding" },
+      ),
     mongoDb.collection("vendorProfiles").createIndex(
       { ownerUserId: 1 },
       {

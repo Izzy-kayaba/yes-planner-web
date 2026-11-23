@@ -1,7 +1,7 @@
 "use client";
 
 import { Pencil, Plus, Trash2 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { EntityDialog, type EntityFormValue } from "@/components/forms/EntityDialog";
 import { useLanguage } from "@/components/providers/LanguageProvider";
 import { useCurrency } from "@/components/providers/CurrencyProvider";
@@ -10,6 +10,7 @@ import { WorkspaceSkeleton } from "@/components/ui/WorkspaceSkeleton";
 import { useWorkspaceCollection } from "@/hooks/useWorkspaceCollection";
 import { useConfirmation } from "@/hooks/useConfirmation";
 import { budgetCategories } from "@/lib/demo-data";
+import { apiRequest } from "@/lib/api/client";
 
 type BudgetCategory = {
   id: string | number;
@@ -34,9 +35,26 @@ export function BudgetSection() {
   const confirmation = useConfirmation();
   const [editing, setEditing] = useState<BudgetCategory | null>(null);
   const [open, setOpen] = useState(false);
+  const [estimatedBudgetMinor, setEstimatedBudgetMinor] = useState<number | null>(null);
+  const fallbackBudgetMinor = seed.reduce((sum, item) => sum + item.budgetMinor, 0);
+
+  useEffect(() => {
+    if ((process.env.NEXT_PUBLIC_DATA_SOURCE ?? "api") === "demo") {
+      setEstimatedBudgetMinor(fallbackBudgetMinor);
+      return;
+    }
+    void apiRequest<{ budgetMinor?: number }>("/api/v1/wedding-profile")
+      .then((profile) => {
+        setEstimatedBudgetMinor(typeof profile.budgetMinor === "number" ? profile.budgetMinor : 0);
+      })
+      .catch(() => setEstimatedBudgetMinor(0));
+  }, [fallbackBudgetMinor]);
+
   const total = items.reduce((sum, item) => sum + item.budgetMinor, 0);
   const committed = items.reduce((sum, item) => sum + item.amountMinor, 0);
-  const allocated = total ? Math.round((committed / total) * 100) : 0;
+  const weddingBudget = estimatedBudgetMinor ?? total;
+  const plannedCategories = total;
+  const allocated = weddingBudget ? Math.round((committed / weddingBudget) * 100) : 0;
   const fields = [
     { name: "name", label: "Budget item", required: true },
     {
@@ -83,10 +101,11 @@ export function BudgetSection() {
       <section className="budget-summary-card">
         <div>
           <p className="eyebrow light">{text("Total wedding budget")}</p>
-          <strong>{displayMoney(total)}</strong>
+          <strong>{displayMoney(weddingBudget)}</strong>
           <span>
-            {displayMoney(committed)} {text("committed")} · {displayMoney(total - committed)}{" "}
-            {text("remaining")}
+            {displayMoney(committed)} {text("committed")} ·{" "}
+            {displayMoney(weddingBudget - committed)} {text("remaining")} ·{" "}
+            {displayMoney(plannedCategories)} {text("planned in categories")}
           </span>
         </div>
         <div className="budget-donut">
@@ -151,7 +170,11 @@ export function BudgetSection() {
               <div>
                 <i
                   style={{
-                    width: `${Math.min(100, (item.amountMinor / item.budgetMinor) * 100)}%`,
+                    width: `${
+                      item.budgetMinor > 0
+                        ? Math.min(100, (item.amountMinor / item.budgetMinor) * 100)
+                        : 0
+                    }%`,
                     background: item.color,
                   }}
                 />

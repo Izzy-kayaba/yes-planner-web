@@ -4,7 +4,8 @@ import { cn } from "@/lib/cn";
 type WorkspaceSkeletonProps = {
   className?: string;
   label?: string;
-  variant?: "page" | "dashboard" | "compact" | "table" | "budget" | "bookings" | "timeline";
+  variant?:
+    "page" | "dashboard" | "compact" | "table" | "budget" | "bookings" | "timeline" | "publication";
   columns?: number;
   rows?: number;
 };
@@ -170,6 +171,36 @@ export function WorkspaceSkeleton({
           </div>
         </article>
       </section>
+    );
+  }
+
+  if (variant === "publication") {
+    return (
+      <div
+        className={cn("publication-builder publication-skeleton workspace-skeleton", className)}
+        role="status"
+        aria-busy="true"
+        aria-label={label}
+      >
+        <section className="panel">
+          <span className="skeleton-block h-3 w-28" />
+          <span className="skeleton-block mt-3 h-9 w-80 max-w-full" />
+          <span className="skeleton-block mt-3 h-4 w-full max-w-2xl" />
+        </section>
+        <section className="panel">
+          <span className="skeleton-block h-3 w-36" />
+          <span className="skeleton-block mt-3 h-7 w-72 max-w-full" />
+          <div className="publication-skeleton-fields">
+            <span className="skeleton-block h-24 rounded-xl" />
+            <span className="skeleton-block h-24 rounded-xl" />
+          </div>
+        </section>
+        <section className="panel">
+          <span className="skeleton-block h-3 w-32" />
+          <span className="skeleton-block mt-3 h-7 w-64 max-w-full" />
+          <span className="skeleton-block mt-5 h-28 w-full rounded-xl" />
+        </section>
+      </div>
     );
   }
 

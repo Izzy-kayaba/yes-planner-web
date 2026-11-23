@@ -9,7 +9,7 @@ import type { TranslationKey } from "@/lib/i18n";
 import type { PlatformRole } from "@/lib/auth/roles";
 import { canUseWorkspaceModule, isWorkspaceModule } from "@/lib/auth/permissions";
 
-const sections: ReadonlyArray<[TranslationKey, string]> = [
+const sections: ReadonlyArray<[string, string]> = [
   ["wedding.overview", ""],
   ["wedding.guests", "guests"],
   ["wedding.budget", "budget"],
@@ -22,6 +22,7 @@ const sections: ReadonlyArray<[TranslationKey, string]> = [
   ["wedding.bookings", "bookings"],
   ["wedding.payments", "payments"],
   ["wedding.reports", "reports"],
+  ["Wedding website", "website"],
 ];
 
 export function WeddingNav({
@@ -47,6 +48,7 @@ export function WeddingNav({
       {sections
         .filter(([, slug]) => {
           if (role === "Venue") return !slug;
+          if (slug === "website") return role === "Couple" || access === "FullManager";
           if (role !== "Vendor") return true;
           if (!slug) return true;
           return isWorkspaceModule(slug) && canUseWorkspaceModule(role, slug, "read", access);
@@ -66,7 +68,7 @@ export function WeddingNav({
               href={href}
               key={label}
             >
-              {t(label)}
+              {label.startsWith("wedding.") ? t(label as TranslationKey) : text(label)}
             </Link>
           );
         })}
