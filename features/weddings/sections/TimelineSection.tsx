@@ -6,6 +6,7 @@ import { ChevronLeft, ChevronRight, Pencil, Plus, Trash2 } from "lucide-react";
 import { useMemo, useState } from "react";
 import { EntityDialog, type EntityFormValue } from "@/components/forms/EntityDialog";
 import { Pagination } from "@/components/ui/Pagination";
+import { WorkspaceSkeleton } from "@/components/ui/WorkspaceSkeleton";
 import { useLanguage } from "@/components/providers/LanguageProvider";
 import { useWorkspaceCollection } from "@/hooks/useWorkspaceCollection";
 import { useConfirmation } from "@/hooks/useConfirmation";
@@ -53,7 +54,7 @@ const fields = [
 
 export function TimelineSection() {
   const { language, text } = useLanguage();
-  const { items, create, update, remove, page, setPage, pagination } =
+  const { items, create, update, remove, page, setPage, pagination, loading } =
     useWorkspaceCollection<TimelineEvent>("timeline", seed);
   const [month, setMonth] = useState(() => moment().startOf("month").toDate());
   const [editing, setEditing] = useState<TimelineEvent | null>(null);
@@ -71,7 +72,9 @@ export function TimelineSection() {
     else await create(input);
   }
 
-  return (
+  return loading ? (
+    <WorkspaceSkeleton variant="timeline" />
+  ) : (
     <section className="dashboard-grid timeline-grid">
       <article className="panel">
         <div className="panel-header">

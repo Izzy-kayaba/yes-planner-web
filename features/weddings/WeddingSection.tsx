@@ -51,15 +51,26 @@ export function WeddingSection({ section }: { section: string }) {
   const { t, text } = useLanguage();
   const heading = titles[section];
   const Section = sections[section];
+  const sectionTitle = heading ? t(heading[0]) : t("nav.workspace");
 
   return (
     <div className="section-stack">
       <PageHeader
         eyebrow={text("Wedding workspace")}
-        title={heading ? t(heading[0]) : t("nav.workspace")}
+        title={sectionTitle}
         description={heading ? t(heading[1]) : t("dashboard.intro")}
         action={
-          ["guests", "budget", "tasks", "vendors", "timeline", "seating", "food-drinks", "documents", "bookings"].includes(section) ? (
+          [
+            "guests",
+            "budget",
+            "tasks",
+            "vendors",
+            "timeline",
+            "seating",
+            "food-drinks",
+            "documents",
+            "bookings",
+          ].includes(section) ? (
             <WorkspaceExportActions section={section} />
           ) : undefined
         }

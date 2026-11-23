@@ -513,6 +513,27 @@
   border-radius: 50%;
   animation: route-loader-spin 700ms linear infinite;
 }
+.workspace-skeleton {
+  min-height: 50vh;
+}
+.workspace-skeleton-compact {
+  display: grid;
+  gap: 16px;
+}
+.skeleton-block {
+  display: block;
+  border-radius: 12px;
+  background: linear-gradient(100deg, var(--surface-soft) 20%, color-mix(in srgb, var(--surface-soft) 65%, var(--surface)) 38%, var(--surface-soft) 56%);
+  background-size: 200% 100%;
+  animation: workspace-skeleton-shimmer 1.4s ease-in-out infinite;
+}
+@keyframes workspace-skeleton-shimmer {
+  from { background-position: 200% 0; }
+  to { background-position: -200% 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .skeleton-block { animation: none; }
+}
 .auth-home-mobile-static {
   position: static;
   flex: 0 0 auto;

@@ -11,11 +11,12 @@ import {
 import { useLanguage } from "@/components/providers/LanguageProvider";
 import { useCurrency } from "@/components/providers/CurrencyProvider";
 import { StatusPill } from "@/components/ui/StatusPill";
-import { MetricGrid } from "@/features/weddings/MetricGrid";
+import { MetricGrid, MetricGridSkeleton } from "@/features/weddings/MetricGrid";
 import { useWorkspaceCollection } from "@/hooks/useWorkspaceCollection";
 import { getInitials } from "@/lib/initials";
 import { useConnectedVendors } from "@/hooks/useConnectedVendors";
 import { Pagination } from "@/components/ui/Pagination";
+import { WorkspaceSkeleton } from "@/components/ui/WorkspaceSkeleton";
 import { useConfirmation } from "@/hooks/useConfirmation";
 
 type Payment = {
@@ -56,7 +57,7 @@ const seed: Payment[] = [
 export function PaymentsSection() {
   const { text } = useLanguage();
   const { currency, displayMoney, displayStoredMoney } = useCurrency();
-  const { items, create, update, remove, page, setPage, pagination } =
+  const { items, create, update, remove, page, setPage, pagination, loading } =
     useWorkspaceCollection<Payment>("payments", seed);
   const connectedVendors = useConnectedVendors();
   const confirmation = useConfirmation();
@@ -122,7 +123,12 @@ export function PaymentsSection() {
   const paid = items
     .filter((item) => item.status === "Paid")
     .reduce((sum, item) => sum + item.amountMinor, 0);
-  return (
+  return loading ? (
+    <>
+      <MetricGridSkeleton />
+      <WorkspaceSkeleton variant="table" columns={5} />
+    </>
+  ) : (
     <>
       <MetricGrid
         items={[

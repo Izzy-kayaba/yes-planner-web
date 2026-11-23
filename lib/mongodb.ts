@@ -55,6 +55,18 @@ export async function ensureMongoIndexes() {
         { ownerUserId: 1, weddingKey: 1, module: 1, recordId: 1 },
         { name: "workspace_record", unique: true },
       ),
+    mongoDb.collection("workspaceItems").createIndex(
+      { ownerUserId: 1, weddingKey: 1, module: 1, "data.table": 1, "data.seatIndex": 1 },
+      {
+        name: "workspace_guest_seat",
+        unique: true,
+        partialFilterExpression: {
+          module: "guests",
+          "data.seatIndex": { $type: "number" },
+          deletedAt: null,
+        },
+      },
+    ),
     mongoDb
       .collection("user")
       .createIndex({ phoneNumber: 1 }, { name: "user_phone_number", unique: true, sparse: true }),

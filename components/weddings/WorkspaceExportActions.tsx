@@ -1,8 +1,10 @@
 "use client";
-// Purpose: provides consistent CSV and print-to-PDF actions for wedding workspace sections.
+// Purpose: provides consistent CSV and branded PDF export actions for wedding workspace sections.
 
 import { Download, FileText } from "lucide-react";
+import { useState } from "react";
 import { useLanguage } from "@/components/providers/LanguageProvider";
+import { downloadWorkspacePdf } from "@/lib/pdf-export";
 
 const sectionLabels: Record<string, string> = {
   guests: "Guests",
@@ -22,7 +24,17 @@ function csvCell(value: string) {
 
 export function WorkspaceExportActions({ section }: { section: string }) {
   const { text } = useLanguage();
+  const [pdfLoading, setPdfLoading] = useState(false);
   const label = sectionLabels[section] ?? "Wedding workspace";
+
+  async function downloadPdf() {
+    setPdfLoading(true);
+    try {
+      await downloadWorkspacePdf(section, label);
+    } finally {
+      setPdfLoading(false);
+    }
+  }
 
   function downloadCsv() {
     const rows = Array.from(
@@ -34,7 +46,13 @@ export function WorkspaceExportActions({ section }: { section: string }) {
       .map((row) =>
         Array.from(row.children)
           .filter((cell) => !(cell.querySelector("button") && !(cell.textContent ?? "").trim()))
-          .map((cell) => csvCell((cell.textContent ?? "").replace(/\s+/g, " ").trim()))
+          .map((cell) =>
+            csvCell(
+              (cell.getAttribute("data-csv-value") ?? cell.textContent ?? "")
+                .replace(/\s+/g, " ")
+                .trim(),
+            ),
+          )
           .join(","),
       )
       .join("\r\n");
@@ -51,10 +69,11 @@ export function WorkspaceExportActions({ section }: { section: string }) {
     <div className="flex flex-wrap gap-2 max-sm:flex-col">
       <button
         className="button button-secondary max-sm:w-full"
-        onClick={() => window.print()}
+        disabled={pdfLoading}
+        onClick={downloadPdf}
         type="button"
       >
-        <FileText size={15} /> {text("Save as PDF")}
+        <FileText size={15} /> {pdfLoading ? "Preparing PDF…" : text("Save as PDF")}
       </button>
       <button className="button button-secondary max-sm:w-full" onClick={downloadCsv} type="button">
         <Download size={15} /> {text("Download CSV")}

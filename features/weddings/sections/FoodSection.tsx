@@ -7,6 +7,7 @@ import { EntityDialog, type EntityFormValue } from "@/components/forms/EntityDia
 import { useLanguage } from "@/components/providers/LanguageProvider";
 import { useWorkspaceCollection } from "@/hooks/useWorkspaceCollection";
 import { Pagination } from "@/components/ui/Pagination";
+import { WorkspaceSkeleton } from "@/components/ui/WorkspaceSkeleton";
 
 type Menu = { id: string | number; name: string; starter: string; main: string; dessert: string };
 const fields = [
@@ -18,10 +19,8 @@ const fields = [
 
 export function FoodSection() {
   const { text } = useLanguage();
-  const { items, create, update, remove, page, setPage, pagination } = useWorkspaceCollection<Menu>(
-    "food-drinks",
-    [],
-  );
+  const { items, create, update, remove, page, setPage, pagination, loading } =
+    useWorkspaceCollection<Menu>("food-drinks", []);
   const { items: guests } = useWorkspaceCollection<{ id: string | number; meal: string }>(
     "guests",
     [],
@@ -35,7 +34,9 @@ export function FoodSection() {
     else await create(input);
   }
 
-  return (
+  return loading ? (
+    <WorkspaceSkeleton variant="table" columns={4} />
+  ) : (
     <section className="section-stack">
       <div className="flex justify-end">
         <button

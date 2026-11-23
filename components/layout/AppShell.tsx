@@ -48,6 +48,7 @@ import { getInitials } from "@/lib/initials";
 import { formatDate } from "@/lib/date-time";
 import { platformAdminNavigation, visiblePlatformAdminNavigation } from "@/lib/admin-navigation";
 import { useTheme } from "@/components/providers/ThemeProvider";
+import { WorkspacePageBoundary } from "@/components/layout/WorkspacePageBoundary";
 
 type NavigationItem = {
   labelKey: TranslationKey;
@@ -405,7 +406,9 @@ export function AppShell({
             </button>
           </div>
         </header>
-        <main className="main-content">{children}</main>
+        <main className="main-content">
+          <WorkspacePageBoundary>{children}</WorkspacePageBoundary>
+        </main>
       </div>
       <Modal
         description="Are you sure you want to log out?"

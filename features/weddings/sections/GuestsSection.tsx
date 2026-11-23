@@ -1,8 +1,8 @@
 "use client";
 // Purpose: implements features/weddings/sections/GuestsSection.tsx for the Yes Planner web application.
 
-import { Pencil, Plus, Trash2 } from "lucide-react";
-import { useMemo, useState } from "react";
+import { FileUp, Pencil, Plus, Trash2 } from "lucide-react";
+import { useMemo, useRef, useState } from "react";
 import { useParams } from "next/navigation";
 import {
   EntityDialog,
@@ -14,18 +14,21 @@ import { SearchField } from "@/components/forms/SearchField";
 import { YesSelect } from "@/components/ui/YesSelect";
 import { StatusPill } from "@/components/ui/StatusPill";
 import { Pagination } from "@/components/ui/Pagination";
-import { MetricGrid } from "@/features/weddings/MetricGrid";
+import { WorkspaceSkeleton } from "@/components/ui/WorkspaceSkeleton";
+import { MetricGrid, MetricGridSkeleton } from "@/features/weddings/MetricGrid";
 import { useWorkspaceCollection } from "@/hooks/useWorkspaceCollection";
 import { guests as guestSeed } from "@/lib/demo-data";
 import { getInitials } from "@/lib/initials";
+import { parseGuestCsv } from "@/lib/guests/csv";
 import type { Guest } from "@/types";
 import { useConfirmation } from "@/hooks/useConfirmation";
+import { toast } from "sonner";
 
 type MenuOption = { id: string | number; name: string };
 
 export function GuestsSection() {
   const { text } = useLanguage();
-  const { items, create, update, remove, page, setPage, pagination } =
+  const { items, create, update, remove, page, setPage, pagination, loading } =
     useWorkspaceCollection<Guest>("guests", guestSeed);
   const { items: menus } = useWorkspaceCollection<MenuOption>("food-drinks", []);
   const params = useParams<{ weddingId?: string }>();
@@ -34,6 +37,8 @@ export function GuestsSection() {
   const [status, setStatus] = useState("All");
   const [editing, setEditing] = useState<Guest | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [importing, setImporting] = useState(false);
+  const importInput = useRef<HTMLInputElement>(null);
   const confirmation = useConfirmation();
   const fields: EntityField[] = [
     { name: "name", label: "Guest name", required: true },
@@ -82,7 +87,48 @@ export function GuestsSection() {
     else await create(guest);
   }
 
-  return (
+  async function importGuests(file: File) {
+    if (!file.name.toLowerCase().endsWith(".csv")) {
+      toast.error(
+        "CSV bulk upload is available now. Excel upload will be enabled after the secure reader is installed.",
+      );
+      return;
+    }
+    setImporting(true);
+    try {
+      const guestsToCreate = parseGuestCsv(await file.text());
+      for (const guest of guestsToCreate) await create(guest);
+      toast.success(`${guestsToCreate.length} guests imported successfully.`);
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "The guest CSV could not be imported.");
+    } finally {
+      setImporting(false);
+      if (importInput.current) importInput.current.value = "";
+    }
+  }
+
+  function downloadGuestTemplate() {
+    const content = [
+      "name,phoneNumber,email,group,isCouple,hasChildren,status,meal,table",
+      '"Ayesha Taylor",+27821234567,ayesha@example.com,Family,false,false,Pending,Vegetarian,',
+      '"Jordan Kim",+27829876543,,Friends,false,true,Pending,Standard,',
+    ].join("\r\n");
+    const url = URL.createObjectURL(
+      new Blob([`${content}\r\n`], { type: "text/csv;charset=utf-8" }),
+    );
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "yes-planner-guests-template.csv";
+    link.click();
+    URL.revokeObjectURL(url);
+  }
+
+  return loading ? (
+    <>
+      <MetricGridSkeleton />
+      <WorkspaceSkeleton variant="table" columns={6} />
+    </>
+  ) : (
     <>
       <MetricGrid
         items={[
@@ -128,6 +174,47 @@ export function GuestsSection() {
               value={status}
               onChange={setStatus}
             />
+            <input
+              accept=".csv,text/csv"
+              className="sr-only"
+              ref={importInput}
+              type="file"
+              onChange={(event) => {
+                const file = event.target.files?.[0];
+                if (file) void importGuests(file);
+              }}
+            />
+            <div className="guest-import-help">
+              <button
+                className="button button-secondary guest-import-button"
+                disabled={importing}
+                onClick={() => importInput.current?.click()}
+                title="Import a CSV using the supported guest columns"
+                type="button"
+              >
+                <FileUp size={15} /> {importing ? text("Importing…") : text("Import CSV")}
+                <span aria-hidden="true" className="guest-import-help-icon">
+                  ?
+                </span>
+              </button>
+              <div className="guest-import-help-content">
+                <strong>Required columns</strong>
+                <p>name, phoneNumber, group</p>
+                <strong>Optional columns</strong>
+                <p>email, isCouple, hasChildren, status, meal, table</p>
+                <small>
+                  Use international phone numbers such as +27821234567. Accepted headings also
+                  include Guest Name, Phone, WhatsApp Number, and Household.
+                </small>
+                <button
+                  className="button button-secondary"
+                  onClick={downloadGuestTemplate}
+                  type="button"
+                >
+                  Download template
+                </button>
+              </div>
+            </div>
             <button
               className="button button-primary"
               onClick={() => {
@@ -151,7 +238,7 @@ export function GuestsSection() {
             </div>
             {filtered.map((guest) => (
               <div className="table-row workspace-table-row" key={guest.id}>
-                <span className="person-cell">
+                <span className="person-cell" data-csv-value={guest.name}>
                   <i>{getInitials(guest.name)}</i>
                   <b>
                     {guest.name}

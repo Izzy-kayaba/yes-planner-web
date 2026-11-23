@@ -14,6 +14,8 @@ export function detectCountry(request: Request) {
       request.headers.get("x-country-code"),
   );
   if (headerCountry) return headerCountry;
+  const pathCountry = normalizeCountry(new URL(request.url).pathname.match(/^\/([a-z]{2})(?:\/|$)/i)?.[1]);
+  if (pathCountry) return pathCountry;
   const locale = request.headers.get("x-yes-locale")?.toUpperCase() ?? "";
   const timeZone = request.headers.get("x-yes-time-zone") ?? "";
   return locale.endsWith("-ZA") || timeZone === "Africa/Johannesburg" ? "ZA" : "";

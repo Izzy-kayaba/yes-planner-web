@@ -123,6 +123,7 @@ export function SettingsPanel() {
     firstName: "",
     lastName: "",
     email: "",
+    emailUnavailable: false,
     phoneNumber: "",
     currency: "USD" as "USD" | "ZAR",
     currencyPreferenceSet: false,
@@ -287,14 +288,20 @@ export function SettingsPanel() {
               </div>
               <label>
                 <FieldLabel required>{t("auth.email")}</FieldLabel>
-                <input
-                  id="settings-email"
-                  name="email"
-                  readOnly
-                  required
-                  type="email"
-                  value={profile.email}
-                />
+                {profile.emailUnavailable ? (
+                  <div className="settings-readonly-select" role="status">
+                    <span>{text("Facebook account email was not provided")}</span>
+                  </div>
+                ) : (
+                  <input
+                    id="settings-email"
+                    name="email"
+                    readOnly
+                    required
+                    type="email"
+                    value={profile.email}
+                  />
+                )}
               </label>
               <label className="settings-checkbox-row">
                 <span className="settings-row-copy">
@@ -390,8 +397,17 @@ export function SettingsPanel() {
                     <Check aria-hidden="true" size={15} />
                   </div>
                   <small className="form-hint">
-                    {text("This currency is locked for this account.")}
+                    {text(
+                      profile.currencyPreferenceSet
+                        ? "This currency is locked for this account."
+                        : "This is your location-based default. Confirm it during onboarding.",
+                    )}
                   </small>
+                  {!profile.currencyPreferenceSet && (
+                    <Link className="text-sm text-yes-burgundy underline" href="/onboarding">
+                      {text("Confirm currency during onboarding")}
+                    </Link>
+                  )}
                 </div>
               </section>
               <LanguageSwitcher />

@@ -9,7 +9,7 @@ import { validateWorkspaceMoney, validateWorkspaceRecord } from "@/lib/api/works
 import { after } from "next/server";
 import { notifyWeddingParticipants } from "@/lib/whatsapp";
 import { validateConnectedVendor } from "@/lib/vendors/connected";
-import { validateGuestSelections } from "@/lib/guests/validation";
+import { validateGuestSeat, validateGuestSelections } from "@/lib/guests/validation";
 
 type RouteContext = {
   params: Promise<{ weddingKey: string; module: string; recordId: string }>;
@@ -87,6 +87,13 @@ export async function PUT(request: Request, context: RouteContext) {
       data,
     );
     if (selectionError) return NextResponse.json({ message: selectionError }, { status: 400 });
+    const seatError = await validateGuestSeat(
+      authorization.resourceOwnerId,
+      authorization.params.weddingKey,
+      data,
+      authorization.params.recordId,
+    );
+    if (seatError) return NextResponse.json({ message: seatError }, { status: 400 });
     const existing = await mongoDb.collection("workspaceItems").findOne(filter);
     if (!existing) return NextResponse.json({ message: "Record not found." }, { status: 404 });
     data.inviteToken = existing.data?.inviteToken ?? randomUUID();

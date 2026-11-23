@@ -1,7 +1,10 @@
 import { parsePhoneNumberFromString } from "libphonenumber-js";
 import { NextResponse } from "next/server";
 import { z } from "zod";
+import { isSyntheticFacebookEmail } from "@/lib/auth/facebook";
 import { requireApiSession } from "@/lib/auth/session";
+import { detectCountry } from "@/lib/country";
+import { currencyForCountry } from "@/lib/currency";
 import { mongoDb } from "@/lib/mongodb";
 
 const profileSchema = z.object({
@@ -11,17 +14,23 @@ const profileSchema = z.object({
   whatsappNotifications: z.boolean().default(false),
 });
 
-function profile(document: Record<string, unknown>) {
+function profile(document: Record<string, unknown>, request?: Request) {
+  const storedCurrency =
+    document.currency === "ZAR" || document.currency === "USD"
+      ? document.currency
+      : currencyForCountry(request ? detectCountry(request) : null);
+  const email = String(document.email ?? "");
   return {
     id: String(document._id),
     name: document.name,
     firstName: document.firstName ?? "",
     lastName: document.lastName ?? "",
-    email: document.email,
+    email,
+    emailUnavailable: isSyntheticFacebookEmail(email),
     emailVerified: document.emailVerified === true,
     phoneNumber: document.phoneNumber ?? "",
     whatsappNotifications: document.whatsappNotifications === true,
-    currency: document.currency === "ZAR" ? "ZAR" : "USD",
+    currency: storedCurrency,
     currencyPreferenceSet: document.currencyPreferenceSet === true,
     role: document.role,
     accountType: document.accountType ?? (document.role === "Planner" ? "Vendor" : document.role),
@@ -55,7 +64,7 @@ export async function GET(request: Request) {
     .findOne({ email: authentication.session.user.email });
   if (!user) return NextResponse.json({ message: "User not found." }, { status: 404 });
   return NextResponse.json({
-    ...profile(user),
+    ...profile(user, request),
     ...(await authenticationMethods(authentication.session.user.id)),
   });
 }
@@ -99,7 +108,7 @@ export async function PATCH(request: Request) {
   }
   if (!user) return NextResponse.json({ message: "User not found." }, { status: 404 });
   return NextResponse.json({
-    ...profile(user),
+    ...profile(user, request),
     ...(await authenticationMethods(authentication.session.user.id)),
   });
 }
