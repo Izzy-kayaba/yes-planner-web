@@ -1,21 +1,6 @@
 // Purpose: implements app/(dashboard)/dashboard/loading.tsx for the Yes Planner web application.
-import { getTextTranslator } from "@/lib/i18n-server";
+import { WorkspaceSkeleton } from "@/components/ui/WorkspaceSkeleton";
 
-export default async function DashboardLoading() {
-  const text = await getTextTranslator();
-  return (
-    <div className="dashboard-stack" aria-label={text("Loading dashboard")} aria-busy="true">
-      <div className="grid gap-3">
-        <div className="h-4 w-36 animate-pulse rounded bg-yes-soft" />
-        <div className="h-11 w-72 max-w-full animate-pulse rounded-xl bg-yes-soft" />
-        <div className="h-4 w-full max-w-xl animate-pulse rounded bg-yes-soft" />
-      </div>
-      <div className="h-52 animate-pulse rounded-3xl bg-yes-soft" />
-      <div className="stats-grid">
-        {Array.from({ length: 4 }, (_, index) => (
-          <div className="h-36 animate-pulse rounded-2xl bg-yes-soft" key={index} />
-        ))}
-      </div>
-    </div>
-  );
+export default function DashboardLoading() {
+  return <WorkspaceSkeleton variant="dashboard" label="Loading dashboard" />;
 }

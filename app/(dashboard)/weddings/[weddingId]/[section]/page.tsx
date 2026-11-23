@@ -15,10 +15,14 @@ export default async function WeddingSectionPage({
 }: {
   params: Promise<{ section: string }>;
 }) {
+  const { section } = await params;
   if ((process.env.NEXT_PUBLIC_DATA_SOURCE ?? "api") !== "demo") {
     const session = await requirePageRole(["Couple", "Vendor", "Venue"]);
-    if (session.user.role === "Venue") notFound();
+    if (
+      session.user.role === "Venue" ||
+      (section === "website" && session.user.role !== "Couple" && session.user.role !== "Vendor")
+    )
+      notFound();
   }
-  const { section } = await params;
   return <WeddingSection section={section} />;
 }

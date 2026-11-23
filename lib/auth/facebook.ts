@@ -5,6 +5,10 @@ export type FacebookProfile = {
   email_verified?: boolean;
 };
 
+export function isSyntheticFacebookEmail(email: string | null | undefined) {
+  return Boolean(email && email.endsWith("@facebook.yesplanner.invalid"));
+}
+
 export function mapFacebookProfile(profile: FacebookProfile) {
   const id = profile.id?.trim();
   if (!id) return null;

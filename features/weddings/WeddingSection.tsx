@@ -17,6 +17,7 @@ import { SeatingSection } from "@/features/weddings/sections/SeatingSection";
 import { TasksSection } from "@/features/weddings/sections/TasksSection";
 import { TimelineSection } from "@/features/weddings/sections/TimelineSection";
 import { VendorsSection } from "@/features/weddings/sections/VendorsSection";
+import { WeddingPublicationSection } from "@/features/weddings/sections/WeddingPublicationSection";
 import { WorkspaceExportActions } from "@/components/weddings/WorkspaceExportActions";
 
 const titles: Record<string, [TranslationKey, TranslationKey]> = {
@@ -45,21 +46,40 @@ const sections: Record<string, ComponentType> = {
   bookings: BookingsSection,
   payments: PaymentsSection,
   reports: ReportsSection,
+  website: WeddingPublicationSection,
 };
 
 export function WeddingSection({ section }: { section: string }) {
   const { t, text } = useLanguage();
   const heading = titles[section];
   const Section = sections[section];
+  const sectionTitle =
+    section === "website" ? "Wedding website" : heading ? t(heading[0]) : t("nav.workspace");
 
   return (
     <div className="section-stack">
       <PageHeader
         eyebrow={text("Wedding workspace")}
-        title={heading ? t(heading[0]) : t("nav.workspace")}
-        description={heading ? t(heading[1]) : t("dashboard.intro")}
+        title={sectionTitle}
+        description={
+          section === "website"
+            ? "Create a beautiful private page, then publish it when your guests are ready."
+            : heading
+              ? t(heading[1])
+              : t("dashboard.intro")
+        }
         action={
-          ["guests", "budget", "tasks", "vendors", "timeline", "seating", "food-drinks", "documents", "bookings"].includes(section) ? (
+          [
+            "guests",
+            "budget",
+            "tasks",
+            "vendors",
+            "timeline",
+            "seating",
+            "food-drinks",
+            "documents",
+            "bookings",
+          ].includes(section) ? (
             <WorkspaceExportActions section={section} />
           ) : undefined
         }

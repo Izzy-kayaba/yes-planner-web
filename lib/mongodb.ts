@@ -55,6 +55,18 @@ export async function ensureMongoIndexes() {
         { ownerUserId: 1, weddingKey: 1, module: 1, recordId: 1 },
         { name: "workspace_record", unique: true },
       ),
+    mongoDb.collection("workspaceItems").createIndex(
+      { ownerUserId: 1, weddingKey: 1, module: 1, "data.table": 1, "data.seatIndex": 1 },
+      {
+        name: "workspace_guest_seat",
+        unique: true,
+        partialFilterExpression: {
+          module: "guests",
+          "data.seatIndex": { $type: "number" },
+          deletedAt: null,
+        },
+      },
+    ),
     mongoDb
       .collection("user")
       .createIndex({ phoneNumber: 1 }, { name: "user_phone_number", unique: true, sparse: true }),
@@ -64,6 +76,18 @@ export async function ensureMongoIndexes() {
     mongoDb
       .collection("weddingProfiles")
       .createIndex({ weddingKey: 1 }, { name: "wedding_profile_key", unique: true }),
+    mongoDb
+      .collection("weddingProfiles")
+      .createIndex(
+        { publicSlug: 1 },
+        { name: "wedding_profile_public_slug", unique: true, sparse: true },
+      ),
+    mongoDb
+      .collection("weddingMedia.files")
+      .createIndex(
+        { "metadata.ownerUserId": 1, "metadata.weddingKey": 1, uploadDate: -1 },
+        { name: "wedding_media_owner_wedding" },
+      ),
     mongoDb.collection("vendorProfiles").createIndex(
       { ownerUserId: 1 },
       {

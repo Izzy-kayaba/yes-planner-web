@@ -207,6 +207,12 @@
   .seating-grid {
     grid-template-columns: repeat(2, 1fr);
   }
+  .seating-editor {
+    grid-template-columns: 1fr;
+  }
+  .seating-plan {
+    min-height: 540px;
+  }
   .booking-board {
     grid-template-columns: 1fr;
   }
@@ -271,6 +277,9 @@
   .banner-copy .banner-budget {
     overflow-wrap: anywhere;
     white-space: normal;
+  }
+  .banner-copy .banner-budget span {
+    font-weight: 900;
   }
   .dashboard-vendor-actions {
     flex-direction: column;
@@ -412,6 +421,30 @@
   .seating-grid,
   .notes-grid {
     grid-template-columns: 1fr;
+  }
+  .seating-actions,
+  .seating-list-row {
+    align-items: stretch;
+    flex-direction: column;
+  }
+  .seating-actions .button {
+    width: 100%;
+  }
+  .seating-action-buttons {
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .seating-action-buttons .guest-import-help {
+    width: 100%;
+  }
+  .seating-plan-panel,
+  .seating-guest-list,
+  .seating-table-list {
+    padding: 16px;
+  }
+  .seating-plan {
+    min-height: 460px;
   }
   .vendor-grid {
     grid-template-columns: repeat(2, 1fr);

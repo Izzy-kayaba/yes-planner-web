@@ -37,3 +37,49 @@ export async function validateGuestSelections(
   data.hasChildren = data.hasChildren === true;
   return null;
 }
+
+export async function validateGuestSeat(
+  ownerUserId: string,
+  weddingKey: string,
+  data: Record<string, unknown>,
+  recordId?: string,
+) {
+  const tableName = typeof data.table === "string" ? data.table.trim() : "";
+  if (
+    !tableName ||
+    data.seatIndex === undefined ||
+    data.seatIndex === null ||
+    data.seatIndex === ""
+  ) {
+    if (!tableName) delete data.seatIndex;
+    return null;
+  }
+  if (
+    typeof data.seatIndex !== "number" ||
+    !Number.isInteger(data.seatIndex) ||
+    data.seatIndex < 0
+  ) {
+    return "Choose a valid chair for this guest.";
+  }
+  const table = await mongoDb.collection("workspaceItems").findOne({
+    ownerUserId,
+    weddingKey,
+    module: "seating",
+    "data.name": tableName,
+    deletedAt: { $exists: false },
+  });
+  const capacity = Number(table?.data?.capacity ?? 0);
+  if (!table || data.seatIndex >= capacity) return "That chair does not exist on this table.";
+  const occupied = await mongoDb.collection("workspaceItems").findOne({
+    ownerUserId,
+    weddingKey,
+    module: "guests",
+    recordId: recordId ? { $ne: recordId } : { $exists: true },
+    "data.table": tableName,
+    "data.seatIndex": data.seatIndex,
+    deletedAt: { $exists: false },
+  });
+  if (occupied) return "That chair is already assigned to another guest.";
+  data.seatIndex = Math.trunc(data.seatIndex);
+  return null;
+}

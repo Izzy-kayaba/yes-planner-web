@@ -13,7 +13,8 @@ import { useCurrency } from "@/components/providers/CurrencyProvider";
 import { SearchField } from "@/components/forms/SearchField";
 import { StatusPill } from "@/components/ui/StatusPill";
 import { Pagination } from "@/components/ui/Pagination";
-import { MetricGrid } from "@/features/weddings/MetricGrid";
+import { WorkspaceSkeleton } from "@/components/ui/WorkspaceSkeleton";
+import { MetricGrid, MetricGridSkeleton } from "@/features/weddings/MetricGrid";
 import { useWorkspaceCollection } from "@/hooks/useWorkspaceCollection";
 import { vendors } from "@/lib/demo-data";
 import { getInitials } from "@/lib/initials";
@@ -41,7 +42,7 @@ const seed: Vendor[] = vendors.map((vendor, index) => ({
 export function VendorsSection() {
   const { text } = useLanguage();
   const { currency, displayMoney, displayStoredMoney } = useCurrency();
-  const { items, create, update, remove, page, setPage, pagination } =
+  const { items, create, update, remove, page, setPage, pagination, loading } =
     useWorkspaceCollection<Vendor>("vendors", seed);
   const connectedVendors = useConnectedVendors();
   const confirmation = useConfirmation();
@@ -90,7 +91,12 @@ export function VendorsSection() {
     else await create(input);
   }
 
-  return (
+  return loading ? (
+    <>
+      <MetricGridSkeleton />
+      <WorkspaceSkeleton variant="table" columns={5} />
+    </>
+  ) : (
     <>
       <MetricGrid
         items={[
