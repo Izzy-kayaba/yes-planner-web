@@ -11,7 +11,7 @@ import { notifyWeddingParticipants, sendWhatsAppToPhone } from "@/lib/whatsapp";
 import { sendEventEmail } from "@/lib/email";
 import { siteUrl } from "@/lib/site";
 import { validateConnectedVendor } from "@/lib/vendors/connected";
-import { validateGuestSelections } from "@/lib/guests/validation";
+import { validateGuestSeat, validateGuestSelections } from "@/lib/guests/validation";
 import { paginatedResult, parsePagination } from "@/lib/api/pagination";
 
 type RouteContext = { params: Promise<{ weddingKey: string; module: string }> };
@@ -122,6 +122,12 @@ export async function POST(request: Request, context: RouteContext) {
       data,
     );
     if (selectionError) return NextResponse.json({ message: selectionError }, { status: 400 });
+    const seatError = await validateGuestSeat(
+      authorization.resourceOwnerId,
+      authorization.params.weddingKey,
+      data,
+    );
+    if (seatError) return NextResponse.json({ message: seatError }, { status: 400 });
     data.inviteToken = randomUUID();
   }
   const vendorError = await validateConnectedVendor(

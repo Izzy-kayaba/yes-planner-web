@@ -8,6 +8,7 @@ import { useLanguage } from "@/components/providers/LanguageProvider";
 import { SearchField } from "@/components/forms/SearchField";
 import { StatusPill } from "@/components/ui/StatusPill";
 import { Pagination } from "@/components/ui/Pagination";
+import { WorkspaceSkeleton } from "@/components/ui/WorkspaceSkeleton";
 import { useWorkspaceCollection } from "@/hooks/useWorkspaceCollection";
 import { tasks as taskSeed } from "@/lib/demo-data";
 import type { WeddingTask } from "@/types";
@@ -30,7 +31,7 @@ const fields = [
 
 export function TasksSection() {
   const { language, text } = useLanguage();
-  const { items, create, update, remove, page, setPage, pagination } =
+  const { items, create, update, remove, page, setPage, pagination, loading } =
     useWorkspaceCollection<WeddingTask>("tasks", taskSeed);
   const [filter, setFilter] = useState("All");
   const [query, setQuery] = useState("");
@@ -54,7 +55,9 @@ export function TasksSection() {
     else await create(input);
   }
 
-  return (
+  return loading ? (
+    <WorkspaceSkeleton variant="table" columns={5} />
+  ) : (
     <section className="panel table-panel">
       <div className="table-toolbar">
         <SearchField value={query} onChange={setQuery} placeholder="Search tasks" />

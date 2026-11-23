@@ -3,6 +3,8 @@ import { NextResponse } from "next/server";
 import { requireApiSession } from "@/lib/auth/session";
 import { isSelfServiceRole } from "@/lib/auth/roles";
 import { isExistingGoogleRegistration } from "@/lib/auth/social-registration";
+import { detectCountry } from "@/lib/country";
+import { currencyForCountry } from "@/lib/currency";
 import { mongoDb } from "@/lib/mongodb";
 import { VendorClaimError, submitVendorClaim } from "@/lib/vendors/claims";
 
@@ -21,7 +23,15 @@ export async function GET(request: Request) {
     .collection("user")
     .findOne(
       { email: authentication.session.user.email.toLowerCase() },
-      { projection: { createdAt: 1, role: 1, platformRoles: 1 } },
+      {
+        projection: {
+          createdAt: 1,
+          role: 1,
+          platformRoles: 1,
+          currency: 1,
+          currencyPreferenceSet: 1,
+        },
+      },
     );
   const existingGoogleAccount = isExistingGoogleRegistration(authIntent, user?.createdAt);
 
@@ -43,6 +53,15 @@ export async function GET(request: Request) {
           updatedAt: new Date(),
         },
       },
+    );
+  }
+
+  // Give a new account the location-based starting currency without locking it;
+  // onboarding remains the place where the user confirms the permanent choice.
+  if (user?.currencyPreferenceSet !== true && !user?.currency) {
+    await mongoDb.collection("user").updateOne(
+      { email: authentication.session.user.email },
+      { $set: { currency: currencyForCountry(detectCountry(request)), updatedAt: new Date() } },
     );
   }
 

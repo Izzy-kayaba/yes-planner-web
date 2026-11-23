@@ -12,6 +12,7 @@ import { useLanguage } from "@/components/providers/LanguageProvider";
 import { useCurrency } from "@/components/providers/CurrencyProvider";
 import { SearchField } from "@/components/forms/SearchField";
 import { Pagination } from "@/components/ui/Pagination";
+import { WorkspaceSkeleton } from "@/components/ui/WorkspaceSkeleton";
 import { useWorkspaceCollection } from "@/hooks/useWorkspaceCollection";
 import { useConnectedVendors } from "@/hooks/useConnectedVendors";
 import { useConfirmation } from "@/hooks/useConfirmation";
@@ -54,7 +55,7 @@ const seed: Booking[] = [
 export function BookingsSection() {
   const { text } = useLanguage();
   const { currency, displayMoney, displayStoredMoney } = useCurrency();
-  const { items, create, update, remove, page, setPage, pagination } =
+  const { items, create, update, remove, page, setPage, pagination, loading } =
     useWorkspaceCollection<Booking>("bookings", seed);
   const connectedVendors = useConnectedVendors();
   const confirmation = useConfirmation();
@@ -95,7 +96,9 @@ export function BookingsSection() {
   const shown = items.filter((booking) =>
     `${booking.vendor} ${booking.service}`.toLowerCase().includes(query.toLowerCase()),
   );
-  return (
+  return loading ? (
+    <WorkspaceSkeleton variant="bookings" />
+  ) : (
     <>
       <div className="table-toolbar">
         <SearchField value={query} onChange={setQuery} placeholder="Search bookings" />

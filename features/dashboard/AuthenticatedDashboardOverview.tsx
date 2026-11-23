@@ -62,8 +62,7 @@ export function AuthenticatedDashboardOverview({ data }: { data: DashboardData }
             {wedding.venue}, {wedding.location}
           </p>
           <p className="banner-budget">
-            <span> {text("Planned budget")} : </span> {budgetLabel} · {guestLabel}{" "}
-            {text("estimated guests")}
+            {text("Planned budget")} : <span>{budgetLabel}</span> · <span>{guestLabel}</span>{" "}{text("estimated guests")}
           </p>
           {data.user.role === "Couple" && (
             <Link className="button button-secondary" href="/onboarding">
