@@ -3,6 +3,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect, useRef } from "react";
 import { useLanguage } from "@/components/providers/LanguageProvider";
 import { cn } from "@/lib/cn";
 import type { TranslationKey } from "@/lib/i18n";
@@ -37,12 +38,17 @@ export function WeddingNav({
   const pathname = usePathname();
   const { t, text } = useLanguage();
   const base = `/weddings/${weddingId}`;
+  const activeLink = useRef<HTMLAnchorElement>(null);
   // The browser may show a country-prefixed URL while the navigation links use internal paths.
   const navigationPathname = normalizeWeddingPath(pathname);
 
+  useEffect(() => {
+    activeLink.current?.scrollIntoView({ block: "nearest", inline: "center" });
+  }, [navigationPathname]);
+
   return (
     <nav
-      className="flex w-full min-w-0 max-w-full gap-1 overflow-x-auto rounded-xl border border-yes-line bg-yes-surface p-1.5 [scrollbar-width:none]"
+      className="wedding-nav flex w-full min-w-0 max-w-full gap-1 overflow-x-auto rounded-xl border border-yes-line bg-yes-surface p-1.5 [scrollbar-width:none]"
       aria-label={text("Wedding workspace")}
     >
       {sections
@@ -67,6 +73,7 @@ export function WeddingNav({
               )}
               href={href}
               key={label}
+              ref={active ? activeLink : undefined}
             >
               {label.startsWith("wedding.") ? t(label as TranslationKey) : text(label)}
             </Link>

@@ -5,7 +5,15 @@ type WorkspaceSkeletonProps = {
   className?: string;
   label?: string;
   variant?:
-    "page" | "dashboard" | "compact" | "table" | "budget" | "bookings" | "timeline" | "publication";
+    | "page"
+    | "dashboard"
+    | "compact"
+    | "table"
+    | "budget"
+    | "bookings"
+    | "timeline"
+    | "publication"
+    | "vendors";
   columns?: number;
   rows?: number;
 };
@@ -32,6 +40,7 @@ export function WorkspaceSkeleton({
         <div className="workspace-skeleton-table-grid">
           <div
             className="workspace-skeleton-table-row workspace-skeleton-table-head"
+            data-columns={columns}
             style={{ gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))` }}
           >
             {Array.from({ length: columns }, (_, index) => (
@@ -41,6 +50,7 @@ export function WorkspaceSkeleton({
           {Array.from({ length: rows }, (_, row) => (
             <div
               className="workspace-skeleton-table-row"
+              data-columns={columns}
               key={row}
               style={{ gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))` }}
             >
@@ -90,6 +100,38 @@ export function WorkspaceSkeleton({
           </div>
         </section>
       </div>
+    );
+  }
+
+  if (variant === "vendors") {
+    return (
+      <section
+        className={cn("vendor-grid workspace-vendor-skeleton workspace-skeleton", className)}
+        role="status"
+        aria-busy="true"
+        aria-label={label}
+      >
+        {Array.from({ length: rows }, (_, index) => (
+          <article className="vendor-card workspace-vendor-skeleton-card" key={index}>
+            <div className="vendor-cover workspace-vendor-skeleton-cover">
+              <span className="skeleton-block size-10 rounded-full" />
+            </div>
+            <div className="vendor-card-copy">
+              <div>
+                <span className="skeleton-block h-3 w-24 max-w-full" />
+                <span className="skeleton-block h-5 w-20 max-w-full rounded-full" />
+              </div>
+              <span className="skeleton-block h-6 w-40 max-w-full" />
+              <span className="skeleton-block h-3 w-36 max-w-full" />
+              <span className="skeleton-block h-4 w-24 max-w-full" />
+              <div className="flex gap-2">
+                <span className="skeleton-block h-9 w-24" />
+                <span className="skeleton-block size-9 rounded-full" />
+              </div>
+            </div>
+          </article>
+        ))}
+      </section>
     );
   }
 

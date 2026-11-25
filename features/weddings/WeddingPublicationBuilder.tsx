@@ -14,11 +14,13 @@ import { useParams } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 import { apiRequest } from "@/lib/api/client";
+import { useLanguage } from "@/components/providers/LanguageProvider";
 import type { WeddingPhoto, WeddingPublication } from "@/lib/wedding-publication";
 import { VenueAddressAutocomplete } from "@/features/weddings/VenueAddressAutocomplete";
 
 export function WeddingPublicationBuilder({ initial }: { initial: WeddingPublication }) {
   const { weddingId } = useParams<{ weddingId: string }>();
+  const { language, text } = useLanguage();
   const [value, setValue] = useState(initial);
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -42,10 +44,10 @@ export function WeddingPublicationBuilder({ initial }: { initial: WeddingPublica
     }));
   }
 
-  const hasVenueAddress = Boolean(value.venueAddress.trim());
-  const mapPreviewUrl = `https://www.google.com/maps?q=${encodeURIComponent(
-    value.venueAddress || "South Africa",
-  )}&output=embed`;
+  const hasSelectedVenue = Boolean(value.venueAddress.trim() && value.mapUrl.trim());
+  const mapPreviewUrl = hasSelectedVenue
+    ? `https://www.google.com/maps?q=${encodeURIComponent(value.venueAddress)}&output=embed`
+    : "";
 
   async function save(action: "save" | "publish" | "unpublish") {
     setSaving(true);
@@ -59,11 +61,11 @@ export function WeddingPublicationBuilder({ initial }: { initial: WeddingPublica
       );
       setValue(result);
       toast.success(
-        action === "publish"
-          ? "Your wedding page is live."
+          action === "publish"
+          ? text("Your wedding page is live.")
           : action === "unpublish"
-            ? "Your page is now private."
-            : "Website draft saved.",
+            ? text("Your page is now private.")
+            : text("Website draft saved."),
       );
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "The wedding page could not be saved.");
@@ -79,11 +81,13 @@ export function WeddingPublicationBuilder({ initial }: { initial: WeddingPublica
     );
     const availableSlots = Math.max(0, 30 - value.photos.length);
     if (!imageFiles.length) {
-      toast.error("Choose JPG, PNG or WebP images.");
+      toast.error(text("Choose JPG, PNG or WebP images."));
       return;
     }
     if (imageFiles.length > availableSlots) {
-      toast.error(`You can add ${availableSlots} more image${availableSlots === 1 ? "" : "s"}.`);
+      toast.error(
+        text(`You can add ${availableSlots} more image${availableSlots === 1 ? "" : "s"}.`),
+      );
       return;
     }
     setUploading(true);
@@ -97,7 +101,7 @@ export function WeddingPublicationBuilder({ initial }: { initial: WeddingPublica
         );
         setValue((current) => ({ ...current, photos: [...current.photos, photo] }));
       }
-      toast.success(`${imageFiles.length} photo${imageFiles.length === 1 ? "" : "s"} added.`);
+      toast.success(text(`${imageFiles.length} photo${imageFiles.length === 1 ? "" : "s"} added.`));
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "The photo could not be uploaded.");
     } finally {
@@ -160,44 +164,45 @@ export function WeddingPublicationBuilder({ initial }: { initial: WeddingPublica
     <div className="publication-builder">
       <section className="panel publication-builder-intro">
         <div>
-          <p className="eyebrow">Wedding website</p>
-          <h2>Build the page your guests will see</h2>
+          <p className="eyebrow">{text("Wedding website")}</p>
+          <h2>{text("Build the page your guests will see")}</h2>
           <p>
-            Keep it private while you work. When everything feels right, publish it and share one
-            simple address.
+            {text(
+              "Keep it private while you work. When everything feels right, publish it and share one simple address.",
+            )}
           </p>
         </div>
         <span
           className={`status-pill ${value.publicationStatus === "Published" ? "status-pill-sage" : "status-pill-gold"}`}
         >
-          {value.publicationStatus === "Published" ? "Published" : "Draft"}
+          {value.publicationStatus === "Published" ? text("Published") : text("Draft")}
         </span>
       </section>
 
       <section className="panel publication-builder-section">
         <div className="panel-header">
           <div>
-            <p className="eyebrow">1 · Publication content</p>
-            <h3>Choose what guests should see</h3>
+            <p className="eyebrow">{text("1 · Publication content")}</p>
+            <h3>{text("Choose what guests should see")}</h3>
           </div>
         </div>
         <div className="publication-summary-grid">
           <div>
-            <span className="field-label">Couple</span>
-            <strong>{value.displayName || "Wedding couple"}</strong>
+            <span className="field-label">{text("Couple")}</span>
+            <strong>{value.displayName || text("Wedding couple")}</strong>
           </div>
           <div>
-            <span className="field-label">Wedding date</span>
-            <strong>{formatWeddingDate(value.weddingDate)}</strong>
+            <span className="field-label">{text("Wedding date")}</span>
+            <strong>{formatWeddingDate(value.weddingDate, language)}</strong>
           </div>
           <div>
-            <span className="field-label">Public address</span>
+            <span className="field-label">{text("Public address")}</span>
             <strong className="publication-generated-address">
               yes-planner.com/wedding/{value.publicSlug || "generated-on-save"}
             </strong>
           </div>
           <label>
-            <span className="field-label">Hashtag</span>
+            <span className="field-label">{text("Hashtag")}</span>
             <input
               value={value.hashtag}
               onChange={(event) => update("hashtag", event.target.value)}
@@ -206,14 +211,14 @@ export function WeddingPublicationBuilder({ initial }: { initial: WeddingPublica
           </label>
         </div>
         <label>
-          <span className="field-label">
-            Your story <em>(optional)</em>
+            <span className="field-label">
+              {text("Your story")} <em>({text("optional")})</em>
           </span>
           <textarea
             rows={5}
             value={value.story}
             onChange={(event) => update("story", event.target.value)}
-            placeholder="Tell guests how your story began…"
+            placeholder={text("Tell guests how your story began…")}
           />
         </label>
       </section>
@@ -221,52 +226,52 @@ export function WeddingPublicationBuilder({ initial }: { initial: WeddingPublica
       <section className="panel publication-builder-section">
         <div className="panel-header">
           <div>
-            <p className="eyebrow">2 · Guest-facing details</p>
-            <h3>Help guests arrive with confidence</h3>
+            <p className="eyebrow">{text("2 · Guest-facing details")}</p>
+            <h3>{text("Help guests arrive with confidence")}</h3>
           </div>
         </div>
         <div className="venue-details-layout">
           <div className="venue-details-fields">
             <div className="publication-readonly-field">
-              <span className="field-label">Venue name *</span>
-              <input aria-label="Venue name" readOnly value={value.venue || "Not provided yet"} />
-              <small className="field-help">Managed from your wedding details.</small>
+              <span className="field-label">{text("Venue name")} *</span>
+              <input aria-label={text("Venue name")} readOnly value={value.venue || text("Not provided yet")} />
+              <small className="field-help">{text("Managed from your wedding details.")}</small>
             </div>
             <label>
               <span className="field-label">Venue address *</span>
               <VenueAddressAutocomplete value={value.venueAddress} onChange={updateVenueAddress} />
             </label>
             <label>
-              <span className="field-label">
-                Directions link <em>(optional)</em>
+                <span className="field-label">
+                {text("Directions link")} <em>({text("optional")})</em>
               </span>
               <input
                 inputMode="url"
                 onChange={(event) => update("directionsUrl", event.target.value)}
-                placeholder="https://www.google.com/maps/..."
+                placeholder={text("https://www.google.com/maps/...")}
                 type="url"
                 value={value.directionsUrl}
               />
             </label>
           </div>
           <div
-            className={`venue-map-preview ${hasVenueAddress ? "has-location" : "is-placeholder"}`}
+            className={`venue-map-preview ${hasSelectedVenue ? "has-location" : "is-placeholder"}`}
           >
-            <iframe
-              title={`Map showing ${value.venueAddress || value.venue || "South Africa"}`}
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-              src={mapPreviewUrl}
-            />
-            {!hasVenueAddress ? (
-              <div className="venue-map-message">
-                <strong>Venue map</strong>
-                <span>Choose a suggested address to place your venue accurately.</span>
+            {hasSelectedVenue ? (
+              <iframe
+                title={`Map showing ${value.venueAddress}`}
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                src={mapPreviewUrl}
+              />
+            ) : (
+              <div className="venue-map-empty" aria-live="polite">
+                <span>{text("Choose a suggested address to place your venue accurately.")}</span>
               </div>
-            ) : null}
+            )}
             {value.directionsUrl || value.mapUrl ? (
               <a href={value.directionsUrl || value.mapUrl} rel="noreferrer" target="_blank">
-                Open in Google Maps <ExternalLink size={13} />
+                {text("Open in Google Maps")} <ExternalLink size={13} />
               </a>
             ) : null}
           </div>
@@ -276,8 +281,8 @@ export function WeddingPublicationBuilder({ initial }: { initial: WeddingPublica
       <section className="panel publication-builder-section">
         <div className="panel-header">
           <div>
-            <p className="eyebrow">3 · Photos and design</p>
-            <h3>Choose the feeling of the page</h3>
+            <p className="eyebrow">{text("3 · Photos and design")}</p>
+            <h3>{text("Choose the feeling of the page")}</h3>
           </div>
         </div>
         <div className="theme-choices" role="radiogroup" aria-label="Visual theme">
@@ -299,7 +304,7 @@ export function WeddingPublicationBuilder({ initial }: { initial: WeddingPublica
               type="button"
             >
               <span />
-              {label}
+              {text(label)}
             </button>
           ))}
         </div>
@@ -323,11 +328,11 @@ export function WeddingPublicationBuilder({ initial }: { initial: WeddingPublica
           <span className="publication-upload-content">
             <ImagePlus size={20} />
             <span>
-              <strong>{uploading ? "Uploading…" : "Add wedding photos"}</strong>
+              <strong>{uploading ? text("Uploading…") : text("Add wedding photos")}</strong>
               <small>
                 {uploading
-                  ? "Please wait while your images are added"
-                  : "Drop images here or browse · JPG, PNG or WebP · up to 30 images"}
+                  ? text("Please wait while your images are added")
+                  : text("Drop images here or browse · JPG, PNG or WebP · up to 30 images")}
               </small>
             </span>
           </span>
@@ -349,7 +354,7 @@ export function WeddingPublicationBuilder({ initial }: { initial: WeddingPublica
                 <img alt={photo.alt} src={photo.url} />
                 <div className="publication-photo-actions">
                   <button
-                    aria-label="Move photo up"
+                    aria-label={text("Move photo up")}
                     disabled={index === 0}
                     onClick={() => void reorder(index, -1)}
                     type="button"
@@ -357,7 +362,7 @@ export function WeddingPublicationBuilder({ initial }: { initial: WeddingPublica
                     <ArrowUp size={14} />
                   </button>
                   <button
-                    aria-label="Move photo down"
+                    aria-label={text("Move photo down")}
                     disabled={index === value.photos.length - 1}
                     onClick={() => void reorder(index, 1)}
                     type="button"
@@ -365,7 +370,7 @@ export function WeddingPublicationBuilder({ initial }: { initial: WeddingPublica
                     <ArrowDown size={14} />
                   </button>
                   <button
-                    aria-label="Remove photo"
+                    aria-label={text("Remove photo")}
                     onClick={() => void remove(photo)}
                     type="button"
                   >
@@ -373,14 +378,14 @@ export function WeddingPublicationBuilder({ initial }: { initial: WeddingPublica
                   </button>
                 </div>
                 {photo.isCover ? (
-                  <span className="publication-cover-label">Cover image</span>
+                  <span className="publication-cover-label">{text("Cover image")}</span>
                 ) : (
                   <button
                     className="publication-set-cover"
                     onClick={() => void setCover(photo.id)}
                     type="button"
                   >
-                    Use as cover
+                    {text("Use as cover")}
                   </button>
                 )}
               </article>
@@ -388,21 +393,23 @@ export function WeddingPublicationBuilder({ initial }: { initial: WeddingPublica
           </div>
         ) : (
           <div className="publication-empty-photos">
-            Your first photo becomes the cover image automatically.
+            {text("Your first photo becomes the cover image automatically.")}
           </div>
         )}
       </section>
 
       <section className="panel publication-preview-card">
         <div>
-          <p className="eyebrow">4 · Preview and publication</p>
+          <p className="eyebrow">{text("4 · Preview and publication")}</p>
           <h3>
-            {value.publicationStatus === "Published" ? "Your page is live" : "Ready when you are"}
+            {value.publicationStatus === "Published"
+              ? text("Your page is live")
+              : text("Ready when you are")}
           </h3>
           <p>
             {value.publicationStatus === "Published"
-              ? "Share the address below with your guests."
-              : "Save a draft to keep working privately, or publish when the story is complete."}
+              ? text("Share the address below with your guests.")
+              : text("Save a draft to keep working privately, or publish when the story is complete.")}
           </p>
         </div>
         <div className="publication-link">
@@ -410,7 +417,7 @@ export function WeddingPublicationBuilder({ initial }: { initial: WeddingPublica
           <span>{publicUrl}</span>
           <button onClick={() => void copyLink()} type="button">
             {copied ? <Check size={15} /> : <Copy size={15} />}
-            {copied ? "Copied" : "Copy link"}
+            {copied ? text("Copied") : text("Copy link")}
           </button>
         </div>
         <div className="publication-actions">
@@ -420,7 +427,7 @@ export function WeddingPublicationBuilder({ initial }: { initial: WeddingPublica
             onClick={() => void save("save")}
             type="button"
           >
-            Save draft
+            {text("Save draft")}
           </button>
           <a
             className="button button-secondary"
@@ -428,7 +435,7 @@ export function WeddingPublicationBuilder({ initial }: { initial: WeddingPublica
             rel="noreferrer"
             target="_blank"
           >
-            <ExternalLink size={15} /> Preview privately
+            <ExternalLink size={15} /> {text("Preview privately")}
           </a>
           {value.publicationStatus === "Published" ? (
             <>
@@ -438,7 +445,7 @@ export function WeddingPublicationBuilder({ initial }: { initial: WeddingPublica
                 rel="noreferrer"
                 target="_blank"
               >
-                <ExternalLink size={15} /> View page
+                <ExternalLink size={15} /> {text("View page")}
               </a>
               <button
                 className="button button-primary"
@@ -446,7 +453,7 @@ export function WeddingPublicationBuilder({ initial }: { initial: WeddingPublica
                 onClick={() => void save("unpublish")}
                 type="button"
               >
-                Unpublish
+                {text("Unpublish")}
               </button>
             </>
           ) : (
@@ -456,7 +463,7 @@ export function WeddingPublicationBuilder({ initial }: { initial: WeddingPublica
               onClick={() => void save("publish")}
               type="button"
             >
-              {saving ? "Publishing…" : "Publish page"}
+              {saving ? text("Publishing…") : text("Publish page")}
             </button>
           )}
         </div>
@@ -465,9 +472,9 @@ export function WeddingPublicationBuilder({ initial }: { initial: WeddingPublica
   );
 }
 
-function formatWeddingDate(value: string) {
-  if (!value) return "Not provided yet";
-  return new Intl.DateTimeFormat("en-ZA", {
+function formatWeddingDate(value: string, language: "en" | "fr") {
+  if (!value) return language === "fr" ? "Non renseignée" : "Not provided yet";
+  return new Intl.DateTimeFormat(language === "fr" ? "fr-ZA" : "en-ZA", {
     day: "numeric",
     month: "long",
     year: "numeric",

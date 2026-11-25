@@ -18,7 +18,21 @@ export function MetricGrid({ items }: { items: WeddingMetric[] }) {
   );
 }
 
-export function MetricGridSkeleton({ count = 4 }: { count?: number }) {
+export function MetricGridSkeleton({
+  count = 4,
+  items,
+}: {
+  count?: number;
+  items?: Array<Pick<WeddingMetric, "label" | "value" | "detail">>;
+}) {
+  const skeletonItems =
+    items ??
+    Array.from({ length: count }, () => ({
+      label: "Summary metric",
+      value: "000",
+      detail: "Additional information",
+    }));
+
   return (
     <section
       className="stats-grid"
@@ -26,7 +40,7 @@ export function MetricGridSkeleton({ count = 4 }: { count?: number }) {
       aria-busy="true"
       aria-label="Loading summary metrics"
     >
-      {Array.from({ length: count }, (_, index) => (
+      {skeletonItems.map((item, index) => (
         <article
           className="min-h-36 rounded-2xl border border-yes-line bg-yes-surface p-5 shadow-yes-soft max-sm:min-h-32 max-sm:p-4"
           key={index}
@@ -34,9 +48,15 @@ export function MetricGridSkeleton({ count = 4 }: { count?: number }) {
           <div className="flex min-h-7 justify-between">
             <span className="skeleton-block size-7 rounded-lg" />
           </div>
-          <span className="skeleton-block mb-2 mt-3 h-3 w-24" />
-          <span className="skeleton-block mb-1 h-8 w-24" />
-          <span className="skeleton-block h-3 w-36 max-w-full" />
+          <p className="skeleton-block mb-1 mt-3 min-h-[18px] w-fit max-w-full text-[12px] text-transparent">
+            {item.label}
+          </p>
+          <strong className="skeleton-block mb-0.5 block min-h-8 w-fit font-display text-2xl font-normal text-transparent">
+            {item.value}
+          </strong>
+          <small className="skeleton-block min-h-4 w-fit max-w-full text-[11px] text-transparent">
+            {item.detail}
+          </small>
         </article>
       ))}
     </section>

@@ -46,9 +46,13 @@ export function VenueAddressAutocomplete({
           );
           setOpen(true);
         })
-        .catch(() => {
+        .catch((error) => {
           setSuggestions([]);
-          setLookupMessage("Address suggestions are temporarily unavailable.");
+          setLookupMessage(
+            error instanceof Error
+              ? error.message
+              : "Address suggestions are temporarily unavailable.",
+          );
           setOpen(true);
         })
         .finally(() => setLoading(false));

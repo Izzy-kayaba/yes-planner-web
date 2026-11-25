@@ -93,8 +93,15 @@ export function VendorsSection() {
 
   return loading ? (
     <>
-      <MetricGridSkeleton />
-      <WorkspaceSkeleton variant="table" columns={5} />
+      <MetricGridSkeleton
+        items={[
+          { label: "Confirmed", value: "0", detail: "Core team secured" },
+          { label: "Quotes open", value: "0", detail: "Awaiting decisions" },
+          { label: "Saved", value: "0", detail: "Portfolio shortlist" },
+          { label: "Average rating", value: "—", detail: "Across your team" },
+        ]}
+      />
+      <WorkspaceSkeleton variant="vendors" />
     </>
   ) : (
     <>

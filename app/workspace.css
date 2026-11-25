@@ -428,6 +428,21 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+.focus-panel .task-row.focus-task-row {
+  grid-template-columns: 24px minmax(0, 1fr) minmax(0, 8rem);
+  min-width: 0;
+  padding-inline: 0;
+  align-items: center;
+}
+.focus-panel .task-row.focus-task-row .task-copy {
+  min-width: 0;
+  overflow: hidden;
+}
+.focus-panel .task-row.focus-task-row > span:last-child {
+  min-width: 0;
+  max-width: 8rem;
+  justify-self: end;
+}
 .priority {
   font-size: 10px;
   font-weight: 800;

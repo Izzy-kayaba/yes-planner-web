@@ -9,7 +9,7 @@ import { PageHeader } from "@/components/ui/PageHeader";
 import { StatCard } from "@/components/ui/StatCard";
 import { StatusPill } from "@/components/ui/StatusPill";
 import type { DashboardData } from "@/lib/dashboard/types";
-import { daysUntil, formatDate, formatDisplayDate, greetingForNow } from "@/lib/date-time";
+import { daysUntil, formatDate, greetingForNow } from "@/lib/date-time";
 
 export function AuthenticatedDashboardOverview({ data }: { data: DashboardData }) {
   const { language, text } = useLanguage();
@@ -118,13 +118,13 @@ export function AuthenticatedDashboardOverview({ data }: { data: DashboardData }
           {data.tasks.length ? (
             <div className="task-list compact">
               {data.tasks.map((task) => (
-                <div className={`task-row ${task.complete ? "complete" : ""}`} key={task.id}>
+                <div className={`task-row focus-task-row ${task.complete ? "complete" : ""}`} key={task.id}>
                   <span className="check-box">{task.complete ? "✓" : ""}</span>
                   <span className="task-copy">
                     <strong>{task.title}</strong>
                     <small>{[task.category, task.assignee].filter(Boolean).join(" · ")}</small>
                   </span>
-                  <span>{formatDisplayDate(task.due, language)}</span>
+                    <span>{formatDate(task.due, "D MMM YYYY", language)}</span>
                 </div>
               ))}
             </div>
