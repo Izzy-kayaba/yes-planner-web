@@ -466,6 +466,14 @@
   margin: 13px 0;
   font-size: 12px;
 }
+
+.workspace-vendor-skeleton .vendor-cover {
+  background: var(--surface-soft);
+}
+.workspace-vendor-skeleton .vendor-cover::before,
+.workspace-vendor-skeleton .vendor-cover::after {
+  display: none;
+}
 /* Keep vendor records row-based like the other workspace tables. */
 .vendor-grid {
   display: block;

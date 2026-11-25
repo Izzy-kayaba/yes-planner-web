@@ -13,7 +13,7 @@ export async function GET(request: Request) {
         "Content-Type": "application/json",
         "X-Goog-Api-Key": apiKey,
         "X-Goog-FieldMask":
-          "suggestions.placePrediction.placeId,suggestions.placePrediction.text,suggestions.placePrediction.structuredFormat",
+          "suggestions.placePrediction.placeId,suggestions.placePrediction.text.text,suggestions.placePrediction.structuredFormat.mainText.text,suggestions.placePrediction.structuredFormat.secondaryText.text",
       },
       body: JSON.stringify({ input, includedRegionCodes: ["za"], languageCode: "en" }),
       cache: "no-store",
@@ -24,9 +24,8 @@ export async function GET(request: Request) {
       { status: 502 },
     );
   }
-  if (!response.ok)
-    return NextResponse.json({ message: "Address suggestions are unavailable." }, { status: 502 });
-  const payload = (await response.json()) as {
+  const payload = (await response.json().catch(() => null)) as {
+    error?: { status?: string; message?: string };
     suggestions?: Array<{
       placePrediction?: {
         placeId?: string;
@@ -35,6 +34,22 @@ export async function GET(request: Request) {
       };
     }>;
   };
+  if (!response.ok) {
+    const providerStatus = payload.error?.status ?? "UNKNOWN";
+    console.error("Google Places autocomplete rejected the request", {
+      providerStatus,
+      providerMessage: payload.error?.message,
+    });
+    const message =
+      providerStatus === "PERMISSION_DENIED"
+        ? "Google Places is not authorized for this environment."
+        : providerStatus === "RESOURCE_EXHAUSTED"
+          ? "Google Places quota or billing is unavailable for this environment."
+          : providerStatus === "INVALID_ARGUMENT"
+            ? "Google Places rejected the autocomplete request."
+            : "Google Places could not return address suggestions.";
+    return NextResponse.json({ message, configured: true }, { status: 502 });
+  }
   return NextResponse.json({
     configured: true,
     suggestions: (payload.suggestions ?? []).flatMap((item) => {
